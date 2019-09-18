@@ -2,7 +2,7 @@
 caip: 2
 title: Blockchain references
 author: ligi <ligi@ligi.de>
-discussions-to: <URL>
+discussions-to: https://ethereum-magicians.org/t/caip-2-blockchain-references/3612
 status: Draft
 type: Standard
 created: 2019-08-31
