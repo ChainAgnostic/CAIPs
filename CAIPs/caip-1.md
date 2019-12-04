@@ -56,7 +56,7 @@ Headers requiring dates will always do so in the format of ISO 8601 (yyyy-mm-dd)
 
 #### `author` header
 
-The `author` header optionally lists the names, email addresses or usernames of the authors/owners of the EIP. Those who prefer anonymity may use a username only, or a first name and a username. The format of the author header value must be:
+The `author` header optionally lists the names, email addresses or usernames of the authors/owners of the CAIP. Those who prefer anonymity may use a username only, or a first name and a username. The format of the author header value must be:
 
 > Random J. User &lt;address@dom.ain&gt;
 
@@ -102,15 +102,15 @@ CAIPs may also have a `superseded-by` header indicating that an CAIP has been re
 
 CAIPs may include auxiliary files such as diagrams. Such files must be named CAIP-XXXX-Y.ext, where “XXXX” is the CAIP number, “Y” is a serial number (starting at 1), and “ext” is replaced by the actual file extension (e.g. “png”).
 
-## Transferring EIP Ownership
+## Transferring CAIP Ownership
 
 It occasionally becomes necessary to transfer ownership of CAIPs to a new champion. In general, we'd like to retain the original author as a co-author of the transferred CAIP, but that's really up to the original author. A good reason to transfer ownership is because the original author no longer has the time or interest in updating it or following through with the CAIP process, or has fallen off the face of the 'net (i.e. is unreachable or isn't responding to email). A bad reason to transfer ownership is because you don't agree with the direction of the CAIP. We try to build consensus around an CAIP, but if that's not possible, you can always submit a competing CAIP.
 
 If you are interested in assuming ownership of an CAIP, send a message asking to take over, addressed to both the original author and the CAIP editor. If the original author doesn't respond to email in a timely manner, the CAIP editor will make a unilateral decision (it's not like such decisions can't be reversed :)).
 
-## EIP Editors
+## CAIP Editors
 
-The current EIP editors are
+The current CAIP editors are
 
 ` * ligi <ligi@ligi.de>`
 
