@@ -1,0 +1,66 @@
+---
+caip: 4
+title: The Bitcoin interface for CAIP-2
+author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
+discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/4, https://github.com/ChainAgnostic/CAIPs/pull/1
+status: Draft
+type: Standard
+created: 2019-12-05
+requires: 2
+---
+
+## Simple Summary
+
+This document is about the details of the Bitcoin interface for CAIP-2.
+
+## Abstract
+
+In CAIP-2 a general blockchain identification scheme is defined. This is the
+implementation of CAIP-2 for Bitcoin.
+
+## Motivation
+
+See CAIP-2.
+
+## Specification
+
+### Interface name
+
+The name of this interface is "bitcoin", referring to the wider Bitcoin ecosystem, including multiple forks of the chain and the code.
+
+### Reference definition
+
+The definition is delegated to [BIP122](https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id). The format is `bip122-%s`, where `%s` is a 32 character prefix of the block hash from BIP122 (lower case hex).
+
+## Rationale
+
+We delegate the identification of Bitcoin-like chains to BIP122, as this is the best Bitcoin chain identification standard known to the authors of this CAIP.
+
+In order to prepare for other network identification standards within the Ethereum interface, we keep the "eip155-" prefix, which seems unneeded at first glance.
+
+## Backwards Compatibility
+
+Not applicable
+
+## Test Cases
+
+This is a list of manually composed examples
+
+```
+# Ethereum mainnet
+ethereum:eip155-1
+
+# Görli
+ethereum:eip155-5
+
+# Auxilium Network Mainnet
+ethereum:eip155-28945486
+```
+
+## Links
+
+- [BIP122](https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki)
+
+## Copyright
+
+Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
