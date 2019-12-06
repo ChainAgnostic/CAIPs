@@ -34,12 +34,12 @@ The reference uses the Tendermint `chain_id` from the genesis file directly (a J
 
 ## Rationale
 
-Blockchains in this interface are [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) blockchain (e.g. Cosmoshub, Binance, Cosmos Testnets) and [Weave](https://github.com/iov-one/weave) based blockchains (e.g. IOV) with a chain ID matching `[-a-zA-Z0-9]{3,47}`.
+Blockchains in this interface are [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) blockchains (e.g. Cosmoshub, Binance, Cosmos Testnets) and [Weave](https://github.com/iov-one/weave) based blockchains (e.g. IOV) with a chain ID matching `[-a-zA-Z0-9]{3,47}`.
 
 While there is no enforced restriction on chain_id, the author of this document did not find a
 non-conforming chain ID in the wild. There is [a discussion about documenting a best practice chain ID pattern](https://github.com/cosmos/cosmos-sdk/issues/5363).
 
-During the development of this chain ID definition, we came across changing chain IDs for Cosmos Hub (`cosmoshub-1`, `cosmoshub-2`, `cosmoshub-3`). A new chain ID is assigned every time Cosmos Hub dumps the current blockchain state and creates a new genesis from the old state. Technically this leads to different blockchains and can (and maybe should) treated as such. For this specification, we treat them as different blockchains. It is responsibility of a higher level application to interprete some chains as sequels of each other or create equality sets.
+During the development of this chain ID definition, we came across changing chain IDs for Cosmos Hub (`cosmoshub-1`, `cosmoshub-2`, `cosmoshub-3`). A new chain ID is assigned every time Cosmos Hub dumps the current blockchain state and creates a new genesis from the old state. Technically this leads to different blockchains and can (and maybe should) treated as such. For this specification, we treat them as different blockchains. It is the responsibility of a higher level application to interpret some chains as sequels of each other or create equality sets.
 
 ## Backwards Compatibility
 
@@ -63,8 +63,7 @@ cosmos:iov-mainnet
 
 ## Links
 
-- [EIP155](https://eips.ethereum.org/EIPS/eip-155)
-- [chainid.network](https://chainid.network/)
+- [Cosmos chain ID best practice](https://github.com/cosmos/cosmos-sdk/issues/5363)
 
 ## Copyright
 
