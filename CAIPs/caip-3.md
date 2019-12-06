@@ -36,7 +36,7 @@ Note: due to length restrictions of the reference field (47 characters), the lar
 
 ## Rationale
 
-The chain ID defined in EIP155 is the most widely used chain identifier in the Ethereum ecosystem known to the authors. It strives for uniqueness and the fact that the standrad is used for reply protection ensure that creators of a new Ethereum network have an incentive to use an ID that is not used elsewhere.
+The chain ID defined in EIP155 is the most widely used chain identifier in the Ethereum ecosystem known to the authors. It strives for uniqueness and the fact that the standard is used for replay protection ensure that creators of a new Ethereum network have an incentive to use an ID that is not used elsewhere.
 
 In order to prepare for other network identification standards within the Ethereum interface, we keep the "eip155-" prefix, which seems unneeded at first glance.
 
