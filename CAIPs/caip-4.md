@@ -36,7 +36,7 @@ The definition is delegated to [BIP122](https://github.com/bitcoin/bips/blob/mas
 
 We delegate the identification of Bitcoin-like chains to BIP122, as this is the best Bitcoin chain identification standard known to the authors of this CAIP.
 
-In order to prepare for other network identification standards within the Ethereum interface, we keep the "eip155-" prefix, which seems unneeded at first glance.
+In order to prepare for other network identification standards within the Bitcoin interface, we keep the "bip122-" prefix, which seems unneeded at first glance.
 
 ## Backwards Compatibility
 
@@ -47,14 +47,14 @@ Not applicable
 This is a list of manually composed examples
 
 ```
-# Ethereum mainnet
-ethereum:eip155-1
+# Bitcoin mainnet (see https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id)
+bitcoin:bip122-000000000019d6689c085ae165831e93
 
-# Görli
-ethereum:eip155-5
+# Litecoin
+bitcoin:bip122-12a765e31ffd4059bada1e25190f6e98
 
-# Auxilium Network Mainnet
-ethereum:eip155-28945486
+# Feathercoin (Litecoin fork)
+bitcoin:bip122-fdbe99b90c90bae7505796461471d89a
 ```
 
 ## Links
