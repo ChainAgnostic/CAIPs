@@ -1,6 +1,6 @@
 ---
 caip: 6
-title: The Ethereum interface for CAIP-2
+title: The Cosmos Hash interface for CAIP-2
 author: Simon Warta (@webmaster128)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/6, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
@@ -17,7 +17,7 @@ This document is about the details of the Cosmos Hash interface for CAIP-2.
 
 In CAIP-2 a general blockchain identification scheme is defined. This is the
 implementation of CAIP-2 for Cosmos blockchains that cannot be covered by CAIP-5
-due too a chain ID that does not match the pattern.
+due to a chain ID that does not match the pattern.
 
 ## Motivation
 
@@ -36,7 +36,7 @@ The `reference` is defined as `first_16_chars(hex(sha256(utf8(chain_id))))`, wit
 - the Tendermint `chain_id` from the genesis file (a JSON-compatible unicode string)
 - `utf8` being the UTF-8 encoding
 - `sha256` being the SHA256 hash function
-- `hex` being a lowecase hex encoder
+- `hex` being a lowercase hex encoder
 - `first_16_chars` being the first 16 characters
 
 ## Rationale
@@ -64,8 +64,7 @@ cosmos-hash:843d2fc87f40eeb9
 
 ## Links
 
-- [EIP155](https://eips.ethereum.org/EIPS/eip-155)
-- [chainid.network](https://chainid.network/)
+- [Cosmos chain ID best practice](https://github.com/cosmos/cosmos-sdk/issues/5363)
 
 ## Copyright
 
