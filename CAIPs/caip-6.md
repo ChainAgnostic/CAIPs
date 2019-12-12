@@ -12,7 +12,7 @@ requires: 2, 5
 
 ## Simple Summary
 
-This document is about the details of the Cosmos Hash interface for CAIP-2.
+This document is about the details of the Cosmos Hash namespace and reference for CAIP-2.
 
 ## Abstract
 
@@ -26,11 +26,11 @@ See CAIP-2.
 
 ## Specification
 
-### Interface name
+### Cosmos Hash Namespace
 
-The name of this interface is "cosmos-hash", where "cosmos" refers to the wider Cosmos ecosystem and "hash" to the fact that native chain IDs are hashed in order to fit in the general format of CAIP-2.
+In the namespace "cosmos-hash" the term "cosmos" refers to the wider Cosmos ecosystem and "hash" to the fact that native chain IDs are hashed in order to fit in the general format of CAIP-2.
 
-### Reference definition
+#### Reference Definition
 
 The `reference` is defined as `first_16_chars(hex(sha256(utf8(chain_id))))`, with
 
@@ -42,7 +42,8 @@ The `reference` is defined as `first_16_chars(hex(sha256(utf8(chain_id))))`, wit
 
 ## Rationale
 
-Cosmos blockchains with a chain ID matching not matching `[-a-zA-Z0-9]{3,47}` fall into this interface. No real world example is known to the author yet.
+Cosmos blockchains with a chain ID matching not matching `[-a-zA-Z0-9]{3,47}` fall into the "cosmos-hash" namespace.
+No real world example is known to the author yet.
 
 ## Backwards Compatibility
 
@@ -53,13 +54,13 @@ Not applicable
 This is a list of manually composed examples
 
 ```
-# chain_id "x" (too short for CAIP-5)
+# chain_id "x" (too short for the "cosmos" namespace)
 cosmos-hash:2d711642b726b044
 
-# chain_id "123456789012345678901234567890123456789012345678" (too long for CAIP-5)
+# chain_id "123456789012345678901234567890123456789012345678" (too long for the "cosmos" namespace)
 cosmos-hash:0204c92a0388779d
 
-# chain_id "wonderland🧝" (invalid character for CAIP-5)
+# chain_id "wonderland🧝" (invalid character for the "cosmos" namespace)
 cosmos-hash:843d2fc87f40eeb9
 ```
 

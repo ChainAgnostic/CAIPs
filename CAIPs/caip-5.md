@@ -12,7 +12,7 @@ requires: 2, 6
 
 ## Simple Summary
 
-This document is about the details of the Cosmos interface for CAIP-2.
+This document is about the details of the Cosmos namespace and reference for CAIP-2.
 
 ## Abstract
 
@@ -25,17 +25,17 @@ See CAIP-2.
 
 ## Specification
 
-### Interface name
+### Cosmos Namespace
 
-The name of this interface is "cosmos", referring to the wider Cosmos ecosystem.
+The namespace "cosmos" refers to the wider Cosmos ecosystem.
 
-### Reference definition
+#### Reference Definition
 
-The reference uses the Tendermint `chain_id` from the genesis file directly (a JSON-compatible unicode string), assuming it matches the case-sensitive pattern `[-a-zA-Z0-9]{3,47}`. Otherwise the Cosmos Hash interface (CAIP-6) must be used.
+The reference uses the Tendermint `chain_id` from the genesis file directly (a JSON-compatible unicode string), assuming it matches the case-sensitive pattern `[-a-zA-Z0-9]{3,47}`. Otherwise the Cosmos Hash namespace (CAIP-6) must be used.
 
 ## Rationale
 
-Blockchains in this interface are [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) blockchains (e.g. Cosmoshub, Binance, Cosmos Testnets) and [Weave](https://github.com/iov-one/weave) based blockchains (e.g. IOV) with a chain ID matching `[-a-zA-Z0-9]{3,47}`.
+Blockchains in the "cosmos" namespace are [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) blockchains (e.g. Cosmoshub, Binance, Cosmos Testnets) and [Weave](https://github.com/iov-one/weave) based blockchains (e.g. IOV) with a chain ID matching `[-a-zA-Z0-9]{3,47}`.
 
 While there is no enforced restriction on chain_id, the author of this document did not find a
 non-conforming chain ID in the wild. There is [a discussion about documenting a best practice chain ID pattern](https://github.com/cosmos/cosmos-sdk/issues/5363).

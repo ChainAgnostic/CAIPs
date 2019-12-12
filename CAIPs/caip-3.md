@@ -12,7 +12,7 @@ requires: 2
 
 ## Simple Summary
 
-This document is about the details of the Ethereum interface for CAIP-2.
+This document is about the details of the Ethereum namespace and reference for CAIP-2.
 
 ## Abstract
 
@@ -25,11 +25,11 @@ See CAIP-2.
 
 ## Specification
 
-### Interface name
+### Ethereum Namespace
 
-The name of this interface is "ethereum", referring to the wider Ethereum ecosystem.
+The namespace "ethereum" refers to the wider Ethereum ecosystem.
 
-### Reference definition
+#### Reference Definition
 
 The definition is delegated to [EIP155](https://eips.ethereum.org/EIPS/eip-155). The format is `eip155-%d`, where `%d` is an unsigned integer in decimal represenation and corresponds to `CHAIN_ID` of EIP155.
 
@@ -39,7 +39,7 @@ Note: due to length restrictions of the reference field (47 characters), the lar
 
 The chain ID defined in EIP155 is the most widely used chain identifier in the Ethereum ecosystem known to the authors. It strives for uniqueness and the fact that the standard is used for replay protection ensure that creators of a new Ethereum network have an incentive to use an ID that is not used elsewhere.
 
-In order to prepare for other network identification standards within the Ethereum interface, we keep the "eip155-" prefix, which seems unneeded at first glance.
+In order to prepare for other network identification standards within the Ethereum namespace, we keep the "eip155-" prefix, which seems unneeded at first glance.
 
 ## Backwards Compatibility
 

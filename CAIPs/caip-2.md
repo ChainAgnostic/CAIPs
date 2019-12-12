@@ -32,18 +32,18 @@ The blockchain ID (short "chain ID") is a string designed to uniquely identify b
 The `chain_id` is a case-sensitive string in the form
 
 ```
-chain_id:    interface + ":" + reference
-interface:   [-a-z]{3,16}
+chain_id:    namespace + ":" + reference
+namespace:   [-a-z]{3,16}
 reference:   [-a-zA-Z0-9]{3,47}
 ```
 
 ### Semantics
 
-The `interface` acts as a namespace, in which a class of similar blockchains are covered.
-Usually it describes an ecosystem, such as e.g. `bitcoin` or `ethereum`. One interface should
-cover as many blockchains as possible. `reference` is a way to identify a blockchain within a
-given interface. The semantics as well as the more granular syntax are of the reference are
-delegated to interface specific documents, to be expected as separate CAIPs.
+Each `namespace` covers a class of similar blockchains.
+Usually it describes an ecosystem, such as e.g. `bitcoin` or `ethereum`.
+One namespace should include as many blockchains as possible.
+`reference` is a way to identify a blockchain within a given namespace.
+The semantics as well as the more granular syntax are of the reference are delegated to ecosystem specific documents, to be expected as separate CAIPs.
 
 ## Rationale
 

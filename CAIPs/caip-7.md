@@ -12,7 +12,7 @@ requires: 2
 
 ## Simple Summary
 
-This document is about the details of the Lisk interface for CAIP-2.
+This document is about the details of the Lisk namespace and reference for CAIP-2.
 
 ## Abstract
 
@@ -25,17 +25,17 @@ See CAIP-2.
 
 ## Specification
 
-### Interface name
+### Lisk Namespace
 
-The name of this interface should be "lisk", referring to the wider Lisk ecosystem.
+The namespace "lisk" refers to the wider Lisk ecosystem.
 
-### Reference definition
+#### Reference Definition
 
 The definition is delegated to [LIP9](https://github.com/LiskHQ/lips/blob/master/proposals/lip-0009.md). The reference format is `lip9-%s`, where `%s` is a 16 character prefix of the hash from LIP9 (lower case hex).
 
 ## Rationale
 
-This interface should cover Lisk Mainnet and Testnet, Forks, Side chains.
+The "lisk" namespace should cover Lisk Mainnet and Testnet, Forks, Side chains.
 
 ## Backwards Compatibility
 

@@ -12,7 +12,7 @@ requires: 2
 
 ## Simple Summary
 
-This document is about the details of the Bitcoin interface for CAIP-2.
+This document is about the details of the Bitcoin namespace and reference for CAIP-2.
 
 ## Abstract
 
@@ -25,11 +25,11 @@ See CAIP-2.
 
 ## Specification
 
-### Interface name
+### Bitcoin Namespace
 
-The name of this interface is "bitcoin", referring to the wider Bitcoin ecosystem, including multiple forks of the chain and the code.
+The namespace "bitcoin" refers to the wider Bitcoin ecosystem, including multiple forks of the chain and the code.
 
-### Reference definition
+#### Reference Definition
 
 The definition is delegated to [BIP122](https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id). The format is `bip122-%s`, where `%s` is a 32 character prefix of the block hash from BIP122 (lower case hex).
 
@@ -37,7 +37,7 @@ The definition is delegated to [BIP122](https://github.com/bitcoin/bips/blob/mas
 
 We delegate the identification of Bitcoin-like chains to BIP122, as this is the best Bitcoin chain identification standard known to the authors of this CAIP.
 
-In order to prepare for other network identification standards within the Bitcoin interface, we keep the "bip122-" prefix, which seems unneeded at first glance.
+In order to prepare for other network identification standards within the Bitcoin namespace, we keep the "bip122-" prefix, which seems unneeded at first glance.
 
 ## Backwards Compatibility
 
