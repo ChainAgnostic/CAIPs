@@ -1,16 +1,17 @@
 ---
 caip: 2
-title: Blockchain ID
+title: Blockchain ID Specification
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/1, https://github.com/UCRegistry/registry/pull/13, https://ethereum-magicians.org/t/caip-2-blockchain-references/3612,
 status: Draft
 type: Standard
 created: 2019-12-05
+updated: 2019-12-12
 ---
 
 ## Simple Summary
 
-CAIP-2 defines a way to identify a blockchain (e.g. Ethereum mainnet, Görli, BTC, Cosmoshub)
+CAIP-2 defines a way to identify a blockchain (e.g. Ethereum Mainnet, Görli, Bitcoin, Cosmoshub)
 in a human readably, developer friendly and transaction-friendly way.
 
 ## Abstract
@@ -24,7 +25,7 @@ Independently, the [Universal Chain Registry](https://github.com/UCRegistry) was
 
 ## Specification
 
-The blockchain ID is a string designed to uniquely identify blockchains in a developer-friendly fashion.
+The blockchain ID (short "chain ID") is a string designed to uniquely identify blockchains in a developer-friendly fashion.
 
 ### Syntax
 
