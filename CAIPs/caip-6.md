@@ -1,11 +1,12 @@
 ---
 caip: 6
-title: The Cosmos Hash interface for CAIP-2
+title: Blockchain Reference for Cosmos (Hashed Variant)
 author: Simon Warta (@webmaster128)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/6, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
 type: Standard
 created: 2019-12-05
+updated: 2019-12-12
 requires: 2, 5
 ---
 

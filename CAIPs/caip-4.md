@@ -1,11 +1,12 @@
 ---
 caip: 4
-title: The Bitcoin interface for CAIP-2
+title: Blockchain Reference for Bitcoin
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/4, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
 type: Standard
 created: 2019-12-05
+updated: 2019-12-12
 requires: 2
 ---
 

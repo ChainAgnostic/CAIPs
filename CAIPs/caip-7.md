@@ -1,11 +1,12 @@
 ---
 caip: 7
-title: The Lisk interface for CAIP-2
+title: Blockchain Reference for Lisk
 author: Simon Warta (@webmaster128)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/7, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
 type: Standard
 created: 2019-12-05
+updated: 2019-12-12
 requires: 2
 ---
 
