@@ -1,12 +1,12 @@
 ---
 caip: 5
-title: Blockchain Reference for Cosmos
+title: Blockchain Reference for the Cosmos Namespace
 author: Simon Warta (@webmaster128)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/5, https://github.com/ChainAgnostic/CAIPs/issues/6, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
 type: Standard
 created: 2019-12-05
-updated: 2019-12-12
+updated: 2020-01-16
 requires: 2
 ---
 
@@ -25,23 +25,20 @@ See CAIP-2.
 
 ## Specification
 
-This document defined the two namespaces Cosmos and Cosmos Hash.
-
 ### Cosmos Namespace
 
 The namespace "cosmos" refers to the wider Cosmos ecosystem.
 
 #### Reference Definition
 
-The reference uses the Tendermint `chain_id` from the genesis file directly (a JSON-compatible unicode string), assuming it matches the case-sensitive pattern `[-a-zA-Z0-9]{3,47}`. Otherwise the Cosmos Hash namespace must be used.
+##### Direct
 
-### Cosmos Hash Namespace
+The reference uses the Tendermint `chain_id` from the genesis file directly (a JSON-compatible unicode string),
+if it matches the case-sensitive pattern `[-a-zA-Z0-9]{3,47}` and does not start with "hash-".
 
-In the namespace "cosmos-hash" the term "cosmos" refers to the wider Cosmos ecosystem and "hash" to the fact that native chain IDs are hashed in order to fit in the general format of CAIP-2.
+##### Hashed
 
-#### Reference Definition
-
-The `reference` is defined as `first_16_chars(hex(sha256(utf8(chain_id))))`, with
+Otherwise the `reference` is defined as `first_16_chars(hex(sha256(utf8(chain_id))))`, with
 
 - the Tendermint `chain_id` from the genesis file (a JSON-compatible unicode string)
 - `utf8` being the UTF-8 encoding
@@ -51,12 +48,12 @@ The `reference` is defined as `first_16_chars(hex(sha256(utf8(chain_id))))`, wit
 
 ## Rationale
 
-Blockchains in the "cosmos" namespace are [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) blockchains (e.g. Cosmoshub, Binance, Cosmos Testnets) and [Weave](https://github.com/iov-one/weave) based blockchains (e.g. IOV) with a chain ID matching `[-a-zA-Z0-9]{3,47}`.
+Blockchains in the "cosmos" namespace are [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) blockchains (e.g. Cosmoshub, Binance, Cosmos Testnets) and [Weave](https://github.com/iov-one/weave) based blockchains (e.g. IOV).
 
-While there is no enforced restriction on chain_id, the author of this document did not find a
-non-conforming chain ID in the wild. There is [a discussion about documenting a best practice chain ID pattern](https://github.com/cosmos/cosmos-sdk/issues/5363).
+While there is no enforced restriction on `chain_id`, the author of this document did not find a chain ID in the wild that does not conform to the restrictions of the direct reference definition.
+There is [a discussion about documenting a best practice chain ID pattern](https://github.com/cosmos/cosmos-sdk/issues/5363).
 
-Cosmos blockchains with a chain ID matching not matching `[-a-zA-Z0-9]{3,47}` fall into the "cosmos-hash" namespace.
+Cosmos blockchains with a chain ID not matching `[-a-zA-Z0-9]{3,47}` or prefixed with "hash-" need to be hashed in order to comply with CAIP-2.
 No real world example is known to the author yet.
 
 During the development of this chain ID definition, we came across changing chain IDs for Cosmos Hub (`cosmoshub-1`, `cosmoshub-2`, `cosmoshub-3`). A new chain ID is assigned every time Cosmos Hub dumps the current blockchain state and creates a new genesis from the old state. Technically this leads to different blockchains and can (and maybe should) treated as such. For this specification, we treat them as different blockchains. It is the responsibility of a higher level application to interpret some chains as sequels of each other or create equality sets.
@@ -80,14 +77,20 @@ cosmos:Binance-Chain-Tigris
 # IOV Mainnet (Tendermint + Weave)
 cosmos:iov-mainnet
 
-# chain_id "x" (too short for the "cosmos" namespace)
-cosmos-hash:2d711642b726b044
+# chain_ids "", "x" (too short for the direct definition)
+cosmos:hash-e3b0c44298fc1c14
+cosmos:hash-2d711642b726b044
 
-# chain_id "123456789012345678901234567890123456789012345678" (too long for the "cosmos" namespace)
-cosmos-hash:0204c92a0388779d
+# chain_ids "hash-", "hash-123" (invalid prefix for the direct definition)
+cosmos:hash-b12b25a61c04f666
+cosmos:hash-6abb36860ec76c5a
 
-# chain_id "wonderland🧝" (invalid character for the "cosmos" namespace)
-cosmos-hash:843d2fc87f40eeb9
+# chain_id "123456789012345678901234567890123456789012345678" (too long for the direct definition)
+cosmos:hash-0204c92a0388779d
+
+# chain_ids " ", "wonderland🧝‍♂️" (invalid character for the direct definition)
+cosmos:hash-36a9e7f1c95b82ff
+cosmos:hash-843d2fc87f40eeb9
 ```
 
 ## Links
