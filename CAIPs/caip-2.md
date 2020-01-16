@@ -73,13 +73,13 @@ This is a list of manually composed examples
 eip155:1
 
 # Bitcoin mainnet (see https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id)
-bitcoin:bip122-000000000019d6689c085ae165831e93
+bip122:000000000019d6689c085ae165831e93
 
 # Litecoin
-bitcoin:bip122-12a765e31ffd4059bada1e25190f6e98
+bip122:12a765e31ffd4059bada1e25190f6e98
 
 # Feathercoin (Litecoin fork)
-bitcoin:bip122-fdbe99b90c90bae7505796461471d89a
+bip122:fdbe99b90c90bae7505796461471d89a
 
 # Cosmos Hub (Tendermint + Cosmos SDK)
 cosmos:cosmoshub-2
