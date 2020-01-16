@@ -1,23 +1,23 @@
 ---
 caip: 3
-title: Blockchain Reference for Ethereum
+title: Blockchain Reference for the EIP155 Namespace
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/3, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
 type: Standard
 created: 2019-12-05
-updated: 2019-12-12
+updated: 2020-01-16
 requires: 2
 ---
 
 ## Simple Summary
 
-This document is about the details of the Ethereum namespace and reference for CAIP-2.
+This document is about the details of the EIP155 namespace and reference for CAIP-2.
 
 ## Abstract
 
 In CAIP-2 a general blockchain identification scheme is defined. This is the
-implementation of CAIP-2 for Ethereum.
+implementation of CAIP-2 for EIP155 (Ethereum).
 
 ## Motivation
 
@@ -25,21 +25,19 @@ See CAIP-2.
 
 ## Specification
 
-### Ethereum Namespace
+### EIP155 Namespace
 
-The namespace "ethereum" refers to the wider Ethereum ecosystem.
+The namespace is called "eip155" as in [EIP155](https://eips.ethereum.org/EIPS/eip-155).
 
 #### Reference Definition
 
-The definition is delegated to [EIP155](https://eips.ethereum.org/EIPS/eip-155). The format is `eip155-%d`, where `%d` is an unsigned integer in decimal represenation and corresponds to `CHAIN_ID` of EIP155.
+The definition is delegated to EIP155. The format is an unsigned integer in decimal represenation and corresponds to `CHAIN_ID` of EIP155.
 
-Note: due to length restrictions of the reference field (47 characters), the largest supported `CHAIN_ID` is 9999999999999999999999999999999999999999.
+Note: due to length restrictions of the reference field (47 characters), the largest supported `CHAIN_ID` is 99999999999999999999999999999999999999999999999.
 
 ## Rationale
 
 The chain ID defined in EIP155 is the most widely used chain identifier in the Ethereum ecosystem known to the authors. It strives for uniqueness and the fact that the standard is used for replay protection ensure that creators of a new Ethereum network have an incentive to use an ID that is not used elsewhere.
-
-In order to prepare for other network identification standards within the Ethereum namespace, we keep the "eip155-" prefix, which seems unneeded at first glance.
 
 ## Backwards Compatibility
 
@@ -51,13 +49,13 @@ This is a list of manually composed examples
 
 ```
 # Ethereum mainnet
-ethereum:eip155-1
+eip155:1
 
 # Görli
-ethereum:eip155-5
+eip155:5
 
 # Auxilium Network Mainnet
-ethereum:eip155-28945486
+eip155:28945486
 ```
 
 ## Links
