@@ -1,12 +1,12 @@
 ---
-caip: 7
+caip: 6
 title: Blockchain Reference for Lisk
 author: Simon Warta (@webmaster128)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/7, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
 type: Standard
 created: 2019-12-05
-updated: 2019-12-12
+updated: 2020-01-16
 requires: 2
 ---
 
