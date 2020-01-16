@@ -34,7 +34,7 @@ The namespace "cosmos" refers to the wider Cosmos ecosystem.
 ##### Direct
 
 The reference uses the Tendermint `chain_id` from the genesis file directly (a JSON-compatible unicode string),
-if it matches the case-sensitive pattern `[-a-zA-Z0-9]{3,47}` and does not start with "hash-".
+if it matches the case-sensitive pattern `[-a-zA-Z0-9]{3,47}` and does not start with "hashed-".
 
 ##### Hashed
 
@@ -53,7 +53,7 @@ Blockchains in the "cosmos" namespace are [Cosmos SDK](https://github.com/cosmos
 While there is no enforced restriction on `chain_id`, the author of this document did not find a chain ID in the wild that does not conform to the restrictions of the direct reference definition.
 There is [a discussion about documenting a best practice chain ID pattern](https://github.com/cosmos/cosmos-sdk/issues/5363).
 
-Cosmos blockchains with a chain ID not matching `[-a-zA-Z0-9]{3,47}` or prefixed with "hash-" need to be hashed in order to comply with CAIP-2.
+Cosmos blockchains with a chain ID not matching `[-a-zA-Z0-9]{3,47}` or prefixed with "hashed-" need to be hashed in order to comply with CAIP-2.
 No real world example is known to the author yet.
 
 During the development of this chain ID definition, we came across changing chain IDs for Cosmos Hub (`cosmoshub-1`, `cosmoshub-2`, `cosmoshub-3`). A new chain ID is assigned every time Cosmos Hub dumps the current blockchain state and creates a new genesis from the old state. Technically this leads to different blockchains and can (and maybe should) treated as such. For this specification, we treat them as different blockchains. It is the responsibility of a higher level application to interpret some chains as sequels of each other or create equality sets.
@@ -77,20 +77,24 @@ cosmos:Binance-Chain-Tigris
 # IOV Mainnet (Tendermint + Weave)
 cosmos:iov-mainnet
 
-# chain_ids "", "x" (too short for the direct definition)
-cosmos:hash-e3b0c44298fc1c14
-cosmos:hash-2d711642b726b044
+# chain_ids "hash-", "hashed" (are direct)
+cosmos:hash-
+cosmos:hashed
 
-# chain_ids "hash-", "hash-123" (invalid prefix for the direct definition)
-cosmos:hash-b12b25a61c04f666
-cosmos:hash-6abb36860ec76c5a
+# chain_ids "", "x" (too short for the direct definition)
+cosmos:hashed-e3b0c44298fc1c14
+cosmos:hashed-2d711642b726b044
+
+# chain_ids "hashed-", "hashed-123" (invalid prefix for the direct definition)
+cosmos:hashed-c904589232422def
+cosmos:hashed-99df5cd68192b33e
 
 # chain_id "123456789012345678901234567890123456789012345678" (too long for the direct definition)
-cosmos:hash-0204c92a0388779d
+cosmos:hashed-0204c92a0388779d
 
 # chain_ids " ", "wonderland🧝‍♂️" (invalid character for the direct definition)
-cosmos:hash-36a9e7f1c95b82ff
-cosmos:hash-843d2fc87f40eeb9
+cosmos:hashed-36a9e7f1c95b82ff
+cosmos:hashed-843d2fc87f40eeb9
 ```
 
 ## Links
