@@ -100,6 +100,7 @@ cosmos:hashed-843d2fc87f40eeb9
 ## Links
 
 - [Cosmos chain ID best practice](https://github.com/cosmos/cosmos-sdk/issues/5363)
+- [TypeScript implementation in IOV Core](https://github.com/iov-one/iov-core/blob/d6cbad55f01cf86b169d99ca9a2170402d81f04a/packages/iov-cosmos/src/caip5.ts)
 
 ## Copyright
 
