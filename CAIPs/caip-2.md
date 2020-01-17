@@ -94,8 +94,8 @@ cosmos:iov-mainnet
 # Lisk Mainnet (LIP-0009; see https://github.com/LiskHQ/lips/blob/master/proposals/lip-0009.md)
 lip9:9ee11e9df416b18b
 
-# Random max length (16+1+47 = 64 chars/bytes)
-blockchain1-hash:xip3343-8c3444cf8970a9e41a706fab93e7a6c4-xxxyyy
+# Dummy max length (16+1+47 = 64 chars/bytes)
+max-namespace-16:xip3343-8c3444cf8970a9e41a706fab93e7a6c4-xxxyyy
 ```
 
 ## Links
