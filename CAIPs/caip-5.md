@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/5, https://github.
 status: Draft
 type: Standard
 created: 2019-12-05
-updated: 2020-01-16
+updated: 2020-01-17
 requires: 2
 ---
 
@@ -31,10 +31,14 @@ The namespace "cosmos" refers to the wider Cosmos ecosystem.
 
 #### Reference Definition
 
+The reference relies on Tendermint's `chain_id` from the genesis file (a JSON-compatible unicode string).
+In some cases we use it directly, otherwise it is hashed.
+An empty `chain_id` must be treated as an error.
+
 ##### Direct
 
-The reference uses the Tendermint `chain_id` from the genesis file directly (a JSON-compatible unicode string),
-if it matches the case-sensitive pattern `[-a-zA-Z0-9]{3,47}` and does not start with "hashed-".
+If the `chain_id` matches the case-sensitive pattern `[-a-zA-Z0-9]{1,47}` and does not start with "hashed-",
+it is used the `reference` directly.
 
 ##### Hashed
 
@@ -53,7 +57,7 @@ Blockchains in the "cosmos" namespace are [Cosmos SDK](https://github.com/cosmos
 While there is no enforced restriction on `chain_id`, the author of this document did not find a chain ID in the wild that does not conform to the restrictions of the direct reference definition.
 There is [a discussion about documenting a best practice chain ID pattern](https://github.com/cosmos/cosmos-sdk/issues/5363).
 
-Cosmos blockchains with a chain ID not matching `[-a-zA-Z0-9]{3,47}` or prefixed with "hashed-" need to be hashed in order to comply with CAIP-2.
+Cosmos blockchains with a chain ID not matching `[-a-zA-Z0-9]{1,47}` or prefixed with "hashed-" need to be hashed in order to comply with CAIP-2.
 No real world example is known to the author yet.
 
 During the development of this chain ID definition, we came across changing chain IDs for Cosmos Hub (`cosmoshub-1`, `cosmoshub-2`, `cosmoshub-3`). A new chain ID is assigned every time Cosmos Hub dumps the current blockchain state and creates a new genesis from the old state. Technically this leads to different blockchains and can (and maybe should) treated as such. For this specification, we treat them as different blockchains. It is the responsibility of a higher level application to interpret some chains as sequels of each other or create equality sets.
@@ -77,13 +81,10 @@ cosmos:Binance-Chain-Tigris
 # IOV Mainnet (Tendermint + Weave)
 cosmos:iov-mainnet
 
-# chain_ids "hash-", "hashed" (are direct)
+# chain_ids "x", "hash-", "hashed" (are direct)
+cosmos:x
 cosmos:hash-
 cosmos:hashed
-
-# chain_ids "", "x" (too short for the direct definition)
-cosmos:hashed-e3b0c44298fc1c14
-cosmos:hashed-2d711642b726b044
 
 # chain_ids "hashed-", "hashed-123" (invalid prefix for the direct definition)
 cosmos:hashed-c904589232422def
@@ -100,7 +101,7 @@ cosmos:hashed-843d2fc87f40eeb9
 ## Links
 
 - [Cosmos chain ID best practice](https://github.com/cosmos/cosmos-sdk/issues/5363)
-- [TypeScript implementation in IOV Core](https://github.com/iov-one/iov-core/blob/d6cbad55f01cf86b169d99ca9a2170402d81f04a/packages/iov-cosmos/src/caip5.ts)
+- [TypeScript implementation in IOV Core](https://github.com/iov-one/iov-core/blob/1cd39e708b/packages/iov-cosmos/src/caip5.ts)
 
 ## Copyright
 

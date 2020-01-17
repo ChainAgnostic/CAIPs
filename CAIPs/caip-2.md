@@ -1,12 +1,12 @@
 ---
 caip: 2
 title: Blockchain ID Specification
-author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
+author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid), Antoine Herzog (@antoineherzog)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/1, https://github.com/UCRegistry/registry/pull/13, https://ethereum-magicians.org/t/caip-2-blockchain-references/3612,
 status: Draft
 type: Standard
 created: 2019-12-05
-updated: 2019-12-12
+updated: 2020-01-17
 ---
 
 ## Simple Summary
@@ -34,7 +34,7 @@ The `chain_id` is a case-sensitive string in the form
 ```
 chain_id:    namespace + ":" + reference
 namespace:   [-a-z]{3,16}
-reference:   [-a-zA-Z0-9]{3,47}
+reference:   [-a-zA-Z0-9]{1,47}
 ```
 
 ### Semantics
