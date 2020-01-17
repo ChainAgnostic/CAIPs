@@ -33,7 +33,7 @@ The `chain_id` is a case-sensitive string in the form
 
 ```
 chain_id:    namespace + ":" + reference
-namespace:   [-a-z]{3,16}
+namespace:   [-a-z0-9]{3,16}
 reference:   [-a-zA-Z0-9]{1,47}
 ```
 
