@@ -31,7 +31,7 @@ The namespace is called "eip155" as in [EIP155](https://eips.ethereum.org/EIPS/e
 
 #### Reference Definition
 
-The definition is delegated to EIP155. The format is an unsigned integer in decimal represenation and corresponds to `CHAIN_ID` of EIP155.
+The definition is delegated to EIP155. The format is an unsigned integer in decimal representation and corresponds to `CHAIN_ID` of EIP155.
 
 Note: due to length restrictions of the reference field (47 characters), the largest supported `CHAIN_ID` is 99999999999999999999999999999999999999999999999.
 
