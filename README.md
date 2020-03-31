@@ -18,3 +18,13 @@ If your CAIP requires images, the image files should be included in a subdirecto
 * **Draft** - an CAIP that is undergoing rapid iteration and changes.
 * **Last Call** - an CAIP that is done with its initial iteration and ready for review by a wide audience.
 * **Accepted** - a core CAIP that has been in Last Call for at least 2 weeks and any technical changes that were requested have been addressed by the author.
+
+# CAIP Index
+
+* **CAIP-1** - [CAIP Purpose and Guidelines](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-1.md)
+* **CAIP-2** - [Blockchain ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md)
+* **CAIP-3** - [Blockchain Reference for the EIP155 Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-3.md)
+* **CAIP-4** - [Blockchain Reference for the BIP122 Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-4.md)
+* **CAIP-5** - [Blockchain Reference for the Cosmos Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-5.md)
+* **CAIP-6** - 	[Blockchain Reference for the LIP9 Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-6.md)
+* **CAIP-10** - 	[Account ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md)
