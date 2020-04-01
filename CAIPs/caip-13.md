@@ -1,6 +1,6 @@
 ---
 caip: 13
-title: Blockchain Reference for the BIP122 Namespace
+title: Blockchain Reference for the Polkadot Namespace
 author: Pedro Gomes (@pedrouid), Joshua Mir (@joshua-mir), Shawn Tabrizi (@shawntabrizi)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/13
 status: Draft
