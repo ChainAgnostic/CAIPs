@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/13
 status: Draft
 type: Standard
 created: 2020-04-01
-updated: 2020-04-01
+updated: 2020-04-02
 requires: 2
 ---
 
@@ -31,11 +31,11 @@ The namespace is called "polkadot" to refer to Polkadot-like chains.
 
 #### Reference Definition
 
-The definition for this namespace will use the `genesis-hash` as an indentifier for different Polkadot chains.
+The definition for this namespace will use the `genesis-hash` as an indentifier for different Polkadot chains. The format is a 32 character prefix of the block hash (lower case hex).
 
 ## Rationale
 
-The rationale behind the use of genesis hash stems from its usage in the Polkadot architecture in network and consensus.
+The rationale behind the use of block hash from the genesis block stems from its usage in the Polkadot architecture in network and consensus.
 
 ## Backwards Compatibility
 
@@ -47,13 +47,13 @@ This is a list of manually composed examples
 
 ```
 # Kusama
-polkadot:b0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe
+polkadot:b0a8d493285c2df73290dfb7e61f870f
 
 # Edgeware
-polkadot:742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b
+polkadot:742a2ca70c2fda6cee4f8df98d64c4c6
 
 # Kulupu
-polkadot:37e1f8125397a98630013a4dff89b54cb758ff8eed894419e65a6dcf27a6fb8a
+polkadot:37e1f8125397a98630013a4dff89b54c
 ```
 
 ## Links
