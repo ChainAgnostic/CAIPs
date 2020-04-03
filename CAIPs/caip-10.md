@@ -59,10 +59,13 @@ This is a list of manually composed examples
 # Bitcoin mainnet 
 128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6@bip122:000000000019d6689c085ae165831e93
 
-# Cosmos Hub (Tendermint + Cosmos SDK)
+# Cosmos Hub
 cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0@cosmos:cosmoshub-3
 
-# Dummy max length (16+1+47 = 64 chars/bytes)
+# Kusama network
+5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy@polkadot:b0a8d493285c2df73290dfb7e61f870f
+
+# Dummy max length (63+1+16+1+47 = 128 chars/bytes)
 bd57219062044ed77c7e5b865339a6d727309c548763141f11e26e9242bbd34@max-namespace-16:xip3343-8c3444cf8970a9e41a706fab93e7a6c4-xxxyyy
 ```
 
