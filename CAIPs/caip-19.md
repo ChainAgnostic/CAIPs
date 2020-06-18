@@ -90,6 +90,9 @@ cosmos:iov-mainnet/slip44:234
 
 # Lisk Token
 lip9:9ee11e9df416b18b/slip44:134
+
+# DAI Token
+eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
 ```
 
 ## Copyright
