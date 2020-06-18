@@ -2,7 +2,7 @@
 caip: 20
 title: Asset Reference for the SLIP44 Asset Namespace
 author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/20
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/19
 status: Draft
 type: Standard
 created: 2020-06-23

@@ -2,7 +2,7 @@
 caip: 22
 title: Asset Reference for the ERC721 Asset Namespace
 author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/20
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/19
 status: Draft
 type: Standard
 created: 2020-06-23
@@ -27,7 +27,7 @@ See CAIP-19.
 
 ### ERC721 Asset Namespace
 
-The asset namespace is called "erc721" as in [ERC721](https://eips.ethereum.org/EIPS/eip-721). It reference erc721 tokens in the eip155 namespace (cf. CAIP3).
+The asset namespace is called "erc721" as in [ERC721](https://eips.ethereum.org/EIPS/eip-721). It reference erc721 tokens (NFT) in the eip155 namespace (cf. CAIP3).
 
 #### Asset Reference Definition
 
