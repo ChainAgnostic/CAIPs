@@ -93,6 +93,9 @@ lip9:9ee11e9df416b18b/slip44:134
 
 # DAI Token
 eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
+
+# CryptoKitties Collectible
+eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
 ```
 
 ## Copyright
