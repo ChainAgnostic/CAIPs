@@ -1,7 +1,7 @@
 ---
 caip: 19
-title: Asset ID Specification
-author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid)
+title: Asset Type and Asset ID Specification
+author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid), Joel Thorstensson (@oed)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/19
 status: Draft
 type: Standard
@@ -12,31 +12,42 @@ requires: 10
 
 ## Simple Summary
 
-CAIP-19 defines a way to identify an asset (e.g. Bitcoin, Ether, ATOM)
-in a human readably, developer friendly and transaction-friendly way.
+CAIP-19 defines a way to identify a type of asset (e.g. Bitcoin, Ether, ATOM) and an asset ID (for non fungible token) in a human readably, developer friendly and transaction-friendly way.
 
 ## Abstract
 
-Often you need to reference an asset. For example when you want to do an atomic swap between two assets.
+Often you need to reference the asset type or the asset ID. For example when you want to do an atomic swap between a fungible asset and a non fungible asset.
 
 ## Motivation
 
-Currently, each wallet or each exchange needs to create their own registry of assets and their associated metadata for example like [Trust-Wallet](https://github.com/trustwallet/assets/tree/master/blockchains) or [CoinMarketCap](https://coinmarketcap.com/). Providing a unique Asset ID for each asset for developers can reduce the risk of confusion betweens different assets. 
+Currently, each wallet or each exchange needs to create their own registry of type of assets and their associated metadata for example like [Trust-Wallet](https://github.com/trustwallet/assets/tree/master/blockchains) or [CoinMarketCap](https://coinmarketcap.com/). Providing a unique type of Asset and an Asset ID for each asset for developers can reduce the risk of confusion betweens different assets. 
 
-## Specification
+## Specification of Asset Type
 
-The Asset ID is a string designed to uniquely identify assets in a developer-friendly fashion.
+The Asset Type is a string designed to uniquely identify type of assets in a developer-friendly fashion.
+
+### Syntax
+
+The `asset_type` is a case-sensitive string in the form
+
+```
+asset_type:    chain_id + "/" + asset_namespace + ":" + asset_reference
+chain_id:          Blockchain ID Specification cf. CAIP2 
+asset_namespace:   [-a-z0-9]{3,16}
+asset_reference:   [-a-zA-Z0-9]{1,47}
+```
+
+## Specification of Asset ID
+
+The Asset ID is a string designed to uniquely identify a non fungible asset in a developer-friendly fashion.
 
 ### Syntax
 
 The `asset_id` is a case-sensitive string in the form
 
 ```
-asset_id:    chain_id + "/" + asset_namespace + ":" + asset_reference
-chain_id:          Blockchain ID Specification cf. CAIP2 
-asset_namespace:   [-a-z0-9]{3,16}
-asset_reference:   [-a-zA-Z0-9]{1,47}
-```
+asset_id:    asset_type + "/" + token_id
+token_id:   [-a-zA-Z0-9]{1,47}
 
 ### Semantics
 
@@ -96,6 +107,9 @@ eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
 
 # CryptoKitties Collectible
 eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
+
+# CryptoKitties Collectible ID
+eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
 ```
 
 ## Copyright

@@ -1,7 +1,7 @@
 ---
 caip: 22
 title: Asset Reference for the ERC721 Asset Namespace
-author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid)
+author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid), Joel Thorstensson (@oed)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/19
 status: Draft
 type: Standard
@@ -33,6 +33,10 @@ The asset namespace is called "erc721" as in [ERC721](https://eips.ethereum.org/
 
 The Asset Reference format is the smart contract address of the erc721 token in the current chain_id.
 
+#### Token ID Definition
+
+The Token Id format is the NFT Identifier of the erc721 specification in the current chain_id.
+
 ## Rationale
 
 The smart contract address strives for uniqueness for any erc721 tokens in the chain_id scope.
@@ -48,6 +52,9 @@ This is a list of manually composed examples
 ```
 # CryptoKitties Collectible
 eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
+
+# CryptoKitties Collectible ID
+eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
 ```
 
 ## Copyright
