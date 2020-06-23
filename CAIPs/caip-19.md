@@ -59,7 +59,7 @@ The semantics as well as the more granular syntax are of the reference are deleg
 
 ## Rationale
 
-The goals of the general asset ID format is:
+The goals of the general asset type and asset ID format is:
 
 - Uniqueness within the entire asset ecosystem
 - To some degree human readable and helps for basic debugging
