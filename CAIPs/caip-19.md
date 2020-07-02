@@ -7,12 +7,12 @@ status: Draft
 type: Standard
 created: 2020-06-23
 updated: 2020-06-23
-requires: 10
+requires: 2
 ---
 
 ## Simple Summary
 
-CAIP-19 defines a way to identify a type of asset (e.g. Bitcoin, Ether, ATOM) and an asset ID (for non fungible token) in a human readably, developer friendly and transaction-friendly way.
+CAIP-19 defines a way to identify a type of asset (e.g. Bitcoin, Ether, ATOM) and an asset ID (for non fungible token) in a human-readable, developer and transaction friendly way.
 
 ## Abstract
 
@@ -24,7 +24,7 @@ Currently, each wallet or each exchange needs to create their own registry of ty
 
 ## Specification of Asset Type
 
-The Asset Type is a string designed to uniquely identify type of assets in a developer-friendly fashion.
+The Asset Type is a string designed to uniquely identify the types of assets in a developer-friendly fashion.
 
 ### Syntax
 

@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-06-23
 updated: 2020-06-23
-requires: 10
+requires: 19
 ---
 
 ## Simple Summary
@@ -27,7 +27,7 @@ See CAIP-19.
 
 ### ERC20 Asset Namespace
 
-The asset namespace is called "erc20" as in [ERC20](https://eips.ethereum.org/EIPS/eip-20). It reference erc20 tokens in the eip155 namespace (cf. CAIP3).
+The asset namespace is called "erc20" as in [ERC20](https://eips.ethereum.org/EIPS/eip-20). It reference erc20 tokens in the eip155 namespace (see CAIP3).
 
 #### Asset Reference Definition
 
