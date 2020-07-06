@@ -29,3 +29,7 @@ If your CAIP requires images, the image files should be included in a subdirecto
 * **CAIP-6** - [Blockchain Reference for the LIP9 Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-6.md)
 * **CAIP-10** - [Account ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md)
 * **CAIP-13** - [Blockchain Reference for the Polkadot Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-13.md)
+* **CAIP-19** - [Asset Type and Asset ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md)
+* **CAIP-20** - [Asset Reference for the SLIP44 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-20.md)
+* **CAIP-21** - [Asset Reference for the ERC20 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-21.md)
+* **CAIP-22** - [Asset Reference for the ERC721 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-22.md)
