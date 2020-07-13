@@ -48,6 +48,7 @@ The `asset_id` is a case-sensitive string in the form
 ```
 asset_id:    asset_type + "/" + token_id
 token_id:   [-a-zA-Z0-9]{1,47}
+```
 
 ### Semantics
 
