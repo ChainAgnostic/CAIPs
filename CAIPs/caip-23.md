@@ -1,5 +1,5 @@
 ---
-caip: <to be assigned>
+caip: 23
 title: Blockchain Reference for the LIP9 Namespace
 author: Sergey Ukustov (@ukstv)
 discussions-to: TBD
