@@ -33,3 +33,4 @@ If your CAIP requires images, the image files should be included in a subdirecto
 * **CAIP-20** - [Asset Reference for the SLIP44 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-20.md)
 * **CAIP-21** - [Asset Reference for the ERC20 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-21.md)
 * **CAIP-22** - [Asset Reference for the ERC721 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-22.md)
+* **CAIP-23** - [Blockchain Reference for Filecoin Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-23.md)

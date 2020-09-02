@@ -1,6 +1,6 @@
 ---
 caip: 23
-title: Blockchain Reference for the LIP9 Namespace
+title: Blockchain Reference for Filecoin Namespace
 author: Sergey Ukustov (@ukstv)
 discussions-to: TBD
 status: Draft
