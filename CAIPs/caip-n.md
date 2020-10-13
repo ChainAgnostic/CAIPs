@@ -55,6 +55,17 @@ The specification is very simple:
 
 Providers that want to support multiple networks should use unique prefixes to namespace the methods for those various networks. As those prefixes and underlying interfaces are defined, they should be publicized so that they can be more widely adopted by other providers and wallets.
 
+Additionally, the provider should allow detecting what interfaces are supported, and so I will suggest one feature detection method, which will return an array of the supported interface identifiers:
+
+```
+{
+  method: 'getSupportedProtocols',
+}
+
+// returns:
+['EtherMain', 'EtherRopsten', 'EtherXDai', 'Bitcoin']
+```
+
 ## Rationale
 
 Opening this CAIP as a discussion point, there are many variations that could be adopted to the proposal; Maybe this proposal itself should be behind a namespace, for example. Otherwise, I think the Motivation above covers the rationale adequatel.
