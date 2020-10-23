@@ -47,7 +47,7 @@ Two other approaches would be:
 - Allow the provider to return additional providers in response to methods.
 - Allow the provider to handle multiple simultaneous networks at once itself.
 
-Allowing a provider to return additional providers is a nice developer experience, but it breaks outisde the scope of JSON-RPC, and so I would argue it should be built at the convenience library layer, and instead the JSON-RPC interface itself should define how to handle multiple providers.
+Allowing a provider to return additional providers is a nice developer experience, but it breaks outside the scope of JSON-RPC, and so I would argue it should be built at the convenience library layer, and instead the JSON-RPC interface itself should define how to handle multiple providers.
 
 ## Specification
 
@@ -68,7 +68,7 @@ Additionally, the provider should allow detecting what interfaces are supported,
 
 ## Rationale
 
-Opening this CAIP as a discussion point, there are many variations that could be adopted to the proposal; Maybe this proposal itself should be behind a namespace, for example. Otherwise, I think the Motivation above covers the rationale adequatel.
+Opening this CAIP as a discussion point, there are many variations that could be adopted to the proposal; Maybe this proposal itself should be behind a namespace, for example. Otherwise, I think the Motivation above covers the rationale adequately.
 
 ## Backwards Compatibility
 
