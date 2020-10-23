@@ -1,5 +1,5 @@
 ---
-caip: <to be assigned>
+caip: 24
 title: Chain-Agnostic JSON-RPC Interface
 author: Dan Finlay <dan@metamask.io>
 discussions-to: TBA
