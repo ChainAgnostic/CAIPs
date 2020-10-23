@@ -2,7 +2,7 @@
 caip: 24
 title: Chain-Agnostic JSON-RPC Interface
 author: Dan Finlay <dan@metamask.io>
-discussions-to: TBA
+discussions-to: https://ethereum-magicians.org/t/caip-24-a-proposal-for-protocol-agnostic-provider/4865
 status: Draft
 type: Interface Standard
 created: 2020-10-13
