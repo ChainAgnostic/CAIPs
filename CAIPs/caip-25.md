@@ -1,6 +1,6 @@
 ---
 caip: 25
-title: Chain Agnostic Provider Authentication
+title: Chain Agnostic Provider Handshake
 author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Draft
@@ -12,7 +12,7 @@ requires: 2, 10
 
 ## Simple Summary
 
-CAIP-25 defines an authentication procedure for a chain agnostic provider to authenticate a session
+CAIP-25 defines an handshake procedure for a chain agnostic provider to interface with a wallet
 
 ## Abstract
 
@@ -24,7 +24,7 @@ The motivation comes from the lack of standardization across blockchains to expo
 
 ## Specification
 
-The provider is defined within a session once the authentication procedure is successfully approved by a wallet and is considered to be over once the wallet chooses to terminate the session by sending a corresponding event labelled as `disconnect`
+The provider is defined within a session once the handshake procedure is successfully approved by a wallet and is considered to be over once the wallet chooses to terminate the session by sending a corresponding event labelled as `disconnect`
 
 ### Request
 
@@ -34,7 +34,7 @@ The application would interface with a provider to initiate a session by calling
 {
     "id": 1,
     "jsonrpc": "2.0",
-    "method": "caip_authenticate",
+    "method": "caip_handshake",
     "params": {
         "chains": ["eip155:1"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
@@ -42,7 +42,7 @@ The application would interface with a provider to initiate a session by calling
 }
 ```
 
-The JSON-RPC method is labelled as `caip_authenticate` and expects two parameters:
+The JSON-RPC method is labelled as `caip_handshake` and expects two parameters:
 
 * chains - array of CAIP-2 complaint chainId's
 * methods - array of JSON-RPC methods expected to be used during the session
