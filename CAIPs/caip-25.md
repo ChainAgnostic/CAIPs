@@ -68,7 +68,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The response MUST be a success result when the user approved accounts matching the requested chains to be exposed or all of chains available in case of a wildcard and the requested methods to be used.
+The response MUST be a success result when the user approved accounts matching the requested chains to be exposed or matching all of chains available in case of a wildcard and the requested methods to be used.
 
 An example of a successful response should match the following format:
 
