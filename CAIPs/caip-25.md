@@ -44,8 +44,23 @@ The application would interface with a provider to initiate a session by calling
 
 The JSON-RPC method is labelled as `caip_handshake` and expects two parameters:
 
-* chains - array of CAIP-2 complaint chainId's
+* chains - array of CAIP-2 complaint chainId's or an array with a wildcard "*"
 * methods - array of JSON-RPC methods expected to be used during the session
+
+Example of the request with a wildcard:
+
+```
+{
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "caip_handshake",
+    "params": {
+        "chains": ["*"],
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
+    }
+}
+```
+
 
 ### Response
 
@@ -53,7 +68,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The response MUST be a success result when the user approved accounts matching the requested chains to be exposed and the requested methods to be used.
+The response MUST be a success result when the user approved accounts matching the requested chains to be exposed or all of chains available in case of a wildcard and the requested methods to be used.
 
 An example of a successful response should match the following format:
 
