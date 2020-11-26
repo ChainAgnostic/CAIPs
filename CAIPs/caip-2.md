@@ -54,7 +54,7 @@ The goals of the general chain ID format is:
 - Restricted in a way that it can be stored on chain
 - Character set basic enough to display in hardware wallets as part of a transaction content
 
-The following secondary goals can easily be archived:
+The following secondary goals can easily be achieved:
 
 - Can be used unescaped in URL paths
 - Can be used as filename in a case-sensitive UNIX file system (Linux/git).
