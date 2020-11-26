@@ -20,7 +20,7 @@ Often you need to reference the asset type or the asset ID. For example when you
 
 ## Motivation
 
-Currently, each wallet or each exchange needs to create their own registry of type of assets and their associated metadata for example like [Trust-Wallet](https://github.com/trustwallet/assets/tree/master/blockchains) or [CoinMarketCap](https://coinmarketcap.com/). Providing a unique type of Asset and an Asset ID for each asset for developers can reduce the risk of confusion betweens different assets. 
+Currently, each wallet or each exchange needs to create their own registry of type of assets and their associated metadata for example like [Trust-Wallet](https://github.com/trustwallet/assets/tree/master/blockchains) or [CoinMarketCap](https://coinmarketcap.com/). Providing a unique type of Asset and an Asset ID for each asset for developers can reduce the risk of confusion betweens different assets.
 
 ## Specification of Asset Type
 
@@ -32,7 +32,7 @@ The `asset_type` is a case-sensitive string in the form
 
 ```
 asset_type:    chain_id + "/" + asset_namespace + ":" + asset_reference
-chain_id:          Blockchain ID Specification cf. CAIP2 
+chain_id:          Blockchain ID Specification cf. CAIP2
 asset_namespace:   [-a-z0-9]{3,16}
 asset_reference:   [-a-zA-Z0-9]{1,47}
 ```
