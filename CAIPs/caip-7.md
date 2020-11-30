@@ -2,7 +2,7 @@
 caip: 7
 title: Blockchain Reference for the EOSIO Namespace
 author: Sebastian Montero (@sebastianmontero)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/5, https://github.com/ChainAgnostic/CAIPs/issues/6, https://github.com/ChainAgnostic/CAIPs/pull/1
+discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/32
 status: Draft
 type: Standard
 created: 2020-11-30
@@ -31,7 +31,7 @@ The namespace "EOSIO" refers to the EOSIO open-source blockchain platform.
 
 #### Reference Definition
 
-The definition is delegated to [Chain API Plugin Documentation of the EOSIO Developers Manual](https://developers.eos.io/manuals/eos/latest/nodeos/plugins/chain_api_plugin/api-reference/index?query=chain%20id&page=1#operation/get_info) and the pull request that implemented its generation [Chain ID generation implementation pull request](https://github.com/EOSIO/eos/pull/3425). 
+The definition is delegated to the [Chain API Plugin Documentation of the EOSIO Developers Manual](https://developers.eos.io/manuals/eos/latest/nodeos/plugins/chain_api_plugin/api-reference/index?query=chain%20id&page=1#operation/get_info) and the pull request that implemented its generation [Chain ID generation implementation pull request](https://github.com/EOSIO/eos/pull/3425). 
 The Chain ID is the SHA256 hash of the genesis state of the chain, and its represented as hexadecimal number of 64 digits
 
 ## Rationale
