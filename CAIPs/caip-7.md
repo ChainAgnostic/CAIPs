@@ -27,7 +27,7 @@ See CAIP-2.
 
 ### EOSIO Namespace
 
-The namespace "EOSIO" refers to the EOSIO open-source blockchain platform.
+The namespace "eosio" refers to the EOSIO open-source blockchain platform.
 
 #### Reference Definition
 
