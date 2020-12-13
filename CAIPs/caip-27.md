@@ -53,7 +53,7 @@ The JSON-RPC method is labelled as `caip_request` and expects two parameters:
 
 ### Response
 
-The wallet will respond to the requested with the targetted chain connection and it will return a response with a succes result or error message.
+The wallet will respond to the requested with the targeted chain connection and it will return a response with a success result or error message.
 
 
 #### Success
