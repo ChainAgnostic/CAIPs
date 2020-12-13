@@ -19,7 +19,7 @@ This proposal has the goal to define a standard method for decentralization appl
 
 ## Motivation
 
-The motivation comes from the ambiguity that comes from interfacing with multi-chain cryptocurrency wallets which may support the same methods for different chains and there is no indication of the chain that is being targetted by the decentralized application.
+The motivation comes from the ambiguity that comes from interfacing with multi-chain cryptocurrency wallets which may support the same methods for different chains and there is no indication of the chain that is being targeted by the decentralized application.
 
 ## Specification
 
