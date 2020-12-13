@@ -46,8 +46,8 @@ The application would interface with a provider to make request as follows:
 
 The JSON-RPC method is labelled as `caip_request` and expects two parameters:
 
-* chains -  CAIP-2 compatible chainId
-* request - an object containting the fields:
+* chainId -  CAIP-2 compatible chainId
+* request - an object containing the fields:
     * method - JSON-RPC method to request
     * params - JSON-RPC parameters to request
 
