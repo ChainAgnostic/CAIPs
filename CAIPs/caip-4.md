@@ -34,6 +34,29 @@ The namespace is called "bip122" as in [BIP122](https://github.com/bitcoin/bips/
 The definition is delegated to [BIP122's chain ID definition](https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id).
 The format is a 32 character prefix of the block hash from BIP122 (lower case hex).
 
+### Resolution Method
+
+To resolve a blockchain reference for the BIP122 namespace, make a JSON-RPC request to the blockchain node with method `getblockhash`, for example:
+
+```jsonc
+// Request
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "getblockhash",
+  "params": [0]
+}
+
+// Response
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "eth_chainId",
+  "result": "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
+}
+```
+The response will return as a value for the result a hash for the block with height 0 that should be sliced to its first 16 bytes (32 characters for base 16) to be CAIP-4 compatible.
+
 ## Rationale
 
 We delegate the identification of Bitcoin-like chains to BIP122, as this is the best Bitcoin chain identification standard known to the authors of this CAIP.
