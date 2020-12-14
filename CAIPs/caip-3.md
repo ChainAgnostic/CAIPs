@@ -52,7 +52,6 @@ To resolve a blockchain reference for the EIP155 namespace, make a JSON-RPC requ
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "eth_chainId",
   "result": "0x1"
 }
 ```
