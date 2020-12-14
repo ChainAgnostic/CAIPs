@@ -51,7 +51,6 @@ To resolve a blockchain reference for the BIP122 namespace, make a JSON-RPC requ
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "eth_chainId",
   "result": "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
 }
 ```
