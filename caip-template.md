@@ -1,5 +1,5 @@
 ---
-# Every document starts with a front matter in YAML enclosed by trible dashes.
+# Every document starts with a front matter in YAML enclosed by triple dashes.
 # See https://jekyllrb.com/docs/front-matter/ to learn more about this concept.
 caip: <to be assigned>
 title: <CAIP title>
