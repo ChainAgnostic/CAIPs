@@ -2,7 +2,7 @@
 caip: 26
 title: Blockchain Reference for the Tezos Namespace
 author: Stanly Johnson (@stanly-johnson)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/36, https://gitlab.com/tezos/tezos/-/issues/1029
+discussions-to: [https://github.com/ChainAgnostic/CAIPs/pull/36, https://gitlab.com/tezos/tezos/-/issues/1029]
 status: Draft
 type: Standard
 created: 2020-12-12
