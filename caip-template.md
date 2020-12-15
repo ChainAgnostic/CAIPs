@@ -1,4 +1,6 @@
 ---
+# Every document starts with a front matter in YAML enclosed by trible dashes.
+# See https://jekyllrb.com/docs/front-matter/ to learn more about this concept.
 caip: <to be assigned>
 title: <CAIP title>
 author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
