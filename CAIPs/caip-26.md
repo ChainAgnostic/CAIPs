@@ -41,7 +41,7 @@ tezosB58CheckEncode('Net',
 
 ## Rationale
 
-Blockchains in the "tezos" namespace are identified by their Chain ID as mentioned in the Reference Definition Section.
+Blockchains in the "tezos" namespace are identified by their chain ID as mentioned in the Reference Definition Section.
 
 ## Backwards Compatibility
 
