@@ -31,7 +31,7 @@ The namespace "tezos" refers to the Tezos open-source blockchain platform.
 
 #### Reference Definition
 
-The definition for this namespace will use the `genesis-block-hash` as an indentifier for different Tezos chains. The method for calculating the chain Id is as follows 
+The definition for this namespace will use the `genesis-block-hash` as an indentifier for different Tezos chains. The method for calculating the chain ID is as follows
 ```
 tezosB58CheckEncode('Net',
   firstFourBytes(
