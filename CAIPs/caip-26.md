@@ -62,8 +62,6 @@ tezos:NetXm8tYqnMWky1
 ## Links
 
 - [Implementation](https://gitlab.com/tezos/tezos/blob/e7612c5ffa46570cdcc612f7bcead771edc24283/src/lib_crypto/chain_id.ml)
-
-
 ## Copyright
 
 Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
