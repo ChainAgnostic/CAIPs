@@ -35,6 +35,29 @@ The definition is delegated to EIP155. The format is an unsigned integer in deci
 
 Note: due to length restrictions of the reference field (47 characters), the largest supported `CHAIN_ID` is 99999999999999999999999999999999999999999999999.
 
+### Resolution Method
+
+To resolve a blockchain reference for the EIP155 namespace, make a JSON-RPC request to the blockchain node with method `eth_chainId`, for example:
+
+```jsonc
+// Request
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "eth_chainId",
+  "params": []
+}
+
+// Response
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": "0x1"
+}
+```
+The response will return as a value for the result a base 16 encoded integer that should be converted to base 10 to format a CAIP-3 compatible blockchain reference.
+
+
 ## Rationale
 
 The chain ID defined in EIP155 is the most widely used chain identifier in the Ethereum ecosystem known to the authors. It strives for uniqueness and the fact that the standard is used for replay protection ensure that creators of a new Ethereum network have an incentive to use an ID that is not used elsewhere.
