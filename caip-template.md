@@ -6,6 +6,7 @@ discussions-to: <URL>
 status: Draft
 type: <Standard | Meta | Informational>
 created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
+updated: <date last updated, in ISO 8601 (yyyy-mm-dd) format>
 requires (*optional): <CAIP number(s)>
 replaces (*optional): <CAIP number(s)>
 ---

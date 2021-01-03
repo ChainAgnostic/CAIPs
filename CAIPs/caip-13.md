@@ -33,6 +33,28 @@ The namespace is called "polkadot" to refer to Polkadot-like chains.
 
 The definition for this namespace will use the `genesis-hash` as an indentifier for different Polkadot chains. The format is a 32 character prefix of the block hash (lower case hex).
 
+### Resolution Method
+
+To resolve a blockchain reference for the Polkadot namespace, make a JSON-RPC request to the blockchain node with method `chain_getBlockHash`, for example:
+
+```jsonc
+// Request
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "chain_getBlockHash",
+  "params": [0]
+}
+
+// Response
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
+}
+```
+The response will return as a value for the result a hash for the block with height 0 that should be sliced to its first 16 bytes (32 characters for base 16) to be CAIP-13 compatible.
+
 ## Rationale
 
 The rationale behind the use of block hash from the genesis block stems from its usage in the Polkadot architecture in network and consensus.

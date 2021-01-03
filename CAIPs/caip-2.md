@@ -6,13 +6,12 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/1, https://github.co
 status: Draft
 type: Standard
 created: 2019-12-05
-updated: 2020-01-17
+updated: 2020-12-14
 ---
 
 ## Simple Summary
 
-CAIP-2 defines a way to identify a blockchain (e.g. Ethereum Mainnet, Görli, Bitcoin, Cosmoshub)
-in a human readably, developer friendly and transaction-friendly way.
+CAIP-2 defines a way to identify a blockchain (e.g. Ethereum Mainnet, Görli, Bitcoin, Cosmos Hub) in a human readably, developer friendly and transaction-friendly way.
 
 ## Abstract
 
@@ -39,11 +38,9 @@ reference:   [-a-zA-Z0-9]{1,47}
 
 ### Semantics
 
-Each `namespace` covers a class of similar blockchains.
-Usually it describes an ecosystem or standard, such as e.g. `cosmos` or `eip155`.
-One namespace should include as many blockchains as possible.
-`reference` is a way to identify a blockchain within a given namespace.
-The semantics as well as the more granular syntax are of the reference are delegated to ecosystem specific documents, to be expected as separate CAIPs.
+Each `namespace` covers a class of similar blockchains. Usually it describes an ecosystem or standard, such as e.g. `cosmos` or `eip155`.
+One namespace should refer to one resolution method to resolve the chain's reference. A `reference` is a way to identify a blockchain within a given namespace.
+The semantics as well as the more granular syntax are of the reference are delegated to each namespace specification to be define in separate CAIPs describing resolution method.
 
 ## Rationale
 

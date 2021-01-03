@@ -50,6 +50,46 @@ Otherwise the `reference` is defined as `first_16_chars(hex(sha256(utf8(chain_id
 - `hex` being a lowercase hex encoder
 - `first_16_chars` being the first 16 characters
 
+### Resolution Method
+
+To resolve a blockchain reference for the Cosmos namespace, make a REST GET request to the blockchain node with endpoint `/node_info`, for example:
+
+```jsonc
+// Request
+curl -X GET "https://stargate.cosmos.network/node_info" -H "accept: application/json"
+
+// Response
+{
+  "application_version": {
+    "build_tags": "string",
+    "client_name": "string",
+    "commit": "string",
+    "go": "string",
+    "name": "string",
+    "server_name": "string",
+    "version": "string"
+  },
+  "node_info": {
+    "id": "string",
+    "moniker": "validator-name",
+    "protocol_version": {
+      "p2p": 7,
+      "block": 10,
+      "app": 0
+    },
+    "network": "gaia-2",
+    "channels": "string",
+    "listen_addr": "192.168.56.1:26656",
+    "version": "0.15.0",
+    "other": {
+      "tx_index": "on",
+      "rpc_address": "tcp://0.0.0.0:26657"
+    }
+  }
+}
+```
+The response will return a JSON object which will include node information and the blockchain reference can be retrieved from `node_info.network` to be CAIP-5 compatible.
+
 ## Rationale
 
 Blockchains in the "cosmos" namespace are [Cosmos SDK](https://github.com/cosmos/cosmos-sdk) blockchains (e.g. Cosmoshub, Binance, Cosmos Testnets) and [Weave](https://github.com/iov-one/weave) based blockchains (e.g. IOV).
