@@ -1,6 +1,6 @@
 ---
 caip: 25
-title: Chain Agnostic Provider Handshake
+title: JSON-RPC Provider Handshake
 author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Draft
