@@ -30,7 +30,7 @@ The namespace "near" refers to the wider [NEAR Protocol](https://near.org) ecosy
 
 #### Reference Definition
 
-The definition for this namespace will use the `chain_id` as an identifier for each of the three NEAR Protocol chains. The format is a string equal to either `mainnet`, `testnet` or `betanet`.  The chain identifier is appended by a [network id](https://chainid.network/).
+The definition for this namespace will use the `chain_id` as an identifier for each of the three NEAR Protocol chains. The format is a string equal to either `mainnet`, `testnet` or `betanet`.  The chain identifier is appended by a [chain id](https://chainid.network).
 
 ## Rationale
 
