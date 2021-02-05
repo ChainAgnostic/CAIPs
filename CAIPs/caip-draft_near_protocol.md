@@ -26,16 +26,19 @@ See CAIP-2.
 
 ### NEAR Protocol Namespace
 
-The namespace "near" refers to the wider NEAR Protocol ecosystem.
+The namespace "near" refers to the wider [NEAR Protocol](https://near.org) ecosystem.
 
 #### Reference Definition
 
-The definition for this namespace will use the `chain_id` as an identifier for each of the three NEAR Protocol chains. The format is a string equal to either `mainnet`, `testnet` 
-or `betanet`.  The chain identifier is appended by a [network id](https://https://chainid.network/).
+The definition for this namespace will use the `chain_id` as an identifier for each of the three NEAR Protocol chains. The format is a string equal to either `mainnet`, `testnet` or `betanet`.  The chain identifier is appended by a [network id](https://chainid.network/).
 
 ## Rationale
 
-NEAR Protocol chains are identified by their chain ID as mentioned in the Reference Definition Section.
+Blockchains in the "near" namespace are [NEAR Core](https://github.com/near/nearcore) blockchains. NEAR Protocol is made up sharded nearcore blockchains, where shards can have features like Ethereum EVM.
+
+The chain ID defined in EIP155 is the most widely used chain identifier in the Ethereum ecosystem known to the authors. It strives for uniqueness and the fact that the standard is used for replay protection ensure that creators of a new Ethereum network have an incentive to use an ID that is not used elsewhere.
+
+Since there is EVM compatible shards, EIP155 is specified in addition to the root shard definitions. As more shards enable different capabilities, additional CAIPs will need specification.
 
 ## Resolution Method
 
@@ -72,20 +75,27 @@ Not applicable
 This is a list of manually composed examples
 
 ```
-# NEAR MainNet
+# NEAR Protocol Root Shards
+near:mainnet
+near:testnet
+near:betanet
+near:guildnet
 
-near:mainnet:1313161554
+# NEAR EVM Shard: Mainnet
+eip155:1313161554
 
-# NEAR TestNet
-near:testnet:1313161555
+# NEAR EVM Shard: Testnet
+eip155:1313161555
 
-# NEAR BetaNet
-near:betanet:1313161556
+# NEAR EVM Shard: Betanet
+eip155:1313161556
 ```
 
 ## Links
 
-Not applicable
+- [Nomicon Accounts](https://nomicon.io/DataStructures/Account.html)
+- [EIP155](https://eips.ethereum.org/EIPS/eip-155)
+- [chainid.network](https://chainid.network/)
 
 ## Copyright
 
