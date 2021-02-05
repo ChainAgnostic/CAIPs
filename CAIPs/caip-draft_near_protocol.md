@@ -63,6 +63,7 @@ RPC endpoints are: `https://rpc.mainnet.near.org`, `https://rpc.testnet.near.org
     "genesis_height": 10885359,
     "num_block_producer_seats": 100,
     ...
+  }
 }
 ```
 
