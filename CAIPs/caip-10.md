@@ -67,6 +67,15 @@ cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0@cosmos:cosmoshub-3
 
 # Dummy max length (63+1+16+1+47 = 128 chars/bytes)
 bd57219062044ed77c7e5b865339a6d727309c548763141f11e26e9242bbd34@max-namespace-16:xip3343-8c3444cf8970a9e41a706fab93e7a6c4-xxxyyy
+
+# NEAR MainNet
+somearbitraryaccountname@near:mainnet:1313161554
+
+# NEAR TestNet
+somearbitraryaccountname@near:testnet:1313161555
+
+# NEAR BetaNet
+somearbitraryaccountname@near:betanet:1313161556
 ```
 
 ## Links
