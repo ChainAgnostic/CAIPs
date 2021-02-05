@@ -12,7 +12,7 @@ requires: 2
 
 ## Simple Summary
 
-Provides details of the NEAR Protocol namespace and reference for CAIP-2.
+Defines the NEAR Protocol namespace and reference for CAIP-2.
 
 ## Abstract
 
