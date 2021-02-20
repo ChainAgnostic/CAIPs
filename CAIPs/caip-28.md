@@ -11,7 +11,7 @@ requires: 2
 
 ## Simple Summary
 
-This document is about the details of the Stellar network namespace and reference for CAIP-2.
+This CAIP defines the Stellar network namespace and reference for CAIP-2.
 
 ## Abstract
 In CAIP-2 a general blockchain identification scheme is defined. This is the
