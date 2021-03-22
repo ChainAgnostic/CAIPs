@@ -2,7 +2,7 @@
 caip: <to be assigned>
 title: Asset Reference for the ERC1155 Asset Namespace
 author: Matt Condon (@shrugs)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/44
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/46
 status: Draft
 type: Standard
 created: 2021-03-22
