@@ -1,5 +1,5 @@
 ---
-caip: <to be assigned>
+caip: 29
 title: Asset Reference for the ERC1155 Asset Namespace
 author: Matt Condon (@shrugs)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/46
