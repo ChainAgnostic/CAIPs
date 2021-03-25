@@ -81,7 +81,7 @@ An example of an error response should match the following format:
     "id": 1,
     "jsonrpc": "2.0",
     "error": {
-        "code": -32000,
+        "code": 7000,
         "message": "User disapproved requested chains",
     }
 }
@@ -90,16 +90,16 @@ An example of an error response should match the following format:
 The valid error messages codes are the following:
 
 * When user disapproves exposing accounts to requested chains
-    * code = -32000
+    * code = 7000
     * message = "User disapproved requested chains"
 * When user disapproves accepting calls with the request methods
-    * code = -32001
+    * code = 7001
     * message = "User disapproved requested methods"
 * When wallet evaluates requested chains to not be supported
-    * code = -32002
+    * code = 8000
     * message = "Requested chains are not supported"
 * When wallet evaluates requested methods to not be supported
-    * code = -32003
+    * code = 8001
     * message = "Requested methods are not supported"
 
 ## Links
