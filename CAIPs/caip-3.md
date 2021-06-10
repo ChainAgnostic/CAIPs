@@ -33,7 +33,7 @@ The namespace is called "eip155" as in [EIP155](https://eips.ethereum.org/EIPS/e
 
 The definition is delegated to EIP155. The format is an unsigned integer in decimal representation and corresponds to `CHAIN_ID` of EIP155.
 
-Note: due to length restrictions of the reference field (47 characters), the largest supported `CHAIN_ID` is 99999999999999999999999999999999999999999999999.
+Note: due to length restrictions of the reference field (32 characters), the largest supported `CHAIN_ID` is 99999999999999999999999999999999.
 
 ### Resolution Method
 
@@ -55,8 +55,8 @@ To resolve a blockchain reference for the EIP155 namespace, make a JSON-RPC requ
   "result": "0x1"
 }
 ```
-The response will return as a value for the result a base 16 encoded integer that should be converted to base 10 to format a CAIP-3 compatible blockchain reference.
 
+The response will return as a value for the result a base 16 encoded integer that should be converted to base 10 to format a CAIP-3 compatible blockchain reference.
 
 ## Rationale
 
