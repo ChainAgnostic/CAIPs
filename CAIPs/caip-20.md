@@ -33,7 +33,7 @@ The asset namespace is called "slip44" as in [SLIP44](https://github.com/satoshi
 
 The definition is delegated to SLIP44. The format is an unsigned integer in decimal representation and corresponds to `index` of SLIP44.
 
-Note: due to length restrictions of the reference field (47 characters), the largest supported `index` is 99999999999999999999999999999999999999999999999.
+Note: due to length restrictions of the reference field (64 characters), the largest supported `index` is 9999999999999999999999999999999999999999999999999999999999999999.
 
 ## Rationale
 
