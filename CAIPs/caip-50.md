@@ -1,78 +1,206 @@
 ---
 caip: 50
-title: Account ID Specification
-author: Pedro Gomes (@pedrouid)
+title: Multi-Chain Account ID Specification
+author: Joel Torstensson (@oedth), Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/50
 status: Draft
 type: Standard
-created: 2020-03-13
-updated: 2020-03-18
+created: 2020-06-10
+updated: 2020-06-11
 requires: 2
 ---
 
 ## Simple Summary
 
-CAIP-50 defines a way to identify an account in any blockchain specified by CAIP-2 blockchain id.
+CAIP-50 defines a way to identify blockchain account addresses uniquely across multiple blockchains
 
 ## Abstract
 
-This proposal aims to facilitate specifying accounts for any blockchain extending CAIP-2 blockchain id specification. This is useful for both decentralized applications and wallets to communicate user accounts for multiple chains using string identifiers specific to each chain. Currently wallets are usually designed for each chain and multi-chain wallets use proprietray data structures to differentiate accounts. This proposal aims to standardize these identifiers for accounts to allow interoperability.
+This proposal aims to facilitate using unique address for accounts on multiple blockchain systems using a multi-codec format that encodes variable integer for chain identifiers complaint with CAIP-2 blockchain id specification. This is useful for both decentralized applications and wallets to communicate user accounts for multiple chains using unique identifiers which are machine veriable and can be decoded to identify the original address and chainId encoded. This proposal aims to standardize these identifiers for accounts to allow inteoperability for multi-chain applications.
 
 ## Motivation
 
-The motivation for proposal stem from designing a chain-agnostic protocol for communication between dapps and wallets that was independent of any blockchain but provide the flexibility to be backwards compatible with existing applications.
+The motivation for this proposal came from different feedback received from the adoption of CAIP-10 and tackles these to provide a significant improvement in more efficient communication of these identifiers using smaller byte footprint while preserving uniqueness and interoperability.
 
 ## Specification
 
-The account id specification will be prefixed with the CAIP-2 blockchain ID and delimited with a colon sign (`:`) same as the blockchain ID.
+In this specifiation we define the Multi-Chain Account Id or MACI for short which is a compactly encoded account identifier that is contextual to a blockchain using a CAIP-2 chainId.
 
 ### Syntax
 
-The `account_id` is a case-sensitive string in the form
-
-```
-account_id:        chain_id + ":" + account_address
-chain_id:          [:-a-zA-Z0-9]{5,41}
-account_address:   [a-zA-Z0-9]{1,64}
+```js
+mcai ::= <multibase_prefix><mcai_code><chain_namespace><id_size><chain_id><address_size><address><parity_byte>
 ```
 
 ### Semantics
 
-The `account_address` is a case sensitive string which its format is specific to the blockchain that is referred to by the `chain_id`
-The `chain_id` is specified by the [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md) which describes the blockchain id.
+- `multibase_prefix` - the prefix which defines which multibase is used to encode the bytes, `z` for `base58btc`
+- `mcai_code` - a number registered on the [multicodec table](https://github.com/multiformats/multicodec/blob/master/table.csv), makes the multi-chain account id upgradable, encoded as varint
+- `chain_namespace` - see table below, encoded as varint
+- `id_size` - the length in bytes of the `chain_id`, encoded as varint
+- `chain_id` - the chain id, encoding is defined by the chain namespace
+- `address_size` - the length of the address, encoded as varint
+- `address` - the address itself, encoding is defined by the chain namespace
+- `parity_byte` - a checksum byte, see section below
 
-## Rationale
+### MCAI multicodec
 
-The goals of the general account ID format is:
+Should be a number registered on the [multicodec table](https://github.com/multiformats/multicodec/blob/master/table.csv). In the examples below we use `0xCA` but this is subject to change.
 
-- Uniqueness between chains regardless if they are mainnet or testnet
-- Hierarichal order of identifiers by prefixing chain_id
-- Restricted to constrained set of characters and length for parsing
+### Chain namespaces
 
-## Test Cases
+Each blockchain namespace needs to be properly defined with a registry table:
 
-This is a list of manually composed examples
+#### Registry Table
+
+| Namespace | code |
+| --------- | ---- |
+| bip122    | 0x00 |
+| eip155    | 0x01 |
+| cosmos    | 0x02 |
+| polkadot  | 0x03 |
+| filecoin  | 0x04 |
+| lip9      | 0x05 |
+| eosio     | 0x06 |
+| tezos     | 0x07 |
+
+#### BIP122 Namespace (CAIP-4)
+
+**Chain ID:** Convert from hex to bytes
+
+**Address:** Convert from base58btc to bytes
+
+**Example:**
+
+In the exammple below we encode `128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6` on bitcoin mainnet.
+This means that we use `chain_id = 000000000019d6689c085ae165831e93`
 
 ```
-# Ethereum mainnet
-eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb
+zEbYEtEFFMZvVzJK3AWU5R5egEj1ep1yMVEWiWJ2FARDz
+```
 
+#### EIP155 Namespace (CAIP-3)
+
+**Chain ID:** Convert from integer to bytes
+
+**Address:** Convert from hex to bytes
+
+**Example:**
+
+In the exammple below we encode `0xde30da39c46104798bb5aa3fe8b9e0e1f348163f` on ethereum mainnet.
+This means that we use `chain_id = 1`
+
+```
+zUJWDxUnc8pZCfUtVKcAsRgxijaVqHyuMgeKKF
+```
+
+#### Cosmos Namespace (CAIP-5)
+
+- TODO
+
+#### Polkadot Namespace (CAIP-13)
+
+- TODO
+
+#### Filecoin Namespace (CAIP-23)
+
+- TODO
+
+#### LIP9 Namespace (CAIP-6)
+
+- TODO
+
+#### EOSIO Namespace (CAIP-7)
+
+- TODO
+
+#### Tezos Namespace (CAIP-26)
+
+- TODO
+
+### Parity byte
+
+Using the algorithm described on [Wikipedia: checksums](https://en.wikipedia.org/wiki/Checksum). XOR each byte word in the mcai, the resulting byte is the parity byte.
+
+### Making MCAI human readable
+
+We could easily build tools and UIs that decompose the encoded mcai similar to this: https://cid.ipfs.io/#bagcqcera6wh5laey5njuo2weun46wv4cn2jlbn6qio6mt3bwian4kbp76tdq
+
+### Implementation
+
+Below is a PoC implementation in javascript
+
+```js
+const varint = require("varint");
+const u8a = require("uint8arrays");
+
+const mcai_code = 0xca;
+
+const namespaces = {
+  bip122: 0x00,
+  eip155: 0x01,
+  cosmos: 0x02,
+  polkadot: 0x03,
+  filecoin: 0x04,
+};
+
+function checksum(bytes) {
+  let result = u8a.xor([bytes[0]], [bytes[1]]);
+  for (let i = 2; i < bytes.length; i++) {
+    result = u8a.xor(result, [bytes[i]]);
+  }
+  return result;
+}
+
+function encodeMCAI(namespace, chain_id, address) {
+  const bytes = u8a.concat([
+    varint.encode(mcai_code),
+    Uint8Array.from([namespace]),
+    varint.encode(1), // chain_id below is just one byte
+    Uint8Array.from([chain_id]),
+    varint.encode(address.length),
+    address,
+  ]);
+  const checksummedBytes = u8a.concat([bytes, checksum(bytes)]);
+  return "z" + u8a.toString(checksummedBytes, "base58btc");
+}
+
+function encodeBtcMainnet() {
+  const chain_id = "000000000019d6689c085ae165831e93";
+  const chain_id_bytes = u8a.fromString(chain_id, "base16");
+  const address = "128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6";
+  const address_bytes = u8a.fromString(address, "base58btc");
+  return encodeMCAI(namespaces["bip122"], chain_id_bytes, address_bytes);
+}
+
+function encodeEthMainnet() {
+  const chain_id = 0x01;
+  const address = "0xde30da39c46104798bb5aa3fe8b9e0e1f348163f";
+  const address_bytes = u8a.fromString(address.slice(2), "base16");
+  return encodeMCAI(namespaces["eip155"], chain_id, address_bytes);
+}
+
+console.log("btc mainnet:", encodeBtcMainnet());
+console.log("eth mainnet:", encodeEthMainnet());
+```
+
+### Test Cases
+
+This is a list of manually composed examples comparing CAIP-10 and CAIP-50 identifiers
+
+```
 # Bitcoin mainnet
-bip122:000000000019d6689c085ae165831e93:128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6
+CAIP10 = 128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6@bip122:000000000019d6689c085ae165831e93
+CAIP50 = zEbYEtEFFMZvVzJK3AWU5R5egEj1ep1yMVEWiWJ2FARDz
 
-# Cosmos Hub
-cosmos:cosmoshub-3:cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0
-
-# Kusama network
-polkadot:b0a8d493285c2df73290dfb7e61f870f:5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy
-
-# Dummy max length (64+1+8+1+32 = 106 chars/bytes)
-chainstd:8c3444cf8970a9e41a706fab93e7a6c:6d9b0b4b9994e8a6afbd3dc3ed983cd51c755afb27cd1dc7825ef59c134a39f7
+# Ethereum mainnet
+CAIP10 = 0xde30da39c46104798bb5aa3fe8b9e0e1f348163f@eip155:1
+CAIP50 = zUJWDxUnc8pZCfUtVKcAsRgxijaVqHyuMgeKKF
 ```
 
 ## Links
 
-n/a
+- Multicodec - https://github.com/multiformats/multicodec/
 
 ## Copyright
 
