@@ -76,7 +76,7 @@ In the exammple below we encode `128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6` on bitcoin 
 This means that we use `chain_id = 000000000019d6689c085ae165831e93`
 
 ```
-zEbYEtEFFMZvVzJK3AWU5R5egEj1ep1yMVEWiWJ2FARDz
+z2gNan4mLV1vvkzpmEi2kzHR8wUyFd5SpsuLcFDGbbyXTxbR8HL5hmqf7DhCEx5Lwt
 ```
 
 #### EIP155 Namespace (CAIP-3)
@@ -131,57 +131,59 @@ We could easily build tools and UIs that decompose the encoded mcai similar to t
 Below is a PoC implementation in javascript
 
 ```js
-const varint = require("varint");
-const u8a = require("uint8arrays");
+const varint = require('varint')
+const u8a = require('uint8arrays')
 
-const mcai_code = 0xca;
+const mcai_code = 0xca
 
 const namespaces = {
   bip122: 0x00,
   eip155: 0x01,
   cosmos: 0x02,
   polkadot: 0x03,
-  filecoin: 0x04,
-};
+  filecoin: 0x04
+}
 
 function checksum(bytes) {
-  let result = u8a.xor([bytes[0]], [bytes[1]]);
+  let result = u8a.xor([bytes[0]], [bytes[1]])
   for (let i = 2; i < bytes.length; i++) {
-    result = u8a.xor(result, [bytes[i]]);
+    result = u8a.xor(result, [bytes[i]])
   }
-  return result;
+  return result
 }
 
 function encodeMCAI(namespace, chain_id, address) {
   const bytes = u8a.concat([
     varint.encode(mcai_code),
-    Uint8Array.from([namespace]),
-    varint.encode(1), // chain_id below is just one byte
-    Uint8Array.from([chain_id]),
+    varint.encode(namespace),
+    varint.encode(chain_id.length),
+    chain_id,
     varint.encode(address.length),
-    address,
-  ]);
-  const checksummedBytes = u8a.concat([bytes, checksum(bytes)]);
-  return "z" + u8a.toString(checksummedBytes, "base58btc");
+    address
+  ])
+  const checksummedBytes = u8a.concat([bytes, checksum(bytes)])
+  return 'z' + u8a.toString(checksummedBytes, 'base58btc')
 }
 
 function encodeBtcMainnet() {
-  const chain_id = "000000000019d6689c085ae165831e93";
-  const chain_id_bytes = u8a.fromString(chain_id, "base16");
-  const address = "128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6";
-  const address_bytes = u8a.fromString(address, "base58btc");
-  return encodeMCAI(namespaces["bip122"], chain_id_bytes, address_bytes);
+  const chain_id = '000000000019d6689c085ae165831e93'
+  const chain_id_bytes = u8a.fromString(chain_id, 'base16')
+  const address = '128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6'
+  const address_bytes = u8a.fromString(address, 'base58btc')
+  return encodeMCAI(namespaces['bip122'], chain_id_bytes, address_bytes)
 }
 
 function encodeEthMainnet() {
-  const chain_id = 0x01;
-  const address = "0xde30da39c46104798bb5aa3fe8b9e0e1f348163f";
-  const address_bytes = u8a.fromString(address.slice(2), "base16");
-  return encodeMCAI(namespaces["eip155"], chain_id, address_bytes);
+  const chain_id = 0x01
+  const chain_id_bytes = Uint8Array.from([chain_id])
+  const address = '0xde30da39c46104798bb5aa3fe8b9e0e1f348163f'
+  const address_bytes = u8a.fromString(address.slice(2), 'base16')
+  return encodeMCAI(namespaces['eip155'], chain_id_bytes, address_bytes)
 }
 
-console.log("btc mainnet:", encodeBtcMainnet());
-console.log("eth mainnet:", encodeEthMainnet());
+
+console.log('btc mainnet:', encodeBtcMainnet())
+console.log('eth mainnet:', encodeEthMainnet())
 ```
 
 ### Test Cases
@@ -191,7 +193,7 @@ This is a list of manually composed examples comparing CAIP-10 and CAIP-50 ident
 ```
 # Bitcoin mainnet
 CAIP10 = 128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6@bip122:000000000019d6689c085ae165831e93
-CAIP50 = zEbYEtEFFMZvVzJK3AWU5R5egEj1ep1yMVEWiWJ2FARDz
+CAIP50 = z2gNan4mLV1vvkzpmEi2kzHR8wUyFd5SpsuLcFDGbbyXTxbR8HL5hmqf7DhCEx5Lwt
 
 # Ethereum mainnet
 CAIP10 = 0xde30da39c46104798bb5aa3fe8b9e0e1f348163f@eip155:1
