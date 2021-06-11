@@ -1,7 +1,7 @@
 ---
 caip: 50
 title: Multi-Chain Account ID Specification
-author: Joel Torstensson (@oedth), Pedro Gomes (@pedrouid)
+author: Joel Torstensson (@oed), Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/50
 status: Draft
 type: Standard
