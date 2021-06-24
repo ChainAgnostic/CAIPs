@@ -2,10 +2,10 @@
 caip: X
 title: Blockchain Reference for the Radicle Namespace
 author: Sebastian Martinez (@sebastinez)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/3, https://github.com/ChainAgnostic/CAIPs/pull/1
+discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/52, https://github.com/ChainAgnostic/CAIPs/pull/53
 status: Draft
 type: Standard
-created: 2019-06-24
+created: 2020-06-24
 updated: 2020-06-24
 requires: X
 ---
