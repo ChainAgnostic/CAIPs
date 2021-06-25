@@ -32,8 +32,8 @@ The `account_id` is a case-sensitive string in the form
 
 ```
 account_id:        account_address + "@" + chain_id
-account_address:   [a-zA-Z0-9]{1,63}
-chain_id:          [:-a-zA-Z0-9]{5,64}
+account_address:   [a-zA-Z0-9]{1,64}
+chain_id:          [:-a-zA-Z0-9]{5,41}
 ```
 
 ### Semantics
@@ -44,9 +44,10 @@ The `chain_id` is specified by the [CAIP-2](https://github.com/ChainAgnostic/CAI
 ## Rationale
 
 The goals of the general account ID format is:
- - Uniqueness between chains regardless if they are mainnet or testnet
- - Readibility using `@` to easily identify the account address
- - Restricted to constrained set of characters and length for parsing
+
+- Uniqueness between chains regardless if they are mainnet or testnet
+- Readibility using `@` to easily identify the account address
+- Restricted to constrained set of characters and length for parsing
 
 ## Test Cases
 
@@ -65,8 +66,8 @@ cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0@cosmos:cosmoshub-3
 # Kusama network
 5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy@polkadot:b0a8d493285c2df73290dfb7e61f870f
 
-# Dummy max length (63+1+16+1+47 = 128 chars/bytes)
-bd57219062044ed77c7e5b865339a6d727309c548763141f11e26e9242bbd34@max-namespace-16:xip3343-8c3444cf8970a9e41a706fab93e7a6c4-xxxyyy
+# Dummy max length (64+1+8+1+32 = 106 chars/bytes)
+6d9b0b4b9994e8a6afbd3dc3ed983cd51c755afb27cd1dc7825ef59c134a39f7@chainstd:8c3444cf8970a9e41a706fab93e7a6c4
 ```
 
 ## Links

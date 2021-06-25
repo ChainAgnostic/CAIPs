@@ -37,7 +37,7 @@ An empty `chain_id` must be treated as an error.
 
 ##### Direct
 
-If the `chain_id` matches the case-sensitive pattern `[-a-zA-Z0-9]{1,47}` and does not start with "hashed-",
+If the `chain_id` matches the case-sensitive pattern `[-a-zA-Z0-9]{1,32}` and does not start with "hashed-",
 it is used the `reference` directly.
 
 ##### Hashed
@@ -97,7 +97,7 @@ Blockchains in the "cosmos" namespace are [Cosmos SDK](https://github.com/cosmos
 While there is no enforced restriction on `chain_id`, the author of this document did not find a chain ID in the wild that does not conform to the restrictions of the direct reference definition.
 There is [a discussion about documenting a best practice chain ID pattern](https://github.com/cosmos/cosmos-sdk/issues/5363).
 
-Cosmos blockchains with a chain ID not matching `[-a-zA-Z0-9]{1,47}` or prefixed with "hashed-" need to be hashed in order to comply with CAIP-2.
+Cosmos blockchains with a chain ID not matching `[-a-zA-Z0-9]{1,32}` or prefixed with "hashed-" need to be hashed in order to comply with CAIP-2.
 No real world example is known to the author yet.
 
 During the development of this chain ID definition, we came across changing chain IDs for Cosmos Hub (`cosmoshub-1`, `cosmoshub-2`, `cosmoshub-3`). A new chain ID is assigned every time Cosmos Hub dumps the current blockchain state and creates a new genesis from the old state. Technically this leads to different blockchains and can (and maybe should) treated as such. For this specification, we treat them as different blockchains. It is the responsibility of a higher level application to interpret some chains as sequels of each other or create equality sets.
