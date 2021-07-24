@@ -2,7 +2,7 @@
 caip: <to be assigned>
 title: Blockchain reference for the Algorand namespace
 author: Dominic Hawton (@dominichawton)
-discussions-to: []
+discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/54
 status: Draft
 type: Standard
 created: 2021-07-24
@@ -74,8 +74,10 @@ This is a list of manually-composed examples:
 ```
 # Algorand MainNet
 algorand:wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=
+
 # Algorand TestNet
 algorand:SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=
+
 # Algorand BetaNet
 algorand:mFgazF+2uRS1tMiL9dsj01hJGySEmPN28B/TjjvpVW0=
 ```
