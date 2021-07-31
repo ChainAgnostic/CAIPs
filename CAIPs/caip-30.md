@@ -79,7 +79,7 @@ This is a list of manually composed examples
 
 ```
 # Solana Mainnet
-solana:db2ede332dd35306fd5a0b879194549b
+solana:b96f647afe2e62fdb778e6ef95ade7e7
 
 # Solana Devnet
 solana:55d16975dbaf9e1a68e017c171209415
