@@ -28,7 +28,7 @@ See CAIP-19.
 
 ### ERC1155 Asset Namespace
 
-The asset namespace is called "erc1155" as in [ERC1155](https://eips.ethereum.org/EIPS/eip-1155). It references ERC1155 assets in the eip155 namespace (cf. CAIP-3).
+The asset namespace is called "erc1155" as in [ERC1155](https://eips.ethereum.org/EIPS/eip-1155). It references ERC1155 assets in the EVM namespace (cf. CAIP-3).
 
 #### Asset Reference Definition
 
@@ -52,10 +52,10 @@ This is a list of manually composed examples:
 
 ```
 # the themanymatts stickers contract
-eip155:1/erc1155:0x28959Cf125ccB051E70711D0924a62FB28EAF186
+evm:1/erc1155:0x28959Cf125ccB051E70711D0924a62FB28EAF186
 
 # a specific sticker asset from themanymatts contract
-eip155:1/erc1155:0x28959Cf125ccB051E70711D0924a62FB28EAF186/0
+evm:1/erc1155:0x28959Cf125ccB051E70711D0924a62FB28EAF186/0
 ```
 
 ## Copyright

@@ -49,7 +49,7 @@ This is a list of manually composed examples
 
 ```
 # Ether Token
-eip155:1/slip44:60
+evm:1/slip44:60
 
 # Bitcoin Token
 bip122:000000000019d6689c085ae165831e93/slip44:0

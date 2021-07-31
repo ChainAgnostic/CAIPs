@@ -27,7 +27,7 @@ See CAIP-19.
 
 ### ERC721 Asset Namespace
 
-The asset namespace is called "erc721" as in [ERC721](https://eips.ethereum.org/EIPS/eip-721). It reference erc721 tokens (NFT) in the eip155 namespace (cf. CAIP3).
+The asset namespace is called "erc721" as in [ERC721](https://eips.ethereum.org/EIPS/eip-721). It reference erc721 tokens (NFT) in the EVM namespace (cf. CAIP3).
 
 #### Asset Reference Definition
 
@@ -51,10 +51,10 @@ This is a list of manually composed examples
 
 ```
 # CryptoKitties Collectible
-eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
+evm:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
 
 # CryptoKitties Collectible ID
-eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
+evm:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
 ```
 
 ## Copyright

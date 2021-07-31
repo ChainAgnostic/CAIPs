@@ -36,7 +36,7 @@ The application would interface with a provider to initiate a session by calling
     "jsonrpc": "2.0",
     "method": "caip_handshake",
     "params": {
-        "chains": ["eip155:1"],
+        "chains": ["evm:1"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
     }
 }
@@ -44,8 +44,8 @@ The application would interface with a provider to initiate a session by calling
 
 The JSON-RPC method is labelled as `caip_handshake` and expects two parameters:
 
-* chains - array of CAIP-2 complaint chainId's
-* methods - array of JSON-RPC methods expected to be used during the session
+- chains - array of CAIP-2 complaint chainId's
+- methods - array of JSON-RPC methods expected to be used during the session
 
 ### Response
 
@@ -59,11 +59,11 @@ An example of a successful response should match the following format:
 
 ```jsonc
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "result": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1"],
-    }
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@evm:1"]
+  }
 }
 ```
 
@@ -71,36 +71,35 @@ The accounts returned as a result should match the requested chainId's and shoul
 
 #### Error
 
-
 The response MUST NOT be a success result when the user disapproves the accounts matching the requested chains to be exposed or the requested methods are not approved or the requested chains are not supported by the wallet or the requested methods are not supported
 
 An example of an error response should match the following format:
 
 ```jsonc
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "error": {
-        "code": 5000,
-        "message": "User disapproved requested chains",
-    }
+  "id": 1,
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 5000,
+    "message": "User disapproved requested chains"
+  }
 }
 ```
 
 The valid error messages codes are the following:
 
-* When user disapproves exposing accounts to requested chains
-    * code = 5000
-    * message = "User disapproved requested chains"
-* When user disapproves accepting calls with the request methods
-    * code = 5001
-    * message = "User disapproved requested methods"
-* When wallet evaluates requested chains to not be supported
-    * code = 5100
-    * message = "Requested chains are not supported"
-* When wallet evaluates requested methods to not be supported
-    * code = 5101
-    * message = "Requested methods are not supported"
+- When user disapproves exposing accounts to requested chains
+  - code = 5000
+  - message = "User disapproved requested chains"
+- When user disapproves accepting calls with the request methods
+  - code = 5001
+  - message = "User disapproved requested methods"
+- When wallet evaluates requested chains to not be supported
+  - code = 5100
+  - message = "Requested chains are not supported"
+- When wallet evaluates requested methods to not be supported
+  - code = 5101
+  - message = "Requested methods are not supported"
 
 ## Links
 

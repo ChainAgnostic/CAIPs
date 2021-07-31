@@ -55,7 +55,7 @@ This is a list of manually composed examples
 
 ```
 # Ethereum mainnet
-0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1
+0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@evm:1
 
 # Bitcoin mainnet
 128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6@bip122:000000000019d6689c085ae165831e93

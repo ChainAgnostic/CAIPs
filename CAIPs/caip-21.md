@@ -27,7 +27,7 @@ See CAIP-19.
 
 ### ERC20 Asset Namespace
 
-The asset namespace is called "erc20" as in [ERC20](https://eips.ethereum.org/EIPS/eip-20). It reference erc20 tokens in the eip155 namespace (see CAIP3).
+The asset namespace is called "erc20" as in [ERC20](https://eips.ethereum.org/EIPS/eip-20). It reference erc20 tokens in the EVM namespace (see CAIP3).
 
 #### Asset Reference Definition
 
@@ -47,10 +47,10 @@ This is a list of manually composed examples
 
 ```
 # DAI Token
-eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
+evm:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
 
 # REQ Token
-eip155:1/erc20:0x8f8221afbb33998d8584a2b05749ba73c37a938a
+evm:1/erc20:0x8f8221afbb33998d8584a2b05749ba73c37a938a
 ```
 
 ## Copyright

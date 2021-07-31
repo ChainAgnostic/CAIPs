@@ -83,7 +83,7 @@ This is a list of manually composed examples
 
 ```
 # Ether Token
-eip155:1/slip44:60
+evm:1/slip44:60
 
 # Bitcoin Token
 bip122:000000000019d6689c085ae165831e93/slip44:0
@@ -104,13 +104,13 @@ cosmos:iov-mainnet/slip44:234
 lip9:9ee11e9df416b18b/slip44:134
 
 # DAI Token
-eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
+evm:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
 
 # CryptoKitties Collectible
-eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
+evm:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
 
 # CryptoKitties Collectible ID
-eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
+evm:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
 ```
 
 ## Copyright
