@@ -1,6 +1,6 @@
 ---
 caip: 3
-title: Blockchain Reference for the EIP155 Namespace
+title: Blockchain Reference for the EVM Namespace
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/3, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
@@ -12,12 +12,12 @@ requires: 2
 
 ## Simple Summary
 
-This document is about the details of the EIP155 namespace and reference for CAIP-2.
+This document is about the details of the EVM namespace and reference for CAIP-2.
 
 ## Abstract
 
 In CAIP-2 a general blockchain identification scheme is defined. This is the
-implementation of CAIP-2 for EIP155 (Ethereum).
+implementation of CAIP-2 for EVM (Ethereum).
 
 ## Motivation
 
@@ -25,19 +25,19 @@ See CAIP-2.
 
 ## Specification
 
-### EIP155 Namespace
+### EVM Namespace
 
-The namespace is called "eip155" as in [EIP155](https://eips.ethereum.org/EIPS/eip-155).
+The namespace is called "evm" as in Ethereum Virtual Machine code execution on-chain as described by Ethereum's [Whitepaper](https://ethereum.org/en/whitepaper/#code-execution).
 
 #### Reference Definition
 
-The definition is delegated to EIP155. The format is an unsigned integer in decimal representation and corresponds to `CHAIN_ID` of EIP155.
+The definition is delegated to [EIP155](https://eips.ethereum.org/EIPS/eip-155) specification. The format is an unsigned integer in decimal representation and corresponds to `CHAIN_ID` of EIP155.
 
 Note: due to length restrictions of the reference field (32 characters), the largest supported `CHAIN_ID` is 99999999999999999999999999999999.
 
 ### Resolution Method
 
-To resolve a blockchain reference for the EIP155 namespace, make a JSON-RPC request to the blockchain node with method `eth_chainId`, for example:
+To resolve a blockchain reference for the EVM namespace, make a JSON-RPC request to the blockchain node with method `eth_chainId`, for example:
 
 ```jsonc
 // Request
@@ -64,7 +64,7 @@ The chain ID defined in EIP155 is the most widely used chain identifier in the E
 
 ## Backwards Compatibility
 
-Not applicable
+Legacy implementations of CAIP-3 used a different namespace naming as `eip155` instead of the current naming as `evm`
 
 ## Test Cases
 
@@ -72,17 +72,18 @@ This is a list of manually composed examples
 
 ```
 # Ethereum mainnet
-eip155:1
+evm:1
 
 # Görli
-eip155:5
+evm:5
 
 # Auxilium Network Mainnet
-eip155:28945486
+evm:28945486
 ```
 
 ## Links
 
+- [EVM](https://ethereum.org/en/whitepaper/#code-execution)
 - [EIP155](https://eips.ethereum.org/EIPS/eip-155)
 - [chainid.network](https://chainid.network/)
 

@@ -38,7 +38,7 @@ reference:   [-a-zA-Z0-9]{1,32}
 
 ### Semantics
 
-Each `namespace` covers a class of similar blockchains. Usually it describes an ecosystem or standard, such as e.g. `cosmos` or `eip155`.
+Each `namespace` covers a class of similar blockchains. Usually it describes an ecosystem or standard, such as e.g. `cosmos` or `evm`.
 One namespace should refer to one resolution method to resolve the chain's reference. A `reference` is a way to identify a blockchain within a given namespace.
 The semantics as well as the more granular syntax are of the reference are delegated to each namespace specification to be define in separate CAIPs describing resolution method.
 
@@ -67,7 +67,7 @@ This is a list of manually composed examples
 
 ```
 # Ethereum mainnet
-eip155:1
+evm:1
 
 # Bitcoin mainnet (see https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id)
 bip122:000000000019d6689c085ae165831e93
