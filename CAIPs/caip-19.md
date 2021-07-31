@@ -33,8 +33,8 @@ The `asset_type` is a case-sensitive string in the form
 ```
 asset_type:    chain_id + "/" + asset_namespace + ":" + asset_reference
 chain_id:          Blockchain ID Specification cf. CAIP2
-asset_namespace:   [-a-z0-9]{3,16}
-asset_reference:   [-a-zA-Z0-9]{1,47}
+asset_namespace:   [-a-z0-9]{3,8}
+asset_reference:   [-a-zA-Z0-9]{1,64}
 ```
 
 ## Specification of Asset ID
@@ -47,7 +47,7 @@ The `asset_id` is a case-sensitive string in the form
 
 ```
 asset_id:    asset_type + "/" + token_id
-token_id:   [-a-zA-Z0-9]{1,47}
+token_id:   [-a-zA-Z0-9]{1,32}
 ```
 
 ### Semantics
