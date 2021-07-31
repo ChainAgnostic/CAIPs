@@ -52,13 +52,13 @@ This is a list of manually composed examples
 evm:1/slip44:60
 
 # Bitcoin Token
-bip122:000000000019d6689c085ae165831e93/slip44:0
+btc:000000000019d6689c085ae165831e93/slip44:0
 
 # ATOM Token
 cosmos:cosmoshub-3/slip44:118
 
 # Litecoin Token
-bip122:12a765e31ffd4059bada1e25190f6e98/slip44:2
+btc:12a765e31ffd4059bada1e25190f6e98/slip44:2
 
 # Binance Token
 cosmos:Binance-Chain-Tigris/slip44:714

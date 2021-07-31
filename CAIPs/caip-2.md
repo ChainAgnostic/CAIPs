@@ -69,14 +69,14 @@ This is a list of manually composed examples
 # Ethereum mainnet
 evm:1
 
-# Bitcoin mainnet (see https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki#definition-of-chain-id)
-bip122:000000000019d6689c085ae165831e93
+# Bitcoin mainnet
+btc:000000000019d6689c085ae165831e93
 
 # Litecoin
-bip122:12a765e31ffd4059bada1e25190f6e98
+btc:12a765e31ffd4059bada1e25190f6e98
 
 # Feathercoin (Litecoin fork)
-bip122:fdbe99b90c90bae7505796461471d89a
+btc:fdbe99b90c90bae7505796461471d89a
 
 # Cosmos Hub (Tendermint + Cosmos SDK)
 cosmos:cosmoshub-2
