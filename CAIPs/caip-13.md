@@ -16,8 +16,7 @@ This document is about the details of the Polkadot namespace and reference for C
 
 ## Abstract
 
-In CAIP-2 a general blockchain identification scheme is defined. This is the
-implementation of CAIP-2 for Polkadot chains.
+In CAIP-2 a general blockchain identification scheme is defined. This is theimplementation of CAIP-2 for Polkadot chains.
 
 ## Motivation
 
@@ -27,7 +26,7 @@ See CAIP-2.
 
 ### Polkadot Namespace
 
-The namespace is called "polkadot" to refer to Polkadot-like chains.
+The namespace is called "dot" to refer to Polkadot-like chains.
 
 #### Reference Definition
 
@@ -53,6 +52,7 @@ To resolve a blockchain reference for the Polkadot namespace, make a JSON-RPC re
   "result": "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
 }
 ```
+
 The response will return as a value for the result a hash for the block with height 0 that should be sliced to its first 16 bytes (32 characters for base 16) to be CAIP-13 compatible.
 
 ## Rationale
@@ -61,7 +61,7 @@ The rationale behind the use of block hash from the genesis block stems from its
 
 ## Backwards Compatibility
 
-Not applicable
+Legacy implementations of CAIP-13 used a different namespace naming as `polkadot` instead of the current naming as `dot`
 
 ## Test Cases
 
@@ -69,13 +69,13 @@ This is a list of manually composed examples
 
 ```
 # Kusama
-polkadot:b0a8d493285c2df73290dfb7e61f870f
+dot:b0a8d493285c2df73290dfb7e61f870f
 
 # Edgeware
-polkadot:742a2ca70c2fda6cee4f8df98d64c4c6
+dot:742a2ca70c2fda6cee4f8df98d64c4c6
 
 # Kulupu
-polkadot:37e1f8125397a98630013a4dff89b54c
+dot:37e1f8125397a98630013a4dff89b54c
 ```
 
 ## Links
