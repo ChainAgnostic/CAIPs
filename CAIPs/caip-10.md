@@ -24,7 +24,7 @@ The motivation for proposal stem from designing a chain-agnostic protocol for co
 
 ## Specification
 
-The account id specification will be prefixed with the CAIP-2 blockchain ID and delimited with a comma sign (`:`)
+The account id specification will be prefixed with the CAIP-2 blockchain ID and delimited with a colon sign (`:`)
 
 ### Syntax
 
