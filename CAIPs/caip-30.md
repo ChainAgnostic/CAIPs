@@ -1,12 +1,12 @@
 ---
 caip: 30
 title: Blockchain Reference for the Solana Namespace
-author: Antoine Herzog (@antoineherzog)
+author: Antoine Herzog (@antoineherzog), Josh Hundley (@oJshua)
 discussions-to: []
 status: Draft
 type: Standard
-created: 2021-06-28
-updated: 2021-06-28
+created: 2021-08-03
+updated: 2021-08-03
 requires: 2
 ---
 
@@ -31,38 +31,34 @@ The namespace "solana" refers to the Solana open-source blockchain platform.
 
 #### Reference Definition
 
-The definition for this namespace will use the `blockhash` as an indentifier for different Solana chains.
+The definition for this namespace will use the `genesisHash` as an indentifier for different Solana chains.
 The method for calculating the chain ID is as follows with pseudo-code:
 
 ```
-firstSixteenBytes((SHA256(blockhash))
+truncate(genesisHash, 32)
 ```
 
 ### Resolution Method
 
-To resolve a blockchain reference for the Solana namespace, make a JSON-RPC request to the blockchain node with method `getBlock`, for example:
+To resolve a blockchain reference for the Solana namespace, make a JSON-RPC request to the blockchain node with method `getGenesisHash`, for example:
 
 ```jsonc
 // Request
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "getBlock",
-  "params":[0]
+  "method": "getGenesisHash"
 }
 
 // Response
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "result": {
-      "blockHeight": 0,
-      "blockhash": "4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZAMdL4VZHirAn",
-  }
+  "result": "4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZAMdL4VZHirAn"
 }
 ```
 
-The response will return as a value for the result a hash for the block with height 0 that should be sliced to its first 16 bytes (32 characters for base 16) to be CAIP-4 compatible.
+The response will return as a value for the result a hash for the block with height 0 that should be truncated to its first 32 characters to be CAIP-30 compatible.
 
 
 ## Rationale
@@ -79,10 +75,10 @@ This is a list of manually composed examples
 
 ```
 # Solana Mainnet
-solana:b96f647afe2e62fdb778e6ef95ade7e7
+solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ
 
 # Solana Devnet
-solana:55d16975dbaf9e1a68e017c171209415
+solana:8E9rvCKLFQia2Y35HXjjpWzj8weVo44K
 ```
 
 ## Links
