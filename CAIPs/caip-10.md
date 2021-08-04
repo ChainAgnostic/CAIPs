@@ -24,7 +24,7 @@ The motivation for proposal stem from designing a chain-agnostic protocol for co
 
 ## Specification
 
-The account id specification will be prefixed with the CAIP-2 blockchain ID and delimited with a comma sign (`:`)
+The account id specification will be prefixed with the CAIP-2 blockchain ID and delimited with a colon sign (`:`)
 
 ### Syntax
 
@@ -48,6 +48,10 @@ The goals of the general account ID format is:
 - Uniqueness between chains regardless if they are mainnet or testnet
 - Readibility using the prefix of a chainId to quickly identify before parsing the address
 - Restricted to constrained set of characters and length for parsing
+
+## Backwards Compatibility
+
+Previously CAIP-10 schema was defined by appending as suffix the CAIP-2 chainId delimited by the at sign (`@`)
 
 ## Test Cases
 
