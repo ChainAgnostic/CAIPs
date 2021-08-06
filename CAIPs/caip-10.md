@@ -49,10 +49,6 @@ The goals of the general account ID format is:
 - Readibility using the prefix of a chainId to quickly identify before parsing the address
 - Restricted to constrained set of characters and length for parsing
 
-## Backwards Compatibility
-
-Previously CAIP-10 schema was defined by appending as suffix the CAIP-2 chainId delimited by the at sign (`@`)
-
 ## Test Cases
 
 This is a list of manually composed examples
@@ -72,6 +68,15 @@ polkadot:b0a8d493285c2df73290dfb7e61f870f:5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr38
 
 # Dummy max length (64+1+8+1+32 = 106 chars/bytes)
 chainstd:8c3444cf8970a9e41a706fab93e7a6c4:6d9b0b4b9994e8a6afbd3dc3ed983cd51c755afb27cd1dc7825ef59c134a39f7
+```
+
+## Backwards Compatibility
+
+Previous legacy CAIP-10 schema was defined by appending as suffix the CAIP-2 chainId delimited by the at sign (`@`)
+
+```
+# Legacy example
+0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1
 ```
 
 ## Links
