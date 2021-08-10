@@ -2,7 +2,7 @@
 caip: 30
 title: Blockchain Reference for the Solana Namespace
 author: Antoine Herzog (@antoineherzog), Josh Hundley (@oJshua)
-discussions-to: []
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/60
 status: Draft
 type: Standard
 created: 2021-08-03
@@ -12,7 +12,7 @@ requires: 2
 
 ## Simple Summary
 
-This document is about the details of the Solana namespaces and references for CAIP-2.
+This document is about the details of the Solana namespace and reference for CAIP-2.
 
 ## Abstract
 
