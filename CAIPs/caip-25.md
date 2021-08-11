@@ -62,7 +62,7 @@ An example of a successful response should match the following format:
     "id": 1,
     "jsonrpc": "2.0",
     "result": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1"],
+        "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
     }
 }
 ```
