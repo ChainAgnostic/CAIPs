@@ -32,7 +32,7 @@ The `account_id` is a case-sensitive string in the form
 
 ```
 account_id:        chain_id + ":" + account_address
-chain_id:          [:-a-zA-Z0-9]{5,41}
+chain_id:          [-a-z0-9]{3,8}:[-a-zA-Z0-9]{1,32}
 account_address:   [a-zA-Z0-9]{1,64}
 ```
 
