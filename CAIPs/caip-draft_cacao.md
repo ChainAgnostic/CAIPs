@@ -1,13 +1,12 @@
 ---
 caip: <to be assigned>
 title: CACAO: Chain Agnostic CApability Object
-author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
 author: Sergey Ukustov (@ukstv)
-discussions-to: <URL>
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/74
 status: Draft
-type: Standard>
-created: 2021-10-31
-updated: 2021-10-31
+type: Standard
+created: 2021-11-01
+updated: 2021-11-01
 ---
 
 ## Simple Summary
