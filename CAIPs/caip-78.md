@@ -1,8 +1,8 @@
 ---
-caip: <to be assigned>
+caip: 78
 title: Asset Reference for the Hedera nft namespace
 author: Danno Ferrin (@shemnon)
-discussions-to: <URL>
+discussions-to: https://github.com/hashgraph/hedera-improvement-proposal/discussions/169
 status: Draft
 type: Standard
 created: 2021-11-01
