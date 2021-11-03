@@ -3,10 +3,10 @@ caip: 2
 title: Blockchain ID Specification
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid), Antoine Herzog (@antoineherzog)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/1, https://github.com/UCRegistry/registry/pull/13, https://ethereum-magicians.org/t/caip-2-blockchain-references/3612,
-status: Draft
+status: Final
 type: Standard
 created: 2019-12-05
-updated: 2020-12-14
+updated: 2021-08-25
 ---
 
 ## Simple Summary
