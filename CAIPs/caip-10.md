@@ -60,8 +60,8 @@ eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb
 # Bitcoin mainnet
 bip122:000000000019d6689c085ae165831e93:128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6
 
-# Cosmos Hub
-cosmos:cosmoshub-3:cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0
+# Cosmos ("cosmos" + ":" + prefix + ":" + cosmos_address_without_prefix)
+cosmos:cosmos:1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0
 
 # Kusama network
 polkadot:b0a8d493285c2df73290dfb7e61f870f:5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy
