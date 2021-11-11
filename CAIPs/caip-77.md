@@ -31,7 +31,7 @@ See CAIP-19.
 ### Token Asset Namespace
 
 The asset namespace is called "token" hosted in the Hedera Token Service (HTS).
-It references HTS tokens in the `hedera` namespace (see CAIP-xx).
+It references HTS tokens in the `hedera` namespace (see CAIP-75).
 
 #### Asset Reference Definition
 
