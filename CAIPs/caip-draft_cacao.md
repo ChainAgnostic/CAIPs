@@ -53,8 +53,7 @@ For now we expect this to be either "eip4361-eip191" or "eip4361-eip1271". For b
 ```
 type Payload struct {
   domain String // =domain
-  iss String // = address or DID
-  chainId Int // =chain-id
+  iss String // = DID pkh
   aud String // =uri
   version String
   nonce String
@@ -66,6 +65,8 @@ type Payload struct {
   resources optional [ String ] // =resources as URIs
 }
 ```
+
+It is important to note, that issuer here is [did:pkh](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
 
 The difference is how we do signature verification.
 
@@ -87,13 +88,13 @@ We reconstruct the EIP4361 payload as follows:
 
 ```
 {.p.domain} wants you to sign in with your Ethereum account:
-{.p.iss}
+{.p.iss[address]}
 
 {.p.statement}
 
 URI: {.p.aud}
 Version: {.p.version}
-Chain ID: {.p.chainId}
+Chain ID: {.p.iss[chainId]}
 Nonce: {.p.nonce}
 Issued At: {.p.iat}
 Resources:
@@ -142,11 +143,10 @@ CACAO:
     "aud": "http://localhost:3000",
     "exp": 1635517748,
     "iat": 1635514148,
-    "iss": "0xfa3F54AE9C4287CA09a486dfaFaCe7d1d4095d93",
+    "iss": "did:pkh:eip155:1:0xfa3F54AE9C4287CA09a486dfaFaCe7d1d4095d93",
     "nbf": 1635514148,
     "uri": "http://localhost:3000/login",
     "nonce": 328917,
-    "chainId": 1,
     "version": 1,
     "requestId": "request-id-random",
     "resources": [
@@ -170,6 +170,7 @@ uOqJlcm9vdHOB2CpYJQABcRIgwfKyc_T-HH2gEAe1ZgoJ-KAuIPXvz2U7PuelvCGEHCJndmVyc2lvbgG
 ## Links
 
 - [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md)
+- [did:pkh Method Specification](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md)
 
 ## Copyright
 Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
