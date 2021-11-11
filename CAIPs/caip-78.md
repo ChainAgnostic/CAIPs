@@ -31,7 +31,7 @@ See CAIP-19.
 ### Token Asset Namespace
 
 The asset namespace is called `nft` hosted in the Hedera Token Service (HTS). It
-references HTS non-fungible tokens in the `hedera` namespace (see CAIP-xx).
+references HTS non-fungible tokens in the `hedera` namespace (see CAIP-75).
 
 #### Asset Reference Definition
 
