@@ -104,7 +104,7 @@ Resources:
 - {.p.resources[n]}
 ```
 
-Then using [EcdsaSecp256k1RecoveryMethod2020](https://identity.foundation/EcdsaSecp256k1RecoverySignature2020/) we verify the signature of the payload above, if type is "eip4361-eip191".
+We then verify the signature of the payload above, according to [EIP-191](https://eips.ethereum.org/EIPS/eip-191) if type is "eip4361-eip191".
 
 "eip4361-eip1271" mandates that we go to an ethereum contract complying with [EIP1271](https://eips.ethereum.org/EIPS/eip-1271) interface to verify the signature.
 
