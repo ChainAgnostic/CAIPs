@@ -57,9 +57,9 @@ type Payload struct {
   aud String // =uri
   version String
   nonce String
-  iat Int // Unix timestamp =issued-at
-  nbf optional Int // Unix timestamp =not-before
-  exp optional Int // Unix timestamp = expiration-time
+  iat String // RFC3339 date-time =issued-at
+  nbf optional String // RFC3339 date-time =not-before
+  exp optional String // RFC3339 date-time = expiration-time
   statement optional String // =statement
   requestId optional String // =request-id
   resources optional [ String ] // =resources as URIs
@@ -67,6 +67,8 @@ type Payload struct {
 ```
 
 It is important to note, that issuer here is [did:pkh](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
+Also, as per [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md) specificaction,
+`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
 
 The difference is how we do signature verification.
 
@@ -136,27 +138,25 @@ Below you could find a CACAO, along with its serialized presentation in CAR file
 CACAO:
 ```
 {
-  "h": {
-    "t": "eip4361-eip191"
-  },
+  "h": { "t": "eip4361-eip191" },
   "p": {
     "aud": "http://localhost:3000",
-    "exp": 1635517748,
-    "iat": 1635514148,
-    "iss": "did:pkh:eip155:1:0xfa3F54AE9C4287CA09a486dfaFaCe7d1d4095d93",
-    "nbf": 1635514148,
+    "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
     "uri": "http://localhost:3000/login",
-    "nonce": 328917,
     "version": 1,
+    "nonce": 328917,
+    "iat": "2022-01-13T16:46:36.839+03:00",
+    "nbf": "2022-01-13T16:46:36.839+03:00",
+    "exp": "2022-01-13T17:46:36.839+03:00",
+    "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos",
     "requestId": "request-id-random",
     "resources": [
       "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
       "https://example.com/my-web2-claim.json"
-    ],
-    "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
+    ]
   },
   "s": {
-    "s": "0xe56e2cdb90d070b8aa1639e1cef36f6a49da8460f86f4a51415a1c3cf0e8f9664a6669dc50250e6bcade9f58e4852da81d97676ee96c22e9ff23b4508955c68d1b" // IPLD bytes presented as hex-prefixed string
+    "s": "4acb0cb4bd4868ddb76c2d425225d3b0b708e1b69f61ec1c74c3f9616ad5d12a3875841541342c3c0552230e43272a2f0cec61917fb79d7df6c346a33501cb0f1c"
   }
 }
 ```
@@ -164,13 +164,14 @@ CACAO:
 CACAO Serialized: base64url-encoded CARv1 file with the IPFS block of the CACAO above:
 
 ```
-uOqJlcm9vdHOB2CpYJQABcRIgwfKyc_T-HH2gEAe1ZgoJ-KAuIPXvz2U7PuelvCGEHCJndmVyc2lvbgGHBAFxEiDB8rJz9P4cfaAQB7VmCgn4oC4g9e_PZTs-56W8IYQcIqNhaKFhdG5laXA0MzYxLWVpcDE5MWFwrGNhdWR1aHR0cDovL2xvY2FsaG9zdDozMDAwY2V4cBphfAU0Y2lhdBphe_ckY2lzc3gqMHhmYTNGNTRBRTlDNDI4N0NBMDlhNDg2ZGZhRmFDZTdkMWQ0MDk1ZDkzY25iZhphe_ckY3VyaXgbaHR0cDovL2xvY2FsaG9zdDozMDAwL2xvZ2luZW5vbmNlGgAFBNVnY2hhaW5JZAFndmVyc2lvbgFpcmVxdWVzdElkcXJlcXVlc3QtaWQtcmFuZG9taXJlc291cmNlc4J4QmlwZnM6Ly9iYWZ5YmVpZW14ZjVhYmp3amJpa296NG1jM2EzZGxhNnVhbDNqc2dwZHI0Y2pyM296M2V2Znlhdmh3cXgmaHR0cHM6Ly9leGFtcGxlLmNvbS9teS13ZWIyLWNsYWltLmpzb25pc3RhdGVtZW50eEFJIGFjY2VwdCB0aGUgU2VydmljZU9yZyBUZXJtcyBvZiBTZXJ2aWNlOiBodHRwczovL3NlcnZpY2Uub3JnL3Rvc2FzoWFzWEHlbizbkNBwuKoWOeHO829qSdqEYPhvSlFBWhw88Oj5ZkpmadxQJQ5ryt6fWOSFLagdl2du6Wwi6f8jtFCJVcaNGw-3yciatpgOo4vtCSBjZ3bctBejGCW8UyNc9dQUgqNhaKFhdGdlaXA0MzYxYXCsY2F1ZHVodHRwOi8vbG9jYWxob3N0OjMwMDBjZXhwGmF7-MVjaWF0GmF76rVjaXNzeCoweGZhM0Y1NEFFOUM0Mjg3Q0EwOWE0ODZkZmFGYUNlN2QxZDQwOTVkOTNjbmJmGmF76rVjdXJpeBtodHRwOi8vbG9jYWxob3N0OjMwMDAvbG9naW5lbm9uY2UaAAUE1WdjaGFpbklkAWd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOhYXNYQeXC_kN9a4-7cySLEe_aUkQN4dENMwUbeS416tnbFcO3FGtWMXCLjmpW4RUoi5WWH_vcgx9TCcEn3H3S00sMROQb
+uOqJlcm9vdHOB2CpYJQABcRIgzqJ6pR0g80ruHWVDkryw1P5ye62QjZpUSmgy1R8knstndmVyc2lvbgHdBAFxEiDOonqlHSDzSu4dZUOSvLDU_nJ7rZCNmlRKaDLVHySey6NhaKFhdG5laXA0MzYxLWVpcDE5MWFwq2NhdWR1aHR0cDovL2xvY2FsaG9zdDozMDAwY2V4cHgdMjAyMi0wMS0xM1QxNzo0NjozNi44MzkrMDM6MDBjaWF0eB0yMDIyLTAxLTEzVDE2OjQ2OjM2LjgzOSswMzowMGNpc3N4O2RpZDpwa2g6ZWlwMTU1OjE6MHhCQWM2NzVDMzEwNzIxNzE3Q2Q0QTM3RjZjYmVBMUYwODFiMUMyYTA3Y25iZngdMjAyMi0wMS0xM1QxNjo0NjozNi44MzkrMDM6MDBjdXJpeBtodHRwOi8vbG9jYWxob3N0OjMwMDAvbG9naW5lbm9uY2UaAAUE1Wd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOhYXNYQUrLDLS9SGjdt2wtQlIl07C3COG2n2HsHHTD-WFq1dEqOHWEFUE0LDwFUiMOQycqLwzsYZF_t5199sNGozUByw8c
 ```
 
 ## Links
 
 - [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md)
 - [did:pkh Method Specification](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md)
+- [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6)
 
 ## Copyright
 Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
