@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-06-24
 updated: 2020-06-24
-requires: X
+requires: 2
 ---
 
 ## Simple Summary
