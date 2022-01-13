@@ -12,15 +12,15 @@ requires: 2
 
 ## Simple Summary
 
-CAIP-19 defines a way to identify a type of asset (e.g. Bitcoin, Ether, ATOM) and an asset ID (for non fungible token) in a human-readable, developer and transaction friendly way.
+CAIP-19 defines a way to identify a type of asset (e.g. Bitcoin, Ether, ATOM) and an asset ID (for a non-fungible token) in a human-readable, developer and transaction friendly way.
 
 ## Abstract
 
-Often you need to reference the asset type or the asset ID. For example when you want to do an atomic swap between a fungible asset and a non fungible asset.
+Often you need to reference the asset type or the asset ID. For example when you want to do an atomic swap between a fungible asset and a non-fungible asset.
 
 ## Motivation
 
-Currently, each wallet or each exchange needs to create their own registry of type of assets and their associated metadata for example like [Trust-Wallet](https://github.com/trustwallet/assets/tree/master/blockchains) or [CoinMarketCap](https://coinmarketcap.com/). Providing a unique type of Asset and an Asset ID for each asset for developers can reduce the risk of confusion betweens different assets.
+Currently, each wallet or each exchange needs to create their own registry of type of assets and their associated metadata for example like [Trust-Wallet](https://github.com/trustwallet/assets/tree/master/blockchains) or [CoinMarketCap](https://coinmarketcap.com/). Providing a unique type of Asset and an Asset ID for each asset for developers can reduce the risk of confusion between different assets.
 
 ## Specification of Asset Type
 
@@ -39,7 +39,7 @@ asset_reference:   [-a-zA-Z0-9]{1,64}
 
 ## Specification of Asset ID
 
-The Asset ID is a string designed to uniquely identify a non fungible asset in a developer-friendly fashion.
+The Asset ID is a string designed to uniquely identify a non-fungible asset in a developer-friendly fashion.
 
 ### Syntax
 
@@ -53,29 +53,29 @@ token_id:   [-a-zA-Z0-9]{1,32}
 ### Semantics
 
 Each `asset_namespace` covers a class of similar assets.
-Usually it describes an ecosystem or standard, such as e.g. `slip44` or `erc20`.
+Usually, it describes an ecosystem or standard, such as e.g. `slip44` or `erc20`.
 One asset_namespace should include as many assets as possible.
-`asset_reference` is a way to identify a asset within a given asset_namespace.
-The semantics as well as the more granular syntax are of the reference are delegated to ecosystem specific documents, to be expected as separate CAIPs.
+`asset_reference` is a way to identify an asset within a given asset_namespace.
+The semantics as well as the more granular syntax of the reference, are delegated to ecosystem specific documents, to be expected as separate CAIPs.
 
 ## Rationale
 
 The goals of the general asset type and asset ID format is:
 
 - Uniqueness within the entire asset ecosystem
-- To some degree human readable and helps for basic debugging
-- Restricted in a way that it can be stored on chain
+- To some degree human-readable and helps for basic debugging
+- Restricted in a way that it can be stored on-chain
 - Character set basic enough to display in hardware wallets as part of a transaction content
 
 The following secondary goals can easily be achieved:
 
 - Can be used unescaped in URL paths
-- Can be used as filename in a case-sensitive UNIX file system (Linux/git).
+- Can be used as a filename in a case-sensitive UNIX file system (Linux/git).
 
 Those secondary goals have been given up along the way:
 
-- Can be used as filename in a case-insensitive UNIX file system (macOS).
-- Can be used as filename in a Windows file system.
+- Can be used as a filename in a case-insensitive UNIX file system (macOS).
+- Can be used as a filename in a Windows file system.
 
 ## Test Cases
 
