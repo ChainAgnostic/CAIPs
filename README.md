@@ -39,5 +39,5 @@ If your CAIP requires images, the image files should be included in a subdirecto
 * **CAIP-26** - [Blockchain Reference for the Tezos Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-26.md)
 * **CAIP-27** - [Chain Agnostic Provider Request](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-27.md)
 * **CAIP-28** - [Blockchain Reference for the Stellar Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-28.md)
-* **CAIP-29** - [Asset Reference for the ERC1155 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/CAIP-29.md)
+* **CAIP-29** - [Asset Reference for the ERC1155 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-29.md)
 * **CAIP-30** - [Blockchain Reference for the Solana Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-30.md)
