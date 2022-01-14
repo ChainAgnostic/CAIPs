@@ -41,4 +41,7 @@ If your CAIP requires images, the image files should be included in a subdirecto
 * **CAIP-28** - [Blockchain Reference for the Stellar Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-28.md)
 * **CAIP-29** - [Asset Reference for the ERC1155 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-29.md)
 * **CAIP-30** - [Blockchain Reference for the Solana Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-30.md)
+* **CAIP-75** - [Blockchain Reference for the Hedera namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-75.md)
 * **CAIP-76** - [Account Address for the Hedera namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-76.md)
+* **CAIP-77** - [Token Asset for the Hedera namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-77.md)
+* **CAIP-78** - [NFT Asset Definition for the Hedera namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-78.md)
