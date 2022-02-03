@@ -1,5 +1,5 @@
 ---
-caip: <to be assigned>
+caip: 94
 title: Blockchain Reference for the Hive Namespace
 author: stoodkev (@stoodkev)
 discussions-to: https://peakd.com/hive/@stoodkev/hive-caip-2
@@ -62,7 +62,7 @@ To resolve a blockchain reference for the Hive namespace, make a JSON-RPC reques
 }
 ```
 
-The response will contain a `chain_id` value that should be sliced to its first 32 characters to be CAIP-<to be assigned> compatible.
+The response will contain a `chain_id` value that should be sliced to its first 32 characters to be CAIP-94 compatible.
 
 ## Rationale
 
