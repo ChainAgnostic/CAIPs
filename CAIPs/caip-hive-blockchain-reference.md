@@ -6,7 +6,7 @@ discussions-to: https://peakd.com/hive/@stoodkev/hive-caip-2
 status: Draft
 type: Standard
 created: 2022-01-27
-updated: 2022-01-27
+updated: 2022-02-03
 requires: 2
 ---
 
