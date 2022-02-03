@@ -2,7 +2,7 @@
 caip: <to be assigned>
 title: Blockchain Reference for the Hive Namespace
 author: stoodkev (@stoodkev)
-discussions-to: <URL>
+discussions-to: https://peakd.com/hive/@stoodkev/hive-caip-2
 status: Draft
 type: Standard
 created: 2022-01-27
