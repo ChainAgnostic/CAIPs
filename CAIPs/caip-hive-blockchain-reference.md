@@ -2,11 +2,11 @@
 caip: 94
 title: Blockchain Reference for the Hive Namespace
 author: stoodkev (@stoodkev)
-discussions-to: https://peakd.com/hive/@stoodkev/hive-caip-2
+discussions-to: https://peakd.com/hive/@stoodkev/hive-caip-2 https://github.com/ChainAgnostic/CAIPs/pull/94
 status: Draft
 type: Standard
 created: 2022-01-27
-updated: 2022-02-03
+updated: 2022-02-07
 requires: 2
 ---
 
@@ -86,6 +86,7 @@ hive:18dcf0a285365fc58b71f18b3d3fec95
 
 ## Links
 
+- [Hive blockchain](https://hive.io/)
 - [CAIP 2: Blockchain ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/dbaa80c465d5c6cea5c65d95f14223b44f806f69/CAIPs/caip-2.md)
 - [Hive Documentation : condenser_api.get_version](https://developers.hive.io/apidefinitions/#condenser_api.get_version)
 
