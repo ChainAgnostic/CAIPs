@@ -1,12 +1,12 @@
 ---
-caip: <TBD>
+caip: 95
 title: Account Address for the Hive namespace
 author: stoodkev (@stoodkev)
-discussions-to: <TBD>
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/95 https://peakd.com/hive/@stoodkev/hive-caip-10#@josediccus/r72ky5
 status: Draft
 type: Standard
 created: 2022-02-07
-updated: 2022-02-07
+updated: 2022-02-10
 requires: 10, 94
 ---
 
@@ -78,6 +78,7 @@ length restrictions.
 
 ## Links
 
+- [Hive blockchain](https://hive.io/)
 - [CAIP-10](./caip-10.md) Account ID Specification
 - [CAIP-94](./caip-94.md) Blockchain Reference for the Hive namespace
 - [Hive account regex](https://regex101.com/r/yADKgU/1) For testing Hive accounts regex
