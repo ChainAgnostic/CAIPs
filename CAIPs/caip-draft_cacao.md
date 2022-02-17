@@ -40,15 +40,16 @@ type CACAO struct {
 }
 ```
 
-Header uniquely identifies signature verification process:
+Header uniquely identifies the payload format:
 
 ```
 type Header struct {
-  t String // specifies signature verification algorithm and format of the payload
+  t String // specifies format of the payload
 }
 ```
 
-For now we expect this to be either "eip4361-eip191" or "eip4361-eip1271". For both formats the payload structure must be presented as follows:
+For now, we expect this to be "eip4361" only. In future, we anticipate creating a specialized registry for payload formats.
+For "eip4361" the payload structure must be presented as follows:
 
 ```
 type Payload struct {
@@ -70,19 +71,23 @@ It is important to note, that issuer here is [did:pkh](https://github.com/spruce
 Also, as per [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md) specificaction,
 `iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
 
-The difference is how we do signature verification.
-
-The signature in essence is just bytes, but we also would like to provide additional meta-information at a later time.
+The signature in essence is just bytes, but we have to give a hint on how the signature verification should work.
+At the moment, we limit the signature verification by two types:
+- `eip191` indicates that that signature is made by an Ethereum [externally owned account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#externally-owned-accounts-eoas) (EOA),
+- `eip1271` indicates that the signature is made by an Etereum [contract account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#contract-accounts) (like Gnosis Safe or Argent); the verification should be done according to [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271).
 
 ```
 type Signature struct {
-  m optional SignatureMeta // For future extension
+  m optional SignatureMeta
   s Bytes
 }
 
 type SignatureMeta struct {
+    t String //= "eip191" or "eip1271"
 }
 ```
+
+This construction allows a dApp to uniformly request a SIWE signature regardless of the user's account nature. The user's wallet determines if it should use an EOA or a contract account.
 
 ### Signature Verification
 
@@ -106,9 +111,9 @@ Resources:
 - {.p.resources[n]}
 ```
 
-We then verify the signature of the payload above, according to [EIP-191](https://eips.ethereum.org/EIPS/eip-191) if type is "eip4361-eip191".
-
-"eip4361-eip1271" mandates that we go to an ethereum contract complying with [EIP1271](https://eips.ethereum.org/EIPS/eip-1271) interface to verify the signature.
+Signature verification goes according to `t` in `SignatureMeta`:
+- `eip191`: use [EIP-191](https://eips.ethereum.org/EIPS/eip-191),
+- `eip1271`: use [EIP1271](https://eips.ethereum.org/EIPS/eip-1271).
 
 ### Serialization
 
@@ -138,33 +143,39 @@ Below you could find a CACAO, along with its serialized presentation in CAR file
 CACAO:
 ```
 {
-  "h": { "t": "eip4361-eip191" },
+  "h": {
+    "t": "eip4361"
+  },
   "p": {
     "aud": "http://localhost:3000",
+    "exp": "2022-02-17T14:40:41.540+03:00",
+    "iat": "2022-02-17T13:40:41.539+03:00",
     "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
+    "nbf": "2022-02-17T13:40:41.540+03:00",
     "uri": "http://localhost:3000/login",
-    "version": 1,
     "nonce": 328917,
-    "iat": "2022-01-13T16:46:36.839+03:00",
-    "nbf": "2022-01-13T16:46:36.839+03:00",
-    "exp": "2022-01-13T17:46:36.839+03:00",
-    "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos",
+    "version": 1,
     "requestId": "request-id-random",
     "resources": [
       "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
       "https://example.com/my-web2-claim.json"
-    ]
+    ],
+    "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
   },
   "s": {
-    "s": "4acb0cb4bd4868ddb76c2d425225d3b0b708e1b69f61ec1c74c3f9616ad5d12a3875841541342c3c0552230e43272a2f0cec61917fb79d7df6c346a33501cb0f1c"
+    "m": {
+      "t": "eip191"
+    },
+    "s": "c0b8530197119453d0488af97cbae4c41716b49f67825e8bb25e5e4109330eac41b02258743b6c3ede8eef4adf7a72c159dba63f7ff346f765a8de905c27d7c61c"
   }
 }
+
 ```
 
 CACAO Serialized: base64url-encoded CARv1 file with the IPFS block of the CACAO above:
 
 ```
-uOqJlcm9vdHOB2CpYJQABcRIgzqJ6pR0g80ruHWVDkryw1P5ye62QjZpUSmgy1R8knstndmVyc2lvbgHdBAFxEiDOonqlHSDzSu4dZUOSvLDU_nJ7rZCNmlRKaDLVHySey6NhaKFhdG5laXA0MzYxLWVpcDE5MWFwq2NhdWR1aHR0cDovL2xvY2FsaG9zdDozMDAwY2V4cHgdMjAyMi0wMS0xM1QxNzo0NjozNi44MzkrMDM6MDBjaWF0eB0yMDIyLTAxLTEzVDE2OjQ2OjM2LjgzOSswMzowMGNpc3N4O2RpZDpwa2g6ZWlwMTU1OjE6MHhCQWM2NzVDMzEwNzIxNzE3Q2Q0QTM3RjZjYmVBMUYwODFiMUMyYTA3Y25iZngdMjAyMi0wMS0xM1QxNjo0NjozNi44MzkrMDM6MDBjdXJpeBtodHRwOi8vbG9jYWxob3N0OjMwMDAvbG9naW5lbm9uY2UaAAUE1Wd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOhYXNYQUrLDLS9SGjdt2wtQlIl07C3COG2n2HsHHTD-WFq1dEqOHWEFUE0LDwFUiMOQycqLwzsYZF_t5199sNGozUByw8c
+uOqJlcm9vdHOB2CpYJQABcRIg259KPbWFWGEIj9rR2CJ3rgbMbfirQunESGm76kJ4D0JndmVyc2lvbgHiBAFxEiDbn0o9tYVYYQiP2tHYIneuBsxt-KtC6cRIabvqQngPQqNhaKFhdGdlaXA0MzYxYXCrY2F1ZHVodHRwOi8vbG9jYWxob3N0OjMwMDBjZXhweB0yMDIyLTAyLTE3VDE0OjQwOjQxLjU0MCswMzowMGNpYXR4HTIwMjItMDItMTdUMTM6NDA6NDEuNTM5KzAzOjAwY2lzc3g7ZGlkOnBraDplaXAxNTU6MToweEJBYzY3NUMzMTA3MjE3MTdDZDRBMzdGNmNiZUExRjA4MWIxQzJhMDdjbmJmeB0yMDIyLTAyLTE3VDEzOjQwOjQxLjU0MCswMzowMGN1cml4G2h0dHA6Ly9sb2NhbGhvc3Q6MzAwMC9sb2dpbmVub25jZRoABQTVZ3ZlcnNpb24BaXJlcXVlc3RJZHFyZXF1ZXN0LWlkLXJhbmRvbWlyZXNvdXJjZXOCeEJpcGZzOi8vYmFmeWJlaWVteGY1YWJqd2piaWtvejRtYzNhM2RsYTZ1YWwzanNncGRyNGNqcjNvejNldmZ5YXZod3F4Jmh0dHBzOi8vZXhhbXBsZS5jb20vbXktd2ViMi1jbGFpbS5qc29uaXN0YXRlbWVudHhBSSBhY2NlcHQgdGhlIFNlcnZpY2VPcmcgVGVybXMgb2YgU2VydmljZTogaHR0cHM6Ly9zZXJ2aWNlLm9yZy90b3Nhc6JhbaFhdGZlaXAxOTFhc1hBwLhTAZcRlFPQSIr5fLrkxBcWtJ9ngl6Lsl5eQQkzDqxBsCJYdDtsPt6O70rfenLBWdumP3_zRvdlqN6QXCfXxhw
 ```
 
 ## Links
