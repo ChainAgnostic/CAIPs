@@ -48,7 +48,7 @@ type Header struct {
 }
 ```
 
-For now, we expect this to be "eip4361" only. In future, we anticipate creating a specialized registry for payload formats.
+For now, we expect this to be "eip4361" only. In the future, we anticipate creating a specialized registry for payload formats.
 For "eip4361" the payload structure must be presented as follows:
 
 ```
@@ -75,6 +75,8 @@ The signature in essence is just bytes, but we have to give a hint on how the si
 At the moment, we limit the signature verification by two types:
 - `eip191` indicates that that signature is made by an Ethereum [externally owned account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#externally-owned-accounts-eoas) (EOA),
 - `eip1271` indicates that the signature is made by an Etereum [contract account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#contract-accounts) (like Gnosis Safe or Argent); the verification should be done according to [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271).
+
+In the future, we anticipate creating a specialized registry for signature types.
 
 ```
 type Signature struct {
