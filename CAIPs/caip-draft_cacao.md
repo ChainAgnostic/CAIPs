@@ -30,7 +30,9 @@ In order to do this, we would like to have a standardized IPLD-based representat
 ### Container format
 
 We start construction with declaring a container format, that represents a signed payload.
-It should contain meta-information, payload and signatures. For reference let's call such container _CACAO_:
+It should contain meta-information, payload and signatures. For reference let's call such container _CACAO_.
+We use [IPLD schema language](https://ipld.io/docs/schemas/) to describe the format.
+Reminder, unless a field is marked `optional`, it is mandatory.
 
 ```
 type CACAO struct {
