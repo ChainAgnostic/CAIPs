@@ -82,12 +82,12 @@ In the future, we anticipate creating a specialized registry for signature types
 
 ```
 type Signature struct {
+  t String //= "eip191" or "eip1271"
   m optional SignatureMeta
   s Bytes
 }
 
 type SignatureMeta struct {
-    t String //= "eip191" or "eip1271"
 }
 ```
 
@@ -152,10 +152,10 @@ CACAO:
   },
   "p": {
     "aud": "http://localhost:3000",
-    "exp": "2022-02-18T19:44:56.764+03:00",
-    "iat": "2022-02-18T18:44:56.764+03:00",
+    "exp": "2022-02-21T14:06:33.940+03:00",
+    "iat": "2022-02-21T13:06:33.933+03:00",
     "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
-    "nbf": "2022-02-18T18:44:56.764+03:00",
+    "nbf": "2022-02-21T13:06:33.940+03:00",
     "uri": "http://localhost:3000/login",
     "nonce": "328917",
     "version": 1,
@@ -167,10 +167,8 @@ CACAO:
     "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
   },
   "s": {
-    "m": {
-      "t": "eip191"
-    },
-    "s": "b0855e6103a67c0d081772af9458f45e8363e52dd888364ad7d202e87fe399ac387607f54c62433aab29a1f925a201035959fb27eda62fc32cdaf79206c1a8e81c" // bytes as base16
+    "s": "65dd132e71a84e726736977474e7fe2d1286f24d78f0b3775791feaff91e850f408daa0ac689a25c16ab2d1102e1b998d2eda066332a816c35bb82414459da5a1b", // bytes
+    "t": "eip191"
   }
 }
 ```
@@ -178,7 +176,7 @@ CACAO:
 CACAO Serialized: base64url-encoded CARv1 file with the IPFS block of the CACAO above:
 
 ```
-uOqJlcm9vdHOB2CpYJQABcRIglFVJjHt0yFhiAkaSIty0E-CymWBHdxxhFs_z-zIVYTBndmVyc2lvbgHkBAFxEiCUVUmMe3TIWGICRpIi3LQT4LKZYEd3HGEWz_P7MhVhMKNhaKFhdGdlaXA0MzYxYXCrY2F1ZHVodHRwOi8vbG9jYWxob3N0OjMwMDBjZXhweB0yMDIyLTAyLTE4VDE5OjQ0OjU2Ljc2NCswMzowMGNpYXR4HTIwMjItMDItMThUMTg6NDQ6NTYuNzY0KzAzOjAwY2lzc3g7ZGlkOnBraDplaXAxNTU6MToweEJBYzY3NUMzMTA3MjE3MTdDZDRBMzdGNmNiZUExRjA4MWIxQzJhMDdjbmJmeB0yMDIyLTAyLTE4VDE4OjQ0OjU2Ljc2NCswMzowMGN1cml4G2h0dHA6Ly9sb2NhbGhvc3Q6MzAwMC9sb2dpbmVub25jZWYzMjg5MTdndmVyc2lvbgFpcmVxdWVzdElkcXJlcXVlc3QtaWQtcmFuZG9taXJlc291cmNlc4J4QmlwZnM6Ly9iYWZ5YmVpZW14ZjVhYmp3amJpa296NG1jM2EzZGxhNnVhbDNqc2dwZHI0Y2pyM296M2V2Znlhdmh3cXgmaHR0cHM6Ly9leGFtcGxlLmNvbS9teS13ZWIyLWNsYWltLmpzb25pc3RhdGVtZW50eEFJIGFjY2VwdCB0aGUgU2VydmljZU9yZyBUZXJtcyBvZiBTZXJ2aWNlOiBodHRwczovL3NlcnZpY2Uub3JnL3Rvc2FzomFtoWF0ZmVpcDE5MWFzWEGwhV5hA6Z8DQgXcq-UWPReg2PlLdiINkrX0gLof-OZrDh2B_VMYkM6qymh-SWiAQNZWfsn7aYvwyza95IGwajoHA
+uOqJlcm9vdHOB2CpYJQABcRIgdsRdr45d6rrcN57pvH9FTZsWFLnk5-mx7jiWry80BRdndmVyc2lvbgHhBAFxEiB2xF2vjl3qutw3num8f0VNmxYUueTn6bHuOJavLzQFF6NhaKFhdGdlaXA0MzYxYXCrY2F1ZHVodHRwOi8vbG9jYWxob3N0OjMwMDBjZXhweB0yMDIyLTAyLTIxVDE0OjA2OjMzLjk0MCswMzowMGNpYXR4HTIwMjItMDItMjFUMTM6MDY6MzMuOTMzKzAzOjAwY2lzc3g7ZGlkOnBraDplaXAxNTU6MToweEJBYzY3NUMzMTA3MjE3MTdDZDRBMzdGNmNiZUExRjA4MWIxQzJhMDdjbmJmeB0yMDIyLTAyLTIxVDEzOjA2OjMzLjk0MCswMzowMGN1cml4G2h0dHA6Ly9sb2NhbGhvc3Q6MzAwMC9sb2dpbmVub25jZWYzMjg5MTdndmVyc2lvbgFpcmVxdWVzdElkcXJlcXVlc3QtaWQtcmFuZG9taXJlc291cmNlc4J4QmlwZnM6Ly9iYWZ5YmVpZW14ZjVhYmp3amJpa296NG1jM2EzZGxhNnVhbDNqc2dwZHI0Y2pyM296M2V2Znlhdmh3cXgmaHR0cHM6Ly9leGFtcGxlLmNvbS9teS13ZWIyLWNsYWltLmpzb25pc3RhdGVtZW50eEFJIGFjY2VwdCB0aGUgU2VydmljZU9yZyBUZXJtcyBvZiBTZXJ2aWNlOiBodHRwczovL3NlcnZpY2Uub3JnL3Rvc2FzomFzWEFl3RMucahOcmc2l3R05_4tEobyTXjws3dXkf6v-R6FD0CNqgrGiaJcFqstEQLhuZjS7aBmMyqBbDW7gkFEWdpaG2F0ZmVpcDE5MQ
 ```
 
 ## Links
