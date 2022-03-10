@@ -10,7 +10,7 @@ updated: 2019-08-31
 
 ## What is an CAIP?
 
-CAIP stands for Chain Agnostic Improvement Proposal. An CAIP is a design document providing information to the community or describing a standard to be used across multiple "chains." To be more precise, a CAIP may describe any sequential orderings of cryptographically hashed commitments, including non-blockchain systems that can interoperate with blockchains productively, such as DAGs, sharded systems, git systems using keyserver-based PKI, etc. The CAIP should provide a concise technical specification of the feature and a rationale for the feature. The CAIP author is responsible for building consensus within the community and documenting dissenting opinions.
+CAIP stands for Chain Agnostic Improvement Proposal. An CAIP is a design document providing information to the community or describing a standard to be used across multiple "chains." To be more precise, a CAIP may describe capabilities applicable to any sequential orderings of cryptographically hashed commitments, including non-blockchain systems that can interoperate with blockchains productively, such as DAGs, sharded systems, git systems using keyserver-based PKI, etc. The CAIP should provide a concise technical specification of the feature and a rationale for the feature. The CAIP author is responsible for building consensus within the community and documenting dissenting opinions.
 
 ## CAIP Rationale
 
