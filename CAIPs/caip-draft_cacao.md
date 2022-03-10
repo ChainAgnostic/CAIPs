@@ -151,13 +151,13 @@ CACAO:
     "t": "eip4361"
   },
   "p": {
-    "aud": "http://localhost:3000",
-    "exp": "2022-02-21T14:06:33.940+03:00",
-    "iat": "2022-02-21T13:06:33.933+03:00",
+    "aud": "http://localhost:3000/login",
+    "exp": "2022-03-10T18:09:21.481+03:00",
+    "iat": "2022-03-10T17:09:21.481+03:00",
     "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
-    "nbf": "2022-02-21T13:06:33.940+03:00",
-    "uri": "http://localhost:3000/login",
+    "nbf": "2022-03-10T17:09:21.481+03:00",
     "nonce": "328917",
+    "domain": "localhost:3000",
     "version": 1,
     "requestId": "request-id-random",
     "resources": [
@@ -167,7 +167,7 @@ CACAO:
     "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
   },
   "s": {
-    "s": "65dd132e71a84e726736977474e7fe2d1286f24d78f0b3775791feaff91e850f408daa0ac689a25c16ab2d1102e1b998d2eda066332a816c35bb82414459da5a1b", // bytes
+    "s": "5ccb134ad3d874cbb40a32b399549cd32c953dc5dc87dc64624a3e3dc0684d7d4833043dd7e9f4a6894853f8dc555f97bc7e3c7dd3fcc66409eb982bff3a44671b",
     "t": "eip191"
   }
 }
@@ -176,7 +176,7 @@ CACAO:
 CACAO Serialized: base64url-encoded CARv1 file with the IPFS block of the CACAO above:
 
 ```
-uOqJlcm9vdHOB2CpYJQABcRIgdsRdr45d6rrcN57pvH9FTZsWFLnk5-mx7jiWry80BRdndmVyc2lvbgHhBAFxEiB2xF2vjl3qutw3num8f0VNmxYUueTn6bHuOJavLzQFF6NhaKFhdGdlaXA0MzYxYXCrY2F1ZHVodHRwOi8vbG9jYWxob3N0OjMwMDBjZXhweB0yMDIyLTAyLTIxVDE0OjA2OjMzLjk0MCswMzowMGNpYXR4HTIwMjItMDItMjFUMTM6MDY6MzMuOTMzKzAzOjAwY2lzc3g7ZGlkOnBraDplaXAxNTU6MToweEJBYzY3NUMzMTA3MjE3MTdDZDRBMzdGNmNiZUExRjA4MWIxQzJhMDdjbmJmeB0yMDIyLTAyLTIxVDEzOjA2OjMzLjk0MCswMzowMGN1cml4G2h0dHA6Ly9sb2NhbGhvc3Q6MzAwMC9sb2dpbmVub25jZWYzMjg5MTdndmVyc2lvbgFpcmVxdWVzdElkcXJlcXVlc3QtaWQtcmFuZG9taXJlc291cmNlc4J4QmlwZnM6Ly9iYWZ5YmVpZW14ZjVhYmp3amJpa296NG1jM2EzZGxhNnVhbDNqc2dwZHI0Y2pyM296M2V2Znlhdmh3cXgmaHR0cHM6Ly9leGFtcGxlLmNvbS9teS13ZWIyLWNsYWltLmpzb25pc3RhdGVtZW50eEFJIGFjY2VwdCB0aGUgU2VydmljZU9yZyBUZXJtcyBvZiBTZXJ2aWNlOiBodHRwczovL3NlcnZpY2Uub3JnL3Rvc2FzomFzWEFl3RMucahOcmc2l3R05_4tEobyTXjws3dXkf6v-R6FD0CNqgrGiaJcFqstEQLhuZjS7aBmMyqBbDW7gkFEWdpaG2F0ZmVpcDE5MQ
+uOqJlcm9vdHOB2CpYJQABcRIgEbxa4r0lKwE4Oj8ZUbYCpULmPfgw2g_r12IcKX1CxNlndmVyc2lvbgHdBAFxEiARvFrivSUrATg6PxlRtgKlQuY9-DDaD-vXYhwpfULE2aNhaKFhdGdlaXA0MzYxYXCrY2F1ZHgbaHR0cDovL2xvY2FsaG9zdDozMDAwL2xvZ2luY2V4cHgdMjAyMi0wMy0xMFQxODowOToyMS40ODErMDM6MDBjaWF0eB0yMDIyLTAzLTEwVDE3OjA5OjIxLjQ4MSswMzowMGNpc3N4O2RpZDpwa2g6ZWlwMTU1OjE6MHhCQWM2NzVDMzEwNzIxNzE3Q2Q0QTM3RjZjYmVBMUYwODFiMUMyYTA3Y25iZngdMjAyMi0wMy0xMFQxNzowOToyMS40ODErMDM6MDBlbm9uY2VmMzI4OTE3ZmRvbWFpbm5sb2NhbGhvc3Q6MzAwMGd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOiYXNYQVzLE0rT2HTLtAoys5lUnNMslT3F3IfcZGJKPj3AaE19SDMEPdfp9KaJSFP43FVfl7x-PH3T_MZkCeuYK_86RGcbYXRmZWlwMTkx
 ```
 
 ## Links
