@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/74
 status: Draft
 type: Standard
 created: 2021-11-01
-updated: 2021-11-01
+updated: 2022-03-10
 ---
 
 ## Simple Summary
