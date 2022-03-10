@@ -69,7 +69,7 @@ type Payload struct {
 }
 ```
 
-It is important to note, that issuer here is [did:pkh](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
+It is important to note, that issuer here is [did:pkh](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
 Also, as per [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md) specificaction,
 `iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
 
