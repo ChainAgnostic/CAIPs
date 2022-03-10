@@ -182,7 +182,7 @@ uOqJlcm9vdHOB2CpYJQABcRIgdsRdr45d6rrcN57pvH9FTZsWFLnk5-mx7jiWry80BRdndmVyc2lvbgH
 ## Links
 
 - [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md)
-- [did:pkh Method Specification](https://github.com/spruceid/ssi/blob/main/did-pkh/did-pkh-method-draft.md)
+- [did:pkh Method Specification](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md)
 - [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6)
 - [EIP-191: Signed Data Standard](https://eips.ethereum.org/EIPS/eip-191)
 - [EIP-1271: Standard Signature Validation Method for Contracts](https://eips.ethereum.org/EIPS/eip-1271)
