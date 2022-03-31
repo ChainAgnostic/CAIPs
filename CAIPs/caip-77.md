@@ -1,5 +1,5 @@
 ---
-caip: <to be assigned>
+caip: 77
 title: CACAO: Chain Agnostic CApability Object
 author: Sergey Ukustov (@ukstv)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/74
