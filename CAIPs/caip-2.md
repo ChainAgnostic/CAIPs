@@ -3,10 +3,10 @@ caip: 2
 title: Blockchain ID Specification
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid), Antoine Herzog (@antoineherzog)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/1, https://github.com/UCRegistry/registry/pull/13, https://ethereum-magicians.org/t/caip-2-blockchain-references/3612,
-status: Draft
+status: Final
 type: Standard
 created: 2019-12-05
-updated: 2020-12-14
+updated: 2021-08-25
 ---
 
 ## Simple Summary
@@ -32,8 +32,8 @@ The `chain_id` is a case-sensitive string in the form
 
 ```
 chain_id:    namespace + ":" + reference
-namespace:   [-a-z0-9]{3,16}
-reference:   [-a-zA-Z0-9]{1,47}
+namespace:   [-a-z0-9]{3,8}
+reference:   [-a-zA-Z0-9]{1,32}
 ```
 
 ### Semantics
@@ -91,8 +91,8 @@ cosmos:iov-mainnet
 # Lisk Mainnet (LIP-0009; see https://github.com/LiskHQ/lips/blob/master/proposals/lip-0009.md)
 lip9:9ee11e9df416b18b
 
-# Dummy max length (16+1+47 = 64 chars/bytes)
-max-namespace-16:xip3343-8c3444cf8970a9e41a706fab93e7a6c4-xxxyyy
+# Dummy max length (8+1+32 = 41 chars/bytes)
+chainstd:8c3444cf8970a9e41a706fab93e7a6c4
 ```
 
 ## Links
