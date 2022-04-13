@@ -21,10 +21,11 @@ can be defined once and not be superseded by the addition or modification of
 higher-level specifications for RPC interfaces or multiple asset types.
 
 In practical terms, that means each blockchain ecosystem's namespace is defined
-by a folder containing one document per applicable CAIP.  At a high-level, the
-important facts about a namespace, its governance, and its nomenclature can be
-defined/introduced in a `README.md` file, and each CAIP can be defined in a
-`caip{X}.md` file, where X is the number of the ratified CAIP.
+by a folder containing a distinct document for *each CAIP* applied to that
+namespace.  At a high level, the important facts about a namespace, its
+governance, and its nomenclature can be defined/introduced in a `README.md`
+file, and each CAIP can be defined in a `caip{X}.md` file, where X is the number
+of the ratified CAIP.
 
 Like CAIPs, each CAIP-reference and namespace-reference is a design document
 providing information to the community and/or describing an addressing scheme
@@ -45,30 +46,22 @@ Cross-chain engineering is difficult and often requires one to know both sides
 of a cross-namespace/cross-ecosystem interaction deeply to avoid serious
 security, UX, and design problems. The primary function of defining a namespace
 reference is to map the cross-chain CAIPs against the specifics of a given
-ecosystem and namespace. For this reason, it is important to consider a reader
-with very little context and tease out any potential risk of unfounded
-assumptions about:
-- what a blockchain or DAG is,
-- how transactions get validated against targeted chains or states, 
-- how addressing and routing work across different systems,
-- how a node's state at any given time relates to finality and the authoritative chain,
-
-etc.
+ecosystem and namespace, ideally written for a reader with very little context in that namespace.
 
 ## Reference Formats and Templates
 
-Namespace references should be written in [markdown] format.
+Namespace references should be written in [markdown][] format.
 
-Image files should be included in a subdirectory of the `assets` folder for that
-reference as follows: `assets/{namespace}` (where `{namespace}` is to be
-replaced with the uniform identifier used as the name of the reference folder
-and included in the headers of each document therein). When linking to an image
-in a reference document, use relative links such as
-`../assets/eip155/image.png`.
+Image files should be included in the same namespace directory to allow for
+simple relative references. Such files must be named readme-Y.ext, where “XXXX”
+is the CAIP number, “Y” is a serial number (starting at 1), and “ext” is
+replaced by the actual file extension (e.g. “png”).
 
-Templates for both the [namespace reference](namespace-reference-template.md)
-and for each [namespace-caip reference](namespace-caip-template.md) are included
-in this folder.
+Templates for both the [namespace
+reference](https://github.com/chainagnostic/namespaces/blob/main/namespace-reference-template.md)
+and for each [namespace-caip
+reference](https://github.com/chainagnostic/namespaces/blob/main/namespace-caip-template.md)
+are included in the namespaces repo folder for easy cloning.
 
 # Specification
 
@@ -177,20 +170,23 @@ status.
 
 #### `requires` header
 
-CAIPs may have a `requires` header, indicating the CAIP numbers that this
-reference depends on. 
+Namespace-CAIPs may have a `requires` header, indicating the CAIP number(s) that
+this reference depends on. 
 
 #### `superseded-by` and `replaces` headers
 
-CAIPs may also have a `superseded-by` header indicating that an CAIP has been
-rendered obsolete by a later document; the value is the number of the CAIP that
-replaces the current document. The newer CAIP must have a `replaces` header
-containing the number of the CAIP that it rendered obsolete.
+Namespace-CAIPs may also have a `superseded-by` header indicating that an CAIP
+has been rendered obsolete by a later document; the value is the `title` that
+replaces the current document, i.e., if "eip155-caip10" gets superceded, it
+should rename in the directory `eip155` directory but contain a link to the
+superseding specification(s), like `[caip10v2](caip10v2.md)`. The newer
+Namespace-CAIP must have a `replaces` header containing the number of the
+Namespace-CAIP that it rendered obsolete.
 
 ## Auxiliary Files
 
-CAIPs may include auxiliary files such as diagrams. Such files must be named
-CAIP-XXXX-Y.ext, where “XXXX” is the CAIP number, “Y” is a serial number
+Namespace-CAIPs may include auxiliary files such as diagrams. Such files must be
+named CAIP-XXXX-Y.ext, where “XXXX” is the CAIP number, “Y” is a serial number
 (starting at 1), and “ext” is replaced by the actual file extension (e.g.
 “png”).
 
