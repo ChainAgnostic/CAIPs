@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/10
 status: Draft
 type: Standard
 created: 2020-03-13
-updated: 2020-03-18
+updated: 2021-08-11
 requires: 2
 ---
 
@@ -24,29 +24,29 @@ The motivation for proposal stem from designing a chain-agnostic protocol for co
 
 ## Specification
 
-The account id specification will be prefixed with the CAIP-2 blockchain ID and delimited with an at sign (`@`) commonly used to define addresses.
+The account id specification will be prefixed with the CAIP-2 blockchain ID and delimited with a colon sign (`:`)
 
 ### Syntax
 
 The `account_id` is a case-sensitive string in the form
 
 ```
-account_id:        account_address + "@" + chain_id
+account_id:        chain_id + ":" + account_address
+chain_id:          [-a-z0-9]{3,8}:[-a-zA-Z0-9]{1,32}
 account_address:   [a-zA-Z0-9]{1,64}
-chain_id:          [:-a-zA-Z0-9]{5,41}
 ```
 
 ### Semantics
 
-The `account_address` is a case sensitive string which its format is specific to the blockchain that is referred to by the `chain_id`
 The `chain_id` is specified by the [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md) which describes the blockchain id.
+The `account_address` is a case sensitive string which its format is specific to the blockchain that is referred to by the `chain_id`
 
 ## Rationale
 
 The goals of the general account ID format is:
 
 - Uniqueness between chains regardless if they are mainnet or testnet
-- Readibility using `@` to easily identify the account address
+- Readibility using the prefix of a chainId to quickly identify before parsing the address
 - Restricted to constrained set of characters and length for parsing
 
 ## Test Cases
@@ -55,19 +55,28 @@ This is a list of manually composed examples
 
 ```
 # Ethereum mainnet
-0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1
+eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb
 
 # Bitcoin mainnet
-128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6@bip122:000000000019d6689c085ae165831e93
+bip122:000000000019d6689c085ae165831e93:128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6
 
 # Cosmos Hub
-cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0@cosmos:cosmoshub-3
+cosmos:cosmoshub-3:cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0
 
 # Kusama network
-5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy@polkadot:b0a8d493285c2df73290dfb7e61f870f
+polkadot:b0a8d493285c2df73290dfb7e61f870f:5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy
 
 # Dummy max length (64+1+8+1+32 = 106 chars/bytes)
-6d9b0b4b9994e8a6afbd3dc3ed983cd51c755afb27cd1dc7825ef59c134a39f7@chainstd:8c3444cf8970a9e41a706fab93e7a6c4
+chainstd:8c3444cf8970a9e41a706fab93e7a6c4:6d9b0b4b9994e8a6afbd3dc3ed983cd51c755afb27cd1dc7825ef59c134a39f7
+```
+
+## Backwards Compatibility
+
+Previous legacy CAIP-10 schema was defined by appending as suffix the CAIP-2 chainId delimited by the at sign (`@`)
+
+```
+# Legacy example
+0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1
 ```
 
 ## Links
