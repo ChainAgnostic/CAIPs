@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-10-14
 updated: 2020-10-14
-requires: 2, 10
+requires: [2, 10]
 ---
 
 ## Simple Summary
@@ -35,17 +35,21 @@ The application would interface with a provider to initiate a session by calling
     "id": 1,
     "jsonrpc": "2.0",
     "method": "caip_handshake",
-    "params": {
-        "chains": ["eip155:1"],
-        "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
-    }
+    "params": [
+        {
+            "chains": ["eip155:1"],
+            "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
+            "events": ["accountsChanged", "chainChanged"]
+        }
+    ]
 }
 ```
 
-The JSON-RPC method is labelled as `caip_handshake` and expects two parameters:
+The JSON-RPC method is labelled as `caip_handshake` and expects an array with objects with three parameters:
 
-* chains - array of CAIP-2 complaint chainId's
+* chains - array of CAIP-2 compliant chainId's to be used during the session
 * methods - array of JSON-RPC methods expected to be used during the session
+* events - array of JSON-RPC message/events expected to be emitted during the session
 
 ### Response
 
@@ -62,12 +66,12 @@ An example of a successful response should match the following format:
     "id": 1,
     "jsonrpc": "2.0",
     "result": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1"],
+        "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
     }
 }
 ```
 
-The accounts returned as a result should match the requested chainId's and should be an array of CAIP-10 complaint accountId's
+The accounts returned as a result should match the requested chainId's and should be an array of CAIP-10 compliant accountId's
 
 #### Error
 
@@ -95,12 +99,18 @@ The valid error messages codes are the following:
 * When user disapproves accepting calls with the request methods
     * code = 5001
     * message = "User disapproved requested methods"
+* When user disapproves accepting calls with the request events
+    * code = 5002
+    * message = "User disapproved requested events"
 * When wallet evaluates requested chains to not be supported
     * code = 5100
     * message = "Requested chains are not supported"
 * When wallet evaluates requested methods to not be supported
     * code = 5101
     * message = "Requested methods are not supported"
+* When wallet evaluates requested events to not be supported
+    * code = 5102
+    * message = "Requested events are not supported"
 
 ## Links
 
