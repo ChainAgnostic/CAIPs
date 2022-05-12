@@ -31,7 +31,7 @@ The Asset Type is a string designed to uniquely identify the types of assets in 
 The `asset_type` is a case-sensitive string in the form
 
 ```
-asset_type:    chain_id + "/" + asset_namespace + ":" + asset_reference
+asset_type:    chain_id + ";" + asset_namespace + ":" + asset_reference
 chain_id:          Blockchain ID Specification cf. CAIP2
 asset_namespace:   [-a-z0-9]{3,8}
 asset_reference:   [-a-zA-Z0-9]{1,64}
@@ -46,7 +46,7 @@ The Asset ID is a string designed to uniquely identify a non-fungible asset in a
 The `asset_id` is a case-sensitive string in the form
 
 ```
-asset_id:    asset_type + "/" + token_id
+asset_id:    asset_type + ";" + token_id
 token_id:   [-a-zA-Z0-9]{1,32}
 ```
 
@@ -83,34 +83,34 @@ This is a list of manually composed examples
 
 ```
 # Ether Token
-eip155:1/slip44:60
+eip155:1;slip44:60
 
 # Bitcoin Token
-bip122:000000000019d6689c085ae165831e93/slip44:0
+bip122:000000000019d6689c085ae165831e93;slip44:0
 
 # ATOM Token
-cosmos:cosmoshub-3/slip44:118
+cosmos:cosmoshub-3;slip44:118
 
 # Litecoin Token
-bip122:12a765e31ffd4059bada1e25190f6e98/slip44:2
+bip122:12a765e31ffd4059bada1e25190f6e98;slip44:2
 
 # Binance Token
-cosmos:Binance-Chain-Tigris/slip44:714
+cosmos:Binance-Chain-Tigris;slip44:714
 
 # IOV Token
-cosmos:iov-mainnet/slip44:234
+cosmos:iov-mainnet;slip44:234
 
 # Lisk Token
-lip9:9ee11e9df416b18b/slip44:134
+lip9:9ee11e9df416b18b;slip44:134
 
 # DAI Token
-eip155:1/erc20:0x6b175474e89094c44da98b954eedeac495271d0f
+eip155:1;erc20:0x6b175474e89094c44da98b954eedeac495271d0f
 
 # CryptoKitties Collectible
-eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
+eip155:1;erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
 
 # CryptoKitties Collectible ID
-eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
+eip155:1;erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d;771769
 ```
 
 ## Copyright
