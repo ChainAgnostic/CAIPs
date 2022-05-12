@@ -7,6 +7,7 @@ status: Draft
 type: Standard
 created: 2021-02-17
 requires: 2
+superseded-by: [namespaces/stellar](https://github.com/ChainAgnostic/namespaces/tree/main/stellar)
 ---
 
 ## Simple Summary

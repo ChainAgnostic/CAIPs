@@ -8,6 +8,7 @@ type: Standard
 created: 2020-12-12
 updated: 2020-12-12
 requires: 2
+superseded-by: [namespaces/tezos](https://github.com/ChainAgnostic/namespaces/tree/main/tezos)
 ---
 
 ## Simple Summary
