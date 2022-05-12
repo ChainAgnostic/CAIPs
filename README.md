@@ -43,3 +43,4 @@ If your CAIP requires images, the image files should be included in a subdirecto
 * ~**CAIP-30** - [Blockchain Reference for the Solana Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-30.md)~ superseded-by: [namespaces/solana](https://github.com/ChainAgnostic/namespaces/tree/main/solana)
 * **CAIP-74** - [CACAO: Chain Agnostic CApability Object](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-74.md)
 * **CAIP-76** - [Account Address for the Hedera namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-76.md) - see [chainagnostic/namespaces#16](https://github.com/ChainAgnostic/namespaces/pull/16)
+* **CAIP-104** - [Namespace Reference Purpose and Guidelines](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-104.md)
