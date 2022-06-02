@@ -38,16 +38,4 @@ If your CAIP requires images, the image files should be included in a subdirecto
 
 ## Namespaces
 
-Please note that CAIPs specific to a blockchain community or namespace have been moved to a separate repository, <a href=https://github.com/chainagnostic/namespaces>`namespaces`</a>, governed by the same processes.  CAIPs 
-[3](https://github.com/ChainAgnostic/namespaces/tree/main/eip155), 
-[4](https://github.com/ChainAgnostic/namespaces/tree/main/bip122), 
-[5](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-5.md)),
-[23](https://github.com/ChainAgnostic/namespaces/tree/main/eip155), 
-[26](https://github.com/ChainAgnostic/namespaces/tree/main/tezos), 
-[28](https://github.com/ChainAgnostic/namespaces/tree/main/stellar), and 
-[30](https://github.com/ChainAgnostic/namespaces/tree/main/solana) 
-have been migrated. CAIPs
-[6](https://github.com/ChainAgnostic/namespaces/pull/6),
-[7])(https://github.com/ChainAgnostic/namespaces/pull/5), and
-[13]()
-are still in process of migration.
+Previously there were specific CAIPs for what is now referred to as *namespaces*. Chain Agnostic [Namespaces](https://github.com/chainagnostic/namespaces) describe a blockchain ecosystem or set of ecosystems as a namespace, relying as much as possible on the CAIP specifications to minimize the research needed to interact with assets, contracts, and accounts in that namespace. 
