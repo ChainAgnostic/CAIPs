@@ -1,7 +1,7 @@
 ---
 caip: 74
-title: CACAO: Chain Agnostic CApability Object
-author: Sergey Ukustov (@ukstv)
+title: CACAO - Chain Agnostic CApability Object
+author: Sergey Ukustov (@ukstv), Haardik (@haardikk21)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/74
 status: Draft
 type: Standard
@@ -10,19 +10,17 @@ updated: 2022-03-10
 ---
 
 ## Simple Summary
-
-Represent a chain-agnostic Object Capability (OCAP), created using [EIP-4361](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md) (or similar for other blockchains), as an [IPLD](https://ipld.io) object.
+Represent a chain-agnostic Object Capability (OCAP), created using [CAIP-122](), as an [IPLD](https://ipld.io) object.
 
 ## Abstract
-
-In this document we define a way to present a result of [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md)
-signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP).
-As we expect other blockchains to follow a path similar to Ethereum, CAIP seems to be the best place for such a proposal.
+In this document we define a way to present a result of [CAIP-122]() signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP).
 
 ## Motivation
 
-"Sign-in with Ethereum" is a way for a user to authenticate into a service, and provide authorization. In essence, it is a signature of a well-formed payload, that can be read by a human as well as a machine.
+"Sign-in with X" is a way for a user to authenticate into a service, and provide authorization. In essense, it is a signature of a well-formed payload.
+
 We could see this as a stepping point for a _rich_ capability-based authorization system.
+
 In order to do this, we would like to have a standardized IPLD-based representation of the payload and the signature, that together comprise a capability.
 
 ## Specification
@@ -30,7 +28,7 @@ In order to do this, we would like to have a standardized IPLD-based representat
 ### Container format
 
 We start construction with declaring a container format, that represents a signed payload.
-It should contain meta-information, payload and signatures. For reference let's call such container _CACAO_.
+It should contain meta-information, payload and signatures. For reference let's call such container _CACAO_ (for Chain Agnostic CApability Object).
 We use [IPLD schema language](https://ipld.io/docs/schemas/) to describe the format.
 Reminder, unless a field is marked `optional`, it is mandatory.
 
@@ -50,8 +48,9 @@ type Header struct {
 }
 ```
 
-For now, we expect this to be "eip4361" only. In the future, we anticipate creating a specialized registry for payload formats.
-For "eip4361" the payload structure must be presented as follows:
+The header type will be represented by the namespace reference to CAIP-122. For example, `eip4361` for `eip155` chains, `solana-caip122` for Solana, etc.
+
+The payload structure must be presented as follows:
 
 ```
 type Payload struct {
@@ -70,19 +69,17 @@ type Payload struct {
 ```
 
 It is important to note, that issuer here is [did:pkh](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
-Also, as per [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md) specificaction,
-`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
+Also, as per [CAIP-122]() specificaction,`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
 
-The signature in essence is just bytes, but we have to give a hint on how the signature verification should work.
-At the moment, we limit the signature verification by two types:
+The signature in essence is just bytes, but we have to give a hint on how the signature verification should work. The signature verification type is referenced from methods that are listed as possible within the [CAIP-122]() namespace.
+
+For example, for EIP-155 chains,
 - `eip191` indicates that that signature is made by an Ethereum [externally owned account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#externally-owned-accounts-eoas) (EOA),
 - `eip1271` indicates that the signature is made by an Etereum [contract account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#contract-accounts) (like Gnosis Safe or Argent); the verification should be done according to [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271).
 
-In the future, we anticipate creating a specialized registry for signature types.
-
 ```
 type Signature struct {
-  t String //= "eip191" or "eip1271"
+  t String
   m optional SignatureMeta
   s Bytes
 }
@@ -91,11 +88,11 @@ type SignatureMeta struct {
 }
 ```
 
-This construction allows a dApp to uniformly request a SIWE signature regardless of the user's account nature. The user's wallet determines if it should use an EOA or a contract account.
+This construction allows a dApp to uniformly request a SIWx signature regardless of the user's account nature. 
 
 ### Signature Verification
 
-We reconstruct the EIP4361 payload as follows:
+Signature signing and verification should follow the workflow as specified in the [CAIP-122]() namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows:
 
 ```
 {.p.domain} wants you to sign in with your Ethereum account:
@@ -116,8 +113,9 @@ Resources:
 ```
 
 Signature verification goes according to `t` in `SignatureMeta`:
+For example,
 - `eip191`: use [EIP-191](https://eips.ethereum.org/EIPS/eip-191),
-- `eip1271`: use [EIP1271](https://eips.ethereum.org/EIPS/eip-1271).
+- `eip1271`: use [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271).
 
 ### Serialization
 
@@ -130,7 +128,7 @@ We propose, that all the necessary parent CACAOs are passed there as well. This 
 ## Rationale
 
 - As a chain-agnostic standard, a capability should identify chain-specific signature methods.
-- While "Sign-in with Ethereum" standardizes payload format, the payload could be extended in future.
+- While "Sign-in with X" standardizes payload format, the payload could be extended in future.
 - The standard should be usable for DID-based signing methods as well as blockchain based ones.
 - The format we are creating here should be uniquely serialized as an IPLD object; we expect it to be identified by CID.
 - A capability format described here should allow chaining capabilities together.
@@ -181,6 +179,7 @@ uOqJlcm9vdHOB2CpYJQABcRIgEbxa4r0lKwE4Oj8ZUbYCpULmPfgw2g_r12IcKX1CxNlndmVyc2lvbgH
 
 ## Links
 
+- [CAIP-122 "Sign-in with X"](https://github.com/ChainAgnostic/CAIPs/pull/122)
 - [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md)
 - [did:pkh Method Specification](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md)
 - [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6)
