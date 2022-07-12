@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/74
 status: Draft
 type: Standard
 created: 2021-11-01
-updated: 2022-03-10
+updated: 2022-07-12
 ---
 
 ## Simple Summary
@@ -48,7 +48,7 @@ type Header struct {
 }
 ```
 
-The header type will be represented by the namespace reference to CAIP-122. For example, `eip4361` for `eip155` chains, `solana-caip122` for Solana, etc.
+The header type will be `caip122` in reference to the [CAIP-122]() specification for the SIWx data model. In an [older version of the specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. As such, newer implementations MUST be able to deal with both header types appropriately.
 
 The payload structure must be presented as follows:
 
@@ -72,10 +72,6 @@ It is important to note, that issuer here is [did:pkh](https://github.com/w3c-cc
 Also, as per [CAIP-122]() specificaction,`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
 
 The signature in essence is just bytes, but we have to give a hint on how the signature verification should work. The signature verification type is referenced from methods that are listed as possible within the [CAIP-122]() namespace.
-
-For example, for EIP-155 chains,
-- `eip191` indicates that that signature is made by an Ethereum [externally owned account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#externally-owned-accounts-eoas) (EOA),
-- `eip1271` indicates that the signature is made by an Etereum [contract account](https://www.ethdocs.org/en/latest/contracts-and-transactions/account-types-gas-and-transactions.html#contract-accounts) (like Gnosis Safe or Argent); the verification should be done according to [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271).
 
 ```
 type Signature struct {
@@ -136,9 +132,9 @@ We propose, that all the necessary parent CACAOs are passed there as well. This 
 
 ## Backwards Compatibility
 
-Not applicable.
+In the [previous version of this specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. Newer implementations should support both header types - `eip4361` and `caip122`.
 
-## Test Cases
+## Example
 
 Below you could find a CACAO, along with its serialized presentation in CAR file.
 
@@ -176,6 +172,12 @@ CACAO Serialized: base64url-encoded CARv1 file with the IPFS block of the CACAO 
 ```
 uOqJlcm9vdHOB2CpYJQABcRIgEbxa4r0lKwE4Oj8ZUbYCpULmPfgw2g_r12IcKX1CxNlndmVyc2lvbgHdBAFxEiARvFrivSUrATg6PxlRtgKlQuY9-DDaD-vXYhwpfULE2aNhaKFhdGdlaXA0MzYxYXCrY2F1ZHgbaHR0cDovL2xvY2FsaG9zdDozMDAwL2xvZ2luY2V4cHgdMjAyMi0wMy0xMFQxODowOToyMS40ODErMDM6MDBjaWF0eB0yMDIyLTAzLTEwVDE3OjA5OjIxLjQ4MSswMzowMGNpc3N4O2RpZDpwa2g6ZWlwMTU1OjE6MHhCQWM2NzVDMzEwNzIxNzE3Q2Q0QTM3RjZjYmVBMUYwODFiMUMyYTA3Y25iZngdMjAyMi0wMy0xMFQxNzowOToyMS40ODErMDM6MDBlbm9uY2VmMzI4OTE3ZmRvbWFpbm5sb2NhbGhvc3Q6MzAwMGd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOiYXNYQVzLE0rT2HTLtAoys5lUnNMslT3F3IfcZGJKPj3AaE19SDMEPdfp9KaJSFP43FVfl7x-PH3T_MZkCeuYK_86RGcbYXRmZWlwMTkx
 ```
+
+## Versioning
+
+Present version of CAIP-74 updates and clarifies the previous versions:
+
+- [Version 1 - CACAO for Sign-in with Ethereum](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md)
 
 ## Links
 
