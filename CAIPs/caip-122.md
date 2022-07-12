@@ -39,9 +39,9 @@ The data model _MUST_ contain the following fields:
 | `version`         | string          | ✓         | Current version of the message.                                                                                                                                                                   |
 | `statement`       | string          |           | Human-readable ASCII assertion that the user will sign. It _must not_ contain `\n`.                                                                                                               |
 | `nonce`           | string          |           | Randomized token to prevent signature replay attacks.                                                                                                                                             |
-| `issued-at`       | string          |           | [ISO 8601][iso 8601] datetime that indicates the issuance time.                                                                                                                                   |
-| `expiration-time` | string          |           | [ISO 8601][iso 8601] datetime that indicates when the signed authentication message is no longer valid.                                                                                           |
-| `not-before`      | string          |           | [ISO 8601][iso 8601] datetime that indicates when the signed authentication message starts being valid.                                                                                           |
+| `issued-at`       | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates the issuance time.                                                                                                                                   |
+| `expiration-time` | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message is no longer valid.                                                                                           |
+| `not-before`      | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message starts being valid.                                                                                           |
 | `request-id`      | string          |           | System-specific identifier used to uniquely refer to the authentication request.                                                                                                                  |
 | `resources`       | List of strings |           | List of information or references to information the user wishes to have resolved as part of the authentication by the relying party; express as [RFC 3986][rfc 3986] URIs and separated by `\n`. |
 | `signature`       | bytes           | ✓         | Signature of the message signed by the wallet.                                                                                                                                                    |
@@ -151,7 +151,7 @@ Not applicable.
 [caip-10]: https://github.com/ChainAgnostic/CAIPs/blob/8fdb5bfd1bdf15c9daf8aacfbcc423533764dfe9/CAIPs/caip-10.md
 [caip-2]: https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
 [rfc 3986]: https://www.rfc-editor.org/rfc/rfc3986
-[iso 8601]: https://www.iso.org/iso-8601-date-and-time-format.html
+[rfc 3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
 [eip-191]: https://eips.ethereum.org/EIPS/eip-191
 [eip-1271]: https://eips.ethereum.org/EIPS/eip-1271
 
@@ -161,7 +161,7 @@ Not applicable.
 - [CAIP-10](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md): Account ID Specification
 - [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md): Blockchain ID Specification
 - [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986): Uniform Resource Identifier (URI): Generic Syntax
-- [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html): Date and Time Format
+- [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6): Date and Time on the Internet: Timestamps
 - [EIP-191](https://eips.ethereum.org/EIPS/eip-191): Signed Data Standard
 - [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271): Standard Signature Validation Method for Contracts
 
