@@ -23,7 +23,6 @@ If your CAIP requires images, the image files should be included in a subdirecto
 
 * **CAIP-1** - [CAIP Purpose and Guidelines](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-1.md)
 * **CAIP-2** - [Blockchain ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md)
-* **CAIP-6** - [Blockchain Reference for the LIP9 Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-6.md) - see [chainagnostic/namespaces#17](https://github.com/ChainAgnostic/namespaces/pull/17)
 * **CAIP-10** - [Account ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md)
 * **CAIP-19** - [Asset Type and Asset ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md)
 * **CAIP-20** - [Asset Reference for the SLIP44 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-20.md)
@@ -33,9 +32,8 @@ If your CAIP requires images, the image files should be included in a subdirecto
 * **CAIP-27** - [Chain Agnostic Provider Request](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-27.md)
 * **CAIP-29** - [Asset Reference for the ERC1155 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-29.md)
 * **CAIP-74** - [CACAO: Chain Agnostic CApability Object](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-74.md)
-* **CAIP-76** - [Account Address for the Hedera namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-76.md) - see [chainagnostic/namespaces#16](https://github.com/ChainAgnostic/namespaces/pull/16)
 * **CAIP-104** - [Namespace Reference Purpose and Guidelines](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-104.md)
 
 ## Namespaces
 
-Previously there were specific CAIPs for what is now referred to as *namespaces*. Chain Agnostic [Namespaces](https://github.com/chainagnostic/namespaces) describe a blockchain ecosystem or set of ecosystems as a namespace, relying as much as possible on the CAIP specifications to minimize the research needed to interact with assets, contracts, and accounts in that namespace. 
+Previously there were specific CAIPs for what is now referred to as *namespaces*. Chain Agnostic [Namespaces](https://github.com/chainagnostic/namespaces) describe a blockchain ecosystem or set of ecosystems as a namespace, relying as much as possible on the CAIP specifications to minimize the research needed to interact with assets, contracts, and accounts in that namespace.
