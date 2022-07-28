@@ -10,11 +10,11 @@ updated: 2019-08-31
 
 ## What is an CAIP?
 
-CAIP stands for Chain Agnostic Improvement Proposal. An CAIP is a design document providing information to the community or describing a standard to be used across multiple "chains." To be more precise, a CAIP may describe capabilities applicable to any sequential orderings of cryptographically hashed commitments, including non-blockchain systems that can interoperate with blockchains productively, such as DAGs, sharded systems, git systems using keyserver-based PKI, etc. The CAIP should provide a concise technical specification of the feature and a rationale for the feature. The CAIP author is responsible for building consensus within the community and documenting dissenting opinions.
+CAIP stands for Chain Agnostic Improvement Proposal. A CAIP is a design document providing information to the community or describing a standard to be used across multiple chains. To be more precise, a CAIP may describe capabilities applicable to any sequential orderings of cryptographically hashed commitments, including non-blockchain systems that can interoperate with blockchains productively, such as DAGs, sharded systems, git systems using keyserver-based PKI, etc. The CAIP should provide a concise technical specification of the feature and a rationale for it. The CAIP author is responsible for building consensus within the community and documenting dissenting opinions.
 
 ## CAIP Rationale
 
-Currently it is often the case that a standard defined in one chain is also used in another chain. E.g. the usage of BIP39 in Ethereum applications. Also there is no real place to propose a standard that can be used for multiple chains (like mnemonics) currently. CAIPs are intended to fill this gap and be a place where such standards can live.
+Currently it is often the case that a standard defined in one chain is also used in another chain, e.g. the usage of BIP39 in Ethereum applications. Also, there is no real place to propose a standard that can be used for multiple chains (like mnemonics) currently. CAIPs are intended to fill this gap and be a place where such standards can live.
 
 ## CAIP Formats and Templates
 
@@ -75,7 +75,7 @@ if the email address is not given.
 
 #### `discussions-to` header
 
-While an CAIP is a draft, a `discussions-to` header will indicate the mailing list or URL where the CAIP is being discussed.
+While a CAIP is a draft, a `discussions-to` header will indicate the mailing list or URL where the CAIP is being discussed.
 
 As a single exception, `discussions-to` cannot point to GitHub pull requests.
 
@@ -93,11 +93,11 @@ The `updated` header records the date(s) when the CAIP was updated with "substan
 
 #### `requires` header
 
-CAIPs may have a `requires` header, indicating the CAIP numbers that this CAIP depends on.
+CAIPs may have a `requires` header, indicating the CAIP(s) on which this CAIP depends.
 
 #### `superseded-by` and `replaces` headers
 
-CAIPs may also have a `superseded-by` header indicating that an CAIP has been rendered obsolete by a later document; the value is the number of the CAIP that replaces the current document. The newer CAIP must have a `replaces` header containing the number of the CAIP that it rendered obsolete.
+CAIPs may also have a `superseded-by` header indicating that a CAIP has been rendered obsolete by a later document; the value is the number of the CAIP that replaces the current document. The newer CAIP must have a `replaces` header containing the number of the CAIP that it rendered obsolete.
 
 ## Auxiliary Files
 
@@ -105,9 +105,9 @@ CAIPs may include auxiliary files such as diagrams. Such files must be named CAI
 
 ## Transferring CAIP Ownership
 
-It occasionally becomes necessary to transfer ownership of CAIPs to a new champion. In general, we'd like to retain the original author as a co-author of the transferred CAIP, but that's really up to the original author. A good reason to transfer ownership is because the original author no longer has the time or interest in updating it or following through with the CAIP process, or has fallen off the face of the 'net (i.e. is unreachable or isn't responding to email). A bad reason to transfer ownership is because you don't agree with the direction of the CAIP. We try to build consensus around an CAIP, but if that's not possible, you can always submit a competing CAIP.
+It occasionally becomes necessary to transfer ownership of CAIPs to a new champion. In general, we'd like to retain the original author as a co-author of the transferred CAIP, but that's really up to the original author. A good reason to transfer ownership is because the original author no longer has the time or interest in updating it or following through with the CAIP process, or has fallen off the face of the 'net (i.e. is unreachable or isn't responding to email). A bad reason to transfer ownership is because you don't agree with the direction of the CAIP. We try to build consensus around a CAIP, but if that's not possible, you can always submit a competing CAIP.
 
-If you are interested in assuming ownership of an CAIP, send a message asking to take over, addressed to both the original author and the CAIP editor. If the original author doesn't respond to email in a timely manner, the CAIP editor will make a unilateral decision (it's not like such decisions can't be reversed :)).
+If you are interested in assuming ownership of a CAIP, send a message asking to take over, addressed to both the original author and the CAIP editor. If the original author doesn't respond to email in a timely manner, the CAIP editor will make a unilateral decision (it's not like such decisions can't be reversed :)).
 
 ## CAIP Editors
 
@@ -121,13 +121,13 @@ For each new CAIP that comes in, an editor does the following:
 
 - Read the CAIP to check if it is ready: sound and complete. The ideas must make technical sense, even if they don't seem likely to get to final status.
 - The title should accurately describe the content.
-- Check the CAIP for language (spelling, grammar, sentence structure, etc.), markup (Github flavored Markdown), code style
+- Check the CAIP for language (spelling, grammar, sentence structure, etc.), markup (Github flavored Markdown), code style.
 
 If the CAIP isn't ready, the editor will send it back to the author for revision, with specific instructions.
 
 Once the CAIP is ready for the repository, the CAIP editor will:
 
-- Assign an CAIP number (generally the PR number or, if preferred by the author, the Issue # if there was discussion in the Issues section of this repository about this CAIP)
+- Assign a CAIP number (generally the PR number or, if preferred by the author, the Issue # if there was discussion in the Issues section of this repository about this CAIP)
 
 - Merge the corresponding pull request
 
@@ -137,7 +137,7 @@ The editors don't pass judgment on CAIPs. We merely do the administrative & edit
 
 ## History
 
-This document was derived heavily from [Bitcoin's BIP-0001] written by Amir Taaki which in turn was derived from [Python's PEP-0001]. In many places text was simply copied and modified. Although the PEP-0001 text was written by Barry Warsaw, Jeremy Hylton, and David Goodger, they are not responsible for its use in the Ethereum Improvement Process, and should not be bothered with technical questions specific to CAIPs. Please direct all comments to the CAIP editors.
+This document was derived heavily from [Bitcoin's BIP-0001] written by Amir Taaki, which in turn was derived from [Python's PEP-0001]. In many places text was simply copied and modified. Although the PEP-0001 text was written by Barry Warsaw, Jeremy Hylton, and David Goodger, they are not responsible for its use in Chain Agnostic Improvement Proposals, and should not be bothered with technical questions specific to CAIPs. Please direct all comments to the CAIP editors.
 
 ### Bibliography
 
