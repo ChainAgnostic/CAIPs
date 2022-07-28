@@ -135,7 +135,7 @@ c2VydmljZS5vcmcgd2FudHMgeW91IHRvIHNpZ24gaW4gd2l0aCB5b3VyIFNvbGFuYSBhY2NvdW50OgpH
 
 ## Rationale
 
-- As a chain-agnostic standard, SIWx should allow for blockchain wallet based authentication across non-blockchain applications regardless of which chain/wallet the user is using.
+- As a chain-agnostic standard, SIWx should allow for authentication via blockchain wallet across non-blockchain applications regardless of which chain/wallet the user is using.
 - The application server must be able to implement fully usable support for its end without forcing a change in the wallets
 - The model should be abstract enough to allow individual namespaces to represent the signing message as suitable for their chain, while allowing conformance with [CAIP-74](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-74.md).
 
