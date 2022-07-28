@@ -48,7 +48,7 @@ type Header struct {
 }
 ```
 
-The header type will be `caip122` in reference to the [CAIP-122]() specification for the SIWx data model. In an [older version of the specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. As such, newer implementations MUST be able to deal with both header types appropriately.
+The header type will be `caip122-namespace` in reference to the [CAIP-122]() specification for the SIWx data model. For example, `caip122-eip4361` when referring to the `eip155` namespace specification, or `caip122-solana` when referring to the Solana namespace specification. In an [older version of the specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. As such, newer implementations MUST be able to deal with both header types appropriately.
 
 The payload structure must be presented as follows:
 
