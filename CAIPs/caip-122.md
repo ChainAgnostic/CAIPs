@@ -49,7 +49,7 @@ The data model _MUST_ contain the following fields:
 
 ### Namespace Specification
 
-A namespace specification _must_ provide:
+A namespace specification _MUST_ provide:
 
 1. signing algorithm, or multitude of those,
 2. accompanied by `type` strings that designate each signing algorithm,
