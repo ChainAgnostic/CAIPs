@@ -55,7 +55,7 @@ A namespace specification _MUST_ provide:
 2. accompanied by `type` strings that designate each signing algorithm,
 3. a procedure for creating a signing input from the data model specified in this document.
 
-The signing algorithm _must_ cover:
+The signing algorithm _MUST_ cover:
 
 1. how to sign the signing input,
 2. how to verify the signature.
