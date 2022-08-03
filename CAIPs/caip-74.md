@@ -13,7 +13,7 @@ updated: 2022-07-12
 Represent a chain-agnostic Object Capability (OCAP), created using [CAIP-122](), as an [IPLD](https://ipld.io) object.
 
 ## Abstract
-In this document we define a way to present a result of [CAIP-122]() signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP).
+In this document we define a way to record the result of [CAIP-122]() signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP). This creates not just an event receipt of an authentication, but also a composable and replay-able authorization receipt for verifiable authorizations, when the message signed contains the appropriate fields. The first CACAO profile was tailored to the ethereum dapps supporting [EIP-4361][] but roughly equivalent profiles for other wallet/dapp ecosystems are being added over time.
 
 ## Motivation
 
