@@ -88,7 +88,7 @@ This construction allows a dApp to uniformly request a SIWx signature regardless
 
 ### Signature Verification
 
-Signature signing and verification should follow the workflow as specified in the [CAIP-122]() namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows:
+Signature signing and verification should follow the workflow as specified in the [CAIP-122]() namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows, resulting in a message conformant with EIP-4361:
 
 ```
 {.p.domain} wants you to sign in with your Ethereum account:
