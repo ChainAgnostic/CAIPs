@@ -68,7 +68,7 @@ type Payload struct {
 }
 ```
 
-It is important to note, that issuer here is [did:pkh](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
+It is important to note, that issuer here is [did:pkh](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md), which includes both blockid address and blockchain network information.
 Also, as per [CAIP-122]() specificaction,`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
 
 The signature in essence is just bytes, but we have to give a hint on how the signature verification should work. The signature verification type is referenced from methods that are listed as possible within the [CAIP-122]() namespace.
@@ -98,7 +98,7 @@ Signature signing and verification should follow the workflow as specified in th
 
 URI: {.p.aud}
 Version: {.p.version}
-Chain ID: {.p.iss[chainId]}
+Chain ID: {.p.iss[chainId.reference]}
 Nonce: {.p.nonce}
 Issued At: {.p.iat}
 Resources:
