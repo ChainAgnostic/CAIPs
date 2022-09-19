@@ -89,8 +89,7 @@ layout: default
   https://ieee-dataport.org/sites/default/files/analysis/27/IEEE%20Citation%20Guidelines.pdf
   {% endcomment %}
   <p>{% include authorlist.html authors=page.author %}, "CAIP-{{ page.caip | xml_escape }}: {{ page.title | xml_escape
-    }}{% if page.status == "Draft" or page.status == "Stagnant" or page.status == "Withdrawn" or page.status == "Review"
-    or page.status == "Last Call" %} [DRAFT]{% endif %}," <em>Chain Agnostic Improvement Proposals</em>, no. {{
+    }}{% if page.status == "Draft" or page.status == "Last Call" or page.status == "Abandoned" %} [DRAFT]{% endif %}," <em>Chain Agnostic Improvement Proposals</em>, no. {{
     page.caip | xml_escape }}, {{ page.created | date: "%B %Y" }}. [Online serial]. Available:
     https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-{{ page.caip | xml_escape }}.md</p>
 </div>
@@ -102,9 +101,9 @@ https://schema.org/TechArticle
   {
     "@context": "http://schema.org",
     "@type": "TechArticle",
-    "headline": "CAIP-{{ page.caip | xml_escape }}: {{ page.title | xml_escape }}{% if page.status == "Draft" or page.status == "Stagnant" or page.status == "Withdrawn" or page.status == "Review" or page.status == "Last Call" %} [DRAFT]{% endif %}",
+    "headline": "CAIP-{{ page.caip | xml_escape }}: {{ page.title | xml_escape }}{% if page.status == "Draft" or page.status == "Last Call" or page.status == "Abandoned" %} [DRAFT]{% endif %}",
     "author": "{{ page.author }}",
-    "name": "CAIP-{{ page.ciap | xml_escape }}: {{ page.title | xml_escape }}{% if page.status == "Draft" or page.status == "Stagnant" or page.status == "Withdrawn" or page.status == "Review" or page.status == "Last Call" %} [DRAFT]{% endif %}",
+    "name": "CAIP-{{ page.caip | xml_escape }}: {{ page.title | xml_escape }}{% if page.status == "Draft" or page.status == "Last Call" or page.status == "Abandoned" %} [DRAFT]{% endif %}",
     "dateCreated": "{{ page.created | date: "%Y-%m-%d" }}",
     "datePublished": "{{ page.created | date: "%Y-%m-%d" }}",
 {% if page["discussions-to"] != undefined %}
