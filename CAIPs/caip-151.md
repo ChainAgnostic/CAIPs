@@ -1,8 +1,8 @@
 ---
-caip: XXX
+caip: 151
 title: Asset Type and Asset ID Specification Superset
 author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid), Joel Thorstensson (@oed), Juan Caballero (@bumblefudge)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/XXX
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/151
 status: Draft
 type: Standard
 created: 2020-06-23
@@ -17,7 +17,7 @@ A variation of CAIP-19 that allows more addressing systems to be transposed dire
 
 ## Abstract
 
-CAIP-19 defined a way to identify a type of asset (e.g. Bitcoin, Ether, ATOM) and an asset ID (for a non-fungible token) in a human-readable, developer and transaction friendly way. CAIP-XXX mirrors exactly its structure and usage, but allows for a broader range of characters in `Asset ID`.  All valid CAIP-19 addresses are valid CAIP-XXX addresses, but not vice versa.
+CAIP-19 defined a way to identify a type of asset (e.g. Bitcoin, Ether, ATOM) and an asset ID (for a non-fungible token) in a human-readable, developer and transaction friendly way. CAIP-151 mirrors exactly its structure and usage, but allows for a broader range of characters in `Asset ID`.  All valid CAIP-19 addresses are valid CAIP-151 addresses, but not vice versa.
 
 ## Motivation
 
@@ -53,7 +53,7 @@ token_id:   [-.%a-zA-Z0-9]{1,78}
 
 ### Semantics
 
-Each `asset_namespace` covers a class of similar assets. Since the adoption of CAIP-19, these have been broken out into loosely and descriptively specified ["CASA namespaces"](https://github.com/chainAgnostic/namespaces), which include, among other profiles, a CAIP-19 and/or CAIP-XXX profile explaining addressing system assumptions or security considerations specific to each namespace.  In many cases, a regular expression is provided for validating addresses, or additional resources for handling them.  See also [CAIP19#semantics](https://chainagnostic.org/CAIPs/caip-19#semantics)
+Each `asset_namespace` covers a class of similar assets. Since the adoption of CAIP-19, these have been broken out into loosely and descriptively specified ["CASA namespaces"](https://github.com/chainAgnostic/namespaces), which include, among other profiles, a CAIP-19 and/or CAIP-151 profile explaining addressing system assumptions or security considerations specific to each namespace.  In many cases, a regular expression is provided for validating addresses, or additional resources for handling them.  See also [CAIP19#semantics](https://chainagnostic.org/CAIPs/caip-19#semantics)
 
 ## Rationale
 
