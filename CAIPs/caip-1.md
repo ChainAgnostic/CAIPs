@@ -33,7 +33,7 @@ Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) styl
 
 ` * discussions-to:` \<a url pointing to the official discussion thread\>
 
-` status:` <Draft | Last Call | Accepted | Active | Abandoned | Rejected | Superseded>
+` status:` <Draft | Rejected | Review | Last Call | Withdrawn | Final | Superseded>
 
 `* review-period-end:` <date review period ends>
 
