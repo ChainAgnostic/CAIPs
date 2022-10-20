@@ -98,7 +98,7 @@ Signature signing and verification should follow the workflow as specified in th
 
 URI: {.p.aud}
 Version: {.p.version}
-Chain ID: {.p.iss[chainId]}
+Chain ID: {.p.iss[chainId.reference]}
 Nonce: {.p.nonce}
 Issued At: {.p.iat}
 Resources:
@@ -152,7 +152,7 @@ CACAO:
     "nbf": "2022-03-10T17:09:21.481+03:00",
     "nonce": "328917",
     "domain": "localhost:3000",
-    "version": 1,
+    "version": "1",
     "requestId": "request-id-random",
     "resources": [
       "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
