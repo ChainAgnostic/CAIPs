@@ -3,7 +3,7 @@ caip: 28
 title: Blockchain Reference for Stellar Namespace
 author: Gleb Pitsevich (@pitsevich)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/44#pullrequestreview-594204708
-status: Draft
+status: Superseded
 type: Standard
 created: 2021-02-17
 requires: 2

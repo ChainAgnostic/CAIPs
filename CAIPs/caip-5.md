@@ -3,11 +3,12 @@ caip: 5
 title: Blockchain Reference for the Cosmos Namespace
 author: Simon Warta (@webmaster128)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/5, https://github.com/ChainAgnostic/CAIPs/issues/6, https://github.com/ChainAgnostic/CAIPs/pull/1
-status: Draft
+status: Superseded
 type: Standard
 created: 2019-12-05
 updated: 2020-01-17
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/cosmos
 ---
 
 ## Simple Summary

@@ -3,7 +3,7 @@ caip: 30
 title: Blockchain Reference for the Solana Namespace
 author: Antoine Herzog (@antoineherzog), Josh Hundley (@oJshua)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/60
-status: Draft
+status: Superseded
 type: Standard
 created: 2021-08-03
 updated: 2021-08-03

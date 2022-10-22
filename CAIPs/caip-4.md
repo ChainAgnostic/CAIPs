@@ -3,7 +3,7 @@ caip: 4
 title: Blockchain Reference for the BIP122 Namespace
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/4, https://github.com/ChainAgnostic/CAIPs/pull/1
-status: Draft
+status: Superseded
 type: Standard
 created: 2019-12-05
 updated: 2020-01-16
