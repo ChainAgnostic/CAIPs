@@ -44,7 +44,7 @@ The `account_id` is a case-sensitive string in the form
 
 ```
 account_id:        chain_id + ":" + account_address
-chain_id:          [:-a-zA-Z0-9]{5,41}
+chain_id:          [:-a-zA-Z0-9]{5,41} (See [CAIP-2][])
 account_address:   [-.%a-zA-Z0-9]{1,64}
 ```
 
