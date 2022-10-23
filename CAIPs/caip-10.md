@@ -33,14 +33,6 @@ communication between dapps and wallets that was independent of any blockchain
 but provide the flexibility to be backwards compatible with existing
 applications.
 
-## Changelog
-
-- 2022-10-23: expanded charset to include `-`,`.`, and `%`; also added
-  canonicalization section and links
-- 2022-03-10: update RegEx to incorporate CAIP-2 reference
-- 2021-08-11: switch from `{account id}@{chain id}` to `{chain id}:{account id}`
-  syntax
-
 ## Specification
 
 The account id specification will be prefixed with the [CAIP-2][] blockchain ID
@@ -81,9 +73,9 @@ The goals of the general account ID format is:
 
 Note that some namespaces like the EVM offer canonicalization schemes that use
 capitalization (e.g. [EIP-55][]), an option suffix (e.g. [HIP-15][]), or some
-other transformation. At the present time, the CAIP-10 specification does NOT
-require canonicalization, and implementers are advised to consider deduplication
-or canonicalization in their consumption of CAIP-addresses. CAIP-10 profiles in
+other transformation. At the present time, this specification does NOT require
+canonicalization, and implementers are advised to consider deduplication or
+canonicalization in their consumption of CAIP-addresses. CAIP-10 profiles in
 CASA [namespaces][] may contain additional information per namespace.
 
 ## Test Cases
@@ -127,6 +119,14 @@ of specification for details.
 # Legacy example pre-2021-08-21
 0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb@eip155:1
 ```
+
+## Changelog
+
+- 2022-10-23: expanded charset to include `-`,`.`, and `%`; also added
+  canonicalization section and links
+- 2022-03-10: update RegEx to incorporate CAIP-2 reference
+- 2021-08-11: switch from `{account id}@{chain id}` to `{chain id}:{account id}`
+  syntax
 
 ## Links
 

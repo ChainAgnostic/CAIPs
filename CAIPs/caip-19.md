@@ -26,9 +26,9 @@ want to do an atomic swap between a fungible asset and a non-fungible asset.
 Currently, each wallet or each exchange needs to create their own registry of
 type of assets and their associated metadata for example like
 [Trust-Wallet](https://github.com/trustwallet/assets/tree/master/blockchains) or
-[CoinMarketCap](https://coinmarketcap.com/). Providing a unique type of Asset
-and an Asset ID for each asset for developers can reduce the risk of confusion
-between different assets.
+[CoinMarketCap](https://coinmarketcap.com/). Providing a unique `Asset Type` and
+a type-specific `Asset ID` for each asset for developers can reduce the risk of
+confusion between different assets.
 
 ## Specification of Asset Type
 
@@ -40,8 +40,8 @@ a developer-friendly fashion.
 The `asset_type` is a case-sensitive string in the form
 
 ```
-asset_type:    chain_id + "/" + asset_namespace + ":" + asset_reference
-chain_id:          Blockchain ID Specification cf. CAIP2
+asset_type:    chain_id + "/" + asset_namespace + [":" + asset_reference]
+chain_id:          Namespace+Blockchain ID as per [CAIP-2][]
 asset_namespace:   [-a-z0-9]{3,8}
 asset_reference:   [-.%a-zA-Z0-9]{1,64}
 ```
@@ -64,7 +64,8 @@ The `asset_id` is a case-sensitive string in the form
 
 ```
 asset_id:    asset_type + "/" + token_id [+ "/" + serial_number]
-token_id:   [-.%a-zA-Z0-9]{1,32}
+token_id:   [-.%a-zA-Z0-9]{1,78}
+serial_number: [0-9]{1,78}
 ```
 
 In the case of collections, a second "/" divides the collection address from the
@@ -76,6 +77,17 @@ non-alphanumerics such as `:`, `/` or `\`.  Implementers are recommended to use
 2][rfc3986sec2.1] of [RFC 3986][rfc3986] to escape any further non-alphanumeric
 characters, and to consider [homograph attack surfaces][homograph] in the handling
 of any non-alphanumerics.
+
+## Canonicalization
+
+Note that for smart contract addresses used in some Asset Types (like ERC721 and
+its equivalents), some namespaces like the EVM offer canonicalization schemes
+that use capitalization (e.g. [EIP-55][]), an option suffix (e.g. [HIP-15][]),
+or some other transformation. At the present time, this specification
+does NOT require canonicalization, and implementers are advised to consider
+deduplication or canonicalization in their consumption of CAIP-addresses.
+CAIP-19 profiles in CASA [namespaces][] may contain additional information per
+namespace.
 
 ### Semantics
 
@@ -149,6 +161,16 @@ eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
 # Edition 12 of 50: First-Generation Hedera Robot VENOM EDITION
 hedera:mainnet/nft:0.0.55492/12
 ```
+
+## Changelog
+
+- 2022-10-23: 
+    - expanded charset to include `-`,`.`, and `%`
+    - addedcanonicalization section and links
+    - regex for serial numbers also expanded to include entire `uint256` range 
+- 2022-05-12: regex for token_id expanded to include entire `uint256` range
+- 2021-06-25: regex max lengths raised and test cases updated accordingly
+- 2020-06-23: added distinction between asset type and asset ID 
 
 ## Links
 
