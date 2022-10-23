@@ -44,7 +44,7 @@ The application would interface with a provider to initiate a session by calling
 
 The JSON-RPC method is labelled as `caip_handshake` and expects two parameters:
 
-* chains - array of CAIP-2 complaint chainId's
+* chains - array of CAIP-2 compliant chainId's
 * methods - array of JSON-RPC methods expected to be used during the session
 
 ### Response
@@ -67,7 +67,7 @@ An example of a successful response should match the following format:
 }
 ```
 
-The accounts returned as a result should match the requested chainId's and should be an array of CAIP-10 complaint accountId's
+The accounts returned as a result should match the requested chainId's and should be an array of CAIP-10 compliant accountId's
 
 #### Error
 
