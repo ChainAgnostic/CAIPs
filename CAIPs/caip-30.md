@@ -8,6 +8,7 @@ type: Standard
 created: 2021-08-03
 updated: 2021-08-03
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/solana
 ---
 
 ## Simple Summary

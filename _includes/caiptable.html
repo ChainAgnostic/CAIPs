@@ -1,0 +1,36 @@
+<style type="text/css">
+    .caiptable .title {
+      width: 67%;
+    }
+  
+    .caiptable .author {
+      width: 33%;
+    }
+  </style>
+  {% for status in site.data.statuses %}
+    {% assign caips = include.caips|where:"status",status|sort:"caip" %}
+    {% assign count = caips|size %}
+    {% if count > 0 %}
+      <h2 id="{{status|slugify}}">{{status}}</h2>
+      <table class="caiptable">
+        <thead>
+          {% if status == "Last Call" %}
+            <tr>
+            <th class="caipnum">Number</th><th class="date">Review ends</th><th class="title">Title</th><th class="author">Author</th></tr>
+          {% else %}
+            <tr><th class="caipnum">Number</th><th class="title">Title</th><th class="author">Author</th></tr>
+          {% endif %}
+        </thead>
+        {% for page in caips %}
+          <tr>
+            <td class="num"><a href="{{page.url|relative_url}}">{{page.caip|xml_escape}}</a></td>
+            {% if status == "Last Call" and page.last-call-deadline != undefined %}
+              <td class="date">{{ page.last-call-deadline | xml_escape }}</td>
+            {% endif %}
+            <td class="title">{{page.title|xml_escape}}</td>
+            <td class="author">{% include authorlist.html authors=page.author %}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  {% endfor %}

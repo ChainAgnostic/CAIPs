@@ -7,6 +7,7 @@ status: Draft
 type: Standard
 created: 2020-08-26
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/fil
 ---
 
 ## Simple Summary

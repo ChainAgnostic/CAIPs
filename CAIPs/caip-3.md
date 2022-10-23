@@ -8,6 +8,7 @@ type: Standard
 created: 2019-12-05
 updated: 2020-01-16
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/eip155
 ---
 
 ## Simple Summary
