@@ -175,8 +175,8 @@ hedera:mainnet/nft:0.0.55492/12
 
 - 2022-10-23: 
     - expanded charset to include `-`,`.`, and `%`
-    - addedcanonicalization section and links
-    - regex for serial numbers also expanded to include entire `uint256` range 
+    - added canonicalization section and links
+    - better language for use cases, wider-characterset syntax, etc 
 - 2022-05-12: regex for token_id expanded to include entire `uint256` range
 - 2021-06-25: regex max lengths raised and test cases updated accordingly
 - 2020-06-23: added distinction between asset type and asset ID 
