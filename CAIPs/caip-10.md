@@ -136,7 +136,7 @@ of specification for details.
 - [HIP-15][] - Hedera Improvement Proposal defining a checksum suffix for addresses
 
 [namespaces]: https://namespaces.chainagnostic.org/
-[EIP-55]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md
+[EIP-55]: https://eips.ethereum.org/EIPS/eip-55
 [HIP-15]: https://github.com/hashgraph/hedera-improvement-proposal/blob/main/HIP/hip-15.md
 [CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
 [rfc3986]: https://www.rfc-editor.org/rfc/rfc3986
