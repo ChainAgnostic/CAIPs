@@ -42,7 +42,7 @@ By limiting the capabilities of where the Web3 provider APIs are being injected 
 
 ## Backwards Compatibility
 
-Wallet extensions SHOULD consider adding a "developer mode" toggle via a UX so that dApp developers have the capability to disable the insecure context (http) check for the http://localhost:<any-port> origin only in the event that [localhost][w3c-secure-context-localhost] does not return `true` for secure context</a>. This will allow dApp developers to be able to continue to host dApps on the localhost origin if a browser environment has chosen to not already consider localhost a secure context. Most major browser providers do consider localhost a secure context already. This toggle MUST be set to disabled by default.
+Wallet extensions SHOULD consider adding a "developer mode" toggle via a UX so that dApp developers have the capability to disable the insecure context (http) check for the http://localhost:<any-port> origin only in the event that [localhost][w3c-secure-context-localhost] does not return `true` for secure context</a>. This will allow dApp developers to be able to continue to host dApps on the localhost origin if a browser environment has chosen to not already consider localhost a secure context. Most major browser providers do consider localhost a secure context already. If such a toggle is made available, it MUST be set to disabled by default.
 
 ## Test Cases
 
