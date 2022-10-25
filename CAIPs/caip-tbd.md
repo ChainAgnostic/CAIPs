@@ -63,12 +63,6 @@ Wallet extensions SHOULD consider adding a "developer mode" toggle via a UX so t
 - Top level `file://foo with <iframe src="file://bar">` -> blocked (3p iframe)
 - Top level `https://a.com` with `<iframe src="https://b.com" sandbox="allow-same-origin allow-scripts">` -> blocked (3p iframe without sufficient privileges)
 
-### Optional Test Cases
-
-- Top level `https://a.com with <iframe src="https://b.com" allow="ethereum">` -> Ethereum allowed, Solana blocked (3P iframe because "allow" attribute in use for ethereum)
-- Top level `https://a.com with <iframe src="https://b.com" allow="solana">` -> Solana allowed, Ethereum blocked (3P iframe because "allow" attribute in use for solana)
-- Top level `https://a.com with <iframe src="https://b.com" allow="ethereum solana">` -> Solana allowed, Ethereum allowed (3P iframe because "allow" attribute in use for solana and ethereum)
-- Top level `https://a.com with <iframe src="https://b.com" allow="">` -> Solana blocked, Ethereum blocked (3P iframe because no "allow" attribute declared)
 
 ## Reference Implementation
 
