@@ -28,8 +28,8 @@ The provider objects, e.g. `window.ethereum` or a [Solana wallet adapter][solana
 - Provider objects MAY be accessible in private (incognito) windows.
 - The origin MUST be a [potentially trustworthy origin][w3c-secure-context-trustworthy-origin] to have access to the Web3 provider APIs. This can be checked using `window.isSecureContext`, including inside iframes.
     - Secure contexts include sites that are served from HTTPS but also HTTP `localhost`. 
-    - The browser implementation may optionally also support configured [potentially trustworthy origins] that would normally not be considered trustworthy if the user configures their browser to do so. See the [Development Environments section of Secure Contexts][w3c-secure-context-dev-env] for additional details.
-- By default the Web3 Provider APIs MUST NOT be exposed to 3p iframes.
+    - The browser implementation MAY optionally also support configured [potentially trustworthy origins] that would normally not be considered trustworthy if the user configures their browser to do so. See the [Development Environments section of Secure Contexts][w3c-secure-context-dev-env] for additional details. For example, in Chromium based browsers this is done via the `chrome://flags/#unsafely-treat-insecure-origin-as-secure` flag.
+- By default the Web3 Provider APIs MUST NOT be exposed to third-party iframes.
 - Web3 provider APIs MUST be `undefined` in an iframe where `window.isSecureContext` returns `false` in that iframe.
 - If the iframe is a third party to the top-level secure origin, it SHOULD be blocked. It MAY be unblocked if the iframe uses the `allow="ethereum"` or `allow="solana"` attribute. In order to achieve this implementers are REQUIRED to extend the Permissions API.
 - If the iframe is first-party to the top-level origin AND the `sandbox` attribute is set on the iframe, the provider object MUST be blocked. If the sandbox attribute is set to `sandbox="allow-same-origin"` it MUST be injected for a first party frame.
