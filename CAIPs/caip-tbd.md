@@ -15,7 +15,7 @@ Historically the web platform has had a notion of “powerful” APIs like [geol
 
 ## Motivation
 
-Wallets are oftentimes maintaining security and safety of users' funds that can be equivalent to large portions of money. For this reason, it's a good idea to restrict access to the Web3 Provider APIs to align it with other powerful APIs on the web platform. This will assist in reducing the surface area that attacks can be conducted to access users funds or data. Additionally, by adding in restrictions we're reducing the surface area that malicious web pages could fingerprint the user via the Web3 Provider APIs providing some additional privacy benefits. An example of a specific attack that's avoided by this is one where a malicious advertisement is loaded on a legitimate dApp that attempts to interact with a users wallet to maliciously request the user to access funds. With this CAIP implemented the advertisement frame would be considered a third party ("3P") iframe and therefore would not have the Web3 Provider API injected into it's sub frame because it's not a secure context.
+Wallets are oftentimes maintaining security and safety of users' funds that can be equivalent to large portions of money. For this reason, it's a good idea to restrict access to the Web3 Provider APIs to align it with other powerful APIs on the web platform. This will assist in reducing the surface area that attacks can be conducted to access users funds or data. Additionally, by adding in restrictions we're reducing the surface area that malicious web pages could fingerprint the user via the Web3 Provider APIs providing some additional privacy benefits. An example of a specific attack that's avoided by this is one where a malicious advertisement is loaded on a legitimate dApp that attempts to interact with a users wallet to maliciously request the user to access funds. With this CAIP implemented the advertisement frame would be considered a third party iframe and therefore would not have the Web3 Provider API injected into it's sub frame because it's not a secure context.
 
 ## Specification
 
@@ -53,15 +53,15 @@ Wallet extensions SHOULD consider adding a "developer mode" toggle via a UX so t
 - Top level `https://a.com` with `<iframe src="http://a.com/">` -> blocked (insecure first party iframe)
 - Top level `http://a.com` with `<iframe src="https://a.com/">` -> blocked (insecure top level window)
 - Top level `https://a.com` with `<iframe src="https://a.com">` -> allowed
-- Top level `https://a.com` with `<iframe src="https://b.com">` -> blocked (3p iframe without sufficient privileges)
+- Top level `https://a.com` with `<iframe src="https://b.com">` -> blocked (third-party iframe without sufficient privileges)
 - Top level `https://b.com` with `<iframe src="http://a.com/">` with `<iframe src="https://b.com">` -> blocked (insecure iframe)
-- Top level `https://b.com` with `<iframe src="https://a.com">` with `<iframe src="https://b.com">` -> blocked (3p iframe without sufficient privileges)
-- Top level `https://a.com` with `<iframe src="https://sub.a.com">` -> blocked (3p iframe without sufficient privileges)
+- Top level `https://b.com` with `<iframe src="https://a.com">` with `<iframe src="https://b.com">` -> blocked (third-party iframe without sufficient privileges)
+- Top level `https://a.com` with `<iframe src="https://sub.a.com">` -> blocked (third-party iframe without sufficient privileges)
 - Top level `https://a.com` with `<iframe src="https://a.com" sandbox>` -> blocked (sandbox attribute without "allow-same-origin")
 - Top level `https://a.com` with `<iframe src="https://a.com" sandbox="allow-same-origin allow-scripts">` -> allowed (but note this case is discouraged in https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox because it’d allow the iframe to remove its own sandbox attribute)
 - Top level `data://foo with <iframe src="data://bar">` -> blocked (insecure top level scheme)
-- Top level `file://foo with <iframe src="file://bar">` -> blocked (3p iframe)
-- Top level `https://a.com` with `<iframe src="https://b.com" sandbox="allow-same-origin allow-scripts">` -> blocked (3p iframe without sufficient privileges)
+- Top level `file://foo with <iframe src="file://bar">` -> blocked (third-party iframe)
+- Top level `https://a.com` with `<iframe src="https://b.com" sandbox="allow-same-origin allow-scripts">` -> blocked (third-party iframe without sufficient privileges)
 
 
 ## Reference Implementation
