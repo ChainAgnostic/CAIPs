@@ -1,0 +1,4 @@
+{% assign caips=include.caips|split:"," %}
+{% for num in caips %}
+  <a href="{{num|strip|prepend:"caip-" }}">{{num|strip}}</a>{% if forloop.last == false %}, {% endif %}
+{% endfor %}

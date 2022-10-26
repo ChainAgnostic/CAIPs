@@ -64,7 +64,7 @@ The JSON-RPC method is labelled as `provider_authorization` and expects one or
 more objects each named after the pertinent ChainAgnostic namespace and each
 containing with three parameters:
 
-* chains - array of CAIP-2 compliant chainId's to be used during the session
+* chains - array of CAIP-2 compliant chainId's
 * methods - array of JSON-RPC methods expected to be used during the session
 * events - array of JSON-RPC message/events expected to be emitted during the
   session
