@@ -58,7 +58,7 @@ given set of parameters by calling the following JSON-RPC request
         "cosmos": {
             ...
         }
-    ],
+    },
  
 }
 ```
