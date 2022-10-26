@@ -49,7 +49,7 @@ given set of parameters by calling the following JSON-RPC request
     "id": 1,
     "jsonrpc": "2.0",
     "method": "provider_authorization",
-    "params": [
+    "params": {
         "eip155": {
             "chains": ["eip155:1"],
             "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
