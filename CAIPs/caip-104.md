@@ -106,9 +106,9 @@ name and github username or email>
 
 ` * updated:` <comma separated list of dates>
 
-` * requires:` <CAIP number(s)>
+` * requires:` <CAIP number(s), i.e. `CAIP-XX` >
 
-` * replaces:` <CAIP number(s) | namespace reference(s)>
+` * replaces:` <CAIP number(s) | namespace reference(s), i.e. `eip155` >
 
 ` * superseded-by:` <namespace reference(s) | URL of non-namespace standard>
 
