@@ -1,7 +1,7 @@
 ---
 caip: 104
 title: Namespace Reference Purpose and Guidelines
-status: Active
+status: Review
 type: Meta
 author: Juan Caballero (@bumblefudge), Wayne Chang (@wyc)
 created: 2022-03-27
@@ -106,11 +106,11 @@ name and github username or email>
 
 ` * updated:` <comma separated list of dates>
 
-` * requires:` <CAIP number(s)>
+` * requires:` <CAIP number(s), i.e. `CAIP-XX` >
 
-` * replaces:` <CAIP number(s)>
+` * replaces:` <CAIP number(s) | namespace reference(s), i.e. `eip155` >
 
-` * superseded-by:` <CAIP number(s)>
+` * superseded-by:` <namespace reference(s) | URL of non-namespace standard>
 
 #### `title` header
 

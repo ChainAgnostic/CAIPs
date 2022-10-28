@@ -3,7 +3,7 @@ caip: 74
 title: CACAO - Chain Agnostic CApability Object
 author: Sergey Ukustov (@ukstv), Haardik (@haardikk21)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/74
-status: Draft
+status: Review
 type: Standard
 created: 2021-11-01
 updated: 2022-07-12

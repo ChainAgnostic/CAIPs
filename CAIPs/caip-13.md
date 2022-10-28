@@ -3,11 +3,12 @@ caip: 13
 title: Blockchain Reference for the Polkadot Namespace
 author: Pedro Gomes (@pedrouid), Joshua Mir (@joshua-mir), Shawn Tabrizi (@shawntabrizi)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/13
-status: Draft
+status: Superseded
 type: Standard
 created: 2020-04-01
 updated: 2020-04-02
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/pull/6
 ---
 
 ## Simple Summary

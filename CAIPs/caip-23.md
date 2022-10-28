@@ -3,7 +3,7 @@ caip: 23
 title: Blockchain Reference for Filecoin Namespace
 author: Sergey Ukustov (@ukstv)
 discussions-to: TBD
-status: Draft
+status: Superseded
 type: Standard
 created: 2020-08-26
 requires: 2

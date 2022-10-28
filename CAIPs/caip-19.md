@@ -3,7 +3,7 @@ caip: 19
 title: Asset Type and Asset ID Specification
 author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid), Joel Thorstensson (@oed)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/19
-status: Draft
+status: Review
 type: Standard
 created: 2020-06-23
 updated: 2020-06-23
