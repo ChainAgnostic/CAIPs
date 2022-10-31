@@ -4,7 +4,7 @@
 caip: <to be assigned>
 title: StreamSync
 author: Joel Thorstensson <joel@3box.io>
-discussions-to: <URL>
+discussions-to: https://forum.ceramic.network/t/discussion-streamsync
 status: Draft
 type: Standard
 created: 2022-10-31
@@ -187,7 +187,6 @@ Another consideration is that in gossipsub messages are propagated though many p
 The purpose of this protocol is to synchronize hash linked and signed event logs. This is the reason that event streams need to be synchronized in verification order, e.g. `event0` -> `event1` -> `event2` and so on. This is to prevent DoS attacks where if the events is sent from tip to first event an attacker can sent a lot of invalid events and the victim node would need to synchronize all data before seeing that these events are invalid.
 
 ## Implementations
-<!--Please add test cases here if applicable.-->
 No implementations exist as of yet. At least one implementation is required for this CAIP to be considered "Final".
 
 ## Copyright
