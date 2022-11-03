@@ -1,5 +1,5 @@
 ---
-caip: TBD
+caip: 154
 title: Restrict Web3 Provider API Injection
 description: Wallet guidance for restricting Web3 Provider API access to secure contexts for improved privacy and security for wallet users
 author: Yan Zhu (@diracdeltas), Brian R. Bondy (@bbondy), Andrea  Brancaleoni (@thypon), Kyle Den Hartog (@kdenhartog)
