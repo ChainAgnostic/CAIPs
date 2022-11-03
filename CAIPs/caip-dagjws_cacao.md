@@ -28,19 +28,19 @@ Initial practical use cases include the ability to make multiple writes to an au
 
 ### JWS with CACAO Construction
 
-JWS CACAO support includes adding a ‘cap’ parameter to the JWS Protected Header and specifying the correct ‘kid’ parameter string. 
+JWS CACAO support includes adding a `cap` parameter to the JWS Protected Header and specifying the correct `kid` parameter string. 
 
 **“cap” Header Parameter**
 
-The “cap” parameter maps to a URI string. ln the scope here this is expected to be an IPLD CID resolvable to to CACAO object. 
+The `cap` parameter maps to a URI string. ln the scope here this is expected to be an IPLD CID resolvable to a CACAO object. 
 
 **“kid” Header Parameter**
 
-The ‘kid’ parameter references the key used to secure the JWS.  In the scope here this is expected to be a DID with reference to any key in the DID verification methods.  The ‘parameter’ MUST match the ‘aud’ target of the CACAO object for both the CACAO and corresponding signature to be valid together.
+The `kid` parameter references the key used to secure the JWS.  In the scope here this is expected to be a DID with reference to any key in the DID verification methods.  The parameter MUST match the `aud` target of the CACAO object for both the CACAO and corresponding signature to be valid together.
 
 **Protected Header**
 
-With ‘cap’ currently not being a registered header parameter name in the IANA "JSON Web Signature and Encryption Header Parameters" registry, we treat this as a “Private Header Parameter Name” for now with additional meaning provided by the CACAO for implementations that choose to use this specification.  
+With `cap` currently not being a registered header parameter name in the IANA "JSON Web Signature and Encryption Header Parameters" registry, we treat this as a “Private Header Parameter Name” for now with additional meaning provided by the CACAO for implementations that choose to use this specification.  
 
 Example 1: Protected JWS header with CACAO
 ```tsx
@@ -51,11 +51,11 @@ Example 1: Protected JWS header with CACAO
  }
 ```
 
-NOTE: Ignoring the ‘cap’ header during validation still results in a valid JWS payload by the key defined in the ‘kid’. It just has no additional meaning by what is defined in the CACAO. The ‘cap’ header parameter could also have support added as an extension by using the “crit” (Critical) Header Parameter in the JWS, but there is little reason to invalidate the JWS based on a consumer not understanding the ‘cap’ header given it is still valid. 
+NOTE: Ignoring the `cap` header during validation still results in a valid JWS payload by the key defined in the ‘kid’. It just has no additional meaning by what is defined in the CACAO. The `cap` header parameter could also have support added as an extension by using the `crit` (Critical) Header Parameter in the JWS, but there is little reason to invalidate the JWS based on a consumer not understanding the `cap` header given it is still valid. 
 
 ### DagJWS with CACAO Construction
 
-Given JWS with CACAO described in prior section, follow the DAG-JOSE specification and implementations for the steps to construct a given JWS with CACAO header and payload into a DagJWS. 
+Given JWS with CACAO described in prior section, follow the DAG-JOSE specification and implementations for the steps to construct a given JWS with CACAO header and payload into a DagJWS. DagJWS is very similar to any JWS, except that the payload is a base64url encoded IPLD CID that references the JSON object payload. 
 
 ### DagJWS with CACAO Verification
 
@@ -63,11 +63,43 @@ The following algorithm describes the steps required to determine if a given Dag
 
 1) Follow DAG-JOSE specification to transform a given DagJWS into a JWS. 
 
-2) Follow JWS specifications to determine if the given JWS is valid. Verifying that the given signature paired with ‘alg’ and ‘kid’ in the protected header is valid over the given payload. If invalid, an error MUST be raised. 
+2) Follow JWS specifications to determine if the given JWS is valid. Verifying that the given signature paired with `alg` and `kid` in the protected header is valid over the given payload. If invalid, an error MUST be raised. 
 
-3) Resolve the given URI in ‘cap’ parameter of the projected JWS header to a CACAO JSON object. Follow the CAIP-74 CACAO specification to determine if the given CACAO is valid. If invalid, an error MUST be raised. 
+3) Resolve the given URI in `cap` parameter of the projected JWS header to a CACAO JSON object. Follow the [CAIP-74 CACAO](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-74.md) specification to determine if the given CACAO is valid. If invalid, an error MUST be raised. 
 
-4) Ensure that the ‘aud’ parameter of the CACAO payload is the same target as the ‘kid’ parameter in the JWS protected header. If they do not match, an error MUST be raised.
+4) Ensure that the `aud` parameter of the CACAO payload is the same target as the `kid` parameter in the JWS protected header. If they do not match, an error MUST be raised.
+
+### Example DagJWS with CACAO
+
+Example IPLD dag-jose encoded block, strings abbreviated. 
+
+```tsx
+{ 
+  cid: "bagcqcera2mews3mbbzs...quxj4bes7fujkms4kxhvqem2a",
+  value: {
+    jws: { 
+      link: CID("bafyreidkjgg6bi4juwx...lb2usana7jvnmtyjb4xbgwl6e"),
+      payload: "AXESIGpJjeCjiaWv...LKw6pIDQfTVrJ4SHlwmsvx", 
+      signatures: [
+        {
+          protected: "eyJhbGciOiJFZERTQSIsImNh...GU2djZEpLTmhYSDl4Rm9rdEFKaXlIQiJ9"
+          signature: "6usTYvu5KN0LFTQsWE9U-tqx...h60EgfvjL_rlAW7_tnQUl84sQyogpkLAQ"
+        }
+      ]
+    }
+  }
+}
+```
+
+If `block.value.jws.signatures[0].protected` is decoded, you would see the following object, a JWS protected header as described above:
+
+```tsx
+{
+  "alg": "EdDSA",
+  "cap": "ipfs://bafyreidoaclgf...yidwbzaouprdbjjfb4yim6q",
+  "kid": "did:key:z6Mkq2ZyjGV54ev...hXH9xFoktAJiyHB#z6Mkq2ZyjGV54ev...hXH9xFoktAJiyHB"
+}
+```
 
 ## Links
 
