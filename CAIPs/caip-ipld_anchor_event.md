@@ -2,7 +2,7 @@
 caip: <to be assigned>
 title: IPLD Timestamp Proof
 author: Zach Ferland <@zachferland>, Joel Thorstensson (@oed)
-discussions-to: <>
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/168
 status: Draft
 type: Standard
 created: 2022-10-27
@@ -61,8 +61,8 @@ A blockchain anchor is made up of both a Merkle tree root CID and the correspond
 ```tsx
 type BlockchainAnchor struct {
   root Link
-	chainID String 
-	txHash Link
+  chainID String 
+  txHash Link
 }
 ```
 
@@ -70,8 +70,8 @@ Example 2
 ```tsx
 {
   root: CID(bafyreiaxdhr5jbabn7enmbb5wpmnm3dwpncbqjcnoneoj22f3sii5vfg74)
-	chainID: "eip155:1"
-	txHash: CID(bagjqcgzanbud4sqdsywfp2mckuj57qsffsovgyjhh7sxebkqwr335hzy2zbq)
+  chainID: "eip155:1"
+  txHash: CID(bagjqcgzanbud4sqdsywfp2mckuj57qsffsovgyjhh7sxebkqwr335hzy2zbq)
 }
 ```
 
@@ -91,8 +91,8 @@ The combination of an IPLD based Merkle proof and blockchain anchor now make up 
 
 ```tsx
 type AnchorProof struct {
-	proof Link
-	path String 
+  proof Link
+  path String 
 }
 ```
 
@@ -100,7 +100,7 @@ Example 4
 ```tsx
 {
   proof: CID(bafyreietaedczjxh7omxfjm3oj55nbmxaga3himruubppgj3hp6dayonqq)
-	path: "0/0/1/0/1/1"
+  path: "0/0/1/0/1/1"
 }
 ```
 
