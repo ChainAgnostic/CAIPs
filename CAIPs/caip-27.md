@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Abandoned
 type: Standard
 created: 2020-12-12
-requires: 2
+requires: 2, 25, XX
 ---
 
 ## Simple Summary
@@ -31,30 +31,34 @@ The application would interface with a provider to make request as follows:
 
 ```jsonc
 {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "caip_request",
-    "params": {
-        "chainId": "eip155:1",
-        "request": {
-            "method": "personal_sign",
-            "params": ["0x68656c6c6f20776f726c642c207369676e2074657374206d65737361676521", "0xa89Df33a6f26c29ea23A9Ff582E865C03132b140"]
-        }
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "caip_request",
+  "params": {
+    "chainId": "eip155:1",
+    "token": "0xdeadbeef",
+    "request": {
+      "method": "personal_sign",
+      "params": [
+        "0x68656c6c6f20776f726c642c207369676e2074657374206d65737361676521",
+        "0xa89Df33a6f26c29ea23A9Ff582E865C03132b140"
+      ]
     }
+  }
 }
 ```
 
-The JSON-RPC method is labelled as `caip_request` and expects two parameters:
+The JSON-RPC method is labelled as `caip_request` and expects three parameters:
 
-* chainId -  CAIP-2 compatible chainId
-* request - an object containing the fields:
-    * method - JSON-RPC method to request
-    * params - JSON-RPC parameters to request
+- chainId - [CAIP-2](./caip-2.md) compatible chainId
+- token - [CAIP-XX](./caip-xx.md) SessionToken for session opened using [CAIP-25](./caip-25.md).
+- request - an object containing the fields:
+  - method - JSON-RPC method to request
+  - params - JSON-RPC parameters to request
 
 ### Response
 
 The wallet will respond to the requested with the targeted chain connection and it will return a response with a success result or error message.
-
 
 ## Links
 
