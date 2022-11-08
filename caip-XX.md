@@ -37,14 +37,36 @@ building block for more complex protocols down the line.
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
 
 ```
-method provider.issue (vc, $params)
+method provider.issue (verifiable_credential, !params)
 (return bool)
 
-method provider.request (presentation_request, $params)
+notes:
+* one call per VC rather than issuing an array of VCs
+* return error object instead of bool? 
+
+method provider.request (presentation_request, !params)
 (post back VP)
 
-method provider.verify (vc, $params, $error)
-(return bool, $error)
+notes:
+* should params include a timeout?
+* is the LD frame option in presentation_request enough to allow LD creds, anoncred VCs, etc via the schema format registry at DIF?
+* empty VP ok as response? 
+* error handling?
+
+```
+
+Worth defining verification APIs in here too? Wallet would call these and dapp shouldn't know whether internally or externally, but not sure if these belong in a separate CAIP or totally out of scope.
+
+``` 
+
+method provider.verifyVC (verifiable_credential, $params)
+(return verification_result)
+
+method provider.verifyVP (verifiable_credential, $params)
+(return verification_result)
+
+notes:
+* one call per VC rather than issuing an array of VCs/VPs
 
 ```
 
@@ -73,7 +95,7 @@ and vp's from presentation exchange v2 spec might be enough here)
 - [VC API][] - W3C-CCG-incubated VC protocol (optimized for LinkedData VCs and the Credential Handler API)
 - [Presentation Exchange][] - DIF-incubated *high-level* VC protocol (optimized for handling both JWT-VCs and JWTs at scale)
 - [DIDComm][] - DIF-incubated messaging layer, which includes sub-protocols for VCs extending the earlier "Present Proof" protocols incubated in Hyperledger Aries community.
-- [Walt.id prototype][] - note that WC Chat API is used as a shim for the interface defined above 
+- [Walt.id prototype][] - note that WC Chat API is used as a shim for the interface defined above; otherwise, a helpful prototype for illustrating a lightweight flow
 
 
 [VC spec]: https://www.w3.org/TR/vc-data-model/
