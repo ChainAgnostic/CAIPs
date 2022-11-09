@@ -1,5 +1,5 @@
 ---
-caip: <to be assigned>
+caip: 171
 title: Session tokens
 author: Olaf Tomalka (@ritave)
 discussions-to: <URL>
