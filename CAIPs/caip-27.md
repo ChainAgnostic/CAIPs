@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Abandoned
 type: Standard
 created: 2020-12-12
-requires: 2, 25, XX
+requires: 2, 25, 171
 ---
 
 ## Simple Summary
@@ -51,7 +51,7 @@ The application would interface with a provider to make request as follows:
 The JSON-RPC method is labelled as `caip_request` and expects three parameters:
 
 - chainId - [CAIP-2](./caip-2.md) compatible chainId
-- token - [CAIP-XX](./caip-xx.md) SessionToken for session opened using [CAIP-25](./caip-25.md).
+- token - [CAIP-171](./caip-171.md) SessionToken for session opened using [CAIP-25](./caip-25.md).
 - request - an object containing the fields:
   - method - JSON-RPC method to request
   - params - JSON-RPC parameters to request
