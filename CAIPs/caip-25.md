@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-10-14
 updated: 2020-10-14
-requires: 2, 10, XX
+requires: 2, 10, 171
 ---
 
 ## Simple Summary
@@ -55,7 +55,7 @@ The wallet can respond to this method with either a success result or an error m
 
 The response MUST be a success result when the user approved accounts matching the requested chains to be exposed and the requested methods to be used.
 
-The response MUST include `token` which is a `SessionToken` as defined in [caip-xx](./caip-XX).
+The response MUST include `token` which is a `SessionToken` as defined in [caip-171](./caip-171).
 
 An example of a successful response should match the following format:
 
