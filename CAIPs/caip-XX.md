@@ -14,7 +14,7 @@ This CAIP defines a token that is used to represent an open session when communi
 
 ## Motivation
 
-Currently, wallets use different ways to manage open sessions, website origin, WalletConnect topics, etc. This becomes hard to implement and has different edge cases depending on the source. One way to identify an open session no matter the source of the session is required.
+Currently, wallets use different ways to manage open sessions, MetaMask maintains connection based on origin, WalletConnect uses topics, etc. This becomes hard to implement and has different edge cases depending on the source. One way to identify an open session no matter the source of the session is required.
 
 ## Specification
 
