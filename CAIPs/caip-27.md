@@ -3,7 +3,7 @@ caip: 27
 title: JSON-RPC Provider Request
 author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
-status: Abandoned
+status: Draft
 type: Standard
 created: 2020-12-12
 requires: 2
