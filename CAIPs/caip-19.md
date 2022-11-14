@@ -31,10 +31,12 @@ The Asset Type is a string designed to uniquely identify the types of assets in 
 The `asset_type` is a case-sensitive string in the form
 
 ```
-asset_type:    chain_id + "/" + asset_namespace + ":" + asset_reference
+asset_type:        chain_id + "/" + asset_namespace + ":" + asset_reference + "?" + query
 chain_id:          Blockchain ID Specification cf. CAIP2
 asset_namespace:   [-a-z0-9]{3,8}
 asset_reference:   [-a-zA-Z0-9]{1,64}
+query:             ("block_number" | "n") "=" block_number
+block_number:      [0-9]{1,78}|"latest"
 ```
 
 ## Specification of Asset ID
@@ -66,6 +68,7 @@ The goals of the general asset type and asset ID format is:
 - To some degree human-readable and helps for basic debugging
 - Restricted in a way that it can be stored on-chain
 - Character set basic enough to display in hardware wallets as part of a transaction content
+- Idempotency and ability to cache the requests to the resource resolvers
 
 The following secondary goals can easily be achieved:
 
@@ -111,6 +114,9 @@ eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
 
 # CryptoKitties Collectible ID
 eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
+
+# CryptoKitties Collectible ID at block number 15051263
+eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769?block_number=15051263
 ```
 
 ## Copyright
