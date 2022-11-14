@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Draft
 type: Standard
 created: 2020-12-12
-requires: 2, 25, 171
+requires: ["2", "25", "171"]
 ---
 
 ## Simple Summary
