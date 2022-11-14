@@ -3,7 +3,7 @@ caip: 122
 title: Sign in With X (SIWx)
 author: Haardik (@haardikk21), Sergey Ukustov (@ukstv)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/122
-status: Draft
+status: Review
 type: Standard
 created: 2022-06-23
 updated: 2022-07-06
