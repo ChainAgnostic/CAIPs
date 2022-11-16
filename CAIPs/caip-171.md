@@ -30,7 +30,10 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 
 Whenever a CAIP uses a name `SessionToken` and has this CAIP in the `required` front-matter property, it SHALL be interpreted as reference to this specification.
 
-> Notice that there are no code constraints on the token value itself. This is by design and the value is implementation dependent.
+> Notice that there are no code constraints on the token value except
+> that it be expressed as a string with few reserve characters, under 256
+> characters in length. This is by design and the value is
+> implementation-dependent.
 
 ```typescript
 type SessionToken = string;
@@ -39,6 +42,8 @@ type SessionToken = string;
 `SessionToken` value MUST uniquely identify an open session. It MUST become invalid after a session is closed.
 
 It MUST be serializable into JSON. Serialization and later deserialization using JSON MUST result in the same value.
+
+5. It MUST be between 1 and 256 characters in length.
 
 ## Copyright
 
