@@ -298,7 +298,7 @@ handler api](https://w3c-ccg.github.io/credential-handler-api/), which does not
 support the [Presentation Exchange Data
 Model](https://identity.foundation/presentation-exchange/) specification but
 does offer more flexible support for Linked Data verifiable credential formats
-and a rich interface for wallet selection via the Credential Hander API (CHAPI).
+and a rich interface for wallet selection via the Credential Handler API (CHAPI).
 Interoperability with other set of interfaces may require extensions or breaking
 changes to this specification, and is out of scope for now.
 
