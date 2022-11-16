@@ -1,6 +1,6 @@
 ---
 caip: 171
-title: Session tokens
+title: Session Identifiers
 author: Olaf Tomalka (@ritave)
 discussions-to: <URL>
 status: Draft
@@ -10,11 +10,19 @@ created: 2022-11-09
 
 ## Simple Summary
 
-This CAIP defines a token that is used to represent an open session when communicating with a wallet
+This CAIP defines an common identifier for representing an open session with a
+wallet, including both in-browser session tokens and API-based connection IDs.
 
 ## Motivation
 
-Currently, wallets use different ways to manage open sessions, MetaMask maintains connection based on origin, WalletConnect uses topics, etc. This becomes hard to implement and has different edge cases depending on the source. One way to identify an open session no matter the source of the session is required.
+Currently, sessions with wallet clients are tracked differently across different
+architectures: in-browser MetaMask sandboxes instance-specific connections based
+on origin which are referred to by tokens in the browser, while WalletConnect
+uses a topic-based pub/sub protocol keyed to a unique topic string, etc.
+Aligning specific aspects of session state can be hard without shared
+assumptions about session boundaries and tracking. A minimal assumption is that
+sessions are tracked by identifiers, and that different actors can update the
+session accordingly.
 
 ## Specification
 
@@ -22,24 +30,35 @@ Currently, wallets use different ways to manage open sessions, MetaMask maintain
 
 ### Language
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-"OPTIONAL" written in uppercase in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt)
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in
+uppercase in this document are to be interpreted as described in [RFC
+2119](https://www.ietf.org/rfc/rfc2119.txt)
 
 ### Definition
 
-Whenever a CAIP uses a name `SessionToken` and has this CAIP in the `required` front-matter property, it SHALL be interpreted as reference to this specification.
+Whenever a CAIP uses a name `SessionIdentifier` and has this CAIP in the
+`required` front-matter property, it SHALL be interpreted as reference to this
+specification.
 
-> Notice that there are no code constraints on the token value itself. This is by design and the value is implementation dependent.
+> Notice that there are no code constraints on the token value except
+> that it be expressed as a string with few reserve characters, under 256
+> characters in length. This is by design and the value is
+> implementation-dependent.
 
 ```typescript
 type SessionToken = string;
 ```
 
-`SessionToken` value MUST uniquely identify an open session. It MUST become invalid after a session is closed.
-
-It MUST be serializable into JSON. Serialization and later deserialization using JSON MUST result in the same value.
+Properties of the `sessionIdentifier` are as follows:
+1. It MUST uniquely identify an open and stateful session. 
+1. It MUST identify a closeable session, and it MUST become invalid
+   after a session is closed.
+1. It MUST remain the same as the identified session's state changes.
+1. It MUST be serializable into JSON. Serialization and later deserialization using
+JSON MUST result in the same value.
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via
+[CC0](https://creativecommons.org/publicdomain/zero/1.0/).

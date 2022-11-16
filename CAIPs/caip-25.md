@@ -80,7 +80,7 @@ The wallet can respond to this method with either a success result or an error m
 The response MUST be a success result when the user approved accounts matching
 the requested chains to be exposed and the requested methods to be used.
 
-The response MUST include `token` which is a `SessionToken` as defined in [caip-171](./caip-171).
+The response MUST include `session` which is a `SessionIdentifier` as defined in [caip-171](./caip-171).
 
 An example of a successful response should match the following format:
 
@@ -89,7 +89,7 @@ An example of a successful response should match the following format:
   "id": 1,
   "jsonrpc": "2.0",
   "result": {
-    "token": "0xdeadbeef",
+    "session": "0xdeadbeef",
     "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
   }
 }
@@ -136,6 +136,12 @@ The valid error messages codes are the following:
 * When wallet evaluates requested events to not be supported
     * code = 5102
     * message = "Requested events are not supported"
+
+## Changelog
+
+- 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement) 
+- 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
+  consolidated variants across issues and forks post-Amsterdam Gathering
 
 ## Copyright
 
