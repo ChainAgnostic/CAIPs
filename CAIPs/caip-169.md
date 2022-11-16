@@ -146,7 +146,7 @@ Stores the given VC in the CP.
 ##### Returns:
 
 - `error` - OPTIONAL. If `vc` was malformed or does not comply with the
-  Verifialbe Credentials Profile defined in this specification.
+  Verifiable Credentials Profile defined in this specification.
 
 ### Issue
 
