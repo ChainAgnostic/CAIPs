@@ -37,14 +37,12 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Definition
 
-Whenever a CAIP uses a name `SessionIdentifier` and has this CAIP in the
+Whenever a CAIP uses the name `SessionIdentifier` and has this CAIP in the
 `required` front-matter property, it SHALL be interpreted as reference to this
 specification.
 
-> Notice that there are no code constraints on the token value except
-> that it be expressed as a string with few reserve characters, under 256
-> characters in length. This is by design and the value is
-> implementation-dependent.
+> Notice that there are no code constraints on the token value. This is by
+> design and the value is implementation-dependent.
 
 ```typescript
 type SessionIdentifier = string;
@@ -52,10 +50,10 @@ type SessionIdentifier = string;
 
 Properties of the `SessionIdentifier` are as follows:
 1. It MUST uniquely identify an open and stateful session. 
-1. It MUST identify a closeable session, and it MUST become invalid
+2. It MUST identify a closeable session, and it MUST become invalid
    after a session is closed.
-1. It MUST remain the same as the identified session's state changes.
-1. It MUST be serializable into JSON. Serialization and later deserialization using
+3. It MUST remain the same as the identified session's state changes.
+4. It MUST be serializable into JSON. Serialization and later deserialization using
 JSON MUST result in the same value.
 
 ## Copyright
