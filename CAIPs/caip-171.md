@@ -47,7 +47,7 @@ specification.
 > implementation-dependent.
 
 ```typescript
-type SessionToken = string;
+type SessionIdentifier = string;
 ```
 
 Properties of the `sessionIdentifier` are as follows:
