@@ -50,7 +50,7 @@ specification.
 type SessionIdentifier = string;
 ```
 
-Properties of the `sessionIdentifier` are as follows:
+Properties of the `SessionIdentifier` are as follows:
 1. It MUST uniquely identify an open and stateful session. 
 1. It MUST identify a closeable session, and it MUST become invalid
    after a session is closed.
