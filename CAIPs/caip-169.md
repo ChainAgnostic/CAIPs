@@ -39,7 +39,7 @@ other dapps, without leaking information about the wallet or architecture to the
 calling dapp.
 
 This CAIP describes three methods that combine to act as a Credential Provider
-(CP) to support _Verifiabe Credentials_ (VCs) storage, issuance, selective
+(CP) to support _Verifiable Credentials_ (VCs) storage, issuance, selective
 disclosure and proof of control. VCs are usually self-certifiable attestations
 from an issuer about the owner of the VC encoded in the credential subject. The
 owner of the VC can selectively disclose information from those VCs and prove
