@@ -334,7 +334,7 @@ capability (including those specified in this specification), and per additional
 resource.
 
 The relying party MUST ensure that: the challenge required by the verifiable
-presentation are is sufficiently random; that they are used only once, tracked
+presentation is sufficiently random; that it is used only once, tracked
 against some form of session token (see [CAIP-170][]), etc; or that it is some form of
 expiring verifiable credential encoded as a string.  Man-in-the-middle
 protection and other security assumptions fall on the relying party to secure.
