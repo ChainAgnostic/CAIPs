@@ -368,7 +368,7 @@ Specifications (Dependencies)
   alike, enable on-chain VC verification, etc.
 - [Data Integrity spec][] - Formerly referred to as "Linked Data Proofs," this
   specification for embedding proofs in structured data objects like JSON-LD
-  documents and verifiable credentialy specifies the handling of distinct
+  documents and verifiable credentials specifies the handling of distinct
   credentials that flatten an open-world/RDF-style graph to be signed and
   verified.
 - [Presentation Exchange][] - DIF-incubated *high-level* VC protocol (optimized
