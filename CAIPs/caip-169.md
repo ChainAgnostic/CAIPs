@@ -71,7 +71,7 @@ for example, these approaches usually rely on either
 [eth.personal.sign](https://web3js.readthedocs.io/en/v1.4.0/web3-eth-personal.html#sign)
 or [EIP-712](https://eips.ethereum.org/EIPS/eip-712). The identity assertion
 becomes self-certifiable with this approach, but tightly bound to the Ethereum
-address as only identifier. To improve privacy it is important to introduce a
+address as the only identifier. To improve privacy it is important to introduce a
 mechanism that allows people to selectively disclose the linkage between another
 identifier (such as a chain-agnostic or off-chain DID) and their Ethereum
 address. This can be done through VCs and DIDs.
