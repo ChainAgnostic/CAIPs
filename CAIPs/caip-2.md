@@ -33,7 +33,7 @@ The `chain_id` is a case-sensitive string in the form
 ```
 chain_id:    namespace + ":" + reference
 namespace:   [-a-z0-9]{3,8}
-reference:   [-a-zA-Z0-9]{1,32}
+reference:   [-_a-zA-Z0-9]{1,32}
 ```
 
 ### Semantics
@@ -87,6 +87,9 @@ cosmos:Binance-Chain-Tigris
 
 # IOV Mainnet (Tendermint + weave)
 cosmos:iov-mainnet
+
+# StarkNet Testnet
+starknet:SN_GOERLI
 
 # Lisk Mainnet (LIP-0009; see https://github.com/LiskHQ/lips/blob/master/proposals/lip-0009.md)
 lip9:9ee11e9df416b18b
