@@ -55,6 +55,7 @@ To resolve a blockchain reference for the BIP122 namespace, make a JSON-RPC requ
   "result": "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
 }
 ```
+
 The response will return as a value for the result a hash for the block with height 0 that should be sliced to its first 16 bytes (32 characters for base 16) to be CAIP-4 compatible.
 
 ## Rationale
@@ -86,4 +87,4 @@ bip122:fdbe99b90c90bae7505796461471d89a
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

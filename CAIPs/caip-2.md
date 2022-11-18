@@ -105,4 +105,4 @@ chainstd:8c3444cf8970a9e41a706fab93e7a6c4
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

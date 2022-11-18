@@ -15,10 +15,12 @@ superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/stellar
 This CAIP defines the Stellar network namespace and reference for CAIP-2.
 
 ## Abstract
+
 In CAIP-2 a general blockchain identification scheme is defined. This is the
 implementation of CAIP-2 for the Stellar network.
 
 ## Motivation
+
 See CAIP-2.
 
 ## Specification
@@ -37,9 +39,9 @@ Reference could only be populated with `testnet` or `pubnet` symbols.
 Each Stellar network has its own unique passphrase, which is used when validating signatures on a given transaction.
 
 The current passphrases for the Stellar pubnet and testnet are:
+
 - Pubnet: 'Public Global Stellar Network ; September 2015'
 - Testnet: 'Test SDF Network ; September 2015'
-
 
 ### Resolution Method
 
@@ -64,10 +66,10 @@ curl -X GET "https://horizon.stellar.org/" -H "accept: application/json"
   "core_supported_protocol_version": 15
 }
 ```
-The response will return a JSON object which will include network information. 
+
+The response will return a JSON object which will include network information.
 
 The blockchain reference can be retrieved from `network_passphrase` response of Horizon or from `network` response of Stellar Core.
-
 
 ## Rationale
 
@@ -95,4 +97,4 @@ stellar:pubnet
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

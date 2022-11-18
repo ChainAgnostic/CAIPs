@@ -53,4 +53,4 @@ Please add test cases here if applicable.
 Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.
 
 ## Copyright
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

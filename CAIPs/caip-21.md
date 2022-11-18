@@ -9,7 +9,6 @@ created: 2020-06-23
 updated: 2020-06-23
 requires: 19
 superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/eip155/caip19.md
-
 ---
 
 ## Simple Summary
@@ -57,4 +56,4 @@ eip155:1/erc20:0x8f8221afbb33998d8584a2b05749ba73c37a938a
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).
