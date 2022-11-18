@@ -100,4 +100,4 @@ expected that we will see this event in normal usage.
 ## Copyright
 
 Copyright and related rights waived
-via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+via [CC0](../LICENSE).

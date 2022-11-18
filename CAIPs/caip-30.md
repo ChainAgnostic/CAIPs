@@ -61,7 +61,6 @@ To resolve a blockchain reference for the Solana namespace, make a JSON-RPC requ
 
 The response will return as a value for the result a hash for the block with height 0 that should be truncated to its first 32 characters to be CAIP-30 compatible.
 
-
 ## Rationale
 
 Blockchains in the "solana" namespace are identified by their chain ID as mentioned in the Reference Definition Section.
@@ -84,7 +83,6 @@ solana:8E9rvCKLFQia2Y35HXjjpWzj8weVo44K
 
 ## Links
 
-
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

@@ -39,9 +39,9 @@ The data model _MUST_ contain the following fields:
 | `version`         | string          | ✓         | Current version of the message.                                                                                                                                                                   |
 | `statement`       | string          |           | Human-readable ASCII assertion that the user will sign. It _MUST NOT_ contain `\n`.                                                                                                               |
 | `nonce`           | string          |           | Randomized token to prevent signature replay attacks.                                                                                                                                             |
-| `issued-at`       | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates the issuance time.                                                                                                                                   |
-| `expiration-time` | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message is no longer valid.                                                                                           |
-| `not-before`      | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message starts being valid.                                                                                           |
+| `issued-at`       | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates the issuance time.                                                                                                                                |
+| `expiration-time` | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message is no longer valid.                                                                                        |
+| `not-before`      | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message starts being valid.                                                                                        |
 | `request-id`      | string          |           | System-specific identifier used to uniquely refer to the authentication request.                                                                                                                  |
 | `resources`       | List of strings |           | List of information or references to information the user wishes to have resolved as part of the authentication by the relying party; express as [RFC 3986][rfc 3986] URIs and separated by `\n`. |
 | `signature`       | bytes           | ✓         | Signature of the message signed by the wallet.                                                                                                                                                    |
@@ -167,4 +167,4 @@ Not applicable.
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).
