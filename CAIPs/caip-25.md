@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-10-14
 updated: 2022-10-26
-requires: ["2", "10"]
+requires: 2, 10
 ---
 
 ## Simple Summary
