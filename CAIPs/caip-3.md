@@ -4,7 +4,7 @@ title: Blockchain Reference for the EIP155 Namespace
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/3, https://github.com/ChainAgnostic/CAIPs/pull/1
 status: Draft
-type: Superseded
+type: Standard
 created: 2019-12-05
 updated: 2020-01-16
 requires: 2
