@@ -37,7 +37,7 @@ Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) styl
 
 `* review-period-end:` <date review period ends>
 
-` type:` <Standards Track (Core, Networking, Interface, ERC)  | Informational | Meta>
+` type:` <Standard | Informational | Meta>
 
 ` * category:` <Core | Networking | Interface | ERC>
 
@@ -81,7 +81,7 @@ As a single exception, `discussions-to` cannot point to GitHub pull requests.
 
 #### `type` header
 
-The `type` header specifies the type of CAIP: Standards Track, Meta, or Informational.
+The `type` header specifies the type of CAIP: Standard, Meta, or Informational.
 
 #### `created` header
 
