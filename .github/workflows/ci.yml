@@ -1,0 +1,12 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: fwilhe2/setup-kotlin@main
+    - run: kotlin .ci/check_caips.main.kts
