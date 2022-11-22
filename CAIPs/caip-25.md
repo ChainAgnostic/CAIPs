@@ -37,11 +37,13 @@ These are out of scope of this CAIP interface and will be specified in a
 forthcoming one.
 
 Within that session model, this interface outlines the authorization of an
-injected provider per namespace.
+injected provider per namespace. These authorization call/responses should be
+idempotent, and successive responses should each update the session object
+identified by the `session` property.
 
 ### Request
 
-The application would interface with a provider to authorize a provider with a
+The application would interface with a provider to authorize that provider with a
 given set of parameters by calling the following JSON-RPC request
 
 ```
@@ -49,6 +51,7 @@ given set of parameters by calling the following JSON-RPC request
     "id": 1,
     "jsonrpc": "2.0",
     "method": "provider_authorization",
+    "session": "0xdeadbeef",
     "params": {
         "eip155": {
             "chains": ["eip155:1"],
@@ -97,6 +100,7 @@ An example of a successful response should match the following format:
 
 The accounts returned as a result should match the requested `chainId`s and
 should be an array of CAIP-10 compliant `accountId`s.
+
 #### Failure States
 
 The response MUST NOT be a success result when the user disapproves the accounts
