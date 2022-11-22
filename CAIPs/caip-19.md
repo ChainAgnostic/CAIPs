@@ -115,4 +115,4 @@ eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

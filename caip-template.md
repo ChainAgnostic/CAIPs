@@ -9,8 +9,8 @@ status: Draft
 type: <Standard | Meta | Informational>
 created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
 updated: <date last updated, in ISO 8601 (yyyy-mm-dd) format>
-requires (*optional): <CAIP number(s)>
-replaces (*optional): <CAIP number(s)>
+requires (*optional): <CAIP number(s); if multiple, format as `[1,2]` array>
+replaces (*optional): <CAIP number(s); if multiple, format as `[1,2]` array>
 ---
 
 <!--You can leave these HTML comments in your merged EIP and delete the visible duplicate text guides, they will not appear and may be helpful to refer to if you edit it again. This is the suggested template for new EIPs. Note that an EIP number will be assigned by an editor. When opening a pull request to submit your EIP, please use an abbreviated title in the filename, `eip-draft_title_abbrev.md`. The title should be 44 characters or less.-->
@@ -53,4 +53,4 @@ Please add test cases here if applicable.
 Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.
 
 ## Copyright
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

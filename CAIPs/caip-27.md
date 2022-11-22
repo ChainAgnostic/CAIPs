@@ -72,10 +72,6 @@ The JSON-RPC method is labelled as `caip_request` and expects three parameters:
 The wallet will respond to the requested with the targeted chain connection and
 it will return a response with a success result or error message.
 
-## Changelog
-
-- 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement) 
-
 ## Links
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
@@ -84,4 +80,4 @@ it will return a response with a success result or error message.
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

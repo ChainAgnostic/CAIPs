@@ -10,9 +10,11 @@ updated: 2022-07-12
 ---
 
 ## Simple Summary
+
 Represent a chain-agnostic Object Capability (OCAP), created using [CAIP-122](), as an [IPLD](https://ipld.io) object.
 
 ## Abstract
+
 In this document we define a way to record the result of [CAIP-122]() signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP). This creates not just an event receipt of an authentication, but also a composable and replay-able authorization receipt for verifiable authorizations, when the message signed contains the appropriate fields. The first CACAO profile was tailored to the ethereum dapps supporting [EIP-4361][] but roughly equivalent profiles for other wallet/dapp ecosystems are being added over time.
 
 ## Motivation
@@ -84,7 +86,7 @@ type SignatureMeta struct {
 }
 ```
 
-This construction allows a dApp to uniformly request a SIWx signature regardless of the user's account nature. 
+This construction allows a dApp to uniformly request a SIWx signature regardless of the user's account nature.
 
 ### Signature Verification
 
@@ -110,6 +112,7 @@ Resources:
 
 Signature verification goes according to `t` in `SignatureMeta`:
 For example,
+
 - `eip191`: use [EIP-191](https://eips.ethereum.org/EIPS/eip-191),
 - `eip1271`: use [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271).
 
@@ -139,6 +142,7 @@ In the [previous version of this specification](https://github.com/ChainAgnostic
 Below you could find a CACAO, along with its serialized presentation in CAR file.
 
 CACAO:
+
 ```
 {
   "h": {
@@ -189,4 +193,5 @@ Present version of CAIP-74 updates and clarifies the previous versions:
 - [EIP-1271: Standard Signature Validation Method for Contracts](https://eips.ethereum.org/EIPS/eip-1271)
 
 ## Copyright
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+
+Copyright and related rights waived via [CC0](../LICENSE).

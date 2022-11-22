@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-10-14
 updated: 2022-10-26
-requires: ["2", "10", "171"]
+requires: [2, 10, 171]
 ---
 
 ## Simple Summary
@@ -59,16 +59,16 @@ given set of parameters by calling the following JSON-RPC request
             ...
         }
     },
- 
+
 }
 ```
 
 The JSON-RPC method is labelled as `provider_authorization` and expects one or
 more objects each named after the pertinent ChainAgnostic namespace and each
 containing with three parameters:
-* chains - array of CAIP-2 compliant chainId's
-* methods - array of JSON-RPC methods expected to be used during the session
-* events - array of JSON-RPC message/events expected to be emitted during the
+- chains - array of CAIP-2 compliant chainId's
+- methods - array of JSON-RPC methods expected to be used during the session
+- events - array of JSON-RPC message/events expected to be emitted during the
   session
 
 ### Response
@@ -145,4 +145,4 @@ The valid error messages codes are the following:
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

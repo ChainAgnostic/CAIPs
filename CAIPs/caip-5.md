@@ -89,6 +89,7 @@ curl -X GET "https://stargate.cosmos.network/node_info" -H "accept: application/
   }
 }
 ```
+
 The response will return a JSON object which will include node information and the blockchain reference can be retrieved from `node_info.network` to be CAIP-5 compatible.
 
 ## Rationale
@@ -146,4 +147,4 @@ cosmos:hashed-843d2fc87f40eeb9
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).
