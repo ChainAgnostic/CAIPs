@@ -51,8 +51,12 @@ given set of parameters by calling the following JSON-RPC request
     "method": "provider_authorization",
     "params": {
         "eip155": {
-            "chains": ["eip155:1"],
+            "chains": ["eip155:1", "eip155:137"],
             "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
+            "events": ["accountsChanged", "chainChanged"]
+        },
+        "eip155:10": {
+            "methods": ["personal_sign"]
             "events": ["accountsChanged", "chainChanged"]
         },
         "cosmos": {
@@ -64,9 +68,13 @@ given set of parameters by calling the following JSON-RPC request
 ```
 
 The JSON-RPC method is labelled as `provider_authorization` and expects one or
-more objects each named after the pertinent ChainAgnostic namespace and each
-containing with three parameters:
-- chains - array of CAIP-2 compliant chainId's
+more objects each named after the scope of authorization:
+1. EITHER an entire ChainAgnostic [namespace][] 
+2. OR a specific [CAIP-2][] in that namespace.
+
+Each object contains the following parameters:
+- chains - array of [CAIP-2][]-compliant `chainId`'s. This parameter MAY be
+  omitted if the chain scope is already given by the name of the object.
 - methods - array of JSON-RPC methods expected to be used during the session
 - events - array of JSON-RPC message/events expected to be emitted during the
   session
@@ -96,7 +104,8 @@ An example of a successful response should match the following format:
 ```
 
 The accounts returned as a result should match the requested `chainId`s and
-should be an array of CAIP-10 compliant `accountId`s.
+should be an array of [CAIP-10][] compliant `accountId`s.
+
 #### Failure States
 
 The response MUST NOT be a success result when the user disapproves the accounts
@@ -136,6 +145,12 @@ The valid error messages codes are the following:
 * When wallet evaluates requested events to not be supported
     * code = 5102
     * message = "Requested events are not supported"
+* When a badly-formed request includes a `chainId` mismatched to scope
+    * code = 5103
+    * message = "Scope/chain mismatch"
+* When a badly-formed request defines one `chainId` two ways
+    * code = 5104
+    * message = "ChainId defined in two different scopes"
 
 ## Changelog
 
