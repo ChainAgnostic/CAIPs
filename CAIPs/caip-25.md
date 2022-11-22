@@ -39,7 +39,8 @@ forthcoming one.
 Within that session model, this interface outlines the authorization of an
 injected provider per namespace. These authorization call/responses should be
 idempotent, and successive responses should each update the session object
-identified by the `session` property.
+identified by the `session` property, which should point to a
+`SessionIdentifier` as defined in [CAIP-171][].
 
 ### Request
 
@@ -69,7 +70,7 @@ given set of parameters by calling the following JSON-RPC request
 The JSON-RPC method is labelled as `provider_authorization` and expects one or
 more objects each named after the pertinent ChainAgnostic namespace and each
 containing with three parameters:
-- chains - array of CAIP-2 compliant chainId's
+- chains - array of [CAIP-2][] compliant chainId's
 - methods - array of JSON-RPC methods expected to be used during the session
 - events - array of JSON-RPC message/events expected to be emitted during the
   session
@@ -83,7 +84,7 @@ The wallet can respond to this method with either a success result or an error m
 The response MUST be a success result when the user approved accounts matching
 the requested chains to be exposed and the requested methods to be used.
 
-The response MUST include `session` which is a `SessionIdentifier` as defined in [caip-171](./caip-171).
+The response MUST include `session` which is a `SessionIdentifier` as defined in [caip-171][].
 
 An example of a successful response should match the following format:
 
@@ -146,6 +147,20 @@ The valid error messages codes are the following:
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement) 
 - 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
   consolidated variants across issues and forks post-Amsterdam Gathering
+
+## Links
+
+- [CAIP-2][] - Chain ID Specification
+- [CAIP-10][] - Account ID Specification
+- [CAIP-25][] - JSON-RPC Provider Request
+- [CAIP-75][] - Blockchain Reference for the Hedera namespace
+- [CAIP-171][] - Session Identifier Specification
+
+[CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
+[CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
+[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
+[CAIP-75]: https://chainagnostic.org/CAIPs/caip-75
+[CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 
 ## Copyright
 
