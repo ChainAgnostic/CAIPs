@@ -2,7 +2,7 @@
 caip: 171
 title: Session Identifiers
 author: Olaf Tomalka (@ritave)
-discussions-to: <URL>
+discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/176
 status: Draft
 type: Standard
 created: 2022-11-09
