@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-12-12
 updated: 2022-11-16
-requires: ["2", "25", "171"]
+requires: [2, 25, 171]
 ---
 
 ## Simple Summary
