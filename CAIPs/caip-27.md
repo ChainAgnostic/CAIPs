@@ -7,19 +7,19 @@ status: Draft
 type: Standard
 created: 2020-12-12
 updated: 2022-11-16
-requires: ["2", "25", "171"]
+requires: [2, 25, 171]
 ---
 
 ## Simple Summary
 
-CAIP-27 defines a standard JSON-RPC method for requesting methods mapped to a
-target chain.
+CAIP-27 defines a standard JSON-RPC method for requesting specific RPC
+methods, mapped to one specific target chain, one per call.
 
 ## Abstract
 
 This proposal has the goal to define a standard method for decentralization
-applications to request JSON-RPC methods from cryptocurrency wallets directed to
-a given target chain.
+applications to request one JSON-RPC method (per call) from cryptocurrency
+wallets, scoped to a given target chain.
 
 ## Motivation
 
@@ -32,7 +32,9 @@ by the decentralized application.
 
 The JSON-RPC provider is able to make one or more JSON-RPC requests accompanied
 by a [CAIP-2][] compatible `chainId` and a keyed to a specific [CAIP-171][]
-session. 
+session. Note that [CAIP-25][] initializes and authorizes a provider session
+with one or more `chainId`s, methods, and events bundled into a session object
+and tracked by a [CAIP-171][] identifier/object on both sides.
 
 ### Request
 
@@ -45,7 +47,7 @@ The application would interface with a provider to make request as follows:
   "method": "caip_request",
   "params": {
     "chainId": "eip155:1",
-    "session": "0xdeadbeef",
+    "sessionIdentifier": "0xdeadbeef",
     "request": {
       "method": "personal_sign",
       "params": [
@@ -61,7 +63,7 @@ The JSON-RPC method is labelled as `caip_request` and expects three parameters:
 
 - chainId - [CAIP-2][]-defined `chainId` to identify both a namespace and a
   specific chain or network within it
-- session - [CAIP-171][] `SessionToken` to identify the session opened or
+- sessionIdentifier - [CAIP-171][] `sessionIdentifier` to identify the session opened or
   updated by a [CAIP-25][] interaction.
 - request - an object containing the fields:
   - method - JSON-RPC method to request
