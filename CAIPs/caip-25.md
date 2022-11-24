@@ -38,9 +38,11 @@ forthcoming one.
 
 Within that session model, this interface outlines the authorization of an
 injected provider per namespace. These authorization call/responses should be
-idempotent, and successive responses should each update the session object
-identified by the `session` property, which should point to a
-`SessionIdentifier` as defined in [CAIP-171][].
+idempotent, assuming the provider is tracking a session property, referred to by
+a `sessionIdentifier` as defined in [CAIP-171][]. If a wallet needs to initiate
+a new session, whether due to user input, security policy, or session expiry
+reasons, it can simply generate a new session identifier to signal this event to
+the calling provider.
 
 ### Request
 
@@ -52,7 +54,6 @@ given set of parameters by calling the following JSON-RPC request
     "id": 1,
     "jsonrpc": "2.0",
     "method": "provider_authorization",
-    "session": "0xdeadbeef",
     "params": {
         "eip155": {
             "chains": ["eip155:1"],
@@ -84,7 +85,8 @@ The wallet can respond to this method with either a success result or an error m
 The response MUST be a success result when the user approved accounts matching
 the requested chains to be exposed and the requested methods to be used.
 
-The response MUST include `session` which is a `SessionIdentifier` as defined in [caip-171][].
+The response MUST include a key `sessionIdentifier` the value of which is a
+`SessionIdentifier` as defined in [caip-171][]. 
 
 An example of a successful response should match the following format:
 
@@ -93,7 +95,7 @@ An example of a successful response should match the following format:
   "id": 1,
   "jsonrpc": "2.0",
   "result": {
-    "session": "0xdeadbeef",
+    "SessionIdentifier": "0xdeadbeef",
     "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
   }
 }
