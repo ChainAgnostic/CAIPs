@@ -229,6 +229,7 @@ The valid error messages codes are the following:
   consolidated variants across issues and forks post-Amsterdam Gathering
 
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
 
 ## Copyright
 
