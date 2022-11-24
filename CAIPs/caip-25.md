@@ -31,10 +31,9 @@ application through a provider connecting to a wallet.
 
 ## Specification
 
-The provider is defined within a session once the handshake procedure is
-successfully approved by a wallet, and updated, extended, closed, etc by events.
-These are out of scope of this CAIP interface and will be specified in a
-forthcoming one.
+The session is defined by a wallet's response to a provider's request, and
+updated, extended, closed, etc by successive calls and events. These are out of
+scope of this CAIP interface and will be specified in a forthcoming one.
 
 Within that session model, this interface outlines the authorization of an
 injected provider per namespace. These authorization call/responses should be
