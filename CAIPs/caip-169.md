@@ -27,7 +27,7 @@ notable examples.
 
 This specification adds new methods to the multi-provider JSON-RPC for storing,
 creating, selectively disclosing and proving control of offchain- and onchain
-credentials under a new `creds_*` prefix.
+credentials under a new `wallet_creds_` prefix.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
@@ -38,31 +38,28 @@ that many of these calls should be routable to services, other software, or even
 other dapps, without leaking information about the wallet or architecture to the
 calling dapp.
 
-This CAIP describes three methods that combine to act as a Credential Provider
-(CP) to support _Verifiable Credentials_ (VCs) storage, issuance, selective
-disclosure and proof of control. VCs are usually self-certifiable attestations
-from an issuer about the owner of the VC encoded in the credential subject. The
-owner of the VC can selectively disclose information from those VCs and prove
-control of the VC to a third-party. See the [VC spec][] for more context on the
-complex and multi-layered VC framework. Since the VC data model is very
-flexible, this CAIP enforces specific rules on VCs and supported proof types to
+This CAIP describes a few core RPC methods that combine to act as a wallet-side
+Credential Provider (CP) to support _Verifiable Credentials_ (VCs) storage,
+issuance, proof-of-control, and even (with some extensions) selective disclosure
+or advancing proofing of those credentials. 
+
+VCs are usually self-certifiable attestations from an issuer about the subject
+of the VC, encoded in the credentialSubject portion of the credential. The
+holder of a VC (often coequal to the subject) can directly consent to disclosing
+information from those VCs and, in combination with other tokens or
+cryptographic forms of evidence, substantiate their context or the relationship
+between holder and subject if they are not coequal. See the [VC spec][] for more
+context on the complex and multi-layered VC framework. Since the VC data model
+is very flexible, this CAIP limits its scope to a few supported proof types to
 facilitate developer experience and interoperability on a limited subset of
 today's VC systems. This is important for use cases such as privacy-preserving
 compliance, sign-in, sign-up and decentralized reputation-based authorization.
-
-
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
 
 Web3 applications like DAOs, Defi, NFT market places etc. need verifiable
 offchain and onchain reputation to enable certain features for their end users.
-Using VCs with LD-Proofs, it will be possible to find a standard representation
-for all types of identity assertions, and specifically with LD-Proofs, those
-identity attestations can contain proofs that can be consumed both offchain and
-onchain. This CAIP introduces new JSON-RPC methods that are needed to build
-decentralized reputation for offchain and onchain use.
-
 Web3 is missing a coherent method for requesting identity assertions from their
 users, e.g. for sign-in and sign-up. The majority of Web3 projects are using an
 approach where they cryptographically bind a signature produced by a
@@ -71,10 +68,14 @@ for example, these approaches usually rely on either
 [eth.personal.sign](https://web3js.readthedocs.io/en/v1.4.0/web3-eth-personal.html#sign)
 or [EIP-712](https://eips.ethereum.org/EIPS/eip-712). The identity assertion
 becomes self-certifiable with this approach, but tightly bound to the Ethereum
-address as the only identifier. To improve privacy it is important to introduce a
-mechanism that allows people to selectively disclose the linkage between another
-identifier (such as a chain-agnostic or off-chain DID) and their blockchain account
-address. This can be done through VCs and DIDs.
+address as the only identifier. To improve privacy it is important to introduce
+a mechanism that allows people to selectively disclose the linkage between
+another identifier (such as a chain-agnostic or off-chain DID) and their
+blockchain account address. 
+
+This can be done through VCs and DIDs. This CAIP introduces new JSON-RPC methods
+that are needed to build decentralized reputation for offchain and onchain uses
+alike.
 
 The identifiers by which issuers and holders and their key material are
 dereferenced for verification and binding purposes are out of scope of this
@@ -82,23 +83,24 @@ specification, but complemented nicely by DID-based approaches such as those
 established in the EVM space by [EIP-2844][] or the cross-chain blockchain-based
 approach indexed by the [did pkh][] multicodec. Implementing verifiable
 credential exchange without DIDs may lead to a closed and limited system with
-limited interoperability; systems that can extend and federate over time are
-encouraged to build in flexibility at both the credential format level as well
-as the decentralized identifier level.
+limited interoperability or exportability; systems that can extend and federate
+over time are encouraged to build in flexibility at both the credential format
+level as well as the decentralized identifier level.
 
 ## Specification
 
-Three new JSON-RPC methods are specified under the new `creds_*` prefix.
+Three new JSON-RPC methods are specified under the new `wallet_creds_*` prefix.
 
 ### Verifiable Credential Proofs
 
 This section provides guidance on recommended [LD-Proof
 Suites](https://w3c-ccg.github.io/ld-proofs/) and [IANA JWS
 algorithm](https://www.iana.org/assignments/jose/jose.xhtml) support of embedded
-and external proofs for VCs.  The designations of common VC formats in
+and external proofs for VCs.  The abbreviations for common VC formats in
 production today are taken from the [DIF Claim Format registry][] of the
 [Presentation Exchange][] meta-protocol specification governed by the
-Decentralized Identity Foundation.
+Decentralized Identity Foundation, while the Verifiable Credentials profile
+defining their proof formats are specified in the [VC spec][] itself.
 
 #### Embedded Proofs
 
@@ -107,7 +109,7 @@ CPs MUST support the following LD-Proof types for embedded proofs (i.e. VC-LDP):
 - [`JsonWebSignature2020`](https://w3id.org/security/suites/jws-2020), only
   Ed25519 and secp256k1
 
-CPs are recommended to support the following LD-Proof types for wide support of
+CPs are RECOMMENDED to support the following LD-Proof types for wide support of
 VC formats with embedded proofs (i.e. VC-LDP):
 - [`BbsBlsSignature2020`](https://w3id.org/security/suites/bls12381-2020)
 - [`BbsBlsBoundSignature2020`](https://w3id.org/security/suites/bls12381-2020)
@@ -119,6 +121,8 @@ CPs SHOULD support the following
 external proofs (i.e. VC-JWT):
 - [`ES256K`](https://www.rfc-editor.org/rfc/rfc8812.html)
 - [`EdDSA`](https://www.rfc-editor.org/rfc/rfc8037.html)
+
+A helpful test suite for conformance-testing VC-JWT signing can be found at [JWS-test-suite][].
 
 ### Supported Verifiable Credentials Profile
 
@@ -137,7 +141,33 @@ Stores the given VC in the CP.
 
 ##### Method:
 
-`creds_store`
+`wallet_creds_store`
+
+##### Params:
+
+- `vc` - A Verifiable Credential.
+
+##### Returns:
+
+- `error` - OPTIONAL. If `vc` was malformed or does not comply with the
+  Verifiable Credentials Profile defined in this specification. Note that some
+  wallets will call `wallet_creds_verify` locally or remotely and pass back an
+  error message received thereby, depending on security context.
+
+### Verify
+
+Verifies the proof section of a single verifiable credential after dereferencing
+its `issuer` property for key material. Note that in an application<>wallet
+connection, the application calls the wallet for the wallet to either perform
+verification locally or remotely; in either case, the application will await
+asynchronously for a success or error code, regardless of how the wallet
+verifies the passed credential. Wallets that cannot return appropriate error
+codes back MUST NOT authorize apps to call this method as undefined behavior may
+occur.
+
+##### Method:
+
+`wallet_creds_verify`
 
 ##### Params:
 
@@ -150,31 +180,39 @@ Stores the given VC in the CP.
 
 ### Issue
 
-Issues a VC with the given payload using one of the CP's DIDs.
+Called **by the wallet** to the application, providing the parameters needed for
+a credential issuance and expecting back a verifiable credential OR an error.
+The parameters are formated as a [credential_application object][] as specified
+in the [Credential Manifest][] specification.
 
 ##### Method:
 
-`creds_issue`
+`wallet_creds_issue`
 
 ##### Params:
 
-- `payload` - REQUIRED. The payload of the Verifiable Credential to be issued.
-- `preferred_proofs` - OPTIONAL. An ordered array of preferred proof formats and
-  types for the VC to be issued. Each array item is an object with two
-  properties, `format` and `type`. `format` indicates the preferred proof type,
-  which is either `jwt` for (External Proofs) or `ldp` for (Embedded Proofs).
-  The `type` refers to proof type of the VC (see [Verifiable Credentials
-  Proofs](#VerifiableCredentialsProofs) for a list of valid combinations). If
-  the wallet does not support any of the preferred proofs, the wallet can select
-  a format and type from the list defined in [Verifiable Credentials
-  Proofs](#VerifiableCredentialsProofs) as a fallback.
+- `credential_application` - REQUIRED. This can vary from the full contents of
+  the payload of the to-be-issued credential to a mere consent event per
+  use-case, but in either case MUST be formated as a valid
+  [credential_application object][] as specified in the [Credential Manifest][]
+  specification.
+- `preferred_proofs` - OPTIONAL. An **ordered** array (from most to least
+  preferred) of preferred proof formats and types for the VC to be issued. Each
+  array item is an object with two properties, `format` and `type`. `format`
+  indicates the preferred proof type, which is either `jwt` for (External
+  Proofs) or `ldp` for (Embedded Proofs). The `type` refers to proof type of the
+  VC (see [Verifiable Credentials Proofs](#Verifiable-Credentials-Proofs) for a
+  list of valid combinations). If the wallet does not support any of the
+  preferred proofs, the wallet can select a format and type from the list
+  defined in [Verifiable Credentials Proofs](#Verifiable-Credentials-Proofs) as
+  a fallback.
 
 ##### Returns:
 
 - `vc` - OPTIONAL. Present if the call was successful. A Verifiable Credential
-  that was issued by the CP.
-- `error` - OPTIONAL. If `payload` was malformed, does not comply with the
-  Verifialbe Credentials Profile defined in this specification.
+  that was issued to the CP by the application.
+- `error` - OPTIONAL. If `payload` was malformed, or does not comply with the
+  Verifiable Credentials Profile defined in this specification.
 
 ### Present
 
@@ -334,10 +372,11 @@ capability (including those specified in this specification), and per additional
 resource.
 
 The relying party MUST ensure that: the challenge required by the verifiable
-presentation is sufficiently random; that it is used only once, tracked
-against some form of session token (see [CAIP-170][]), etc; or that it is some form of
-expiring verifiable credential encoded as a string.  Man-in-the-middle
-protection and other security assumptions fall on the relying party to secure.
+presentation is sufficiently random; that it is used only once, tracked against
+some form of session object (see [CAIP-170][] and [CAIP-171][]), etc; or that it
+is some form of expiring verifiable credential encoded as a string.
+Man-in-the-middle protection and other security assumptions fall on the relying
+party (i.e. the calling application) to secure.
 
 Appropriate domain-binding for web/http-based dapp-wallet connections is assumed
 and out of scope for this specification. Other CAIPs may be forthcoming for
@@ -346,7 +385,7 @@ preceding [CAIP-122][] flow.
 
 Similarly, holder binding (e.g. binding the current wallet controller to the
 wallet controller at time of credential issuance) is out of scope of this
-specification but assumed by it.  Where no holder binding beyond wallet control
+specification but assumed by it. Where no holder binding beyond wallet control
 is enforced, the submission details can be tampered with and should be
 considered unsecured. Some useful forms of holder binding can be provided by:
 wallet-level strong authentication; supplemental liveness or multi-factor
@@ -373,6 +412,7 @@ Specifications (Dependencies)
   verified.
 - [Presentation Exchange][] - DIF-incubated *high-level* VC protocol (optimized
   for handling both JWT-VCs and JWTs at scale)
+- [Credential Manifest][] - DIF-incubated *high-level* VC issuance protocol
 - [DIF Claim Format registry][] - A registry of formats supported by
   Presentation Exchange
 
@@ -384,23 +424,31 @@ Specifications (Optional Dependencies and Prior Art)
   Aries community.
 
 Prior Art and Reference Implementations
+- [JWS-test-suite][] - A self-serve, open-source conformance test suite for
+  VC-JWT implementations
 - [Veramo][] Project - EVM-friendly but multi-chain sample libraries for
   issuing, signing, holding, verifying and presenting verifiable credentials 
 - [Walt.id prototype][] - note that WC Chat API is used as a shim for the
   interface defined above; otherwise, a helpful prototype for illustrating a
   lightweight flow
 
+[CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
+[CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+
 [VC spec]: https://www.w3.org/TR/vc-data-model/
 [Data Integrity spec]: https://www.w3.org/TR/vc-data-integrity/
 [DIF Claim Format registry]: https://identity.foundation/claim-format-registry/#registry
+[JWS-test-suite]: https://identity.foundation/JWS-Test-Suite/
 [Veramo]: https://veramo.io/
 [VC API]: https://w3c-ccg.github.io/vc-api/
 [Presentation Exchange]: https://identity.foundation/presentation-exchange/spec/v2.0.0/
+[Credential Manifest]: https://identity.foundation/credential-manifest/
 [DIDComm]: https://identity.foundation/didcomm-messaging/spec/v2.0/
 [Walt.id prototype]: https://github.com/waltid-ethlisbon2022
 [DID EIP]: https://eips.ethereum.org/EIPS/eip-2844
 [did pkh]: https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md
 [presentation_definition object]: https://identity.foundation/presentation-exchange/spec/v2.0.0/#presentation-definition
+[credential_application object]: https://identity.foundation/credential-manifest/#credential-application
 
 ## Copyright
 Copyright and related rights waived via
