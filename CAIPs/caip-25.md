@@ -61,29 +61,28 @@ Example:
     "required": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
-        "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"]
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"],
         "events": ["accountsChanged", "chainChanged"]
-        },
-        "eip155:10": {
-          "methods": ["get_balance"],
-          "events": ["accountsChanged", "chainChanged"]
-        },
-        "cosmos": {
-          ...
-        }
       },
-      "optional":{
-        "eip155:42161": {
-          "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
-          "events": ["accountsChanged", "chainChanged"]
-        },
-        "sessionProperties": {
-          "expiry": "2022-12-24T17:07:31+00:00",
-          "auto-refresh": "true"
-        }         
+      "eip155:10": {
+        "methods": ["get_balance"],
+        "events": ["accountsChanged", "chainChanged"]
+      },
+      "cosmos": {
+        ...
       }
-  },
-
+    },
+    "optional":{
+      "eip155:42161": {
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
+        "events": ["accountsChanged", "chainChanged"]
+      },
+      "sessionProperties": {
+        "expiry": "2022-12-24T17:07:31+00:00",
+        "auto-refresh": "true"
+      }         
+    }
+  }
 }
 ```
 
