@@ -49,7 +49,7 @@ type NodeList [Link]
 Example 1
 
 ```tsx
-[CID(bagcqcerav5zyrlelnnx24blbgob6stz6y4oiwenn3hodbmyf7bnnguh6gdeq), CID(bagcqcera4nnpzmwsk2bbww6n4bgq3cwne6gmhkouciam44nyjbindkxpz2eq)
+[CID(bafyreig3lwe3xf2qmip6radn7iuars7g4xr2ktrgoxyryx65cwe4jpbmny), CID(bafyreieaqjqd7oee3aaghcal3woxbxmjy6l52wt4yp24o6ei3cayeiu2cm)
 ```
 
 Non leaf nodes are then recursively built in the same way using list pairs of CIDs until you have constructed the entire Merkle tree and a root Node/CID. 
@@ -63,6 +63,7 @@ type BlockchainAnchor struct {
   root Link
   chainID String 
   txHash Link
+  txType String
 }
 ```
 
@@ -72,16 +73,17 @@ Example 2
   root: CID(bafyreiaxdhr5jbabn7enmbb5wpmnm3dwpncbqjcnoneoj22f3sii5vfg74)
   chainID: "eip155:1"
   txHash: CID(bagjqcgzanbud4sqdsywfp2mckuj57qsffsovgyjhh7sxebkqwr335hzy2zbq)
+  txType: 'raw'
 }
 ```
 
-Blockchain transaction resolution, parsing, and verification can later be defined by each blockchain CAIP-2 namespace if needed. Implementations will vary and may even vary for the same chain. Optional parameters can be included here to indicate the methods required. For now transaction resolution, parsing, and verification is out of scope for this specification. 
+Blockchain transaction resolution, parsing, and verification are to be defined by each blockchain CAIP-2 namespace. Implementations will vary and will even vary for the same chain. The `txType` parameter string is used to discriminate between different transaction verification methods for the same chain. Every `txType` is expected to be defined in the corresponding blockchain CAIP-2 namespace. The corresponding blockchain CAIP-2 namespace can be found in the `chainId`. The example above references the `raw` transaction type verification in the `eip155` namespace. 
 
 ### IPLD Based Merkle Proofs
 
 A Merkle proof allows verification that a given piece of data or “leaf” was included in the set of data for the given Merkle Tree. A  typical proof includes a Merkle root of the tree and a subset list of tree node hashes that allow verification by reconstructing the Merkle root starting from the data or "leaf" you are interested in.
 
-In IPLD a Merkle root (CID) and a “path” are provided that allows you to traverse the tree from the root to the piece of data your interested in. Paths are strings and refer to [Pathing in IPLD](https://ipld.io/docs/data-model/pathing/). Following an IPLD path, and ultimately resolving the data or "leaf" you are interested in from the root, is equivalent to a standard proof. 
+In IPLD a Merkle root (CID) and a “path” are provided that allows you to traverse the tree from the root to the piece of data your interested in. Paths are strings and refer to [Pathing in IPLD](https://ipld.io/docs/data-model/pathing/). Following an IPLD path, and ultimately arriving at the data or "leaf" you are interested in from the root, is equivalent to a standard proof. Implementations may resolve the subset of the tree needed for verification on demand from a network (for example IPFS) or may package all necessary blocks/nodes together and present them alongside the proof. 
 
 As defined above, an IPLD Merkle tree node includes a list pair. List traversal in IPLD is defined by index, for example 0 referencing the first item, 1 referencing the second. An example IPLD path through a tree could look as such `0/0/1/0/1/1`. It is also possible to reference trees as part of other paths, for example `myprotocol/mytree/0/0/1/0/1/1` or any general path if the suggested construction above is not followed. 
 
