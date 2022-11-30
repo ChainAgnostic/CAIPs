@@ -307,12 +307,19 @@ Optionally, holder binding can also be requested.
 ### Wallet Metadata
 
 Called by the application to fetch a configuration object describing signing and
-verification capabilities of the wallet.  The formatting and values of the
-metadata object are borrowed from the [OIDC4VP][] specification, which in
-references the [DIF Claim Format registry][] for the names of objects and [IANA
-JOSE Registry][] for the exact, case-sensitive abbreviations contained therein.
-Note that no other values from a full OAuth2 Authorization Server metadata need
-to be present, and they will be ignored if included.
+verification capabilities of the wallet.  This method is an optional way for
+CAIP-169 supporting wallets to signal signing and verifying capabilities *in
+addition to* those necessary for the blockchain/VM-specific accounts and methods
+already exposed; it is required for interoperability with OIDC-based protocols,
+and its absence can be interpreted as an absence of interoperability with
+protocols requiring it. 
+
+The formatting and values of the metadata object are borrowed from the
+[OIDC4VP][] specification, which in references the [DIF Claim Format registry][]
+for the names of objects and [IANA JOSE Registry][] for the exact,
+case-sensitive abbreviations contained therein. Note that no other values from a
+full OAuth2 Authorization Server metadata need to be present, and they will be
+ignored if included.
 
 NOTE: `alg` value `none` SHOULD NOT be accepted.
 
