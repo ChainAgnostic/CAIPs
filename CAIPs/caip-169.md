@@ -355,7 +355,7 @@ NOTE: `alg` value `none` SHOULD NOT be accepted.
         "ES256K",
         "EdDSA"
     ‌ ]
-  ‌ }
+   ‌ }
   }
 }
 ```
