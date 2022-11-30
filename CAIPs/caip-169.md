@@ -139,7 +139,7 @@ object][] accordingly.
 
 Stores the given VC in the CP.
 
-##### Method:
+#### Method:
 
 `wallet_creds_store`
 
@@ -165,7 +165,7 @@ verifies the passed credential. Wallets that cannot return appropriate error
 codes back MUST NOT authorize apps to call this method as undefined behavior may
 occur.
 
-##### Method:
+#### Method:
 
 `wallet_creds_verify`
 
@@ -185,7 +185,7 @@ a credential issuance and expecting back a verifiable credential OR an error.
 The parameters are formated as a [credential_application object][] as specified
 in the [Credential Manifest][] specification.
 
-##### Method:
+#### Method:
 
 `wallet_creds_issue`
 
@@ -216,13 +216,14 @@ in the [Credential Manifest][] specification.
 
 ### Present
 
-Selectively discloses information from the CP. Optionally, holder binding can be
-requested. For the query, we will use the [DIF Presentation
+The application calls the wallet to request verifiable claims from the CP. For
+the query, we will use the [DIF Presentation
 Exchange](https://identity.foundation/presentation-exchange/) data model.
+Optionally, holder binding can also be requested. 
 
-##### Method:
+#### Method:
 
-`creds_present`
+`wallet_creds_present`
 
 ##### Params:
 
@@ -242,7 +243,7 @@ Exchange](https://identity.foundation/presentation-exchange/) data model.
   not comply with the Verifiable Credentials Profile defined in this
   specification.
 
-##### Examples:
+#### Example:
 
 ```json
 {
@@ -303,6 +304,54 @@ Exchange](https://identity.foundation/presentation-exchange/) data model.
   }
 }
 ```
+### Wallet Metadata
+
+Called by the application to fetch a configuration object describing signing and
+verification capabilities of the wallet.  The formatting and values of the
+metadata object are borrowed from the [OIDC4VP][] specification, which in
+references the [DIF Claim Format registry][] for the names of objects and [IANA
+JOSE Registry][] for the exact, case-sensitive abbreviations contained therein.
+Note that no other values from a full OAuth2 Authorization Server metadata need
+to be present, and they will be ignored if included.
+
+NOTE: `alg` value `none` SHOULD NOT be accepted.
+
+#### Method:
+
+`wallet_creds_metadata`
+
+##### Params:
+
+- `URL_accepted` - OPTIONAL. Boolean, default to false if not present.  If true,
+  metadata object MAY be passed as an HTTPS URL OR as an object; otherwise, MUST
+  be passed as a JSON object.
+
+##### Returns:
+
+- `metadata_object` - OPTIONAL. See [OIDC4VP][] section "Authorization Server
+  Metadata" for properties.
+- `error` - OPTIONAL. 
+
+#### Example
+
+```jsonc
+{
+  "vp_formats_supported": {
+  ‌  "jwt_vc": {
+      "alg_values_supported": [
+        "ES256K",
+        "ES384"
+    ‌ ]
+  ‌  },
+  ‌  "jwt_vp": {
+      "alg_values_supported": [
+        "ES256K",
+        "EdDSA"
+    ‌ ]
+  ‌ }
+  }
+}
+```
 
 ## Rationale
 
@@ -348,10 +397,10 @@ TBD
 ## Test Cases
 
 See:
-- [/assets/presentation-definition-example.json](
-  "../assets/presentation-definition-example.json")
-- [/assets/presentation-submission-example.json](
-  "../assets/presentation-submission-example.json")
+- [/assets/CAIP-169/presentation-definition-example.json](
+  "../assets/CAIP-169/presentation-definition-example.json")
+- [/assets/CAIP-169/presentation-submission-example.json](
+  "../assets/CAIP-169/presentation-submission-example.json")
 
 ## Known Implementations
 
@@ -422,6 +471,9 @@ Specifications (Optional Dependencies and Prior Art)
 - [DIDComm][] - DIF-incubated messaging layer, which includes sub-protocols for
   VCs extending the earlier "Present Proof" protocols incubated in Hyperledger
   Aries community.
+- [OIDC4VP][] - A specification written at and governed by the OIDF that
+  describes VC issuance from OIDC servers and conceives of self-custody
+  cryptographic wallets as "Authorization Servers" in OIDC terminology. 
 
 Prior Art and Reference Implementations
 - [JWS-test-suite][] - A self-serve, open-source conformance test suite for
@@ -438,6 +490,8 @@ Prior Art and Reference Implementations
 [VC spec]: https://www.w3.org/TR/vc-data-model/
 [Data Integrity spec]: https://www.w3.org/TR/vc-data-integrity/
 [DIF Claim Format registry]: https://identity.foundation/claim-format-registry/#registry
+[OID4VP]: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-8.1
+[IANA JOSE Registry]: https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms
 [JWS-test-suite]: https://identity.foundation/JWS-Test-Suite/
 [Veramo]: https://veramo.io/
 [VC API]: https://w3c-ccg.github.io/vc-api/
