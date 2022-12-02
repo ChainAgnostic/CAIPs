@@ -37,7 +37,7 @@ Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) styl
 
 `* review-period-end:` <date review period ends>
 
-` type:` <Standards Track (Core, Networking, Interface, ERC)  | Informational | Meta>
+` type:` <Standard | Informational | Meta>
 
 ` * category:` <Core | Networking | Interface | ERC>
 
@@ -45,9 +45,9 @@ Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) styl
 
 ` * updated:` <comma separated list of dates>
 
-` * requires:` <CAIP number(s)>
+` * requires:` <CAIP number(s); if multiple, use `[1,2]` format to create a YAML array>
 
-` * replaces:` <CAIP number(s)>
+` * replaces:` <CAIP number(s); if multiple, use `[1,2]` format to create a YAML array>
 
 ` * superseded-by:` <CAIP number(s) | URL of non-CAIP standard >
 
@@ -81,7 +81,7 @@ As a single exception, `discussions-to` cannot point to GitHub pull requests.
 
 #### `type` header
 
-The `type` header specifies the type of CAIP: Standards Track, Meta, or Informational.
+The `type` header specifies the type of CAIP: Standard, Meta, or Informational.
 
 #### `created` header
 
@@ -93,7 +93,7 @@ The `updated` header records the date(s) when the CAIP was updated with "substan
 
 #### `requires` header
 
-CAIPs may have a `requires` header, indicating the CAIP(s) on which this CAIP depends.
+CAIPs may have a `requires` header, indicating the CAIP(s) on which this CAIP depends. Note that if the CAIP requires multiple others, the value should be an array of integers (no `"` needed) and/or URLs (wrapped in `"`s) within square brackets (`[]`).
 
 #### `superseded-by` and `replaces` headers
 

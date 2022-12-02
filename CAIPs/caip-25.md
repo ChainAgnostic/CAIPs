@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2020-10-14
 updated: 2022-10-26
-requires: ["2", "10"]
+requires: [2, 10, 171]
 ---
 
 ## Simple Summary
@@ -66,7 +66,6 @@ given set of parameters by calling the following JSON-RPC request
 The JSON-RPC method is labelled as `provider_authorization` and expects one or
 more objects each named after the pertinent ChainAgnostic namespace and each
 containing with three parameters:
-
 - chains - array of CAIP-2 compliant chainId's
 - methods - array of JSON-RPC methods expected to be used during the session
 - events - array of JSON-RPC message/events expected to be emitted during the
@@ -81,6 +80,8 @@ The wallet can respond to this method with either a success result or an error m
 The response MUST be a success result when the user approved accounts matching
 the requested chains to be exposed and the requested methods to be used.
 
+The response MUST include `session` which is a `SessionIdentifier` as defined in [caip-171](./caip-171).
+
 An example of a successful response should match the following format:
 
 ```jsonc
@@ -88,6 +89,7 @@ An example of a successful response should match the following format:
   "id": 1,
   "jsonrpc": "2.0",
   "result": {
+    "session": "0xdeadbeef",
     "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
   }
 }
@@ -95,7 +97,6 @@ An example of a successful response should match the following format:
 
 The accounts returned as a result should match the requested `chainId`s and
 should be an array of CAIP-10 compliant `accountId`s.
-
 #### Failure States
 
 The response MUST NOT be a success result when the user disapproves the accounts
@@ -117,29 +118,30 @@ An example of an error response should match the following format:
 ```
 
 The valid error messages codes are the following:
+* When user disapproves exposing accounts to requested chains
+    * code = 5000
+    * message = "User disapproved requested chains"
+* When user disapproves accepting calls with the request methods
+    * code = 5001
+    * message = "User disapproved requested methods"
+* When user disapproves accepting calls with the request events
+    * code = 5002
+    * message = "User disapproved requested events"
+* When wallet evaluates requested chains to not be supported
+    * code = 5100
+    * message = "Requested chains are not supported"
+* When wallet evaluates requested methods to not be supported
+    * code = 5101
+    * message = "Requested methods are not supported"
+* When wallet evaluates requested events to not be supported
+    * code = 5102
+    * message = "Requested events are not supported"
 
-- When user disapproves exposing accounts to requested chains
-  - code = 5000
-  - message = "User disapproved requested chains"
-- When user disapproves accepting calls with the request methods
-  - code = 5001
-  - message = "User disapproved requested methods"
-- When user disapproves accepting calls with the request events
-  - code = 5002
-  - message = "User disapproved requested events"
-- When wallet evaluates requested chains to not be supported
-  - code = 5100
-  - message = "Requested chains are not supported"
-- When wallet evaluates requested methods to not be supported
-  - code = 5101
-  - message = "Requested methods are not supported"
-- When wallet evaluates requested events to not be supported
-  - code = 5102
-  - message = "Requested events are not supported"
+## Changelog
 
-## Links
-
-n/a
+- 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement) 
+- 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
+  consolidated variants across issues and forks post-Amsterdam Gathering
 
 ## Copyright
 
