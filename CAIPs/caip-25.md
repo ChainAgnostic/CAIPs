@@ -79,7 +79,7 @@ Example:
       },
       "sessionProperties": {
         "expiry": "2022-12-24T17:07:31+00:00",
-        "auto-refresh": "true"
+        "caip154-mandatory": "true"
       }         
     }
   }
