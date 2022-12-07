@@ -217,7 +217,7 @@ The valid error messages codes are the following:
 * Invalid Session Properties Object
     * code = 5200
     * message = "Invalid Session Properties requested"
-* Required Session Properties 
+    * Required Session Properties 
     * code = 5201
     * message = "Session Properties can only be optional"
 
