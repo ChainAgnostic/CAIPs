@@ -31,13 +31,17 @@ application through a provider connecting to a wallet.
 
 ## Specification
 
-The provider is defined within a session once the handshake procedure is
-successfully approved by a wallet, and updated, extended, closed, etc by events.
-These are out of scope of this CAIP interface and will be specified in a
-forthcoming one.
+The session is defined by a wallet's response to a provider's request, and
+updated, extended, closed, etc by successive calls and events. These are out of
+scope of this CAIP interface and will be specified in a forthcoming one.
 
 Within that session model, this interface outlines the authorization of an
-injected provider per namespace.
+injected provider per namespace. These authorization call/responses should be
+idempotent, assuming the provider is tracking a session property, referred to by
+a `sessionIdentifier` as defined in [CAIP-171][]. If a wallet needs to initiate
+a new session, whether due to user input, security policy, or session expiry
+reasons, it can simply generate a new session identifier to signal this event to
+the calling provider.
 
 The application interfaces with a provider to populate a session with a base
 state describing authorized chains, methods, event, and accounts.  This
@@ -49,6 +53,9 @@ the provider's choice of the optional properties* expressed as a unified set of
 parameters.
 
 ### Request
+
+The application would interface with a provider to authorize that provider with a
+given set of parameters by calling the following JSON-RPC request
 
 Example:
 
@@ -93,7 +100,7 @@ The JSON-RPC method is labelled as `provider_authorization` and both the
 
 Each `namespace` object contains the following parameters:
 - chains - array of [CAIP-2][]-compliant `chainId`'s. This parameter MAY be
-  omitted if the chain scope is already given by the name of the object.
+  omitted if a single-chain scope is already declared in the index of the object.
 - methods - array of JSON-RPC methods expected to be used during the session
 - events - array of JSON-RPC message/events expected to be emitted during the
   session
@@ -131,7 +138,9 @@ discretion of the provider) MUST be included if successful.
 and a `chains` object if a specific chain is not specified in the object's index.
 * Unlike the request, each namespace object MUST also contain an `accounts` array, 
 containing 0 or more [CAIP-10][] conformant accounts authorized for the session and valid
-in the namespace and chains authorized.
+in the namespace and chain(s) authorized by the object they are in. Additional constraints
+on the accounts authorized for a given session MAY be specified in the corresponding 
+[namespaces][] specification.
 
 A `sessionProperties` object MAY also be present, and its contents MAY correspond to the
 properties requested in the response or not (at the discretion of the provider) but MUST
@@ -231,6 +240,20 @@ The valid error messages codes are the following:
 - 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
   consolidated variants across issues and forks post-Amsterdam Gathering
 
+## Links
+
+- [CAIP-2][] - Chain ID Specification
+- [CAIP-10][] - Account ID Specification
+- [CAIP-25][] - JSON-RPC Provider Request
+- [CAIP-75][] - Blockchain Reference for the Hedera namespace
+- [CAIP-171][] - Session Identifier Specification
+
+[CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
+[CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
+[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
+[CAIP-75]: https://chainagnostic.org/CAIPs/caip-75
+[CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+[namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
 [CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
 
