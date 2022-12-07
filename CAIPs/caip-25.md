@@ -31,17 +31,21 @@ application through a provider connecting to a wallet.
 
 ## Specification
 
-The provider is defined within a session once the handshake procedure is
-successfully approved by a wallet, and updated, extended, closed, etc by events.
-These are out of scope of this CAIP interface and will be specified in a
-forthcoming one.
+The session is defined by a wallet's response to a provider's request, and
+updated, extended, closed, etc by successive calls and events. These are out of
+scope of this CAIP interface and will be specified in a forthcoming one.
 
 Within that session model, this interface outlines the authorization of an
-injected provider per namespace.
+injected provider per namespace. These authorization call/responses should be
+idempotent, assuming the provider is tracking a session property, referred to by
+a `sessionIdentifier` as defined in [CAIP-171][]. If a wallet needs to initiate
+a new session, whether due to user input, security policy, or session expiry
+reasons, it can simply generate a new session identifier to signal this event to
+the calling provider.
 
 ### Request
 
-The application would interface with a provider to authorize a provider with a
+The application would interface with a provider to authorize that provider with a
 given set of parameters by calling the following JSON-RPC request
 
 ```
@@ -66,7 +70,7 @@ given set of parameters by calling the following JSON-RPC request
 The JSON-RPC method is labelled as `provider_authorization` and expects one or
 more objects each named after the pertinent ChainAgnostic namespace and each
 containing with three parameters:
-- chains - array of CAIP-2 compliant chainId's
+- chains - array of [CAIP-2][] compliant chainId's
 - methods - array of JSON-RPC methods expected to be used during the session
 - events - array of JSON-RPC message/events expected to be emitted during the
   session
@@ -80,7 +84,8 @@ The wallet can respond to this method with either a success result or an error m
 The response MUST be a success result when the user approved accounts matching
 the requested chains to be exposed and the requested methods to be used.
 
-The response MUST include `session` which is a `SessionIdentifier` as defined in [caip-171](./caip-171).
+The response MUST include a key `sessionIdentifier` the value of which is a
+`SessionIdentifier` as defined in [caip-171][]. 
 
 An example of a successful response should match the following format:
 
@@ -89,7 +94,7 @@ An example of a successful response should match the following format:
   "id": 1,
   "jsonrpc": "2.0",
   "result": {
-    "session": "0xdeadbeef",
+    "sessionIdentifier": "0xdeadbeef",
     "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
   }
 }
@@ -97,6 +102,7 @@ An example of a successful response should match the following format:
 
 The accounts returned as a result should match the requested `chainId`s and
 should be an array of CAIP-10 compliant `accountId`s.
+
 #### Failure States
 
 The response MUST NOT be a success result when the user disapproves the accounts
@@ -142,6 +148,20 @@ The valid error messages codes are the following:
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement) 
 - 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
   consolidated variants across issues and forks post-Amsterdam Gathering
+
+## Links
+
+- [CAIP-2][] - Chain ID Specification
+- [CAIP-10][] - Account ID Specification
+- [CAIP-25][] - JSON-RPC Provider Request
+- [CAIP-75][] - Blockchain Reference for the Hedera namespace
+- [CAIP-171][] - Session Identifier Specification
+
+[CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
+[CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
+[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
+[CAIP-75]: https://chainagnostic.org/CAIPs/caip-75
+[CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 
 ## Copyright
 
