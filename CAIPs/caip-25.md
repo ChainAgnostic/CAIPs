@@ -58,7 +58,7 @@ Example:
   "jsonrpc": "2.0",
   "method": "provider_authorization",
   "params": {
-    "required": {
+    "requiredNamespaces": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"],
@@ -72,46 +72,48 @@ Example:
         ...
       }
     },
-    "optional":{
+    "optionalNamespaces":{
       "eip155:42161": {
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
         "events": ["accountsChanged", "chainChanged"]
-      },
-      "sessionProperties": {
-        "expiry": "2022-12-24T17:07:31+00:00",
-        "caip154-mandatory": "true"
-      }         
-    }
+    },
+    "sessionProperties": {
+      "expiry": "2022-12-24T17:07:31+00:00",
+      "caip154-mandatory": "true"
+    }         
   }
 }
 ```
 
 The JSON-RPC method is labelled as `provider_authorization` and both the
-"required" and "optional" arrays are populated with objects each
-named after the scope of authorization:
+"requiredNamespaces" and "optionalNamespaces" arrays are populated with 
+`namespace` objects each named after the scope of authorization:
 1. EITHER an entire ChainAgnostic [namespace][] 
 2. OR a specific [CAIP-2][] in that namespace.
 
-Each object contains the following parameters:
+Each `namespace` object contains the following parameters:
 - chains - array of [CAIP-2][]-compliant `chainId`'s. This parameter MAY be
   omitted if the chain scope is already given by the name of the object.
 - methods - array of JSON-RPC methods expected to be used during the session
 - events - array of JSON-RPC message/events expected to be emitted during the
   session
 
-The `required` array MUST contain 1 or more of these objects; the `optional`
-array MAY contain 0 or more of them, but MUST NOT be present if empty of any
-objects.
+The `requiredNamespaces` array MUST contain 1 or more of these objects, and MUST
+be present; the `optionalNamespaces` array MUST contain 1 or more of them, if 
+present.
 
-A special case is the `sessionProperties` object, which MUST be in the
-`optional` array if present, as applications cannot mandate session variables to
-providers. Because they are optional, providers MAY respond with all of the
-requested properties, or a subset of the session properties, or no
+A third object is the `sessionProperties` object, all of whose properties MUST 
+be in the interpreted as optional, since requesting applications cannot mandate
+session variables to providers. Because they are optional, providers MAY respond
+with all of the requested properties, or a subset of the session properties, or no
 `sessionProperties` object at all; they MAY even replace the values of the
-optional session properties with their own values.  Applications are expected to
-track all of these returned properties in the session object identified by the
-`sessionIdentifier`. All properties and their values MUST conform to definitions
-in [CAIP-170][].
+optional session properties with their own values.  The `sessionProperties` 
+object MUST contain 1 or more properties if present.
+
+Requesting applications are expected to track all of these returned properties in
+the session object identified by the `sessionId`. All properties and their values
+MUST conform to definitions in [CAIP-170][], and MUST be ignored (rather than 
+tracked) if they do not.
 
 ### Response
 
@@ -119,17 +121,22 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The response MUST be structured as a session object containing all required
-parameters and all, none, or some of the optional objections.  Optionally, a
-`sessionProperties` object may also be present, but its contents MUST conform to
-[CAIP-170][] and MAY share all, none, or some of the recommended properties, in
-addition to those provided by the provider.
+The succesfull reslt contains one mandatory string (keyed as `sessionId` with a value 
+conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
 
-All namespace objects MUST contain an `accounts` array, and at least one of them
-must contain an account authorized for use in the constructed session.
+The first is called `sessionNamespaces` and contains 1 or more namespace objects.
+* All required namespaces and all, none, or some of the optional namespaces (at the 
+discretion of the provider) MUST be included if successful.  
+* As in the request, each namespace object MUST contain `methods` and `events` objects, 
+and a `chains` object if a specific chain is not specified in the object's index.
+* Unlike the request, each namespace object MUST also contain an `accounts` array, 
+containing 0 or more [CAIP-10][] conformant accounts authorized for the session and valid
+in the namespace and chains authorized.
 
-The response MUST also include `sessionIdentifier` which is a `sessionIdentifier` as
-defined in [caip-171](./caip-171) before the `session` object it identifies.
+A `sessionProperties` object MAY also be present, and its contents MAY correspond to the
+properties requested in the response or not (at the discretion of the provider) but MUST
+conform to the properties names and value constraints described in [CAIP-170][]; any other 
+MUST be dropped by the requester.
 
 An example of a successful response follows:
 
@@ -138,8 +145,8 @@ An example of a successful response follows:
   "id": 1,
   "jsonrpc": "2.0",
   "result": {
-    "sessionIdentifier": "0xdeadbeef",
-    "session": {
+    "sessionId": "0xdeadbeef",
+    "sessionNamespaces": {
       "eip155": {
           "chains": ["eip155:1", "eip155:137"],
           "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
@@ -165,9 +172,6 @@ An example of a successful response follows:
   }
 }
 ```
-
-The accounts returned as a result should match the requested `chainId`s and
-should be an array of [CAIP-10][] compliant `accountId`s.
 
 #### Failure States
 
@@ -213,7 +217,7 @@ The valid error messages codes are the following:
     * message = "Scope/chain mismatch"
 * When a badly-formed request defines one `chainId` two ways
     * code = 5104
-    * message = "ChainId defined in two different scopes"
+    * message = "ChainId defined in two different scopes"  
 * Invalid Session Properties Object
     * code = 5200
     * message = "Invalid Session Properties requested"
