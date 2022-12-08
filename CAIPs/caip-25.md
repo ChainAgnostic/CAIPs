@@ -3,7 +3,7 @@ caip: 25
 title: JSON-RPC Provider Authorization
 author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
-status: Draft
+status: Review
 type: Standard
 created: 2020-10-14
 updated: 2022-10-26
