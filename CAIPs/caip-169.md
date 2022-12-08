@@ -404,10 +404,10 @@ TBD
 ## Test Cases
 
 See:
-- [/assets/CAIP-169/presentation-definition-example.json](
-  "../assets/CAIP-169/presentation-definition-example.json")
-- [/assets/CAIP-169/presentation-submission-example.json](
-  "../assets/CAIP-169/presentation-submission-example.json")
+- [/assets/CAIP-169/presentation-definition-simple_example.json](
+  "../assets/CAIP-169/presentation-definition-simple_example.json")
+- [/assets/CAIP-169/presentation-submission-simple_example.json](
+  "../assets/CAIP-169/presentation-submission-simple_example.json")
 
 ## Known Implementations
 
