@@ -157,26 +157,26 @@ An example of a successful response follows:
     "sessionId": "0xdeadbeef",
     "sessionNamespaces": {
       "eip155": {
-          "chains": ["eip155:1", "eip155:137"],
-          "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
-          "events": ["accountsChanged", "chainChanged"],
-          "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
-        },
-        "eip155:10": {
-          "methods": ["get_balance"],
-          "events": ["accountsChanged", "chainChanged"],
-          "accounts:" []
-        },
-        "eip155:42161": {
-          "methods": ["personal_sign"],
-          "events": ["accountsChanged", "chainChanged"],
-          "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
-        "cosmos": {
-          ...
-        },      
-        "sessionProperties": {
-          "expiry": "2022-11-31T17:07:31+00:00"          
-        }
+        "chains": ["eip155:1", "eip155:137"],
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
+        "events": ["accountsChanged", "chainChanged"],
+        "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
+      },
+      "eip155:10": {
+        "methods": ["get_balance"],
+        "events": ["accountsChanged", "chainChanged"],
+        "accounts:" []
+      },
+      "eip155:42161": {
+        "methods": ["personal_sign"],
+        "events": ["accountsChanged", "chainChanged"],
+        "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
+      "cosmos": {
+        ...
+      }
+    },      
+    "sessionProperties": {
+      "expiry": "2022-11-31T17:07:31+00:00"          
     }
   }
 }
