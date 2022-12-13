@@ -43,17 +43,15 @@ Credential Provider (CP) to support _Verifiable Credentials_ (VCs) storage,
 issuance, proof-of-control, and even (with some extensions) selective disclosure
 or advancing proofing of those credentials. 
 
-VCs are usually self-certifiable attestations from an issuer about the subject
-of the VC, encoded in the credentialSubject portion of the credential. The
-holder of a VC (often coequal to the subject) can directly consent to disclosing
-information from those VCs and, in combination with other tokens or
-cryptographic forms of evidence, substantiate their context or the relationship
-between holder and subject if they are not coequal. See the [VC spec][] for more
-context on the complex and multi-layered VC framework. Since the VC data model
-is very flexible, this CAIP limits its scope to a few supported proof types to
-facilitate developer experience and interoperability on a limited subset of
-today's VC systems. This is important for use cases such as privacy-preserving
-compliance, sign-in, sign-up and decentralized reputation-based authorization.
+VCs are self-certifiable attestations from an issuer about the subject of the
+VC. The holder of a VC can directly consent to disclosing information from those
+VCs and, in combination with other tokens or cryptographic forms of evidence,
+substantiate their context or the relationship between holder and subject. See
+the [VC spec][] for more context. To facilitate developer experience and
+progress towards end-to-end interoperability, this CAIP limits its scope to a
+few supported proof types and focuses on a limited subset of today's VC
+systems. This CAIP is important for use cases such as privacy-preserving
+compliance, sign-in, sign-up, and decentralized reputation-based authorization.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
@@ -104,13 +102,14 @@ defining their proof formats are specified in the [VC spec][] itself.
 
 #### Embedded Proofs
 
-CPs MUST support the following LD-Proof types for embedded proofs (i.e. VC-LDP):
+Credential issuance systems MUST support the following LD-Proof types for
+embedded proofs (i.e. VC-LDP):
 - [`EthereumEip712Signature2021`](https://w3id.org/security/suites/eip712sig-2021)
 - [`JsonWebSignature2020`](https://w3id.org/security/suites/jws-2020), only
   Ed25519 and secp256k1
 
-CPs are RECOMMENDED to support the following LD-Proof types for wide support of
-VC formats with embedded proofs (i.e. VC-LDP):
+Credential issuance systems are RECOMMENDED to support the following LD-Proof
+types for wide support of VC formats with embedded proofs (i.e. VC-LDP):
 - [`BbsBlsSignature2020`](https://w3id.org/security/suites/bls12381-2020)
 - [`BbsBlsBoundSignature2020`](https://w3id.org/security/suites/bls12381-2020)
 
