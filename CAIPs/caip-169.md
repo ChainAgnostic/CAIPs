@@ -152,6 +152,9 @@ Stores the given VC in the CP.
   Verifiable Credentials Profile defined in this specification. Note that some
   wallets will call `wallet_creds_verify` locally or remotely and pass back an
   error message received thereby, depending on security context.
+    + 400 - invalid parameters
+    + 500 - processing or internal error
+    + 501 - invalid cryptographic primitives (see `wallet_creds_metadata`)
 
 ### Verify
 
@@ -212,6 +215,8 @@ in the [Credential Manifest][] specification.
   that was issued to the CP by the application.
 - `error` - OPTIONAL. If `payload` was malformed, or does not comply with the
   Verifiable Credentials Profile defined in this specification.
+    + 400 - invalid `credential_application` or payload construction
+    + 500 - processing or internal error
 
 ### Present
 
@@ -337,6 +342,9 @@ NOTE: `alg` value `none` SHOULD NOT be accepted.
 - `metadata_object` - OPTIONAL. See [OIDC4VP][] section "Authorization Server
   Metadata" for properties.
 - `error` - OPTIONAL. 
+    + 400 - invalid request
+    + 500 - error forming response from selected credentials
+    + 501 - invalid cryptographic primitives (see `wallet_creds_metadata`)
 
 #### Example
 
