@@ -44,7 +44,7 @@ The `account_id` is a case-sensitive string in the form
 
 ```
 account_id:        chain_id + ":" + account_address
-chain_id:          [-a-z0-9]{3,8}:[-a-zA-Z0-9]{1,32} (See [CAIP-2][])
+chain_id:          [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See [CAIP-2][])
 account_address:   [-.%a-zA-Z0-9]{1,64}
 ```
 
@@ -94,6 +94,9 @@ cosmos:cosmoshub-3:cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0
 
 # Kusama network
 polkadot:b0a8d493285c2df73290dfb7e61f870f:5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy
+
+# StarkNet Testnet
+starknet:SN_GOERLI:0x02dd1b492765c064eac4039e3841aa5f382773b598097a40073bd8b48170ab57
 
 # Dummy max length (64+1+8+1+32 = 106 chars/bytes)
 chainstd:8c3444cf8970a9e41a706fab93e7a6c4:6d9b0b4b9994e8a6afbd3dc3ed983cd51c755afb27cd1dc7825ef59c134a39f7
