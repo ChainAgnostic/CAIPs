@@ -105,8 +105,7 @@ Each `namespace` object contains the following parameters:
 - events - array of JSON-RPC message/events expected to be emitted during the
   session
 
-The `requiredNamespaces` array MUST contain 1 or more of these objects, and MUST
-be present; the `optionalNamespaces` array MUST contain 1 or more of them, if 
+The `requiredNamespaces` array MUST contain 1 or more of these objects, if present; the `optionalNamespaces` array MUST contain 1 or more of them, if 
 present.
 
 A third object is the `sessionProperties` object, all of whose properties MUST 
