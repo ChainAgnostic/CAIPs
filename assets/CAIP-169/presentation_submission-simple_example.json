@@ -1,0 +1,61 @@
+ {
+  "presentation_submission": {
+    "id": "KYCAMLPresentationSubmission-c5368e01fe63",
+    "definition_id": "KYCAMLPresentationDefinition-v0.9.0",
+    "descriptor_map": [
+      {
+        "id": "KYCAMLAttestation.process",
+        "format": "jwt_vc",
+        "path": "$.credentialSubject.KYCAMLAttestation.process"
+      },
+      {
+        "id": "subjectId",
+        "format": "jwt_vc",
+        "path": "$.credentialSubject.id"
+      },
+      {
+        "id": "credentialSchema",
+        "format": "jwt_vc",
+        "path": "$.credentialSubject.credentialSchema"
+      },
+      {
+        "id": "issuer",
+        "format": "jwt_vc",
+        "path": "$.issuer" 
+      }
+    ]
+  }
+}
+
+
+
+{
+  "id": "banking_input_2",
+  "path": "$.verifiableCredential[0]",
+  "format": "jwt"
+},
+{
+  "id": "employment_input",
+  "path": "$.verifiableCredential[1]",
+  "format": "ldp_vc"
+},
+{
+  "id": "citizenship_input_1",
+  "path": "$.verifiableCredential[2]",
+  "format": "jwt_vp"
+},
+{ 
+  "id": "banking_input_2",
+  "format": "jwt_vp",
+  "path": "$.outerCredential[0]",
+  "path_nested": {
+      "id": "banking_input_2",
+      "format": "ldp_vc",
+      "path": "$.innerCredential[1]",
+      "path_nested": {
+          "id": "banking_input_2",
+          "format": "jwt_vc",
+          "path": "$.mostInnerCredential[2]"
+      }
+  }
+}
