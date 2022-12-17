@@ -1,143 +1,270 @@
 ---
 caip: 74
 title: CACAO - Chain Agnostic CApability Object
-author: Sergey Ukustov (@ukstv), Haardik (@haardikk21)
+author: Sergey Ukustov (@ukstv), Haardik (@haardikk21), Irakli Gozalishvili (@Gozala), Joel Thorstensson (@oed)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/74
 status: Review
 type: Standard
 created: 2021-11-01
-updated: 2022-07-12
+updated: 2022-12-17
 ---
 
 ## Simple Summary
 
-Represent a chain-agnostic Object Capability (OCAP), created using [CAIP-122](), as an [IPLD](https://ipld.io) object.
+A Chain Agnostic CApability Object, or CACAO, is an [IPLD](https://ipld.io) representation of an object-capability. 
 
 ## Abstract
 
-In this document we define a way to record the result of [CAIP-122]() signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP). This creates not just an event receipt of an authentication, but also a composable and replay-able authorization receipt for verifiable authorizations, when the message signed contains the appropriate fields. The first CACAO profile was tailored to the ethereum dapps supporting [EIP-4361][] but roughly equivalent profiles for other wallet/dapp ecosystems are being added over time.
+CACAO proposes a way to leverage [varsig](https://github.com/ChainAgnostic/varsig) and [multidid](https://github.com/ChainAgnostic/multidid/) as well as IPLD to create a common representation for various different object-capability formats, such as SIWE and UCAN. The IPLD representation contains common fields shared between these format. In addition this CAIP also registers varsig codes for both SIWE + ReCap and UCAN. 
 
 ## Motivation
 
-"Sign-in with X" is a way for a user to authenticate into a service, and provide authorization. In essense, it is a signature of a well-formed payload.
-
-We could see this as a stepping point for a _rich_ capability-based authorization system.
-
-In order to do this, we would like to have a standardized IPLD-based representation of the payload and the signature, that together comprise a capability.
+There has been a proliferation of ways to create object-capabilities in the web3 space. Most notably [Sign-in with Ethereum](https://eips.ethereum.org/EIPS/eip-4361), [UCAN](https://github.com/ucan-wg/spec), [Sign-in with X](https://chainagnostic.org/CAIPs/caip-122), and [ReCap](https://eips.ethereum.org/EIPS/eip-5573). All of these approaches share similar characteristics such as an issuer, audience, signature, etc. However, they are structured quite differently and have different constraints when it comes to how they are serialized and signed. Having a common representation strategy in IPLD can make it easier to interface with these various formats.
 
 ## Specification
 
-### Container format
+The specification consists of two main things, an IPLD schema that describes the data structure of a CACAO, and algorithms to convert SIWE(x), ReCap, and UCAN messages into and out of this data structure.
 
-We start construction with declaring a container format, that represents a signed payload.
-It should contain meta-information, payload and signatures. For reference let's call such container _CACAO_ (for Chain Agnostic CApability Object).
-We use [IPLD schema language](https://ipld.io/docs/schemas/) to describe the format.
-Reminder, unless a field is marked `optional`, it is mandatory.
+### Container IPLD schema
 
-```
+The container schema described SHOULD be encoded using the `dag-cbor` IPLD codec.
+
+```verilog
+
+type Prinicpal Bytes // a multidid
+type Varsig Bytes
+type Resource String // URL
+type Ability String // e.g. crud/create
+
+type NB { String : Any }
+type Abilities { Ability : [NB] }
+type Resources { Resource : Abilities }
+type Fact { String: Any }
+
 type CACAO struct {
-  h Header // container meta-information
-  p Payload // payload
-  s Signature // signature, single
-}
-```
-
-Header uniquely identifies the payload format:
-
-```
-type Header struct {
-  t String // specifies format of the payload
-}
-```
-
-The header type will be `caip122` in reference to the [CAIP-122]() specification for the SIWx data model. In an [older version of the specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. As such, newer implementations MUST be able to deal with both header types appropriately.
-
-The payload structure must be presented as follows:
-
-```
-type Payload struct {
-  domain String // =domain
-  iss String // = DID pkh
-  aud String // =uri
-  version String
-  nonce String
-  iat String // RFC3339 date-time =issued-at
-  nbf optional String // RFC3339 date-time =not-before
-  exp optional String // RFC3339 date-time = expiration-time
-  statement optional String // =statement
-  requestId optional String // =request-id
-  resources optional [ String ] // =resources as URIs
-}
-```
-
-It is important to note, that issuer here is [did:pkh](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
-Also, as per [CAIP-122]() specificaction,`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
-
-The signature in essence is just bytes, but we have to give a hint on how the signature verification should work. The signature verification type is referenced from methods that are listed as possible within the [CAIP-122]() namespace.
-
-```
-type Signature struct {
-  t String
-  m optional SignatureMeta
-  s Bytes
+  iss Principal
+  aud Principal
+  s Varsig
+  
+  v String
+  att Resources
+  nnc String
+  prf optional [&CACAO]
+  iat optional Int
+  nbf optional Int
+  exp optional Int
+  fct optional Fact
 }
 
-type SignatureMeta struct {
-}
 ```
 
-This construction allows a dApp to uniformly request a SIWx signature regardless of the user's account nature.
+### Decode to IPLD
+
+This section describes how to convert different object-capability formats into the IPLD schema described above.
+
+#### SIWx + ReCap
+
+The following values can be easily translated from the SIWx (CAIP-122) specification:
+
+* `iss` - a multidid encoded DID PKH constructued using `address` and `chain-id`
+* `aud` - a multidid encoded DID based on `uri`
+* `v` - set to `version`
+* `nnc` - set to `nonce`
+
+**Timestamps**
+
+* `iat` - is based on `issued-at`
+* `nbf` - is based on `not-before`
+* `exp` - is based on `expiration-time`
+* `fct.z-iat` - timezone info from `issued-at`
+* `fct.z-nbf` - timezone info from `not-before`
+* `fct.z-exp` - timezone info from `expiration-time`
+
+See [Appendix A](#appendix-a) for the algorithm used for the conversion.
+
+**ReCap**
+
+CACAO only allows there to be one ReCap message per SIWx message.
+
+* `prf` - set to `recap.prf`, make sure that the CIDs get encoded as IPLD links
+* `att` - set to `recap.att`, these should map 1-to-1
+
+**Additional fields**
+
+* `fct.domain` should be set to `domain`
+* `fct.statement` should be set to `statement` (if the SIWx message contain a ReCap, the redundant data MUST be removed, e.g. `recap-preamble 1*(" " recap-statement-entry ".")`, according to [ReCap eip](https://eips.ethereum.org/EIPS/eip-5573))
+* `fct.request-id` should be set to `request-id`
+* `fct.resources` should be set to an array containing all strings in `resources` except the ReCap resource
+
+**Signature**
+
+The `s` field is a signature encoded as a varsig and depends on which SIWx type is used. A few examples are outlined below,
+
+***SIWx, eip191:***
+
+* `content_multicodec` - set to *caip122-eip191*, `0xd51e`
+* `multihash` - set to *keccak-256*, `0x1b`
+* `key_multicodec` - set to *secp256k1*, `0xe7`
+* `raw_signature` - the signature bytes
+
+***SIWx, solana:***
+
+According to the [solana namespace](https://namespaces.chainagnostic.org/solana/caip122),
+
+* `content_multicodec` - set to *caip122*, `0xd510`
+* `multihash` - set to *sha2-256*, `0x12`
+* `key_multicodec` - set to *ed25519*, `0xed`
+* `raw_signature` - the signature bytes
+
+***SIWx, tezos:***
+
+According to the [tezos namespace](https://namespaces.chainagnostic.org/tezos/caip122),
+
+* `content_multicodec` - set to *caip122*, `0xd510`
+* `multihash` - set to *sha2-256*, `0x12`
+* `key_multicodec` - set to *ed25519*, `0xed` (or other curves based on the tezos namespace)
+* `raw_signature` - the signature bytes
+
+#### UCAN
+
+Most fields in a UCAN should map 1-to-1 with the CACAO IPLD schema. 
+
+**Additional fields**
+
+* `v` - set to `ucv` from the JWT header
+
+* `iss` - convert the `iss` string of the UCAN to a multidid
+* `aud` - convert the `aud` string of the UCAN to a multidid
+
+**Signature**
+
+The `s` field is a signature encoded as a varsig and depends on which signature algorithm was used for the UCAN JWT,
+
+* `content_multicodec` - set to *ucan-jwt*, `0xd001`
+* `raw_signature` - the signature bytes
+
+Examples based on *alg* in the JWT header:
+
+***EdDSA:***
+
+* `multihash` - set to *sha2-256*, `0x12`
+* `key_multicodec` - set to *ed25519*, `0xed`
+
+***ES256K:***
+
+* `multihash` - set to *sha2-256*, `0x12`
+* `key_multicodec` - set to *secp256k1*, `0xe7`
+
+#### Other formats
+
+Other formats can be added similarly to the examples above by registering a `content_multicodec` for the particular object-capability.
 
 ### Signature Verification
 
-Signature signing and verification should follow the workflow as specified in the [CAIP-122]() namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows, resulting in a message conformant with EIP-4361:
+To verify a signature of a CACAO the varsig specification is followed. Before verifying the signature the `content_multicodec` must be used to compute the digest used by the hash function and signature verification algorithm. Below the `content_multicodec` is described for `0xd510`, `0xd51e`, and `0xd001`.
+
+#### Content encoding: SIWx + ReCap
+
+In order to verify the signature we first need to reconstruct the message that was signed. For *caip122-eip191* (`0xd51e`) and *caip122* (`0xd510`) we can start with the shared steps.
+
+**Reconstruct ReCap data**
+
+If present the ReCap URI and statement segment need to be reconstructed. Using the values from the CACAO reconstruct the ReCap json object (should be valid *dag-json*).
+
+```javascript
+{
+  att: cacao.att,
+  prf: cacao.prf
+}
+```
+
+The recap statement segment is computed according to the [ReCap eip](https://eips.ethereum.org/EIPS/eip-5573), e.g. `recap-preamble 1*(" " recap-statement-entry ".")`.
+
+**Reconstruct SIWx message**
+
+Start by computing values for:
+
+* `address` - extract address from DID PKH in `cacao.iss`
+* `chain-id` - extract chain id reference from DID PKH in `cacao.iss`
+
+***Timestamps:***
+
+* `issued-at` - based on `cacao.iat` and `cacao.fct.z-iat`
+* `not-before` - based on `cacao.nbf` and `cacao.fct.z-nbf`
+* `expiration-time` - based on `cacao.exp` and `cacao.fct.z-exp`
+
+See [Appendix A](#appendix-a) for the algorithm used for the conversion.
+
+Finally, construct the SIWx string:
 
 ```
-{.p.domain} wants you to sign in with your Ethereum account:
-{.p.iss[address]}
+{cacao.fct.domain} wants you to sign in with your Ethereum account:
+{address}
 
-{.p.statement}
+{cacao.fct.statement + recap-statement-segment}
 
-URI: {.p.aud}
-Version: {.p.version}
-Chain ID: {.p.iss[chainId.reference]}
-Nonce: {.p.nonce}
-Issued At: {.p.iat}
+URI: {cacao.aud}
+Version: {cacao.v}
+Chain ID: {chain-id}
+Nonce: {cacao.nnc}
+Issued At: {issued-at}
+Expiration Time: ${expiration-time}
+Not Before: ${not-before}
+Request ID: ${cacao.fct.request-id}
 Resources:
-- {.p.resources[0]}
-- {.p.resources[1]}
+- {recap-uri}
+- {cacao.fct.resources[0]}
+- {cacao.fct.resources[1]}
 ...
-- {.p.resources[n]}
+- {cacao.fct.resources[n]}
 ```
 
-Signature verification goes according to `t` in `SignatureMeta`:
-For example,
+**Construct signature digest, *caip122* `0xd510`:**
 
-- `eip191`: use [EIP-191](https://eips.ethereum.org/EIPS/eip-191),
-- `eip1271`: use [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271).
+`digest = SIWx-string`
+
+**Construct signature digest, *caip122-eip191* `0xd51e`:**
+
+Simply prepend the message according to [eip191](https://eips.ethereum.org/EIPS/eip-191):
+
+`digest = "\x19Ethereum Signed Message:\n" + SIWx-string`
+
+#### Content encoding: UCAN (`0xd001`)
+
+Converting a CACAO to a UCAN string that can be verified is relatively simple. Remove the `s` and `v` fields from the CACAO object and encode it as `dag-json`. Stringify the json object and encode using base64url. The protected header is constructed as follows,
+
+* `typ` - MUST equal `"JWT"`
+* `ucv` - is set to `cacao.v`
+* `alg` - is based on `key_multicodec` and `multihash` in  `cacao.v`:
+  * `"EdDSA"` if *ed25519* and *sha2-256*
+  * `"ES256K"` if *secp256k1* and *sha2-256*
+
+Stringify the protected header json object and encode it using base64url.
+
+`digest = protected-base64url + "." + payload-base64url`
 
 ### Serialization
 
-As a proper IPLD object, it can be deterministically serialized using [CBOR](https://ipld.io/docs/codecs/known/dag-cbor/) into bytes.
-Performance is almost as fast as vanilla JSON serialization. For transport purposes we propose that a CACAO is passed inside a base64url-serialized [CAR](https://ipld.io/specs/transport/car/) file,
+For transport purposes a CACAO can be passed inside a base64url-serialized [CAR](https://ipld.io/specs/transport/car/) file,
 with root of the CAR file set to a tip of capability chain. Here and now we use [CARv1](https://ipld.io/specs/transport/car/carv1/) format, as [CARv2](https://ipld.io/specs/transport/car/carv2/) is still being worked on.
 
 We propose, that all the necessary parent CACAOs are passed there as well. This way, even if a referenced CACAO is not yet available over IPFS, both consumer and presenter of CACAO still can access it.
 
 ## Rationale
 
-- As a chain-agnostic standard, a capability should identify chain-specific signature methods.
-- While "Sign-in with X" standardizes payload format, the payload could be extended in future.
-- The standard should be usable for DID-based signing methods as well as blockchain based ones.
-- The format we are creating here should be uniquely serialized as an IPLD object; we expect it to be identified by CID.
-- A capability format described here should allow chaining capabilities together.
-- We should standardize on a url-safe serialization format of a capability chain suitable for well-established non-binary transport protocols.
+A common way to represent multiple different types of capabilities can enable more interoperability between object-capability systems and establishes a common ground for further innovation. CACAO relies on existing standards, such as DIDs and multicodec as a base layer for this interoperability.
+
+Using IPLD as a represetation layer allows CACAO to easily be transfered over the internet, using IPFS or other protocols that can leverage its integrity checks.
+
+We choose SIWx + ReCap and UCAN as examples since they represent a majority of the existing object-capabilities in use in the blockchain community today.
 
 ## Backwards Compatibility
 
 In the [previous version of this specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. Newer implementations should support both header types - `eip4361` and `caip122`.
 
 ## Example
+
+**TODO - update these examples**
 
 Below you could find a CACAO, along with its serialized presentation in CAR file.
 
@@ -171,15 +298,29 @@ CACAO:
 }
 ```
 
-CACAO Serialized: base64url-encoded CARv1 file with the IPFS block of the CACAO above:
+CACAO Serialized: base64url-encoded CARv1 file with the IPLD block of the CACAO above:
 
 ```
 uOqJlcm9vdHOB2CpYJQABcRIgEbxa4r0lKwE4Oj8ZUbYCpULmPfgw2g_r12IcKX1CxNlndmVyc2lvbgHdBAFxEiARvFrivSUrATg6PxlRtgKlQuY9-DDaD-vXYhwpfULE2aNhaKFhdGdlaXA0MzYxYXCrY2F1ZHgbaHR0cDovL2xvY2FsaG9zdDozMDAwL2xvZ2luY2V4cHgdMjAyMi0wMy0xMFQxODowOToyMS40ODErMDM6MDBjaWF0eB0yMDIyLTAzLTEwVDE3OjA5OjIxLjQ4MSswMzowMGNpc3N4O2RpZDpwa2g6ZWlwMTU1OjE6MHhCQWM2NzVDMzEwNzIxNzE3Q2Q0QTM3RjZjYmVBMUYwODFiMUMyYTA3Y25iZngdMjAyMi0wMy0xMFQxNzowOToyMS40ODErMDM6MDBlbm9uY2VmMzI4OTE3ZmRvbWFpbm5sb2NhbGhvc3Q6MzAwMGd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOiYXNYQVzLE0rT2HTLtAoys5lUnNMslT3F3IfcZGJKPj3AaE19SDMEPdfp9KaJSFP43FVfl7x-PH3T_MZkCeuYK_86RGcbYXRmZWlwMTkx
 ```
 
+### <a name="appendix-a"></a>Appendix A: Timestamp converstion algorithm
+
+The values in SIWx are encoded as [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) strings, while CACAO requires unix timestamps (in seconds). The algorithm used to convert between the two is outlined below.
+
+### RFC3339 to UNIX + tz-info
+
+1. TODO
+
+### UNIX + tz-info to RFC3339
+
+1. TODO
+
 ## Versioning
 
-Present version of CAIP-74 updates and clarifies the previous versions:
+Present version of CAIP-74 is a substantial change from the previous draft versions:
+
+* [Version 2 - CACAO for Sign-in with X](https://github.com/ChainAgnostic/CAIPs/blob/6d6c109d7df25dc4fad1010d3270703bf2a0ee42/CAIPs/caip-74.md)
 
 - [Version 1 - CACAO for Sign-in with Ethereum](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md)
 
@@ -190,7 +331,8 @@ Present version of CAIP-74 updates and clarifies the previous versions:
 - [did:pkh Method Specification](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md)
 - [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6)
 - [EIP-191: Signed Data Standard](https://eips.ethereum.org/EIPS/eip-191)
-- [EIP-1271: Standard Signature Validation Method for Contracts](https://eips.ethereum.org/EIPS/eip-1271)
+- [Varsig](https://github.com/ChainAgnostic/varsig)
+- [Multidid](https://github.com/ChainAgnostic/multidid/)
 
 ## Copyright
 
