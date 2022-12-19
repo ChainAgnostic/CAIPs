@@ -279,6 +279,16 @@ a credential issuance and expecting back a verifiable credential OR an error.
 The parameters are formated as a [credential_application object][] as specified
 in the [Credential Manifest][] specification.
 
+Note that the optional `preferred_proofs` parameter is redundant if the
+`credential_application` contains `format` properties subsetted from the formats
+listed in the original `credential_manifest` object (delivered previously with
+the issuer metadata method below). In this case, the `preferred_proofs` object
+should be dropped and the `formats` in the application object should be
+considered authoritative.  The second parameter is a fallback in cases where a
+`credential_manifest` was not available or malformed, or for legacy
+compatibility with non-conforming apps (e.g. apps exposing only OIDC
+capabilities, not credential manifest capabilities).
+
 #### Method:
 
 `wallet_creds_issue`
@@ -290,7 +300,7 @@ in the [Credential Manifest][] specification.
   use-case, but in either case MUST be formated as a valid
   [credential_application object][] as specified in the [Credential Manifest][]
   specification.
-- `preferred_proofs` - OPTIONAL. An **ordered** array (from most to least
+- `preferred_proofs` - OPTIONAL.  An **ordered** array (from most to least
   preferred) of preferred proof formats and types for the VC to be issued. Each
   array item is an object with two properties, `format` and `type`. `format`
   indicates the preferred proof type, which is either `jwt` for (External
