@@ -548,7 +548,7 @@ Prior Art and Reference Implementations
 [VC spec]: https://www.w3.org/TR/vc-data-model/
 [Data Integrity spec]: https://www.w3.org/TR/vc-data-integrity/
 [DIF Claim Format registry]: https://identity.foundation/claim-format-registry/#registry
-[OID4VP]: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-8.1
+[OIDC4VP]: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-8.1
 [IANA JOSE Registry]: https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms
 [JWS-test-suite]: https://identity.foundation/JWS-Test-Suite/
 [Veramo]: https://veramo.io/
