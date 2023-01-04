@@ -47,7 +47,7 @@ The application would interface with a provider to make request as follows:
   "method": "caip_request",
   "params": {
     "chainId": "eip155:1",
-    "sessionIdentifier": "0xdeadbeef",
+    "sessionId": "0xdeadbeef",
     "request": {
       "method": "personal_sign",
       "params": [
@@ -63,7 +63,7 @@ The JSON-RPC method is labelled as `caip_request` and expects three parameters:
 
 - chainId - [CAIP-2][]-defined `chainId` to identify both a namespace and a
   specific chain or network within it
-- sessionIdentifier - [CAIP-171][] `sessionIdentifier` to identify the session opened or
+- sessionId - [CAIP-171][] `sessionId` string to identify the session opened or
   updated by a [CAIP-25][] interaction.
 - request - an object containing the fields:
   - method - JSON-RPC method to request
