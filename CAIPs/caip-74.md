@@ -229,11 +229,11 @@ Expiration Time: ${expiration-time}
 Not Before: ${not-before}
 Request ID: ${cacao.fct.request-id}
 Resources:
-- {recap-uri}
 - {cacao.fct.resources[0]}
 - {cacao.fct.resources[1]}
 ...
 - {cacao.fct.resources[n]}
+- {recap-uri}
 ```
 
 **Construct signature digest, *caip122* `0xd510`:**
