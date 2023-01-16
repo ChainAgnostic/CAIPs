@@ -58,6 +58,23 @@ type CACAO struct {
 
 ```
 
+Important to note is that in the `Abilitiy` array, every `NB` are treated as separate. For example,
+
+```json
+"crud/create": [
+  {"day": "friday"},
+  {"status": "draft"}
+]
+```
+
+is treated as "You can post drafts to the blog, or post any status on Fridays". If you want to represent "You can post drafts to the blog on Fridays" it would need to be expressed as,
+
+```json
+"crud/create": [
+  {"day": "friday", "status": "draft"}
+]
+```
+
 ### Decode to IPLD
 
 This section describes how to convert different object-capability formats into the IPLD schema described above.
@@ -260,7 +277,11 @@ We choose SIWx + ReCap and UCAN as examples since they represent a majority of t
 
 ## Backwards Compatibility
 
-In the [previous version of this specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. Newer implementations should support both header types - `eip4361` and `caip122`.
+Present version of CAIP-74 is a substantial change from the previous draft versions:
+
+* [Version 2 - CACAO for Sign-in with X](https://github.com/ChainAgnostic/CAIPs/blob/6d6c109d7df25dc4fad1010d3270703bf2a0ee42/CAIPs/caip-74.md)
+
+- [Version 1 - CACAO for Sign-in with Ethereum](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md)
 
 ## Example
 
@@ -315,14 +336,6 @@ The values in SIWx are encoded as [RFC3339](https://datatracker.ietf.org/doc/htm
 ### UNIX + tz-info to RFC3339
 
 1. TODO
-
-## Versioning
-
-Present version of CAIP-74 is a substantial change from the previous draft versions:
-
-* [Version 2 - CACAO for Sign-in with X](https://github.com/ChainAgnostic/CAIPs/blob/6d6c109d7df25dc4fad1010d3270703bf2a0ee42/CAIPs/caip-74.md)
-
-- [Version 1 - CACAO for Sign-in with Ethereum](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md)
 
 ## Links
 
