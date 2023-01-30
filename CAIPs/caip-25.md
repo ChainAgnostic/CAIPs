@@ -32,25 +32,51 @@ application through a provider connecting to a wallet.
 ## Specification
 
 The session is defined by a wallet's response to a provider's request, and
-updated, extended, closed, etc by successive calls and events. These are out of
-scope of this CAIP interface and will be specified in a forthcoming one.
+updated, extended, closed, etc by successive calls and events. The exact
+parameters and assumptions of that session abstraction are defined in
+[CAIP-171][], but note that a string identifier referring to it is absent from
+the initial call (if authorization is granted) and present in both the initial
+response and all future responses.
 
-Within that session model, this interface outlines the authorization of an
-injected provider per namespace. These authorization call/responses should be
-idempotent, assuming the provider is tracking a session property, referred to by
-a `sessionIdentifier` as defined in [CAIP-171][]. If a wallet needs to initiate
-a new session, whether due to user input, security policy, or session expiry
-reasons, it can simply generate a new session identifier to signal this event to
-the calling provider.
+Given the session model of [CAIP-171][], this interface outlines the
+authorization of a provider to handle a set of interfaces grouped into
+namespaces, as well as to interact with a session abstraction used by both
+caller and respondent to manage the authorization over time. The
+`sessionIdentifier` defined in [CAIP-171][] enables this mutual management and
+alignment across calls that are idempotent if identical. If a respondent (e.g. a
+wallet) needs to initiate a new session, whether due to user input, security
+policy, or session expiry reasons, it can simply generate a new session
+identifier to signal this event to the calling provider; if a caller needs to
+initiate a new session, it can do so by sending a new request without
+`sessionIdentifier`. In such cases, a respondent (e.g. wallet) may choose to
+explicitly close all sessions upon generation of a new one from the same origin,
+or leave it to time-out; maintaining concurrent sessions is discouraged (see
+Security Considerations).
 
-The application interfaces with a provider to populate a session with a base
-state describing authorized chains, methods, event, and accounts.  This
-negotation takes place by sending the application's REQUIRED and REQUESTED
-properties of the session. If any requirements are not met, a failure response
-expressive of one or more specific failure states will be sent (see below).
+In the initial call, the application interfaces with a provider to populate a
+session with a base state describing authorized chains, methods, event, and
+accounts.  This negotation takes place by sending the application's REQUIRED and
+REQUESTED properties of the session, organized into arrays of namespaces (named
+`requiredNamespaces` and `optionalNamespaces` respectively).  These two arrays
+are not mutually exclusive (i.e., additional properties of a required namespace
+may be requested under the same namespace key in the requested object). 
+
+If any properties in the required namespace(s) are not authorized by the
+respondent (e.g. wallet), a failure response expressive of one or more specific
+failure states will be sent (see [#### failure states](#failure-states) below),
+with the exception of user denying consent. For privacy reasons, an `undefined`
+response (or no response, depending on implementation) should be sent to prevent
+incentivizing unwanted requests and to minimize the surface for fingerprinting
+of public web traffic (See Privacy Considerations below).
+
 Conversely, a succesful response will contain all the required properties *and
 the provider's choice of the optional properties* expressed as a unified set of
-parameters.
+parameters. In the case of identically-keyed namespaces appearing in both arrays
+in the request where properties from both are returned as authorized, the two
+namespaces MUST be merged in the response (see examples below). However,
+respondents MUST NOT restructure namespaces (e.g., by folding properties from a
+[CAIP2][]-scoped namespace into a namespace-wide namespace) as this may
+introduce ambiguities (See Security Considerations below).
 
 ### Request
 
@@ -196,15 +222,15 @@ An example of an error response should match the following format:
   "jsonrpc": "2.0",
   "error": {
     "code": 5000,
-    "message": "User disapproved requested chains"
+    "message": "Unknown error"
   }
 }
 ```
 
 The valid error messages codes are the following:
-* When user disapproves exposing accounts to requested chains
+* Unknown error OR no requested namespaces were authorized
     * code = 5000
-    * message = "User disapproved requested chains"
+    * message = "Unknown error"
 * When user disapproves accepting calls with the request methods
     * code = 5001
     * message = "User disapproved requested methods"
@@ -229,9 +255,62 @@ The valid error messages codes are the following:
 * Invalid Session Properties Object
     * code = 5200
     * message = "Invalid Session Properties requested"
-    * Required Session Properties 
+* Session Properties requested outside of Session Properties Object 
     * code = 5201
-    * message = "Session Properties can only be optional"
+    * message = "Session Properties can only be optional and global"
+
+## Security Considerations
+
+The crucial security function of a shared session negotiated and maintained by a
+series of CAIP-25 calls is to reduce ambiguity in authorization.  This requires
+a somewhat counterintuitive structuring of the building-blocks of a
+Chain-Agnostic session into namespaces that can be scoped to either one of the
+CASA [namespaces][] as a whole or to a specific [CAIP-2][] chain within such a
+namespace; for this reason, requests and responses are structures as arrays of
+these namespaces keyed to their scope, formatted either as a bare entry in the
+[namespaces][] registry OR as a full [CAIP-2][].  While internal systems are
+free to translate this object into other structures, preserving it in the
+CAIP-25 interface is crucial to the unambiguous communication between caller and
+respondent about what exact authorization is granted.
+
+## Privacy Considerations
+
+One major risk in browser-based or HTTP-based communications is "fingerprinting
+risk", i.e. the risk that public or intercepted traffic can be used to
+deanonymize browsers and/or wallets deductively based on response times, error
+codes, etc. To minimize this risk, and to minimize the data (including
+behavioral data) leaked by responses to potentially malicious CAIP-25 calls,
+respondents are recommended to ignore calls
+1. which the respondent does not authorize, 
+2. which are rejected by policy, or 
+3. requests which are rejected for unknown reasons. 
+ 
+"Ignoring" these calls means responding to all three in a way that is
+*indistinguishable* to a malicious caller or observer which might deduce
+information from differences in those responses (including the time taken to
+provide them). Effectively, this means allowing requests in all three cases to
+time out even if the end-user experience might be better served by
+differentiating them, particularly in complex multi-party architectures where
+parties on one side of this interface need to have a shared understanding of why
+a request did not receive a response. At scale, however, better user experiences in a single architecture or context can contribute to a systemic erosion of anonymity.
+
+Given this "silent time out" behavior, the best strategy to ensure good user
+experience is not to request too many properties in the initial establishment of
+a session and to iteratively and incrementally expand session authorization over
+time. This also contributes to a more consentful experience overall and
+encourages progressive trust establishment across complex architectures with
+many distinct actors and agents.
+
+Another design pattern that accomodates the "silent time out" behavior is minor
+updates to the session. For example, a caller sending a request identical to a
+previous request (or a previous response) except for a new session expiry
+further in the future could expect one of exactly three responses:
+1. An identical response to the previous request (meaning the session extension was denied);
+2. A response identical expect that it includes the new, extended session expiry; or,
+3. A silent time out (meaning the calling behavior was malformed in ways the
+respondent cannot understand, or the respondent choses not to make explicit how
+the request was malformed, or the end-user rejected them, or the request itself
+was in violation of policy). 
 
 ## Changelog
 
