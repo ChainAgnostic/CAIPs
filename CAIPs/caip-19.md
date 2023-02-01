@@ -46,7 +46,7 @@ The `asset_type` is a case-sensitive string in the form
 asset_type:        chain_id + "/" + asset_namespace + ":" + asset_reference
 chain_id:          Namespace+Blockchain ID as per [CAIP-2][]
 asset_namespace:   [-a-z0-9]{3,8}
-asset_reference:   [-.%a-zA-Z0-9]{1,64}
+asset_reference:   [-.%a-zA-Z0-9]{1,128}
 ```
 
 Note that `-`, `%` and `.` characters are allowed in `asset_references`, which
