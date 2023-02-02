@@ -56,12 +56,16 @@ Security Considerations).
 In the initial call, the application interfaces with a provider to populate a
 session with a base state describing authorized chains, methods, event, and
 accounts.  This negotation takes place by sending the application's REQUIRED and
-REQUESTED properties of the session, organized into arrays of namespaces (named
-`requiredNamespaces` and `optionalNamespaces` respectively).  These two arrays
-are not mutually exclusive (i.e., additional properties of a required namespace
-may be requested under the same namespace key in the requested object). 
+REQUESTED authorizations of the session, grouped into objects scoping those
+authorizations which in turn are grouped into two top-level arrays (named
+`requiredScopes` and `optionalScopes` respectively).  These two arrays are not
+mutually exclusive (i.e., additional properties of a required scope may be
+requested under the same keyed scope object key in the requested array). Note
+that scopes can be keyed to an entire [CAIP-104][] "namespace", meaning
+applicable to *any* current or future [CAIP-2][] chainID within that namespace,
+or keyed to a specific [CAIP-2][] within that namespace.
 
-If any properties in the required namespace(s) are not authorized by the
+If any properties in the required scope(s) are not authorized by the
 respondent (e.g. wallet), a failure response expressive of one or more specific
 failure states will be sent (see [#### failure states](#failure-states) below),
 with the exception of user denying consent. For privacy reasons, an `undefined`
@@ -71,12 +75,12 @@ of public web traffic (See Privacy Considerations below).
 
 Conversely, a succesful response will contain all the required properties *and
 the provider's choice of the optional properties* expressed as a unified set of
-parameters. In the case of identically-keyed namespaces appearing in both arrays
-in the request where properties from both are returned as authorized, the two
-namespaces MUST be merged in the response (see examples below). However,
-respondents MUST NOT restructure namespaces (e.g., by folding properties from a
-[CAIP2][]-scoped namespace into a namespace-wide namespace) as this may
-introduce ambiguities (See Security Considerations below).
+parameters. In the case of identically-keyed scopes appearing in both arrays in
+the request where properties from both are returned as authorized, the two
+scopes MUST be merged in the response (see examples below). However, respondents
+MUST NOT restructure scopes (e.g., by folding properties from a [CAIP2][]-keyed,
+chain-specific scope object into a [CAIP-104][]-keyed, namespace-wide scope
+object) as this may introduce ambiguities (See Security Considerations below).
 
 ### Request
 
@@ -91,7 +95,7 @@ Example:
   "jsonrpc": "2.0",
   "method": "provider_authorization",
   "params": {
-    "requiredNamespaces": {
+    "requiredScopes": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"],
@@ -105,7 +109,7 @@ Example:
         ...
       }
     },
-    "optionalNamespaces":{
+    "optionalScopes":{
       "eip155:42161": {
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
         "events": ["accountsChanged", "chainChanged"]
@@ -119,20 +123,20 @@ Example:
 ```
 
 The JSON-RPC method is labelled as `provider_authorization` and both the
-"requiredNamespaces" and "optionalNamespaces" arrays are populated with 
-`namespace` objects each named after the scope of authorization:
-1. EITHER an entire ChainAgnostic [namespace][] 
-2. OR a specific [CAIP-2][] in that namespace.
+"requiredScopes" and "optionalScopes" arrays are populated with 
+"scope objects" each named after the scope of authorization requested:
+1. EITHER an entire [CAIP-104][] [namespace][]
+2. OR a specific [CAIP-2][]-identified chain in a specific namespace.
 
-Each `namespace` object contains the following parameters:
+Each scope object contains the following parameters:
 - chains - array of [CAIP-2][]-compliant `chainId`'s. This parameter MAY be
   omitted if a single-chain scope is already declared in the index of the object.
 - methods - array of JSON-RPC methods expected to be used during the session
 - events - array of JSON-RPC message/events expected to be emitted during the
   session
 
-The `requiredNamespaces` array MUST contain 1 or more of these objects, if present; the `optionalNamespaces` array MUST contain 1 or more of them, if 
-present.
+The `requiredScopes` array MUST contain 1 or more of these objects, if present;
+the `optionalScopes` array MUST contain 1 or more of them, if present.
 
 A third object is the `sessionProperties` object, all of whose properties MUST 
 be in the interpreted as optional, since requesting applications cannot mandate
@@ -156,21 +160,22 @@ The wallet can respond to this method with either a success result or an error m
 The succesfull reslt contains one mandatory string (keyed as `sessionId` with a value 
 conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
 
-The first is called `sessionNamespaces` and contains 1 or more namespace objects.
-* All required namespaces and all, none, or some of the optional namespaces (at the 
-discretion of the provider) MUST be included if successful.  
-* As in the request, each namespace object MUST contain `methods` and `events` objects, 
-and a `chains` object if a specific chain is not specified in the object's index.
-* Unlike the request, each namespace object MUST also contain an `accounts` array, 
-containing 0 or more [CAIP-10][] conformant accounts authorized for the session and valid
-in the namespace and chain(s) authorized by the object they are in. Additional constraints
-on the accounts authorized for a given session MAY be specified in the corresponding 
-[namespaces][] specification.
+The first is called `sessionScopes` and contains 1 or more scope objects.
+* All required scope objects and all, none, or some of the optional scope object
+(at the discretion of the provider) MUST be included if successful.  
+* As in the request, each scope object object MUST contain `methods` and
+`events` objects, and a `chains` object if a specific chain is not specified in
+the object's index.
+* Unlike the request, each scope object MUST also contain an `accounts` array,
+containing 0 or more [CAIP-10][] conformant accounts authorized for the session
+and valid in the namespace and chain(s) authorized by the scope object they are
+in. Additional constraints on the accounts authorized for a given session MAY be
+specified in the corresponding [CAIP-104][] namespaces specification.
 
-A `sessionProperties` object MAY also be present, and its contents MAY correspond to the
-properties requested in the response or not (at the discretion of the provider) but MUST
-conform to the properties names and value constraints described in [CAIP-170][]; any other 
-MUST be dropped by the requester.
+A `sessionProperties` object MAY also be present, and its contents MAY
+correspond to the properties requested in the response or not (at the discretion
+of the provider) but MUST conform to the property names and value constraints
+described in [CAIP-170][]; any other MUST be dropped by the requester.
 
 An example of a successful response follows:
 
@@ -180,7 +185,7 @@ An example of a successful response follows:
   "jsonrpc": "2.0",
   "result": {
     "sessionId": "0xdeadbeef",
-    "sessionNamespaces": {
+    "sessionScopes": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
@@ -228,7 +233,7 @@ An example of an error response should match the following format:
 ```
 
 The valid error messages codes are the following:
-* Unknown error OR no requested namespaces were authorized
+* Unknown error OR no requested scopes were authorized
     * code = 5000
     * message = "Unknown error"
 * When user disapproves accepting calls with the request methods
@@ -263,14 +268,13 @@ The valid error messages codes are the following:
 
 The crucial security function of a shared session negotiated and maintained by a
 series of CAIP-25 calls is to reduce ambiguity in authorization.  This requires
-a somewhat counterintuitive structuring of the building-blocks of a
-Chain-Agnostic session into namespaces that can be scoped to either one of the
-CASA [namespaces][] as a whole or to a specific [CAIP-2][] chain within such a
-namespace; for this reason, requests and responses are structures as arrays of
-these namespaces keyed to their scope, formatted either as a bare entry in the
-[namespaces][] registry OR as a full [CAIP-2][].  While internal systems are
-free to translate this object into other structures, preserving it in the
-CAIP-25 interface is crucial to the unambiguous communication between caller and
+a potentially counterintuitive structuring of the building-blocks of a
+Chain-Agnostic session into scopes at the "namespace-wide" ([CAIP-104][]) or at
+the "chain-specific" ([CAIP-2][]) level; for this reason, requests and responses
+are structures as arrays of objects keyed to these scopes, formatted either as a
+[CAIP-104][] scheme OR as a full [CAIP-2][]. While internal systems are free to
+translate this object into other structures, preserving it in the CAIP-25
+interface is crucial to the unambiguous communication between caller and
 respondent about what exact authorization is granted.
 
 ## Privacy Considerations
@@ -330,6 +334,7 @@ was in violation of policy).
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-75]: https://chainagnostic.org/CAIPs/caip-75
+[CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
