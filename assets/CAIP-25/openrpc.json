@@ -1,0 +1,291 @@
+{
+  "openrpc": "1.2.4",
+  "info": {
+    "title": "CAIP-25",
+    "description": "[CAIP-25](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-25.md) defines an authorization procedure for a chain agnostic provider to interface with a wallet as part of their initialization and/or 'handshake' protocol.",
+    "version": "1.0.0"
+  },
+  "methods": [
+    {
+      "name": "provider_authorization",
+      "paramStructure": "by-position",
+      "params": [
+        {
+          "name": "requiredNamespaces",
+          "description": "Namespaces that the wallet must support in order to be used with this provider.",
+          "schema": {
+            "type": "object",
+            "patternProperties": {
+              "[-a-z0-9]{3,8}(:[-_a-zA-Z0-9]{1,32})?": {
+                "$ref": "#/components/schemas/Namespace"
+              }
+            }
+          }
+        },
+        {
+          "name": "optionalNamespaces",
+          "description": "Namespaces that the wallet may support in order to be used with this provider.",
+          "schema": {
+            "type": "object",
+            "patternProperties": {
+              "[-a-z0-9]{3,8}(:[-_a-zA-Z0-9]{1,32})?": {
+                "$ref": "#/components/schemas/Namespace"
+              }
+            }
+          }
+        },
+        {
+          "name": "sessionProperties",
+          "description": "Properties that the wallet may use to determine if the session is valid.",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "expiry": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "provider_authorizationResult",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "description": "A unique identifier for the session. Defined by [CAIP-171](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-171.md)",
+              "type": "string"
+            },
+            "sessionNamespaces": {
+              "type": "object",
+              "patternProperties": {
+                "[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}": {
+                  "$ref": "#/components/schemas/Namespace"
+                }
+              }
+            },
+            "sessionProperties": {
+              "type": "object",
+              "properties": {
+                "expiry": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      },
+      "examples": [
+        {
+          "name": "provider_authorizationExample",
+          "description": "Example of a provider authorization request.",
+          "params": [
+            {
+              "name": "requiredNamespaces",
+              "value": {
+                "eip155": {
+                  "chains": [
+                    "eip155:1",
+                    "eip155:137"
+                  ],
+                  "methods": [
+                    "eth_sendTransaction",
+                    "eth_signTransaction",
+                    "eth_sign",
+                    "get_balance",
+                    "personal_sign"
+                  ],
+                  "events": [
+                    "accountsChanged",
+                    "chainChanged"
+                  ]
+                },
+                "eip155:10": {
+                  "methods": [
+                    "get_balance"
+                  ],
+                  "events": [
+                    "accountsChanged",
+                    "chainChanged"
+                  ]
+                },
+                "cosmos": {}
+              }
+            },
+            {
+              "name": "optionalNamespaces",
+              "value": {
+                "eip155:42161": {
+                  "methods": [
+                    "eth_sendTransaction",
+                    "eth_signTransaction",
+                    "get_balance",
+                    "personal_sign"
+                  ],
+                  "events": [
+                    "accountsChanged",
+                    "chainChanged"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "sessionProperties",
+              "value": {
+                "expiry": "2022-12-24T17:07:31+00:00"
+              }
+            }
+          ],
+          "result": {
+            "name": "provider_authorizationResultExample",
+            "value": {
+              "sessionId": "0xdeadbeef",
+              "sessionNamespaces": {
+                "eip155": {
+                  "chains": [
+                    "eip155:1",
+                    "eip155:137"
+                  ],
+                  "methods": [
+                    "eth_sendTransaction",
+                    "eth_signTransaction",
+                    "get_balance",
+                    "eth_sign",
+                    "personal_sign"
+                  ],
+                  "events": [
+                    "accountsChanged",
+                    "chainChanged"
+                  ],
+                  "accounts": [
+                    "eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb",
+                    "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"
+                  ]
+                },
+                "eip155:10": {
+                  "methods": [
+                    "get_balance"
+                  ],
+                  "events": [
+                    "accountsChanged",
+                    "chainChanged"
+                  ],
+                  "accounts": []
+                },
+                "eip155:42161": {
+                  "methods": [
+                    "personal_sign"
+                  ],
+                  "events": [
+                    "accountsChanged",
+                    "chainChanged"
+                  ],
+                  "accounts": [
+                    "eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"
+                  ],
+                  "cosmos": {}
+                },
+                "sessionProperties": {
+                  "expiry": "2022-11-31T17:07:31+00:00"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "errors": [
+        {
+          "code": 5000,
+          "message": "User disapproved requested chains"
+        },
+        {
+          "code": 5001,
+          "message": "User disapproved requested methods"
+        },
+        {
+          "code": 5002,
+          "message": "User disapproved requested events"
+        },
+        {
+          "code": 5100,
+          "message": "Requested chains are not supported"
+        },
+        {
+          "code": 5101,
+          "message": "Requested methods are not supported"
+        },
+        {
+          "code": 5102,
+          "message": "Requested events are not supported"
+        },
+        {
+          "code": 5103,
+          "message": "Scope/chain mismatch"
+        },
+        {
+          "code": 5104,
+          "message": "ChainId defined in two different scopes"
+        },
+        {
+          "code": 5200,
+          "message": "Invalid Session Properties requested"
+        },
+        {
+          "code": 5201,
+          "message": "Session Properties can only be optional"
+        }
+      ]
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Namespace": {
+        "type": "object",
+        "title": "Namespace",
+        "description": "Namespace for a multi-chain connection",
+        "additionalProperties": true,
+        "properties": {
+          "chains": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "[-a-z0-9]{3,8}(:[-_a-zA-Z0-9]{1,32})?"
+            }
+          },
+          "methods": {
+            "description": "Methods that the wallet must support in order to be used with this provider.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "events": {
+            "description": "Events that the wallet must support in order to be used with this provider.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rpcEndpoints": {
+            "description": "JSON-RPC endpoints for this namespace.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "rpcDocuments": {
+            "type": "array",
+            "description": "OpenRPC documents that describe the RPC endpoints for this namespace.",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    }
+  }
+}
