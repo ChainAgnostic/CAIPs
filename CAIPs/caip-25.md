@@ -6,8 +6,8 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Last Call
 type: Standard
 created: 2020-10-14
-updated: 2022-10-26
-requires: [2, 10, 171]
+updated: 2023-02-02
+requires: [2, 10, 25, 171]
 ---
 
 ## Simple Summary
@@ -157,7 +157,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The succesfull reslt contains one mandatory string (keyed as `sessionId` with a value 
+The succesfull result contains one mandatory string (keyed as `sessionId` with a value 
 conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
 
 The first is called `sessionScopes` and contains 1 or more scope objects.
@@ -214,10 +214,12 @@ An example of a successful response follows:
 
 #### Failure States
 
-The response MUST NOT be a success result when the user disapproves the accounts
-matching the requested chains to be exposed or the requested methods are not
-approved or the requested chains are not supported by the wallet or the
-requested methods are not supported.
+The response MUST NOT be a success result if any of the following conditions are met:
+- the user disapproves the accounts matching the requested chains to be exposed 
+- requested methods are not approved 
+- the requested chains are not supported by the wallet
+- the requested methods are not supported by the wallet
+- there is anything malformed about the request
 
 An example of an error response should match the following format:
 
@@ -263,6 +265,17 @@ The valid error messages codes are the following:
 * Session Properties requested outside of Session Properties Object 
     * code = 5201
     * message = "Session Properties can only be optional and global"
+
+## Extensibility and Additional Properties
+
+Any other properties present in a request MUST be ignored by respondents, UNLESS
+they are defined by an extension specification to CAIP-25 (such as, for example,
+the methods defined in [CAIP-169][]). Since unsuccesful authorizations return
+nothing, it is recommended that requests for potentially unstable or
+authority-specific terms be handled progressively, i.e., requesting initial
+authorization or feature discovery first, then negotiating authorities on any
+local or versioned authorization terms (using, for example, [CAIP-207][]), and
+only then requesting authorization of those terms.
 
 ## Security Considerations
 
@@ -329,13 +342,17 @@ was in violation of policy).
 - [CAIP-25][] - JSON-RPC Provider Request
 - [CAIP-75][] - Blockchain Reference for the Hedera namespace
 - [CAIP-171][] - Session Identifier Specification
+- [CAIP-207][] - Extension to CAIP-25 that enables explicit negotiation of RPC
+  authorities and semantics
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-75]: https://chainagnostic.org/CAIPs/caip-75
 [CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
+[CAIP-169]: https://chainagnostic.org/CAIPs/caip-169
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+[CAIP-207]: https://chainagnostic.org/CAIPs/caip-207
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
 [CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
