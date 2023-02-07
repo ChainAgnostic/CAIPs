@@ -8,7 +8,7 @@
   "methods": [
     {
       "name": "provider_authorization",
-      "paramStructure": "by-position",
+      "paramStructure": "by-name",
       "params": [
         {
           "name": "requiredNamespaces",
