@@ -90,7 +90,7 @@ Example:
       },
       "eip155:42069": {
         "methods": ["get_balance", "chainChanged", "42069_sEcReTbAlAnCe"],
-        "rpcDocuments": ["https://openrpc.42069-chain.org/"],
+        "rpcDocuments": ["https://openrpc.42069-chain.org/", "https://ethereum.github.io/execution-apis/api-documentation/"],
         "rpcEndpoints": ["https://node1.42069-chain.org/"]
       },
       "cosmos": {
@@ -142,7 +142,7 @@ An example of a successful response follows:
       },
       "eip155:42069": {
         "methods": ["get_balance", "chainChanged", "42069_sEcReTbAlAnCe"],
-        "rpcDocuments": ["https://openrpc.42069-chain.org/"],
+        "rpcDocuments": ["https://ethereum.github.io/execution-apis/api-documentation/", "https://openrpc.42069-chain.org/"],
         "rpcEndpoints": ["https://node1.42069-chain.org/"]
       }
         //...
@@ -153,6 +153,15 @@ An example of a successful response follows:
   }
 }
 ```
+
+Note:
+* The response re-ordered the RPC documents array, which still allows the
+  42069-chain docs to define new methods such as the namespaced secret-balance
+  method example. However, since the ordinality of the array prioritizes earlier
+  authorities in any case where two define the same term, the chain-specific
+  authority is effectively prevented from redefining any methods defined in the
+  eip155-wide standard, even in the limited scope of the 42069 chain. This is
+  purely for illustrative purposes and not normative.
 
 #### Failure States
 
