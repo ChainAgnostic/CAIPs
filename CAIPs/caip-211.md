@@ -90,7 +90,7 @@ Example:
       },
       "eip155:42069": {
         "methods": ["get_balance", "chainChanged", "42069_sEcReTbAlAnCe"],
-        "rpcDocuments": ["https://openrpc.42069-chain.org/", "https://ethereum.github.io/execution-apis/api-documentation/"],
+        "rpcDocuments": ["https://openrpc.42069-chain.org/", "https://raw.githubusercontent.com/ethereum/execution-apis/assembled-spec/refs-openrpc.json"],
         "rpcEndpoints": ["https://node1.42069-chain.org/"]
       },
       "cosmos": {
