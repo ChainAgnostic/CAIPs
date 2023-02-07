@@ -32,7 +32,22 @@ respondents agree to them already), others are specific to chains or even to
 subsets of wallets and dapps on a given chain.  This requires scope objects in
 CAIP-25 requests to negotation semantic anchors and/or network routing
 **before** authorization can occur in the confidence that both parties agree to
-the syntax and semantics of a given chain or notification.
+the syntax and semantics of a given method or notification, which may only be
+available on certain RPC endpoints.
+
+The concept of a custom RPC endpoint or definition presumes the existence of
+"default" or universal endpoints and definitions, which can be hard to anchor in
+explicit specifications unless a namespace profile of this CAIP has been
+published. (This may be unnecessary in the case of younger namespaces without
+customization built in at the per-chain or per-dapp layer). An empty array of
+`rpcEndpoints` or `rpcDocuments` sent in either direction should be interpreted
+differently than the absence of the array.  Namely, either array being present
+but empty in a request signals that a caller is requesting that custom endpoints
+or  definitions NOT be considered in CAIP-25 authorizations. Present but empty
+arrays in a response confirms this behavior, while its absence can be taken to
+mean the wallet either does not support custom endpoints/definitions or the user
+has opted out of that degree of trust, which for privacy/fingerprinting reasons,
+should not be handled by distinct codepaths (See Privacy Considerations).
 
 ## Specification
 
@@ -164,10 +179,12 @@ Possible error messages (to be discussed with WG):
 - rpcDocuments not conformant syntactically (not openRPC, not served as mime type JSON, etc)
 
 Are these error messages required at protocol level or are they implementation-specific?
-- rpcDocuments rejected by user input
+- ~~rpcDocuments rejected by user input OR wallet does not support custom RPC documents~~
+  - ^ no response in either case
 - rpcDocuments rejected by policy/in principle
 - rpcDocuments unreachable/404
-- rpcEndpoints rejected by user input
+- ~~rpcEndpoints rejected by user input OR wallet does not support custom RPC documents~~
+  - ^ no response in either case
 - rpcEndpoints rejected by policy/in principle
 - rpcEndpoints unreachable/404
 - rpcEndpoints URL malformed
@@ -211,6 +228,16 @@ Are these error messages required at protocol level or are they implementation-s
   neither party can guarantee how the other is ordering them?
 
 ## Privacy Considerations
+
+The trust model of custom RPC endpoints and/or definition documents is complex
+and reputation/discovery systems are still emerging on a per-chain basis in many
+ecosystems. For this reason, iterations of CAIP-25 should be considered a
+delicate negotiation best done progressively to avoid malicious dapps partially
+deanonymizing wallets by profiling their support for custom RPCs (i.e.
+overasking).  For this reason, as with the initial CAIP-25 exchange, discovery
+requests rejected due to user input, due to security policy, and due to
+non-support at the wallet software level should not be distinguished as the RPC
+level.
 
 ##### TODO
 
