@@ -142,7 +142,7 @@ An example of a successful response follows:
       },
       "eip155:42069": {
         "methods": ["get_balance", "chainChanged", "42069_sEcReTbAlAnCe"],
-        "rpcDocuments": ["https://ethereum.github.io/execution-apis/api-documentation/", "https://openrpc.42069-chain.org/"],
+        "rpcDocuments": ["https://raw.githubusercontent.com/ethereum/execution-apis/assembled-spec/refs-openrpc.json", "https://openrpc.42069-chain.org/"],
         "rpcEndpoints": ["https://node1.42069-chain.org/"]
       }
         //...
