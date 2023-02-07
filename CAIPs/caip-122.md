@@ -143,6 +143,12 @@ c2VydmljZS5vcmcgd2FudHMgeW91IHRvIHNpZ24gaW4gd2l0aCB5b3VyIFNvbGFuYSBhY2NvdW50OgpH
 
 Not applicable.
 
+## Wallet Implementer Steps
+
+### Verifying `domain` binding
+- Wallet implementers MUST prevent phishing attacks by matching on the `domain` term when processing a signing request. For example, when processing the message beginning with `"service.invalid wants you to sign in..."`, the wallet checks that the request actually originated from `service.invalid`.
+- The domain SHOULD be read from a trusted data source such as the browser window.
+
 ## References
 
 [eip-4361]: https://eips.ethereum.org/EIPS/eip-4361
