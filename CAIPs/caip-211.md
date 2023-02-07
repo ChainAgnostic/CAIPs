@@ -1,5 +1,5 @@
 ---
-caip: 207
+caip: 211
 title: JSON-RPC Authority Negotiation
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/207
@@ -12,24 +12,27 @@ requires: [2, 10, 25, 171]
 
 ## Simple Summary
 
-CAIP-207 extends CAIP-25 to allow callers and respondents to negotiate RPC
-authorities and RPC semantics before authorizing RPC terms. 
+CAIP-211 extends CAIP-25 to allow callers and respondents to anchor feature
+discovery in specific RPC semantics and to request the respondent route requests
+to specific RPC endpoints.
 
 ## Abstract
 
-CAIP-207 defines additional properties that CAIP-25 can be used
-iteratively/progressively to layer custom or local RPC semantics and/or routing
-onto a session. Since CAIP-25 respondents ignore unknown properties, respondents
-that conform to CAIP-25 but not to CAIP-207 should be carefully considered and
-accomodated by implementers. 
+CAIP-211 defines additional properties that enable progressive usage of CAIP-25
+to layer custom or local RPC semantics and/or routing onto a session. Since
+CAIP-25 respondents ignore unknown properties, respondents that conform to
+CAIP-25 but not to CAIP-211 should be carefully considered and accomodated by
+implementers. 
 
 ## Motivation
 
-While some core methods and notifications are foundational to a namespace and
-universally defined out-of-band (meaning all callers and respondents agree to
-them already), others are specific to chains or even to subsets of wallets and
-dapps on a given chain, which requires semantic negotiation and/or network
-routing negotiation before authorization can occur.
+While some core methods and notifications are foundational to entire namespaces
+and thus almost universally defined out-of-band (meaning all callers and
+respondents agree to them already), others are specific to chains or even to
+subsets of wallets and dapps on a given chain.  This requires scope objects in
+CAIP-25 requests to negotation semantic anchors and/or network routing
+**before** authorization can occur in the confidence that both parties agree to
+the syntax and semantics of a given chain or notification.
 
 ## Specification
 
@@ -54,7 +57,7 @@ optionally returned in `sessionScopes`.  These are both [ordered] strings of arr
 
 ### Request
 
-A CAIP-207 request is a valid CAIP-25 except for the two additional properties. 
+A CAIP-211 request is a valid CAIP-25 except for the two additional properties. 
 
 Example:
 
