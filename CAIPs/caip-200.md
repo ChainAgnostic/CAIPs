@@ -25,10 +25,6 @@ This is a CAIP with minimal routes that are used most of the time. If other rout
 
 Block explorers will route their webpages accordingly for the following data:
 
-### Blocks
-
-`<BLOCK_EXPORER_URL>/block/<BLOCK_HASH_OR_HEIGHT>`
-
 ### Transactions
 
 `<BLOCK_EXPORER_URL>/tx/<TX_HASH>`
