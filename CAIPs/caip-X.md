@@ -40,7 +40,7 @@ Block explorers will route their webpages accordingly for the following data:
 ## Backwards Compatibility
 
 This EIP was designed with existing API routes in mind to reduce disruption. Incompatible block explorers should include either 301 redirects to their existing API routes to match this EIP.
-Explorers compatible with EIP-3091 are automatically comatible with this CAIP.
+Explorers compatible with EIP-3091 are automatically compatible with this CAIP.
 
 ## Links
 
