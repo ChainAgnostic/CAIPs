@@ -31,7 +31,7 @@ Block explorers will route their webpages accordingly for the following data:
 
 ### Addresses
 
-`<BLOCK_EXPORER_URL>/address/<ACCOUNT_ADDRESS>`
+`<BLOCK_EXPLORER_URL>/address/<ACTOR_ADDRESS>`
 
 ## Backwards Compatibility
 
