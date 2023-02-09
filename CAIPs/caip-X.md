@@ -1,5 +1,5 @@
 --
-caip: <to be assigned>
+caip: 200
 title: BlockExplorer API Routes
 author: Pedro Gomes (@pedrouid), ligi (@ligi)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/199
