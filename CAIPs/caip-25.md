@@ -98,7 +98,7 @@ Example:
     "requiredScopes": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
-        "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"],
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
         "events": ["accountsChanged", "chainChanged"]
       },
       "eip155:10": {
@@ -110,9 +110,16 @@ Example:
       }
     },
     "optionalScopes":{
+      "eip155": {
+        "methods": ["eth_sign","eth_signTypedData","eth_signTypedData_v3","eth_signTypedData_v4","wallet_switchEthereumChain","wallet_addEthereumChain"]
+      },
       "eip155:42161": {
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
         "events": ["accountsChanged", "chainChanged"]
+      },
+      "wallet" {
+        "method": ["creds_present", "creds_store"]
+      }
     },
     "sessionProperties": {
       "expiry": "2022-12-24T17:07:31+00:00",
@@ -137,6 +144,14 @@ Each scope object contains the following parameters:
 
 The `requiredScopes` array MUST contain 1 or more of these objects, if present;
 the `optionalScopes` array MUST contain 1 or more of them, if present.
+
+There is one special-case scope object, named `wallet`, which refers to methods
+and events independent of any namespace but, crucially, no chains or CASA
+namespaces. This off-chain scope objects exists for callers and respondents to
+negotiate support for chain-agnostic primitives like W3C decentralized
+identifiers, W3C Verifiable Credentials, JWTs, IPFS, webCrypto, and other
+cryptographic standards. At time or writing, the only CAIP that specifies
+`wallet` methods so far is [CAIP-169][], although others may be in progress.
 
 A third object is the `sessionProperties` object, all of whose properties MUST 
 be in the interpreted as optional, since requesting applications cannot mandate
@@ -188,7 +203,7 @@ An example of a successful response follows:
     "sessionScopes": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
-        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign", "eth_signTypedData_v4", "wallet_switchEthereumChain"]
         "events": ["accountsChanged", "chainChanged"],
         "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
       },
@@ -201,6 +216,7 @@ An example of a successful response follows:
         "methods": ["personal_sign"],
         "events": ["accountsChanged", "chainChanged"],
         "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
+      },
       "cosmos": {
         ...
       }
