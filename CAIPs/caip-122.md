@@ -147,7 +147,7 @@ Not applicable.
 
 ### Verifying `domain` binding
 - Wallet implementers MUST prevent phishing attacks by matching on the `domain` term when processing a signing request. For example, when processing the message beginning with `"service.invalid wants you to sign in..."`, the wallet checks that the request actually originated from `service.invalid`.
-- The domain SHOULD be read from a trusted data source such as the browser window.
+- The domain is expected to be read from a trusted data source such as the browser window.
 
 ## References
 
