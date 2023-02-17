@@ -30,7 +30,7 @@ While some core methods and notifications are foundational to entire namespaces
 and thus almost universally defined out-of-band (meaning all callers and
 respondents agree to them already), others are specific to chains or even to
 subsets of wallets and dapps on a given chain.  This requires scope objects in
-CAIP-25 requests to negotation semantic anchors and/or network routing
+CAIP-25 requests to negotiate semantic anchors and/or network routing
 **before** authorization can occur in the confidence that both parties agree to
 the syntax and semantics of a given method or notification, which may only be
 available on certain RPC endpoints.
