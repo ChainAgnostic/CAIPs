@@ -146,12 +146,12 @@ The `requiredScopes` array MUST contain 1 or more of these objects, if present;
 the `optionalScopes` array MUST contain 1 or more of them, if present.
 
 There is one special-case scope object, named `wallet`, which refers to methods
-and events independent of any namespace but, crucially, no chains or CASA
-namespaces. This off-chain scope objects exists for callers and respondents to
-negotiate support for chain-agnostic primitives like W3C decentralized
-identifiers, W3C Verifiable Credentials, JWTs, IPFS, webCrypto, and other
-cryptographic standards. At time or writing, the only CAIP that specifies
-`wallet` methods so far is [CAIP-169][], although others may be in progress.
+and events independent of CASA namespace. This off-chain scope objects exists
+for callers and respondents to negotiate support for chain-agnostic primitives
+like W3C decentralized identifiers, W3C Verifiable Credentials, JWTs, IPFS,
+webCrypto, and other cryptographic standards. At time or writing, the only CAIP
+that specifies `wallet` methods so far is [CAIP-169][], although others may be
+in progress.
 
 A third object is the `sessionProperties` object, all of whose properties MUST 
 be in the interpreted as optional, since requesting applications cannot mandate
@@ -177,15 +177,16 @@ conformant to [CAIP-171][]) and two session objects, both mandatory and non-empt
 
 The first is called `sessionScopes` and contains 1 or more scope objects.
 * All required scope objects and all, none, or some of the optional scope object
-(at the discretion of the provider) MUST be included if successful.  
-* As in the request, each scope object object MUST contain `methods` and
-`events` objects, and a `chains` object if a specific chain is not specified in
-the object's index.
-* Unlike the request, each scope object MUST also contain an `accounts` array,
-containing 0 or more [CAIP-10][] conformant accounts authorized for the session
-and valid in the namespace and chain(s) authorized by the scope object they are
-in. Additional constraints on the accounts authorized for a given session MAY be
-specified in the corresponding [CAIP-104][] namespaces specification.
+  (at the discretion of the provider) MUST be included if successful.  
+* With the exception of the special `wallet` scope object, each scope object
+  MUST contain `methods` and `events` objects. If the object is not scoped to a
+  specific chain, it should also have a `chains` object.
+* Even if unspecified in the request, each non-wallet scope object MUST also
+  contain an `accounts` array, containing 0 or more [CAIP-10][] conformant
+  accounts authorized for the session and valid in the namespace and chain(s)
+  authorized by the scope object they are in. Additional constraints on the
+  accounts authorized for a given session MAY be specified in the corresponding
+  [CAIP-104][] namespaces specification.
 
 A `sessionProperties` object MAY also be present, and its contents MAY
 correspond to the properties requested in the response or not (at the discretion
