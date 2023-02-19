@@ -59,7 +59,7 @@ optionally returned in `sessionScopes`.  These are both [ordered] strings of arr
    must be a valid URL that addresses an RPC endpoint. The respondent may
    return it empty, reordered, with less, the same, or even more conformant URLs
    than received.
-2. `rpcDocuments` is an array of zero or more URLs of machine-readable RPC
+2. `rpcDocuments` is an array of zero or more URLs of machine-readable OpenRPC
    documents that the caller would prefer the respondent to use, ordered by
    preference. This set of document collectively defines at least syntactically
    if not also semantically any methods and/or notifications authorized by the
