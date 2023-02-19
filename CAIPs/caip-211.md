@@ -51,8 +51,9 @@ should not be handled by distinct codepaths (See Privacy Considerations).
 
 ## Specification
 
-Two properties are added to the scope objects requested in `optionalScopes` and
-optionally returned in `sessionScopes`.  These are both [ordered] strings of arrays:
+CAIP-211 adds two properties, either of which can be set in `requiredScopes` or 
+in `optionalScopes` and, if authorized, optionally returned in `sessionScopes`.
+These are both [ordered] strings of arrays:
 
 1. `rpcEndpoints` is an array of zero or more URLs of RPC endpoints that
    the caller would prefer the respondent to use, ordered by preference. Each
