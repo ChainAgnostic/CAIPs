@@ -55,6 +55,7 @@ Properties of the `SessionIdentifier` are as follows:
 3. It MUST remain the same as the identified session's state changes.
 4. It MUST be serializable into JSON. Serialization and later deserialization using
 JSON MUST result in the same value.
+5. It MUST be generated from a cryptographically random source and MUST include at least 96 bits of entropy for security.
 
 ## Copyright
 
