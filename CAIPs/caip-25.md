@@ -157,7 +157,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The succesfull reslt contains one mandatory string (keyed as `sessionId` with a value 
+The succesfull result contains one mandatory string (keyed as `sessionId` with a value 
 conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
 
 The first is called `sessionScopes` and contains 1 or more scope objects.
