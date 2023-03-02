@@ -57,10 +57,10 @@ In the initial call, the application interfaces with a provider to populate a
 session with a base state describing authorized chains, methods, notification,
 and accounts.  This negotation takes place by sending the application's REQUIRED
 and REQUESTED authorizations of the session, grouped into objects scoping those
-authorizations which in turn are grouped into two top-level arrays (named
-`requiredScopes` and `optionalScopes` respectively).  These two arrays are not
+authorizations which in turn are grouped into two top-level objects (named
+`requiredScopes` and `optionalScopes` respectively).  These two objects are not
 mutually exclusive (i.e., additional properties of a required scope may be
-requested under the same keyed scope object key in the requested array). Note
+requested under the same keyed scope object key in the requested object). Note
 that scopes can be keyed to an entire [CAIP-104][] "namespace", meaning
 applicable to *any* current or future [CAIP-2][] chainID within that namespace,
 or keyed to a specific [CAIP-2][] within that namespace.
@@ -330,7 +330,9 @@ provide them). Effectively, this means allowing requests in all three cases to
 time out even if the end-user experience might be better served by
 differentiating them, particularly in complex multi-party architectures where
 parties on one side of this interface need to have a shared understanding of why
-a request did not receive a response. At scale, however, better user experiences in a single architecture or context can contribute to a systemic erosion of anonymity.
+a request did not receive a response. At scale, however, better user experiences
+in a single architecture or context can contribute to a systemic erosion of
+anonymity.
 
 Given this "silent time out" behavior, the best strategy to ensure good user
 experience is not to request too many properties in the initial establishment of
