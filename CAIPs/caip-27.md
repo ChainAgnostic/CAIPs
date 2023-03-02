@@ -6,27 +6,28 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Draft
 type: Standard
 created: 2020-12-12
-updated: 2022-11-16
+updated: 2023-03-02
 requires: ["2", "25", "171"]
 ---
 
 ## Simple Summary
 
-CAIP-27 defines a standard JSON-RPC method for requesting methods mapped to a
-target chain.
+CAIP-27 defines a standard JSON-RPC method for routing method calls through a
+CAIP-25 session object.
 
 ## Abstract
 
 This proposal has the goal to define a standard method for decentralization
-applications to request JSON-RPC methods from cryptocurrency wallets directed to
-a given target chain.
+applications to request JSON-RPC methods from user agents (such as
+cryptocurrency wallets) directed to a given previously-authorized target network
+(such as a specific blockchain).
 
 ## Motivation
 
-The motivation comes from the ambiguity that comes from interfacing with
-multi-chain cryptocurrency wallets which may support the same methods for
-different chains and there is no indication of the chain that is being targeted
-by the decentralized application.
+The motivation comes from the ambiguity that comes from interfacing with a
+multi-network agent (e.g. a cryptocurrency wallets which supports the same
+method on multiple chains in a namespace, or supports methods with the same name
+on multiple namespaces).
 
 ## Specification
 
@@ -44,8 +45,9 @@ The application would interface with a provider to make request as follows:
   "jsonrpc": "2.0",
   "method": "caip_request",
   "params": {
-    "chainId": "eip155:1",
     "session": "0xdeadbeef",
+    "scope": "eip155",
+    "chainId": "eip155:1",
     "request": {
       "method": "personal_sign",
       "params": [
@@ -57,15 +59,23 @@ The application would interface with a provider to make request as follows:
 }
 ```
 
-The JSON-RPC method is labelled as `caip_request` and expects three parameters:
+The JSON-RPC method is labelled as `caip_request` and expects 
+three **required parameters** and 
+one *optional parameter*:
 
-- chainId - [CAIP-2][]-defined `chainId` to identify both a namespace and a
-  specific chain or network within it
-- session - [CAIP-171][] `SessionToken` to identify the session opened or
+- **session** - [CAIP-171][] `SessionToken` to identify the session opened or
   updated by a [CAIP-25][] interaction.
-- request - an object containing the fields:
-  - method - JSON-RPC method to request
-  - params - JSON-RPC parameters to request
+- **scope** - a `scopeObject` authorized by a [CAIP-25][] response and persisted in
+  the session by both caller and respondent
+- *chainId* - [CAIP-2][]-defined `chainId` including both namespace and a
+  specific chain or network within it, if `scope` is an entire namespace
+- **request** - an object containing the fields:
+  - **method** - JSON-RPC method to request
+  - **params** - JSON-RPC parameters to request (may be empty but must be set)
+
+NOTE: a respondent MUST check the scope, chainId (if application), and method
+against their [CAIP-25][] session object before executing or responding to such
+a request.
 
 ### Response
 
