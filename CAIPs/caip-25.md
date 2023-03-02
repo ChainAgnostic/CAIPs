@@ -244,7 +244,7 @@ is RECOMMENDED for any of the following cases:
 
 ##### Trusted Failure Codes
 
-Send more informative error messages MAY be used in trusted-counterparty
+More informative error messages MAY be sent in trusted-counterparty
 circumstances, although extending this trust too widely may contribute to
 widespread fingerprinting and analytics which corrode herd privacy (see 
 [Privacy Considerations](#privacy-considerations) below). The core error 
