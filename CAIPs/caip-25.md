@@ -93,7 +93,7 @@ Example:
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "provider_authorization",
+  "method": "provider_authorize",
   "params": {
     "requiredScopes": {
       "eip155": {
