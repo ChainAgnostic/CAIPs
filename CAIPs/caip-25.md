@@ -157,7 +157,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The succesfull result contains one mandatory string (keyed as `sessionId` with a value 
+The successful result contains one mandatory string (keyed as `sessionId` with a value 
 conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
 
 The first is called `sessionScopes` and contains 1 or more scope objects.
@@ -214,55 +214,89 @@ An example of a successful response follows:
 
 #### Failure States
 
-The response MUST NOT be a success result when the user disapproves the accounts
-matching the requested chains to be exposed or the requested methods are not
-approved or the requested chains are not supported by the wallet or the
-requested methods are not supported.
+The response MUST NOT be a JSON-RPC success result in any of the following
+failure states.
 
-An example of an error response should match the following format:
+##### Generic Failure Code
+
+Unless the dapp is known to the wallet and trusted, the generic/undefined error
+response,
 
 ```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
   "error": {
-    "code": 5000,
+    "code": 0,
     "message": "Unknown error"
   }
 }
 ```
 
+is RECOMMENDED for any of the following cases:
+- the user denies consent for exposing accounts that match the requested and
+  approved chains,
+- the user denies consent for requested methods,
+- the user denies all requested or any required scope objects,
+- the wallet cannot support all requested or any required scope objects,
+- the requested chains are not supported by the wallet, or 
+- the requested methods are not supported by the wallet
+
+##### Trusted Failure Codes
+
+Send more informative error messages MAY be used in trusted-counterparty
+circumstances, although extending this trust too widely may contribute to
+widespread fingerprinting and analytics which corrode herd privacy (see 
+[Privacy Considerations](#privacy-considerations) below). The core error 
+messages over trusted connections are as follows:
+
 The valid error messages codes are the following:
-* Unknown error OR no requested scopes were authorized
+* Unknown error OR no scopes were authorized
     * code = 5000
-    * message = "Unknown error"
+    * message = "Unknown error with request"
 * When user disapproves accepting calls with the request methods
     * code = 5001
     * message = "User disapproved requested methods"
 * When user disapproves accepting calls with the request events
     * code = 5002
     * message = "User disapproved requested events"
-* When wallet evaluates requested chains to not be supported
+* When provider evaluates requested chains to not be supported
     * code = 5100
     * message = "Requested chains are not supported"
-* When wallet evaluates requested methods to not be supported
+* When provider evaluates requested methods to not be supported
     * code = 5101
     * message = "Requested methods are not supported"
-* When wallet evaluates requested events to not be supported
+* When provider evaluates requested events to not be supported
     * code = 5102
     * message = "Requested events are not supported"
+
+##### Trust-Agnostic Malformed Request Failure Codes
+
+Regardless of caller trust level, the following error responses can reduce
+friction and user experience problems in the case of malformed requests. 
+
+* When provider does not recognize one or more requested method(s)
+    * code = 5201
+    * message = "Unknown method(s) requested"
+* When provider does not recognize one or more requested event(s)
+    * code = 5202
+    * message = "Unknown event(s) requested"
 * When a badly-formed request includes a `chainId` mismatched to scope
-    * code = 5103
+    * code = 5203
     * message = "Scope/chain mismatch"
 * When a badly-formed request defines one `chainId` two ways
-    * code = 5104
+    * code = 5204
     * message = "ChainId defined in two different scopes"  
 * Invalid Session Properties Object
-    * code = 5200
+    * code = 5300
     * message = "Invalid Session Properties requested"
 * Session Properties requested outside of Session Properties Object 
-    * code = 5201
+    * code = 5301
     * message = "Session Properties can only be optional and global"
+
+Note: respondents are RECOMMENDED to implement support for core RPC Documents
+per each supported namespace to avoid sending error messages 5201 and 5202 in
+cases where 0, 5101 or 5102 would be more appropriate.
 
 ## Security Considerations
 
