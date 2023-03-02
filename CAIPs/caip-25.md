@@ -122,7 +122,7 @@ Example:
 }
 ```
 
-The JSON-RPC method is labelled as `provider_authorization` and both the
+The JSON-RPC method is labelled as `provider_authorize` and both the
 "requiredScopes" and "optionalScopes" arrays are populated with 
 "scope objects" each named after the scope of authorization requested:
 1. EITHER an entire [CAIP-104][] [namespace][]
