@@ -59,7 +59,7 @@ The application would interface with a provider to make request as follows:
 }
 ```
 
-The JSON-RPC method is labelled as `caip_request` and expects 
+The JSON-RPC method is labeled as `caip_request` and expects 
 three **required parameters** and 
 one *optional parameter*:
 
