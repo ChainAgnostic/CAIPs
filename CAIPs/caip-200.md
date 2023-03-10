@@ -18,29 +18,55 @@ This CAIP standardizes the routes for addesses and transactions between BlockExp
 
 ## Motivation
 
-For the Ethereum ecosystem Pedro Gomez already created EIP-3091 and it already helped getting explorers to use the same routes. Ligi was verifying compatibility in ethereum-lists/chains often. And noticed that only addresses and transactions are really meaningfully used - and tokens/blocks where causing work verifying and failing verifications while not really being used. Also some L2s go away from the concept of blocks.
-This is a CAIP with minimal routes that are used most of the time. If other routes are used in the future other CAIPs can inherit from this one and extend it. This way we can also differentiate between CAIPs with different feature-sets.
+For the Ethereum ecosystem, Pedro Gomez already created [EIP-3091][] and it has
+already helped harmonize block explorers' usage of uniform routes. In the
+process of verifying compatibility and conformance for new entries in
+[ethereum-lists/chains][], Ligi noticed that only addresses and transactions are
+really meaningfully used; tokens and blocks have not been as effectively
+harmonized, and divergent syntax for those routes caused some block explorers to
+fail verifications. Also, the evolution of L2s has seen many drift away from the
+concept of blocks, making uniform syntax increasingly difficult. 
+
+For these reasons, this CAIP requires minimal routes that are used most of the
+time with the least divergence across L1s and L2s' data structures. Other
+routes, or alternate syntaxes that can redirect to these, can be specified in
+separate future CAIPs extending this one. This creates a more composable and
+piecemeal conformance since many use cases need only these routes.
 
 ## Specification
 
-Block explorers will route their webpages accordingly for the following data:
+Block explorers will route their webpages accordingly for the following syntax:
 
 ### Transactions
 
 `<BLOCK_EXPORER_URL>/tx/<TX_HASH>`
 
+Note: transactions should be addressed here natively, i.e. in the native,
+internal syntax of the relevant namespace, rather than universally.
+
 ### Addresses
 
 `<BLOCK_EXPLORER_URL>/address/<ACTOR_ADDRESS>`
 
+Note: actor addresses should be addressed here natively, i.e. in the native,
+internal syntax of the relevant namespace, rather than in CAIP-10 URN syntax or
+any other multi-chain standard.
+
 ## Backwards Compatibility
 
-This CAIP was designed with existing API routes in mind to reduce disruption. Incompatible block explorers should include redirects to their existing API routes to match this EIP.
-Explorers compatible with EIP-3091 are automatically compatible with this CAIP.
+This CAIP was designed with existing API routes in mind to reduce disruption.
+Incompatible block explorers can come into conformance by programming redirects
+from their existing API routes to the syntax outlined in this EIP, or supporting
+both; they are not considered conformant if the syntax above redirects to any
+other route. Explorers that conform to [EIP-3091][] are automatically conformant
+with this CAIP.
 
 ## Links
 
-- [EIP-3091](https://eips.ethereum.org/EIPS/eip-3091)
+- [EIP-3091][] - EVM-wide standard for block explorer addressing syntax
+
+[EIP-3091]: https://eips.ethereum.org/EIPS/eip-3091
+[ethereum-lists/chains]: https://github.com/ethereum-lists/chains
 
 ## Copyright
 
