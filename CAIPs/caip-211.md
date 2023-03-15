@@ -62,14 +62,14 @@ These are both [ordered] strings of arrays:
    than received.
 2. `rpcDocuments` is an array of zero or more URLs of machine-readable OpenRPC
    documents that the caller would prefer the respondent to use, ordered by
-   preference. This set of document collectively defines at least syntactically
-   if not also semantically any methods and/or notifications authorized by the
-   CAIP-25 authorization, in DESCENDING heirarchical authority. (For example,
-   any methods or notifications defined differently by multiple authorites will
-   be interpreted by whichever authority is closer to the 0-index of the array).
-   Each must be a valid URL that addresses a valid openRPC document. The
-   respondent may return it empty, reordered, with less, the same, or even more
-   conformant URLs than received.
+   preference. This set of documents defines the syntax (and optionally also the
+   semantics) of all the methods and/or notifications being requested and
+   authorized  in a CAIP-25 authorization. The documents are listed in
+   descending heirarchical authority, i.e., documents later in the list extend
+   the first, but any terms already defined by a previous entry are dropped
+   rather than being redefined by the later documents. Each must be a valid URL
+   that addresses a valid openRPC document. The respondent may return it empty,
+   reordered, with less, the same, or even more conformant URLs than received.
 
 ### Request
 
