@@ -32,7 +32,7 @@ application through a provider connecting to a wallet.
 ## Specification
 
 The session is defined by a wallet's response to a provider's request, and
-updated, extended, closed, etc by successive calls and events. The exact
+updated, extended, closed, etc by successive calls and notifications. The exact
 parameters and assumptions of that session abstraction are defined in
 [CAIP-171][], but note that a string identifier referring to it is absent from
 the initial call (if authorization is granted) and present in both the initial
@@ -46,21 +46,21 @@ caller and respondent to manage the authorization over time. The
 alignment across calls that are idempotent if identical. If a respondent (e.g. a
 wallet) needs to initiate a new session, whether due to user input, security
 policy, or session expiry reasons, it can simply generate a new session
-identifier to signal this event to the calling provider; if a caller needs to
-initiate a new session, it can do so by sending a new request without
+identifier to signal this notification to the calling provider; if a caller
+needs to initiate a new session, it can do so by sending a new request without
 `sessionIdentifier`. In such cases, a respondent (e.g. wallet) may choose to
 explicitly close all sessions upon generation of a new one from the same origin,
 or leave it to time-out; maintaining concurrent sessions is discouraged (see
 Security Considerations).
 
 In the initial call, the application interfaces with a provider to populate a
-session with a base state describing authorized chains, methods, event, and
-accounts.  This negotation takes place by sending the application's REQUIRED and
-REQUESTED authorizations of the session, grouped into objects scoping those
-authorizations which in turn are grouped into two top-level arrays (named
-`requiredScopes` and `optionalScopes` respectively).  These two arrays are not
+session with a base state describing authorized chains, methods, notification,
+and accounts.  This negotation takes place by sending the application's REQUIRED
+and REQUESTED authorizations of the session, grouped into objects scoping those
+authorizations which in turn are grouped into two top-level objects (named
+`requiredScopes` and `optionalScopes` respectively).  These two objects are not
 mutually exclusive (i.e., additional properties of a required scope may be
-requested under the same keyed scope object key in the requested array). Note
+requested under the same keyed scope object key in the requested object). Note
 that scopes can be keyed to an entire [CAIP-104][] "namespace", meaning
 applicable to *any* current or future [CAIP-2][] chainID within that namespace,
 or keyed to a specific [CAIP-2][] within that namespace.
@@ -93,17 +93,17 @@ Example:
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "provider_authorization",
+  "method": "provider_authorize",
   "params": {
     "requiredScopes": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
-        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
-        "events": ["accountsChanged", "chainChanged"]
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"],
+        "notifications": ["accountsChanged", "chainChanged"]
       },
       "eip155:10": {
         "methods": ["get_balance"],
-        "events": ["accountsChanged", "chainChanged"]
+        "notifications": ["accountsChanged", "chainChanged"]
       },
       "cosmos": {
         ...
@@ -115,7 +115,7 @@ Example:
       },
       "eip155:42161": {
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
-        "events": ["accountsChanged", "chainChanged"]
+        "notifications": ["accountsChanged", "chainChanged"]
       },
       "wallet" {
         "method": ["creds_present", "creds_store"]
@@ -129,9 +129,9 @@ Example:
 }
 ```
 
-The JSON-RPC method is labelled as `provider_authorization` and both the
-"requiredScopes" and "optionalScopes" arrays are populated with 
-"scope objects" each named after the scope of authorization requested:
+The JSON-RPC method is labelled as `provider_authorize` and its `params` object
+contains "requiredScopes" and/or "optionalScopes" objects populated with "scope
+objects" each named after the scope of authorization requested:
 1. EITHER an entire [CAIP-104][] [namespace][]
 2. OR a specific [CAIP-2][]-identified chain in a specific namespace.
 
@@ -139,8 +139,8 @@ Each scope object contains the following parameters:
 - chains - array of [CAIP-2][]-compliant `chainId`'s. This parameter MAY be
   omitted if a single-chain scope is already declared in the index of the object.
 - methods - array of JSON-RPC methods expected to be used during the session
-- events - array of JSON-RPC message/events expected to be emitted during the
-  session
+- notifications - array of JSON-RPC message/notifications expected to be emitted
+  during the session
 
 The `requiredScopes` array MUST contain 1 or more of these objects, if present;
 the `optionalScopes` array MUST contain 1 or more of them, if present.
@@ -172,21 +172,20 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The succesfull result contains one mandatory string (keyed as `sessionId` with a value 
+The successful result contains one mandatory string (keyed as `sessionId` with a value 
 conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
 
 The first is called `sessionScopes` and contains 1 or more scope objects.
 * All required scope objects and all, none, or some of the optional scope object
-  (at the discretion of the provider) MUST be included if successful.  
-* With the exception of the special `wallet` scope object, each scope object
-  MUST contain `methods` and `events` objects. If the object is not scoped to a
-  specific chain, it should also have a `chains` object.
-* Even if unspecified in the request, each non-wallet scope object MUST also
-  contain an `accounts` array, containing 0 or more [CAIP-10][] conformant
-  accounts authorized for the session and valid in the namespace and chain(s)
-  authorized by the scope object they are in. Additional constraints on the
-  accounts authorized for a given session MAY be specified in the corresponding
-  [CAIP-104][] namespaces specification.
+(at the discretion of the provider) MUST be included if successful.  
+* As in the request, each scope object object MUST contain `methods` and
+`notifications` objects, and a `chains` object if a specific chain is not
+specified in the object's index.
+* Unlike the request, each scope object MUST also contain an `accounts` array,
+containing 0 or more [CAIP-10][] conformant accounts authorized for the session
+and valid in the namespace and chain(s) authorized by the scope object they are
+in. Additional constraints on the accounts authorized for a given session MAY be
+specified in the corresponding [CAIP-104][] namespaces specification.
 
 A `sessionProperties` object MAY also be present, and its contents MAY
 correspond to the properties requested in the response or not (at the discretion
@@ -204,18 +203,18 @@ An example of a successful response follows:
     "sessionScopes": {
       "eip155": {
         "chains": ["eip155:1", "eip155:137"],
-        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign", "eth_signTypedData_v4", "wallet_switchEthereumChain"]
-        "events": ["accountsChanged", "chainChanged"],
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
+        "notifications": ["accountsChanged", "chainChanged"],
         "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
       },
       "eip155:10": {
         "methods": ["get_balance"],
-        "events": ["accountsChanged", "chainChanged"],
+        "notifications": ["accountsChanged", "chainChanged"],
         "accounts:" []
       },
       "eip155:42161": {
         "methods": ["personal_sign"],
-        "events": ["accountsChanged", "chainChanged"],
+        "notifications": ["accountsChanged", "chainChanged"],
         "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
       },
       "cosmos": {
@@ -231,57 +230,89 @@ An example of a successful response follows:
 
 #### Failure States
 
-The response MUST NOT be a success result if any of the following conditions are met:
-- the user disapproves the accounts matching the requested chains to be exposed 
-- requested methods are not approved 
-- the requested chains are not supported by the wallet
-- the requested methods are not supported by the wallet
-- there is anything malformed about the request
+The response MUST NOT be a JSON-RPC success result in any of the following
+failure states.
 
-An example of an error response should match the following format:
+##### Generic Failure Code
+
+Unless the dapp is known to the wallet and trusted, the generic/undefined error
+response,
 
 ```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
   "error": {
-    "code": 5000,
+    "code": 0,
     "message": "Unknown error"
   }
 }
 ```
 
+is RECOMMENDED for any of the following cases:
+- the user denies consent for exposing accounts that match the requested and
+  approved chains,
+- the user denies consent for requested methods,
+- the user denies all requested or any required scope objects,
+- the wallet cannot support all requested or any required scope objects,
+- the requested chains are not supported by the wallet, or 
+- the requested methods are not supported by the wallet
+
+##### Trusted Failure Codes
+
+More informative error messages MAY be sent in trusted-counterparty
+circumstances, although extending this trust too widely may contribute to
+widespread fingerprinting and analytics which corrode herd privacy (see 
+[Privacy Considerations](#privacy-considerations) below). The core error 
+messages over trusted connections are as follows:
+
 The valid error messages codes are the following:
-* Unknown error OR no requested scopes were authorized
+* Unknown error OR no scopes were authorized
     * code = 5000
-    * message = "Unknown error"
+    * message = "Unknown error with request"
 * When user disapproves accepting calls with the request methods
     * code = 5001
     * message = "User disapproved requested methods"
-* When user disapproves accepting calls with the request events
+* When user disapproves accepting calls with the request notifications
     * code = 5002
-    * message = "User disapproved requested events"
-* When wallet evaluates requested chains to not be supported
+    * message = "User disapproved requested notifications"
+* When provider evaluates requested chains to not be supported
     * code = 5100
     * message = "Requested chains are not supported"
-* When wallet evaluates requested methods to not be supported
+* When provider evaluates requested methods to not be supported
     * code = 5101
     * message = "Requested methods are not supported"
-* When wallet evaluates requested events to not be supported
+* When provider evaluates requested notifications to not be supported
     * code = 5102
-    * message = "Requested events are not supported"
+    * message = "Requested notifications are not supported"
+
+##### Trust-Agnostic Malformed Request Failure Codes
+
+Regardless of caller trust level, the following error responses can reduce
+friction and user experience problems in the case of malformed requests. 
+
+* When provider does not recognize one or more requested method(s)
+    * code = 5201
+    * message = "Unknown method(s) requested"
+* When provider does not recognize one or more requested notification(s)
+    * code = 5202
+    * message = "Unknown notification(s) requested"
 * When a badly-formed request includes a `chainId` mismatched to scope
-    * code = 5103
+    * code = 5203
     * message = "Scope/chain mismatch"
 * When a badly-formed request defines one `chainId` two ways
-    * code = 5104
+    * code = 5204
     * message = "ChainId defined in two different scopes"  
 * Invalid Session Properties Object
-    * code = 5200
+    * code = 5300
     * message = "Invalid Session Properties requested"
 * Session Properties requested outside of Session Properties Object 
-    * code = 5201
+    * code = 5301
     * message = "Session Properties can only be optional and global"
+
+Note: respondents are RECOMMENDED to implement support for core RPC Documents
+per each supported namespace to avoid sending error messages 5201 and 5202 in
+cases where 0, 5101 or 5102 would be more appropriate.
 
 ## Extensibility and Additional Properties
 
@@ -326,7 +357,9 @@ provide them). Effectively, this means allowing requests in all three cases to
 time out even if the end-user experience might be better served by
 differentiating them, particularly in complex multi-party architectures where
 parties on one side of this interface need to have a shared understanding of why
-a request did not receive a response. At scale, however, better user experiences in a single architecture or context can contribute to a systemic erosion of anonymity.
+a request did not receive a response. At scale, however, better user experiences
+in a single architecture or context can contribute to a systemic erosion of
+anonymity.
 
 Given this "silent time out" behavior, the best strategy to ensure good user
 experience is not to request too many properties in the initial establishment of
