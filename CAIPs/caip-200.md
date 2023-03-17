@@ -22,9 +22,7 @@ For the Ethereum ecosystem, Pedro Gomez already created [EIP-3091][] and it has
 already helped harmonize block explorers' usage of uniform routes. In the
 process of verifying compatibility and conformance for new entries in
 [ethereum-lists/chains][], Ligi noticed that only addresses and transactions are
-really meaningfully used; tokens and blocks have not been as effectively
-harmonized, and divergent syntax for those routes caused some block explorers to
-fail verifications. Also, the evolution of L2s has seen many drift away from the
+really meaningfully used. Also, the evolution of L2s has seen many drift away from the
 concept of blocks, making uniform syntax increasingly difficult. 
 
 For these reasons, this CAIP requires minimal routes that are used most of the
