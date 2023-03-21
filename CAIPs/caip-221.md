@@ -65,7 +65,7 @@ TBD - will just summarize PR debates if good input is forthcoming!
 <!--Please add diverse test cases here if applicable. Any normative definition of an interface requires test cases to be implementable. -->
 
 ```
-# bip122:000000000019d6689c085ae165831e93:666666:tx/057954bb28527ff9c7701c6fd2b7f770163718ded09745da56cc95e7606afe99.data
+# bip122:000000000019d6689c085ae165831e93:666666:tx/057954bb28527ff9c7701c6fd2b7f770163718ded09745da56cc95e7606afe99.inputs
 ## https://www.blockchain.com/explorer/transactions/btc/057954bb28527ff9c7701c6fd2b7f770163718ded09745da56cc95e7606afe99
 
 OP_RETURN OP_PUSHBYTES_70 446f206e6f74206265206f766572636f6d65206279206576696c2c20627574206f766572636f6d65206576696c207769746820676f6f64202d20526f6d616e732031323a3231
