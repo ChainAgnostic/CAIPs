@@ -40,7 +40,7 @@ Transactions are addressed as follows:
 block_address:        chain_id + ":" [ + "block:"]? + "txn/" + transaction_id + ["." + property]?
 chain_id:             [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See [CAIP-2][])
 transaction_id:       [-%a-zA-Z0-9]{1,128}
-property (optional):  (from|to|outputs|feePaid|inputs)
+property (optional):  (signer|recipients|type|outputs|inputs)
 ```
 
 The *name* of each value in its native namespace varies; a few illustrative
@@ -48,13 +48,11 @@ examples follow:
 
 |CAIP-220 property|BTC block property|ETH2 block property|
 |---|---|---|
-|from|?|?|
-|to|?|?|
-|type|?|?|
-|position|?|?|
-|output|?|?|
-|feePaid|?|?|
-|inputs|?|?|
+|signer|*(derived from scriptsig)|from|
+|recipients|*(derived from outputs)|to|
+|type|?|TransactionType (see [EIP-2718][])|
+|outputs|outputs[]|value|
+|inputs|inputs[]|data[]|
 
 The *value* of each of these properties varies widely by namespace, so see the
 [namespace profiles][namespaces] for each for validation guidance.
@@ -103,6 +101,7 @@ TBD
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.-->
 
 [namespaces]: https://namespaces.chainagnostic.org/
+[EIP-2718]: https://eips.ethereum.org/EIPS/eip-2718
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE).
