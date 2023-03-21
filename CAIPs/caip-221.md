@@ -40,7 +40,7 @@ Transactions are addressed as follows:
 block_address:        chain_id + ":" [ + "block:"]? + "txn/" + transaction_id + ["." + property]?
 chain_id:             [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See [CAIP-2][])
 transaction_id:       [-%a-zA-Z0-9]{1,128}
-property (optional):  (hash|data)
+property (optional):  (from|to|outputs|feePaid|inputs)
 ```
 
 The *name* of each value in its native namespace varies; a few illustrative
@@ -48,8 +48,13 @@ examples follow:
 
 |CAIP-220 property|BTC block property|ETH2 block property|
 |---|---|---|
-|hash|?|?|
-|data|?|?|
+|from|?|?|
+|to|?|?|
+|type|?|?|
+|position|?|?|
+|output|?|?|
+|feePaid|?|?|
+|inputs|?|?|
 
 The *value* of each of these properties varies widely by namespace, so see the
 [namespace profiles][namespaces] for each for validation guidance.
@@ -63,15 +68,24 @@ TBD - will just summarize PR debates if good input is forthcoming!
 
 ```
 # bip122:000000000019d6689c085ae165831e93:666666:tx/057954bb28527ff9c7701c6fd2b7f770163718ded09745da56cc95e7606afe99.data
-# https://www.blockchain.com/explorer/transactions/btc/057954bb28527ff9c7701c6fd2b7f770163718ded09745da56cc95e7606afe99
+## https://www.blockchain.com/explorer/transactions/btc/057954bb28527ff9c7701c6fd2b7f770163718ded09745da56cc95e7606afe99
+
+OP_RETURN OP_PUSHBYTES_70 446f206e6f74206265206f766572636f6d65206279206576696c2c20627574206f766572636f6d65206576696c207769746820676f6f64202d20526f6d616e732031323a3231
+
+# Decoded:
 
 Do not be overcome by evil, but overcome evil with good - Romans 12:21
 
-# eip155:6:tx/0x3edb98c24d46d148eb926c714f4fbaa117c47b0c0821f38bfce9763604457c33.data
+# eip155:6:tx/0x3edb98c24d46d148eb926c714f4fbaa117c47b0c0821f38bfce9763604457c33.inputs
+## https://goerli.etherscan.io/tx/0x3edb98c24d46d148eb926c714f4fbaa117c47b0c0821f38bfce9763604457c33
+
+0x82f71739000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000000374b4143584443544e5250524352595042444a4e594f594c575452414f4b54544341555334325a4f355434495a56553436374b48484e5559000000000000000000000000000000000000000000000000000000000000000000000000000000004368747470733a2f2f697066732e696f2f697066732f516d53424638314b577147414e564363384178675276796f44316b69546a687263354d79704c65764a6f67755638000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000134c49434349554d5f544553544445434c41524500000000000000000000000000
+
+## decoded:
 
 #	Name	Type	Data
-0	iscc	string	KACXDCTNRPRCRYPBDJNYOYLWTRAOKTTCAUS42ZO5T4IZVU467KHHNUY
-1	url	    string	https://ipfs.io/ipfs/QmSBF81KWqGANVCc8AxgRvyoD1kiTjhrc5MypLevJoguV8
+0	iscc    string	KACXDCTNRPRCRYPBDJNYOYLWTRAOKTTCAUS42ZO5T4IZVU467KHHNUY
+1	url     string	https://ipfs.io/ipfs/QmSBF81KWqGANVCc8AxgRvyoD1kiTjhrc5MypLevJoguV8
 2	message string	LICCIUM_TESTDECLARE
 ```
 
