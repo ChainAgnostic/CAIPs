@@ -69,9 +69,14 @@ TBD - will just summarize PR debates if good input is forthcoming!
 
 ```
 # bip122:000000000019d6689c085ae165831e93:tx.0.txinwitness
+## https://www.blockchain.com/explorer/blocks/btc/0
 
+OP_PUSHBYTES_4 ffff001d OP_PUSHBYTES_1 04 OP_PUSHBYTES_69 5468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73
+
+## Decoded:
+The Times 03/Jan/2009 Chancellor on brink of second bailout for banks
 ```
-Sources: [bip122](https://www.blockchain.com/explorer/blocks/btc/0) | 
+
 
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
