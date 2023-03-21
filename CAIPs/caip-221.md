@@ -1,7 +1,7 @@
 ---
 caip: CAIP-X
 title: Transaction Object Addressing
-author: Juan Caballero (@bumblefudge), Sebastian Posth <sebastian@posth.com>, and Antonio Antonioni (@ntn-x2)
+author: Juan Caballero (@bumblefudge), Sebastian Posth <sebastian@posth.com>, and Antonio Antonino (@ntn-x2)
 discussions-to: https://github.com/chainAgnostic/CAIPs/pull/220
 status: Draft
 type: Standard
