@@ -62,7 +62,8 @@ Where:
 - `string` (conditional) = A namespace identifier string registered in the CASA [namespaces][] registry to authorize multiple chains with identical properties OR a single, valid [CAIP-2][] identifier, i.e., a specific `chain_id` within a namespace.
 - `scopes` (conditional) = An array of 0 or more [CAIP-2][] `chainId`s. 
   - This property MUST NOT be present if the object is already scoped to a single `chainId` in the string value above
-  - This property MUST be present if the scope is an entire [namespace][namespaces].
+  - This property MUST NOT be present if the scope is an entire [namespace][namespaces] in which `chainId`s are not defined.
+  - This property MAY be present if the scope is an entire [namespace][namespaces] in which `chainId`s are defined.
 - `methods` = An array of 0 or more JSON-RPC methods that an application can call on the agent and/or an agent can call on an application.
 - `notifications` = An array of 0 or more JSON-RPC notifications that an application send to or expect from the agent.
 - `rpcDocuments` (optional) = An array of URIs that each dereference to an RPC document specifying methods and notifications applicable in this scope. 
