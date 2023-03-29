@@ -52,6 +52,7 @@ scopeObject: {
    *scopes: [(chainId)+],
    methods: [(method_name)+],
    notifications: [(notification_name)+],
+   accounts: [(account_id)+]
    *rpcDocuments: [(rpcDocument)+],
    *rpcEndpoints: [(rpcEndpoint)+]
 }
@@ -60,12 +61,13 @@ scopeObject: {
 Where:
 
 - `string` (conditional) = A namespace identifier string registered in the CASA [namespaces][] registry to authorize multiple chains with identical properties OR a single, valid [CAIP-2][] identifier, i.e., a specific `chain_id` within a namespace.
-- `scopes` (conditional) = An array of 0 or more [CAIP-2][] `chainId`s. 
-  - This property MUST NOT be present if the object is already scoped to a single `chainId` in the string value above
+- `scopes` (conditional) = An array of 0 or more [CAIP-2][] `chainId`s. Setting multiple `scopes` is equivalent to making multiple copies of the `scopeObject` for each member of `scopes`, simply in compact form.
+  - This property MUST NOT be present if the object is already scoped to a single `chainId` in the string value above.
   - This property MUST NOT be present if the scope is an entire [namespace][namespaces] in which `chainId`s are not defined.
   - This property MAY be present if the scope is an entire [namespace][namespaces] in which `chainId`s are defined.
 - `methods` = An array of 0 or more JSON-RPC methods that an application can call on the agent and/or an agent can call on an application.
 - `notifications` = An array of 0 or more JSON-RPC notifications that an application send to or expect from the agent.
+- `accounts` (optional) = An array of 0 or more [CAIP-10][] identifiers valid within the scope of authorization.
 - `rpcDocuments` (optional) = An array of URIs that each dereference to an RPC document specifying methods and notifications applicable in this scope. 
   - These are ordered from most authoritative to least, i.e. methods defined more than once by the union of entries should be defined by their earliest definition only.
 - `rpcEndpoints` (optional) = An array of URLs that each dereference to an RPC endpoints for routing requests within this scope. 
@@ -77,6 +79,7 @@ specification.
 
 ## References
 
+[CAIP-10]: https://chainAgnostic.org/CAIPs/CAIP-10
 [CAIP-25]: https://chainAgnostic.org/CAIPs/CAIP-25
 [CAIP-27]: https://chainAgnostic.org/CAIPs/CAIP-27
 [CAIP-211]: https://chainAgnostic.org/CAIPs/CAIP-211
