@@ -63,7 +63,7 @@ The application would interface with an RPC provider to make request as follows:
 }
 ```
 
-The JSON-RPC method is labeled as `caip_request` and expects 
+The JSON-RPC method is labeled as `provider_request` and expects 
 three **required parameters**:
 
 - **sessionId** - [CAIP-171][] `SessionId` referencing a known, open session
