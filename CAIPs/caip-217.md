@@ -44,7 +44,7 @@ uppercase in this document are to be interpreted as described in [RFC
 
 The syntax is as follows:
 
-```json
+```jsonc
 
 scope: string 
 
