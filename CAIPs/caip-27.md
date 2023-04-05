@@ -48,7 +48,7 @@ The application would interface with an RPC provider to make request as follows:
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "caip_request",
+  "method": "provider_request",
   "params": {
     "session": "0xdeadbeef",
     "scope": "eip155:1",
