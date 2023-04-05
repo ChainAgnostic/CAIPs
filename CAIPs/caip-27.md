@@ -66,7 +66,7 @@ The application would interface with an RPC provider to make request as follows:
 The JSON-RPC method is labeled as `caip_request` and expects 
 three **required parameters**:
 
-- **session** - [CAIP-171][] `SessionId` referencing a known, open session
+- **sessionId** - [CAIP-171][] `SessionId` referencing a known, open session
 - **scope** - a valid `scopeObject` previously authorized to the caller and persisted in
   the session identified by `sessionId`
 - **request** - an object containing the fields:
