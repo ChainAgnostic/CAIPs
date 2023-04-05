@@ -50,7 +50,7 @@ The application would interface with an RPC provider to make request as follows:
   "jsonrpc": "2.0",
   "method": "provider_request",
   "params": {
-    "session": "0xdeadbeef",
+    "sessionId": "0xdeadbeef",
     "scope": "eip155:1",
     "request": {
       "method": "personal_sign",
