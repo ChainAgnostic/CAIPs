@@ -24,8 +24,8 @@ cryptocurrency wallets) directed to a given previously-authorized target network
 (such as a specific blockchain or consensus community within a protocol). It
 requires a valid [scopeObject][CAIP-217] and a valid [sessionId][CAIP-171] for
 interoperability and composability. These two properties MAY be inherited from a
-persistent session created by [CAIP-25][], but also supports other kinds of
-sessions.
+persistent session created by [CAIP-25][], but could also be used as part of
+session management mechanisms.
 
 ## Motivation
 
@@ -35,6 +35,15 @@ method on multiple chains in a namespace, or supports methods with the same name
 on multiple namespaces). 
 
 ## Specification
+
+### Language
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in
+uppercase in this document are to be interpreted as described in [RFC
+2119][]
+
+### Definition
 
 The JSON-RPC provider is able to make one or more JSON-RPC requests accompanied
 by a [CAIP-2][] compatible `chainId` and a keyed to the [sessionId][CAIP-171] of
@@ -76,23 +85,28 @@ three **required parameters**:
 ### Validation
 
 1. A respondent MUST check the `scope` against the identified session object
-before executing or responding to such a request.
+   before executing or responding to such a request, and invalidate a request
+   for a scope not already authorized and persisted. 
 2. The respondent SHOULD check that `request.method` is authorized in the
-session object.
+   session object for that specific scope.
 3. The respondent MAY check that the `params` are valid for that method, if its
    syntax is known to it.
 4. The respondent MAY apply other logic or validation.
-5. The respondent MAY chose to drop invalid requests or return an error message.
+5. The respondent MAY chose to drop invalid requests or return an error message,
+   but it MUST NOT route or submit them.
 
 ### Response
 
-Upon succesful validation, the respondent will submit or route the request to the targeted network. If the targeted network returns a response to the respondent, the respondent MAY forward this response to the caller.
+Upon succesful validation, the respondent will submit or route the request to
+the targeted network. If the targeted network returns a response to the
+respondent, the respondent MAY forward this response to the caller.
 
 ## Links
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+[RFC 2119]: https://www.ietf.org/rfc/rfc2119.txt
 
 ## Copyright
 
