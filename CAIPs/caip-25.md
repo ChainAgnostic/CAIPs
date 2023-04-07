@@ -150,6 +150,19 @@ Requesting applications are expected to track all of these returned properties i
 the session object identified by the `sessionId`. All properties and their values
 MUST conform to definitions in [CAIP-170][], and MUST be ignored (rather than 
 tracked) if they do not.
+=======
+    "id": 1,
+    "jsonrpc": "2.0",
+    "method": "caip_handshake",
+    "params": [
+        {
+            "chains": ["eip155:1"],
+            "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
+            "events": ["accountsChanged", "chainChanged"]
+        }
+    ]
+}
+```
 
 The JSON-RPC method is labelled as `caip_handshake` and expects an array with objects with three parameters:
 
