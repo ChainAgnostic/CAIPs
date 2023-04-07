@@ -3,11 +3,12 @@ caip: 22
 title: Asset Reference for the ERC721 Asset Namespace
 author: Antoine Herzog (@antoineherzog), Pedro Gomes (@pedrouid), Joel Thorstensson (@oed)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/19
-status: Draft
+status: Superseded
 type: Standard
 created: 2020-06-23
 updated: 2020-06-23
 requires: 19
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/eip155/caip19.md
 ---
 
 ## Simple Summary
@@ -59,4 +60,4 @@ eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

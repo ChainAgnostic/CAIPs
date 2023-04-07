@@ -3,10 +3,11 @@ caip: 23
 title: Blockchain Reference for Filecoin Namespace
 author: Sergey Ukustov (@ukstv)
 discussions-to: TBD
-status: Draft
+status: Superseded
 type: Standard
 created: 2020-08-26
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/fil
 ---
 
 ## Simple Summary
@@ -14,10 +15,12 @@ requires: 2
 This document is about the details of the Filecoin network namespace and reference for CAIP-2.
 
 ## Abstract
+
 In CAIP-2 a general blockchain identification scheme is defined. This is the
 implementation of CAIP-2 for Filecoin network.
 
 ## Motivation
+
 See CAIP-2.
 
 ## Specification
@@ -59,4 +62,4 @@ fil:f
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

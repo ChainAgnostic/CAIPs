@@ -3,11 +3,12 @@ caip: 13
 title: Blockchain Reference for the Polkadot Namespace
 author: Pedro Gomes (@pedrouid), Joshua Mir (@joshua-mir), Shawn Tabrizi (@shawntabrizi)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/13
-status: Draft
+status: Superseded
 type: Standard
 created: 2020-04-01
 updated: 2020-04-02
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/pull/6
 ---
 
 ## Simple Summary
@@ -53,6 +54,7 @@ To resolve a blockchain reference for the Polkadot namespace, make a JSON-RPC re
   "result": "0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3"
 }
 ```
+
 The response will return as a value for the result a hash for the block with height 0 that should be sliced to its first 16 bytes (32 characters for base 16) to be CAIP-13 compatible.
 
 ## Rationale
@@ -84,4 +86,4 @@ Not applicable
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

@@ -1,7 +1,7 @@
 ---
 caip: 104
 title: Namespace Reference Purpose and Guidelines
-status: Active
+status: Review
 type: Meta
 author: Juan Caballero (@bumblefudge), Wayne Chang (@wyc)
 created: 2022-03-27
@@ -15,14 +15,14 @@ matured and expanded, it has become clear that namespaces are more complex and
 multi-dimensional than can be efficiently governed over time in the current CAIP
 single-document structure; instead, a Namespace Reference is proposed that
 splits out the application of each cross-chain CAIP to a given namespace as a
-distinct document with its own ratification/supersession lifecycle.  This way,
+distinct document with its own ratification/supersession lifecycle. This way,
 long-term specifications for low-level primitives like Chain IDs and addresses
 can be defined once and not be superseded by the addition or modification of
 higher-level specifications for RPC interfaces or multiple asset types.
 
 In practical terms, that means each blockchain ecosystem's namespace is defined
-by a folder containing a distinct document for *each CAIP* applied to that
-namespace.  At a high level, the important facts about a namespace, its
+by a folder containing a distinct document for _each CAIP_ applied to that
+namespace. At a high level, the important facts about a namespace, its
 governance, and its nomenclature can be defined/introduced in a `README.md`
 file, and each CAIP can be defined in a `caip{X}.md` file, where X is the number
 of the ratified CAIP.
@@ -35,7 +35,7 @@ specification of each feature or variant, as well as a rationale requiring
 little namespace-specific context. The namespace reference should include
 canonical (and ideally long-lived) links to authoritative documents, both when
 relied upon by the specified behavior AND when namespace-specific context is
-required to understand the inputs to or assumptions of the behavior.  
+required to understand the inputs to or assumptions of the behavior.
 
 The reference author is responsible for building consensus within the community
 and documenting dissenting opinions or rejected alternatives.
@@ -70,11 +70,12 @@ are included in the namespaces repo folder for easy cloning.
 Each reference document must begin with an [RFC
 822](https://www.ietf.org/rfc/rfc822.txt) style header preamble, preceded and
 followed by three hyphens (`---`). This header is also termed ["front matter" by
-Jekyll](https://jekyllrb.com/docs/front-matter/). 
+Jekyll](https://jekyllrb.com/docs/front-matter/).
 
 Please Note:
-- The headers must appear in the following order. 
-- Headers marked with "*" are optional and are described below.
+
+- The headers must appear in the following order.
+- Headers marked with "\*" are optional and are described below.
   - All other headers are required.
 - Lists/arrays in RFC822 must be encoded in the form `key: ["str1", "str2"]`,
   NOT `key: Str1, Str2`, even though single strings can be encoded in the form
@@ -83,7 +84,7 @@ Please Note:
 
 ` namespace-identifier:` <{unique lowercase alphanumeric string}[-caip{X}],
 where the optional suffix replaces X with the number of the applied CAIP unless
-the reference is a base namespace reference> 
+the reference is a base namespace reference>
 
 ` title:` <{string1}[ - {string2}]>
 
@@ -98,7 +99,7 @@ name and github username or email>
 
 `* review-period-end:` <date review period ends>
 
-` type:` <Standards Track (Core, Networking, Interface, ERC)  | Informational | Meta>
+` type:` <Standards Track (Core, Networking, Interface, ERC) | Informational | Meta>
 
 ` * category:` <Core | Networking | Interface | ERC>
 
@@ -106,11 +107,11 @@ name and github username or email>
 
 ` * updated:` <comma separated list of dates>
 
-` * requires:` <CAIP number(s)>
+` * requires:` <CAIP number(s), i.e. `CAIP-XX` >
 
-` * replaces:` <CAIP number(s)>
+` * replaces:` <CAIP number(s) | namespace reference(s), i.e. `eip155` >
 
-` * superseded-by:` <CAIP number(s)>
+` * superseded-by:` <namespace reference(s) | URL of non-namespace standard>
 
 #### `title` header
 
@@ -171,7 +172,7 @@ status.
 #### `requires` header
 
 Namespace-CAIPs may have a `requires` header, indicating the CAIP number(s) that
-this reference depends on. 
+this reference depends on.
 
 #### `superseded-by` and `replaces` headers
 
@@ -215,11 +216,11 @@ This document was derived heavily from [CAIP-1][], which was in turn influenced 
 
 ### Bibliography
 
-[CAIP-1]: caip-1.md
+[caip-1]: caip-1.md
 [markdown]: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
-[Bitcoin's BIP-0001]: https://github.com/bitcoin/bips
-[Python's PEP-0001]: https://www.python.org/dev/peps/
+[bitcoin's bip-0001]: https://github.com/bitcoin/bips
+[python's pep-0001]: https://www.python.org/dev/peps/
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

@@ -3,11 +3,12 @@ caip: 3
 title: Blockchain Reference for the EIP155 Namespace
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/3, https://github.com/ChainAgnostic/CAIPs/pull/1
-status: Draft
+status: Superseded
 type: Standard
 created: 2019-12-05
 updated: 2020-01-16
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/eip155
 ---
 
 ## Simple Summary
@@ -88,4 +89,4 @@ eip155:28945486
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).
