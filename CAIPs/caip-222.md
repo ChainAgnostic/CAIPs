@@ -61,7 +61,7 @@ The application would interface with a provider to make request as follows:
 
 The JSON-RPC method is labelled as `wallet_authenticate` and expects the following parameters:
 
-- type - cacao header type
+- type - cacao header message type
 - chainId - [CAIP-2][]-defined `chainId` to identify specific chain or network.
 - domain - [RFC 4501][rfc 4501] `dnsauthority` that is requesting the signing.
 - aud - [RFC 3986][rfc 3986] URI referring to the resource that is the subject of the signing.
@@ -111,9 +111,12 @@ If approved, the walllet will return a signed CACAO with the selected blockchain
 }
 ```
 
-All parameters MUST match the same parameters as the ones provided in the request and the following will be added:
+All payload parameters MUST match the same parameters as the ones provided in the request and the following will be added:
 
-- iss - [did:pkh][did:pkh] method identifying [CAIP-10][caip-10] blockchain account
+- h - header object according to [CAIP-74][caip-74]
+  - t - cacao message type (matching `type` in request)
+- p - payload object according to [CAIP-74][caip-74]
+  - iss - [did:pkh][did:pkh] method identifying [CAIP-10][caip-10] blockchain account
 - s - signature object according to [CAIP-74][caip-74]
   - t - signature type
   - s - signature bytes
