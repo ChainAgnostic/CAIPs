@@ -43,6 +43,7 @@ The application would interface with a provider to make request as follows:
   "jsonrpc": "2.0",
   "method": "wallet_authenticate",
   "params": {
+      "cacaov": string,
       "type": string,
       "chainId": string,
       "domain": string,
@@ -61,7 +62,8 @@ The application would interface with a provider to make request as follows:
 
 The JSON-RPC method is labelled as `wallet_authenticate` and expects the following parameters:
 
-- type - cacao header message type
+- cacaov - Cacao version number
+- type - Cacao header message type
 - chainId - [CAIP-2][]-defined `chainId` to identify specific chain or network.
 - domain - [RFC 4501][rfc 4501] `dnsauthority` that is requesting the signing.
 - aud - [RFC 3986][rfc 3986] URI referring to the resource that is the subject of the signing.
@@ -91,10 +93,10 @@ If approved, the walllet will return a signed CACAO with the selected blockchain
       "t": string,
     },
     "p": {
+      "iss": string,
       "aud": string,
       "exp": string,
       "iat": string,
-      "iss": string,
       "nbf": string,
       "nonce": string,
       "domain": string,
@@ -148,29 +150,98 @@ This interface can be used with multiple accounts by simply calling it multiple 
 
 ## Test Cases
 
-TODO
+Here is an example request and response exchange with `wallet_authenticate` method:
+
+```jsonc
+// Request
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "wallet_authenticate",
+  "params": {
+      "cacaov": "2",
+      "type": "eip4361",
+      "chainId": "eip155:1",
+      "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
+      "aud": "http://localhost:3000/login",
+      "exp": "2022-03-10T18:09:21.481+03:00",
+      "iat": "2022-03-10T17:09:21.481+03:00",
+      "nbf": "2022-03-10T17:09:21.481+03:00",
+      "nonce": "328917",
+      "domain": "localhost:3000",
+      "version": "1",
+      "requestId": "request-id-random",
+      "resources": [
+        "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
+        "https://example.com/my-web2-claim.json"
+      ],
+      "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
+  }
+}
+
+
+// Response
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "h": {
+      "t": "eip4361",
+    },
+    "p": {
+      "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
+      "aud": "http://localhost:3000/login",
+      "exp": "2022-03-10T18:09:21.481+03:00",
+      "iat": "2022-03-10T17:09:21.481+03:00",
+      "nbf": "2022-03-10T17:09:21.481+03:00",
+      "nonce": "328917",
+      "domain": "localhost:3000",
+      "version": "1",
+      "requestId": "request-id-random",
+      "resources": [
+        "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
+        "https://example.com/my-web2-claim.json"
+      ],
+      "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
+    },
+    "s": {
+      "t": "eip191",
+      "s": "5ccb134ad3d874cbb40a32b399549cd32c953dc5dc87dc64624a3e3dc0684d7d4833043dd7e9f4a6894853f8dc555f97bc7e3c7dd3fcc66409eb982bff3a44671b",
+    }
+  }
+}
+```
 
 ## Security Considerations
 
-TODO
+In order to provide the user guarantees of the origin for the request the wallet MUST provide domain binding by verifying the origin matches the `domain` parameter as described in [CAIP-122][caip-122] description under "Verify domain binding"
 
 ## Privacy Considerations
 
-TODO
+Users must be prompted explicitly to approve `wallet_authenticate` requests as these not only verify ownership of a specific blockchain account as specified in the `iss` param but also they are exposing it to the application which will be able to index and explore blockchain history corresponding to the blockchain account used for signing.
 
 ## Backwards Compatibility
 
-TODO
+CACAO versioning is included as a parameter for this request to allow backwards-compatibility for future changes in [CAIP-74][caip-74] standard.
 
 ## Links
+
+- [CAIP-2][caip-2] - Blockchain ID Specification
+- [CAIP-10][caip-10] - Account ID Specification
+- [CAIP-74][caip-74] - CACAO: Chain Agnostic CApability Object
+- [CAIP-122][caip-122] - Sign in With X (SIWx)
+- [RFC 3339][rfc 3339] - Date and Time on the Internet: Timestamps
+- [RFC 3986][rfc 3986] - Uniform Resource Identifier (URI): Generic Syntax
+- [RFC 4501][rfc 4501] - Domain Name System Uniform Resource Identifiers
+- [did:pkh][did:pkh] - did:pkh Method Specification
 
 [caip-2]: https://chainagnostic.org/CAIPs/caip-2
 [caip-10]: https://chainagnostic.org/CAIPs/caip-2
 [caip-74]: https://chainagnostic.org/CAIPs/caip-74
 [caip-122]: https://chainagnostic.org/CAIPs/caip-122
-[rfc 4501]: https://www.rfc-editor.org/rfc/rfc4501.html
-[rfc 3986]: https://www.rfc-editor.org/rfc/rfc3986
 [rfc 3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[rfc 3986]: https://www.rfc-editor.org/rfc/rfc3986
+[rfc 4501]: https://www.rfc-editor.org/rfc/rfc4501.html
 [did:pkh]: https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md
 
 ## Copyright
