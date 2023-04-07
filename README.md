@@ -21,18 +21,7 @@ If your CAIP requires images, the image files should be included in a subdirecto
 
 ## CAIP Index
 
-* **CAIP-1** - [CAIP Purpose and Guidelines](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-1.md)
-* **CAIP-2** - [Blockchain ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md)
-* **CAIP-10** - [Account ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md)
-* **CAIP-19** - [Asset Type and Asset ID Specification](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-19.md)
-* **CAIP-20** - [Asset Reference for the SLIP44 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-20.md)
-* **CAIP-21** - [Asset Reference for the ERC20 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-21.md)
-* **CAIP-22** - [Asset Reference for the ERC721 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-22.md)
-* **CAIP-25** - [Chain Agnostic Provider Handshake](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-25.md)
-* **CAIP-27** - [Chain Agnostic Provider Request](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-27.md)
-* **CAIP-29** - [Asset Reference for the ERC1155 Asset Namespace](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-29.md)
-* **CAIP-74** - [CACAO: Chain Agnostic CApability Object](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-74.md)
-* **CAIP-104** - [Namespace Reference Purpose and Guidelines](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-104.md)
+Visit [chainagnostic.org](https://chainagnostic.org/) for the up-to-date index of all CAIPs listed by status.
 
 ## Namespaces
 
