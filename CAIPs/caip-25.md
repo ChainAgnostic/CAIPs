@@ -55,14 +55,14 @@ Security Considerations).
 
 In the initial call, the application interfaces with a provider to populate a
 session with a base state describing authorized chains, methods, notification,
-and accounts.  This negotation takes place by sending the application's REQUIRED
+and accounts. This negotation takes place by sending the application's REQUIRED
 and REQUESTED authorizations of the session, grouped into objects scoping those
 authorizations which in turn are grouped into two top-level objects (named
-`requiredScopes` and `optionalScopes` respectively).  These two objects are not
+`requiredScopes` and `optionalScopes` respectively). These two objects are not
 mutually exclusive (i.e., additional properties of a required scope may be
 requested under the same keyed scope object key in the requested object). Note
 that scopes can be keyed to an entire [CAIP-104][] "namespace", meaning
-applicable to *any* current or future [CAIP-2][] chainID within that namespace,
+applicable to _any_ current or future [CAIP-2][] chainID within that namespace,
 or keyed to a specific [CAIP-2][] within that namespace.
 
 If any properties in the required scope(s) are not authorized by the
@@ -73,8 +73,8 @@ response (or no response, depending on implementation) should be sent to prevent
 incentivizing unwanted requests and to minimize the surface for fingerprinting
 of public web traffic (See Privacy Considerations below).
 
-Conversely, a succesful response will contain all the required properties *and
-the provider's choice of the optional properties* expressed as a unified set of
+Conversely, a succesful response will contain all the required properties _and
+the provider's choice of the optional properties_ expressed as a unified set of
 parameters. In the case of identically-keyed scopes appearing in both arrays in
 the request where properties from both are returned as authorized, the two
 scopes MUST be merged in the response (see examples below). However, respondents
@@ -117,7 +117,7 @@ Example:
     "sessionProperties": {
       "expiry": "2022-12-24T17:07:31+00:00",
       "caip154-mandatory": "true"
-    }         
+    }
   }
 }
 ```
@@ -125,10 +125,12 @@ Example:
 The JSON-RPC method is labelled as `provider_authorize` and its `params` object
 contains "requiredScopes" and/or "optionalScopes" objects populated with "scope
 objects" each named after the scope of authorization requested:
+
 1. EITHER an entire [CAIP-104][] [namespace][]
 2. OR a specific [CAIP-2][]-identified chain in a specific namespace.
 
 Each scope object contains the following parameters:
+
 - chains - array of [CAIP-2][]-compliant `chainId`'s. This parameter MAY be
   omitted if a single-chain scope is already declared in the index of the object.
 - methods - array of JSON-RPC methods expected to be used during the session
@@ -138,37 +140,18 @@ Each scope object contains the following parameters:
 The `requiredScopes` array MUST contain 1 or more of these objects, if present;
 the `optionalScopes` array MUST contain 1 or more of them, if present.
 
-A third object is the `sessionProperties` object, all of whose properties MUST 
+A third object is the `sessionProperties` object, all of whose properties MUST
 be in the interpreted as optional, since requesting applications cannot mandate
 session variables to providers. Because they are optional, providers MAY respond
 with all of the requested properties, or a subset of the session properties, or no
 `sessionProperties` object at all; they MAY even replace the values of the
-optional session properties with their own values.  The `sessionProperties` 
+optional session properties with their own values. The `sessionProperties`
 object MUST contain 1 or more properties if present.
 
 Requesting applications are expected to track all of these returned properties in
 the session object identified by the `sessionId`. All properties and their values
-MUST conform to definitions in [CAIP-170][], and MUST be ignored (rather than 
+MUST conform to definitions in [CAIP-170][], and MUST be ignored (rather than
 tracked) if they do not.
-=======
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "caip_handshake",
-    "params": [
-        {
-            "chains": ["eip155:1"],
-            "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "personal_sign"]
-            "events": ["accountsChanged", "chainChanged"]
-        }
-    ]
-}
-```
-
-The JSON-RPC method is labelled as `caip_handshake` and expects an array with objects with three parameters:
-
-* chains - array of CAIP-2 compliant chainId's to be used during the session
-* methods - array of JSON-RPC methods expected to be used during the session
-* events - array of JSON-RPC message/events expected to be emitted during the session
 
 ### Response
 
@@ -176,20 +159,21 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The successful result contains one mandatory string (keyed as `sessionId` with a value 
-conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
+The successful result contains one mandatory string (keyed as `sessionId` with a value
+conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty.
 
 The first is called `sessionScopes` and contains 1 or more scope objects.
-* All required scope objects and all, none, or some of the optional scope object
-(at the discretion of the provider) MUST be included if successful.  
-* As in the request, each scope object object MUST contain `methods` and
-`notifications` objects, and a `chains` object if a specific chain is not
-specified in the object's index.
-* Unlike the request, each scope object MUST also contain an `accounts` array,
-containing 0 or more [CAIP-10][] conformant accounts authorized for the session
-and valid in the namespace and chain(s) authorized by the scope object they are
-in. Additional constraints on the accounts authorized for a given session MAY be
-specified in the corresponding [CAIP-104][] namespaces specification.
+
+- All required scope objects and all, none, or some of the optional scope object
+  (at the discretion of the provider) MUST be included if successful.
+- As in the request, each scope object object MUST contain `methods` and
+  `notifications` objects, and a `chains` object if a specific chain is not
+  specified in the object's index.
+- Unlike the request, each scope object MUST also contain an `accounts` array,
+  containing 0 or more [CAIP-10][] conformant accounts authorized for the session
+  and valid in the namespace and chain(s) authorized by the scope object they are
+  in. Additional constraints on the accounts authorized for a given session MAY be
+  specified in the corresponding [CAIP-104][] namespaces specification.
 
 A `sessionProperties` object MAY also be present, and its contents MAY
 correspond to the properties requested in the response or not (at the discretion
@@ -223,9 +207,9 @@ An example of a successful response follows:
       "cosmos": {
         ...
       }
-    },      
+    },
     "sessionProperties": {
-      "expiry": "2022-11-31T17:07:31+00:00"          
+      "expiry": "2022-11-31T17:07:31+00:00"
     }
   }
 }
@@ -253,65 +237,67 @@ response,
 ```
 
 is RECOMMENDED for any of the following cases:
+
 - the user denies consent for exposing accounts that match the requested and
   approved chains,
 - the user denies consent for requested methods,
 - the user denies all requested or any required scope objects,
 - the wallet cannot support all requested or any required scope objects,
-- the requested chains are not supported by the wallet, or 
+- the requested chains are not supported by the wallet, or
 - the requested methods are not supported by the wallet
 
 ##### Trusted Failure Codes
 
 More informative error messages MAY be sent in trusted-counterparty
 circumstances, although extending this trust too widely may contribute to
-widespread fingerprinting and analytics which corrode herd privacy (see 
-[Privacy Considerations](#privacy-considerations) below). The core error 
+widespread fingerprinting and analytics which corrode herd privacy (see
+[Privacy Considerations](#privacy-considerations) below). The core error
 messages over trusted connections are as follows:
 
 The valid error messages codes are the following:
-* Unknown error OR no scopes were authorized
-    * code = 5000
-    * message = "Unknown error with request"
-* When user disapproves accepting calls with the request methods
-    * code = 5001
-    * message = "User disapproved requested methods"
-* When user disapproves accepting calls with the request notifications
-    * code = 5002
-    * message = "User disapproved requested notifications"
-* When provider evaluates requested chains to not be supported
-    * code = 5100
-    * message = "Requested chains are not supported"
-* When provider evaluates requested methods to not be supported
-    * code = 5101
-    * message = "Requested methods are not supported"
-* When provider evaluates requested notifications to not be supported
-    * code = 5102
-    * message = "Requested notifications are not supported"
+
+- Unknown error OR no scopes were authorized
+  - code = 5000
+  - message = "Unknown error with request"
+- When user disapproves accepting calls with the request methods
+  - code = 5001
+  - message = "User disapproved requested methods"
+- When user disapproves accepting calls with the request notifications
+  - code = 5002
+  - message = "User disapproved requested notifications"
+- When provider evaluates requested chains to not be supported
+  - code = 5100
+  - message = "Requested chains are not supported"
+- When provider evaluates requested methods to not be supported
+  - code = 5101
+  - message = "Requested methods are not supported"
+- When provider evaluates requested notifications to not be supported
+  - code = 5102
+  - message = "Requested notifications are not supported"
 
 ##### Trust-Agnostic Malformed Request Failure Codes
 
 Regardless of caller trust level, the following error responses can reduce
-friction and user experience problems in the case of malformed requests. 
+friction and user experience problems in the case of malformed requests.
 
-* When provider does not recognize one or more requested method(s)
-    * code = 5201
-    * message = "Unknown method(s) requested"
-* When provider does not recognize one or more requested notification(s)
-    * code = 5202
-    * message = "Unknown notification(s) requested"
-* When a badly-formed request includes a `chainId` mismatched to scope
-    * code = 5203
-    * message = "Scope/chain mismatch"
-* When a badly-formed request defines one `chainId` two ways
-    * code = 5204
-    * message = "ChainId defined in two different scopes"  
-* Invalid Session Properties Object
-    * code = 5300
-    * message = "Invalid Session Properties requested"
-* Session Properties requested outside of Session Properties Object 
-    * code = 5301
-    * message = "Session Properties can only be optional and global"
+- When provider does not recognize one or more requested method(s)
+  - code = 5201
+  - message = "Unknown method(s) requested"
+- When provider does not recognize one or more requested notification(s)
+  - code = 5202
+  - message = "Unknown notification(s) requested"
+- When a badly-formed request includes a `chainId` mismatched to scope
+  - code = 5203
+  - message = "Scope/chain mismatch"
+- When a badly-formed request defines one `chainId` two ways
+  - code = 5204
+  - message = "ChainId defined in two different scopes"
+- Invalid Session Properties Object
+  - code = 5300
+  - message = "Invalid Session Properties requested"
+- Session Properties requested outside of Session Properties Object
+  - code = 5301
+  - message = "Session Properties can only be optional and global"
 
 Note: respondents are RECOMMENDED to implement support for core RPC Documents
 per each supported namespace to avoid sending error messages 5201 and 5202 in
@@ -320,7 +306,7 @@ cases where 0, 5101 or 5102 would be more appropriate.
 ## Security Considerations
 
 The crucial security function of a shared session negotiated and maintained by a
-series of CAIP-25 calls is to reduce ambiguity in authorization.  This requires
+series of CAIP-25 calls is to reduce ambiguity in authorization. This requires
 a potentially counterintuitive structuring of the building-blocks of a
 Chain-Agnostic session into scopes at the "namespace-wide" ([CAIP-104][]) or at
 the "chain-specific" ([CAIP-2][]) level; for this reason, requests and responses
@@ -338,12 +324,13 @@ deanonymize browsers and/or wallets deductively based on response times, error
 codes, etc. To minimize this risk, and to minimize the data (including
 behavioral data) leaked by responses to potentially malicious CAIP-25 calls,
 respondents are recommended to ignore calls
-1. which the respondent does not authorize, 
-2. which are rejected by policy, or 
-3. requests which are rejected for unknown reasons. 
- 
+
+1. which the respondent does not authorize,
+2. which are rejected by policy, or
+3. requests which are rejected for unknown reasons.
+
 "Ignoring" these calls means responding to all three in a way that is
-*indistinguishable* to a malicious caller or observer which might deduce
+_indistinguishable_ to a malicious caller or observer which might deduce
 information from differences in those responses (including the time taken to
 provide them). Effectively, this means allowing requests in all three cases to
 time out even if the end-user experience might be better served by
@@ -364,16 +351,17 @@ Another design pattern that accomodates the "silent time out" behavior is minor
 updates to the session. For example, a caller sending a request identical to a
 previous request (or a previous response) except for a new session expiry
 further in the future could expect one of exactly three responses:
+
 1. An identical response to the previous request (meaning the session extension was denied);
 2. A response identical expect that it includes the new, extended session expiry; or,
 3. A silent time out (meaning the calling behavior was malformed in ways the
-respondent cannot understand, or the respondent choses not to make explicit how
-the request was malformed, or the end-user rejected them, or the request itself
-was in violation of policy). 
+   respondent cannot understand, or the respondent choses not to make explicit how
+   the request was malformed, or the end-user rejected them, or the request itself
+   was in violation of policy).
 
 ## Changelog
 
-- 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement) 
+- 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement)
 - 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
   consolidated variants across issues and forks post-Amsterdam Gathering
 
@@ -385,15 +373,15 @@ was in violation of policy).
 - [CAIP-75][] - Blockchain Reference for the Hedera namespace
 - [CAIP-171][] - Session Identifier Specification
 
-[CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
-[CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
-[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
-[CAIP-75]: https://chainagnostic.org/CAIPs/caip-75
-[CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
-[CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+[caip-2]: https://chainagnostic.org/CAIPs/caip-2
+[caip-10]: https://chainagnostic.org/CAIPs/caip-10
+[caip-25]: https://chainagnostic.org/CAIPs/caip-25
+[caip-75]: https://chainagnostic.org/CAIPs/caip-75
+[caip-104]: https://chainagnostic.org/CAIPs/caip-104
+[caip-171]: https://chainagnostic.org/CAIPs/caip-171
 [namespaces]: https://namespaces.chainagnostic.org
-[RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
-[CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
+[rfc3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[caip-170]: https://chainagnostic.org/CAIPs/caip-170
 
 ## Copyright
 
