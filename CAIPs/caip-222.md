@@ -5,7 +5,7 @@ author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/222
 status: Draft
 type: Standard
-created: 2022-04-07
+created: 2023-04-07
 requires: ["2", "10", "74", "122"]
 ---
 
