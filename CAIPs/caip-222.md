@@ -82,7 +82,7 @@ The wallet will prompt the user with a dedicated UI to display the app requestin
 
 #### Success
 
-If approved, the walllet will return a signed CACAO with the selected blockchain account.
+If approved, the wallet will return a signed CACAO with the selected blockchain account.
 
 ```jsonc
 {
