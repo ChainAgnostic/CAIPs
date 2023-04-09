@@ -125,7 +125,7 @@ All payload parameters MUST match the same parameters as the ones provided in th
 
 #### Failure
 
-Request will fail if rejected by the user or if paramaters fail validation.
+Request will fail if rejected by the user or if parameters fail validation.
 
 The following Error responses MUST be used:
 
