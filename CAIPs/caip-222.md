@@ -146,7 +146,7 @@ Developers have the ability to verify ownership of users' blockchain accounts si
 
 This also incentives more applications to prevent impersonation by verifying ownership of blockchain accounts upfront without needing to trust the wallet provider interface that optimistically exposes account on connection.
 
-This interface can be used with multiple accounts by simply calling it multiple times with a difference nonce and prompting the waller user to authenticate each account individually without establishing a persistent connection.
+This interface can be used with multiple accounts by simply calling it multiple times with a difference nonce and prompting the wallet user to authenticate each account individually without establishing a persistent connection.
 
 ## Test Cases
 
