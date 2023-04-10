@@ -162,7 +162,6 @@ Here is an example request and response exchange with `wallet_authenticate` meth
       "cacaov": "2",
       "type": "eip4361",
       "chainId": "eip155:1",
-      "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
       "aud": "http://localhost:3000/login",
       "exp": "2022-03-10T18:09:21.481+03:00",
       "iat": "2022-03-10T17:09:21.481+03:00",
