@@ -18,7 +18,12 @@ within one) and RPC endpoints (i.e. preferential routing for specific nodes).
 
 ## Abstract
 
-
+Without a profile of this CAIP which defines implicit values for a namespace,
+setting the `rpcDocuments` and `rpcEndpoints` values in the `scopeObject`s of a
+[CAIP-25][] negotiation does not make much sense. Once those implicit values
+have been set, however, the meaning of any explicit values in [CAIP-25][]
+negotiations or other scope expressions can be deterministic and evolve over
+time.
 
 ## Motivation
 
