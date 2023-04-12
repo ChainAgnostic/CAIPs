@@ -10,8 +10,12 @@ created: 2022-11-09
 
 ## Simple Summary
 
-This CAIP defines a simple syntax for scopes of authorization between applications (e.g. dapps) and user-agents (e.g. "wallets" or signers). These are described in JSON objects as a building block across multiple protocols and mechanisms:
-- A JSON-RPC protocol for persisting and synchronizing authorized sessions ([CAIP-25][])
+This CAIP defines a simple syntax for scopes of authorization between
+applications (e.g. dapps) and user-agents (e.g. "wallets" or signers). These are
+expressed as JSON objects as a building block across multiple protocols and
+mechanisms, for example:
+- A JSON-RPC protocol for persisting and synchronizing authorized sessions
+  ([CAIP-25][])
 - Routing individual RPC commands to an authorized network ([CAIP-27][])
 
 ## Motivation
@@ -52,7 +56,7 @@ scopeObject: {
    *scopes: [(chainId)+],
    methods: [(method_name)+],
    notifications: [(notification_name)+],
-   accounts: [(account_id)+]
+   *accounts: [(account_id)+]
    *rpcDocuments: [(rpcDocument)+],
    *rpcEndpoints: [(rpcEndpoint)+]
 }
@@ -67,11 +71,15 @@ Where:
   - This property MAY be present if the scope is an entire [namespace][namespaces] in which `chainId`s are defined.
 - `methods` = An array of 0 or more JSON-RPC methods that an application can call on the agent and/or an agent can call on an application.
 - `notifications` = An array of 0 or more JSON-RPC notifications that an application send to or expect from the agent.
-- `accounts` (optional) = An array of 0 or more [CAIP-10][] identifiers valid within the scope of authorization.
+- `accounts` (optional) = An array of 0 or more [CAIP-10][] identifiers, each valid within the scope of authorization.
 - `rpcDocuments` (optional) = An array of URIs that each dereference to an RPC document specifying methods and notifications applicable in this scope. 
   - These are ordered from most authoritative to least, i.e. methods defined more than once by the union of entries should be defined by their earliest definition only.
 - `rpcEndpoints` (optional) = An array of URLs that each dereference to an RPC endpoints for routing requests within this scope. 
-  - These are ordered from most authoritative to least, i.e. priority SHOULD be given to endpoints in the order given, as per the CAIP-217 profile for that [namespace][namespaces], if one has been specified.
+  - These are ordered from most authoritative to least, i.e. priority SHOULD be given to endpoints in the order given, as per the CAIP-211 profile for that [namespace][namespaces], if one has been specified.
+
+Additional constraints MAY be imposed by the usage of `scopeObject`s in
+protocols such as [CAIP-25][], and specific [namespaces][] may have
+implicit values or validity constraints for these properties.
 
 Whenever another CAIP uses the name `scopeObject` and has this CAIP in the
 `required` front-matter property, it SHALL be interpreted as reference to this

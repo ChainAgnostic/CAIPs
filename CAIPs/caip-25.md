@@ -28,16 +28,17 @@ persisting authorizations during a session managed by a provider construct.
 
 The motivation comes from the lack of standardization across blockchains to
 expose accounts and define the expected JSON-RPC methods to be used by an
-application through a provider connecting to a wallet or other user agent.
+application through a provider connecting to a signer or other user agent.
 
 ## Specification
 
 The session is proposed by a caller and the response by the respondent is used
 as the baseline for an ongoing session that both parties will persist. The
-properties of this session, which is identified mutually by an entropic
-[identifier][CAIP-171] assigned in the initial response, get updated, extended,
-closed, etc. by successive calls and notifications, each tagged by this
-identifier. 
+properties and authorization scopes that make up the session are expected to be
+persisted and tracked over time by both parties in a discrete data store,
+identified by an entropic [identifier][CAIP-171] assigned in the initial
+response. This object gets updated, extended, closed, etc. by successive calls
+and notifications, each tagged by this identifier. 
 
 If a respondent (e.g. a wallet) needs to initiate a new session, whether due to
 user input, security policy, or session expiry reasons, it can simply generate a
@@ -56,8 +57,9 @@ the optional array, keyed to the same scope string). Note that `scopeObject`s
 can be keyed to a specific [CAIP-2][], or to a [CAIP-104][] namespace; if the
 latter defines a [CAIP-2][] profile, a `scopes` array MAY be set within it
 containing multiple [CAIP-2][] strings; this is functionally equivalent to
-defining multiple identical `scopeObjects`, each keyed to one [CAIP-2]. See
-[CAIP-217][] for more details on the structure of these objects.
+defining multiple identical `scopeObjects`, each keyed to one of the [CAIP-2][]s
+listed in the `scopes` array. See [CAIP-217][] for more details on the structure
+of the typed objects included in these arrays.
 
 If any properties in the required scope(s) are not authorized by the respondent,
 a failure response expressive of one or more specific failure states will be
@@ -128,13 +130,18 @@ be interpreted as optional, since requesting applications cannot mandate session
 variables to providers. Because they are optional, providers MAY respond with
 all of the requested properties, or a subset of the session properties, or no
 `sessionProperties` object at all; they MAY even replace the values of the
-optional session properties with their own values.  The `sessionProperties`
-object MUST contain 1 or more properties if present.
+optional session properties with their own values. Wallets may also interpret
+values of sessionProperties in how it assigns values (for example, which
+`accounts` to expose) based on flags or properties defined here. The
+`sessionProperties` object MUST contain 1 or more properties if present.
 
 Requesting applications are expected to persisted all of these returned
 properties in the session object identified by the `sessionId`. All properties
-and their values MUST conform to definitions in [CAIP-170][], and MUST be
-ignored (rather than persisted) if they do not.
+in `sessionProperties` and their values MUST conform to definitions in
+[CAIP-170][], and MUST be ignored (rather than persisted) if they do not;
+similarly, nothing except valid [CAIP-217][] objects may be present in
+`requiredScopes`, `optionalScopes`, and `sessionScopes` arrays; all other
+array members should be dropped.
 
 ### Response
 

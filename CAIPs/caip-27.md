@@ -106,6 +106,7 @@ respondent, the respondent MAY forward this response to the caller.
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+[CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [RFC 2119]: https://www.ietf.org/rfc/rfc2119.txt
 
 ## Copyright
