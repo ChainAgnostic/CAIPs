@@ -105,8 +105,8 @@ values. Extending the example above, we could say that the request:
   }
 }
 ```
-MUST be taken literally, as dropping the implicit values rather than appending
-to them. It MUST NOT be interpreted as equivalent to:
+MUST be interpreted as replacing rather than appending to the implicit values.
+It MUST NOT be interpreted as equivalent to:
 
 ```jsonc
 {
@@ -119,9 +119,90 @@ to them. It MUST NOT be interpreted as equivalent to:
 }
 ```
 
-But the latter SHOULD be returned as response if dropping the implicit values in
-favor of the requested ones is unacceptable and extending the implicit values is
-preferred. 
+## Security Considerations
+
+The main security risk in accepting multiple authorities (expressed as URIs,
+which may be mutable) is that ambiguity and undesired behavior can arise from
+multiple RPC documents defining the same term, or different endpoints producing
+different outcomes. The solution to this is to assign priority by array ordering
+in the context of negotiation. In a protocol like [CAIP-25][], this means
+achieving consensus between parties on the exact priority before initiating a
+session.
+
+### CAIP-25 Example
+
+Since [CAIP-25][] obligates both parties to an authorization negotiation to
+persist and honor whatever `scopeObject`s they agree to, including the ordering
+of arrays, it is important to resolve all implicit and explicit members at the
+same negotiation step as the merging of `requiredScopes` and `optionalScopes`
+into `sessionScopes`. To further extend the examples above, consider the
+following CAIP-25 example request:
+
+```jsonc
+{
+  "requiredScopes": {
+    "X": {
+      methods: [A, B, C],
+      notifications: [D, E, F],
+    }
+  },
+  "optionalScopes": {
+    "X": {
+      methods: [A, B, C],
+      notifications: [D, E, F],
+      rpcEndpoints: [U1, U2, U3],
+      rpcDocuments: [V]
+    }
+  },
+}
+```
+
+Depending on the security posture of the respondent, they could answer with any
+of the three following responses, which would communicate unambiguously to the
+caller what sessions are available to them:
+
+```jsonc
+{
+  ...
+  "sessionScopes": {
+    "X": {
+      methods: [A, B, C],
+      notifications: [D, E, F],
+      rpcEndpoints: [Y1, Y2, Y3, U1, U2, U3],
+      rpcDocuments: [Z, V]
+    }
+  }
+  ...
+}
+
+{
+  ...
+  "sessionScopes": {
+    "X": {
+      methods: [A, B, C],
+      notifications: [D, E, F],
+      rpcEndpoints: [U1, U2, U3, Y1, Y2, Y3],
+      rpcDocuments: [V, Z]
+    }
+  }
+  ...
+}
+
+{
+  ...
+  "sessionScopes": {
+    "X": {
+      methods: [A, B, C],
+      notifications: [D, E, F],
+      rpcEndpoints: [Y1, Y2, Y3],
+      rpcDocuments: [Z]
+    }
+  }
+  ...
+}
+
+```
+
 
 ## Privacy Considerations
 
