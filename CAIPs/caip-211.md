@@ -18,20 +18,27 @@ within one) and RPC endpoints (i.e. preferential routing for specific nodes).
 
 ## Abstract
 
-Without a profile of this CAIP which defines implicit values for a namespace,
-setting the `rpcDocuments` and `rpcEndpoints` values in the `scopeObject`s of a
-[CAIP-25][] negotiation does not make much sense. Once those implicit values
-have been set, however, the meaning of any explicit values in [CAIP-25][]
-negotiations or other scope expressions can be deterministic and evolve over
-time.
+Without a profile of this CAIP which defines implicit values for a given
+namespace, setting the `rpcDocuments` and `rpcEndpoints` values in the
+`scopeObject`s of a [CAIP-25][] negotiation could be seen as a security risk
+within that namespace, since either a custom endpoint or a custom re-definition
+of a common method or event syntax or semantics would be harder for the
+respondent to detect. Once those implicit values have been profiled and
+published, however, the meaning of any explicit values in [CAIP-25][]
+negotiations or other scope expressions have an explicit baseline making RPC
+security postures more deterministic.
 
 ## Motivation
 
-Allowing experimentation and extension within certain local contexts (like a
-specific network within a namespace, or a specific community of usage of a
-network) without compromising the integrity and security of the broader
-community requires a flexible and layer mechanism for negotiating authorities
-over routing and RPC method/notification definitions. 
+This deterministic expression of variations in RPC routing and behavior is a
+precondition for explicit and informed user consent to be gotten about these
+variations, in addition to supporting clarity between the multiple agents
+connecting that consenting user to a network. This enables flexible and layered mechanism for
+negotiating authorities over routing and RPC method/notification definitions. In
+turn, this allows experimentation and extension within certain local contexts
+(like a specific network within a namespace, or a specific community of usage of
+a network) without compromising the integrity and security of the broader
+community.
 
 ## Specification
 
