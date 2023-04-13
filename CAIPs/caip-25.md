@@ -191,6 +191,7 @@ An example of a successful response follows:
         "methods": ["personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
         "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
+      },
       "cosmos": {
         ...
       }
