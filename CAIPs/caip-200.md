@@ -63,8 +63,8 @@ with this CAIP.
 
 - [EIP-3091][] - EVM-wide standard for block explorer addressing syntax
 
-[EIP-3091]: https://eips.ethereum.org/EIPS/eip-3091
-[ethereum-lists/chains]: https://github.com/ethereum-lists/chains
+ - [EIP-3091]: https://eips.ethereum.org/EIPS/eip-3091
+ - [ethereum-lists/chains]: https://github.com/ethereum-lists/chains
 
 ## Copyright
 
