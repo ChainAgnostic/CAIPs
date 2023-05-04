@@ -1,0 +1,4 @@
+{% assign links=include.links|split:"," %}
+{% for link in links %}
+<a href="{{ link | strip | uri_escape }}">{{ link | strip | xml_escape }}</a>
+{% endfor %}

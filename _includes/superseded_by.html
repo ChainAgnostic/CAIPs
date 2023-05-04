@@ -1,0 +1,9 @@
+{% assign caips=include.caips|split:"," %}
+{% for caip in caips %}
+{% if caip contains "https://" %}
+<a href="{{ caip | strip | uri_escape }}">{{ caip | strip | xml_escape }}</a>
+{% else %}
+<a href="{{caip|strip|prepend:"caip-" }}">{{caip|strip}}</a>
+{% endif %}
+{% if forloop.last == false %}, {% endif %}
+{% endfor %}

@@ -11,11 +11,11 @@ updated: 2021-08-25
 
 ## Simple Summary
 
-CAIP-2 defines a way to identify a blockchain (e.g. Ethereum Mainnet, Görli, Bitcoin, Cosmos Hub) in a human readably, developer friendly and transaction-friendly way.
+CAIP-2 defines a way to identify a blockchain (e.g. Ethereum Mainnet, Görli, Bitcoin, Cosmos Hub) in a human-readable, developer-friendly and transaction-friendly way.
 
 ## Abstract
 
-Often you need to reference a blockchain. For example when you want to state where some asset or smart contract is located. In Ethereum the [EIP155](https://eips.ethereum.org/EIPS/eip-155) chain ID is used most of the time. But with an Ethereum chain ID you cannot reference e.g. a Bitcoin or Cosmos chain.
+Often you need to reference a blockchain, for example when you want to state where some asset or smart contract is located. In Ethereum the [EIP155](https://eips.ethereum.org/EIPS/eip-155) chain ID is used most of the time. But with an Ethereum chain ID you cannot reference e.g. a Bitcoin or Cosmos chain.
 
 ## Motivation
 
@@ -33,21 +33,21 @@ The `chain_id` is a case-sensitive string in the form
 ```
 chain_id:    namespace + ":" + reference
 namespace:   [-a-z0-9]{3,8}
-reference:   [-a-zA-Z0-9]{1,32}
+reference:   [-_a-zA-Z0-9]{1,32}
 ```
 
 ### Semantics
 
 Each `namespace` covers a class of similar blockchains. Usually it describes an ecosystem or standard, such as e.g. `cosmos` or `eip155`.
 One namespace should refer to one resolution method to resolve the chain's reference. A `reference` is a way to identify a blockchain within a given namespace.
-The semantics as well as the more granular syntax are of the reference are delegated to each namespace specification to be define in separate CAIPs describing resolution method.
+The semantics as well as the more granular syntax which are delegated to each namespace specification shall be defined in separate CAIPs describing resolution methods.
 
 ## Rationale
 
 The goals of the general chain ID format is:
 
 - Uniqueness within the entire blockchain ecosystem
-- To some degree human readable and helps for basic debugging
+- To some degree human-readable and helps for basic debugging
 - Restricted in a way that it can be stored on chain
 - Character set basic enough to display in hardware wallets as part of a transaction content
 
@@ -56,7 +56,7 @@ The following secondary goals can easily be achieved:
 - Can be used unescaped in URL paths
 - Can be used as filename in a case-sensitive UNIX file system (Linux/git).
 
-Those secondary goals have been given up along the way:
+These secondary goals have been given up along the way:
 
 - Can be used as filename in a case-insensitive UNIX file system (macOS).
 - Can be used as filename in a Windows file system.
@@ -88,6 +88,9 @@ cosmos:Binance-Chain-Tigris
 # IOV Mainnet (Tendermint + weave)
 cosmos:iov-mainnet
 
+# StarkNet Testnet
+starknet:SN_GOERLI
+
 # Lisk Mainnet (LIP-0009; see https://github.com/LiskHQ/lips/blob/master/proposals/lip-0009.md)
 lip9:9ee11e9df416b18b
 
@@ -105,4 +108,4 @@ chainstd:8c3444cf8970a9e41a706fab93e7a6c4
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

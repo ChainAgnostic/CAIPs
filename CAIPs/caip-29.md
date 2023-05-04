@@ -60,4 +60,4 @@ eip155:1/erc1155:0x28959Cf125ccB051E70711D0924a62FB28EAF186/0
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

@@ -1,0 +1,89 @@
+{
+  "presentation_definition": {
+    "id": "KYCAMLPresentationDefinition-v0.9.0",
+    "input_descriptors": [
+      {
+        "id": "KYCAMLCredential",
+        "name": "Proof of KYC",
+        "purpose": "Please provide a valid credential from a KYC/AML issuer",
+        "constraints": {
+          "statuses": {
+            "active": {
+              "directive": "required"
+            }
+          },
+          "is_holder": [
+            {
+              "field_id": ["subjectId"],
+              "directive": "required"
+            }
+          ],
+          "fields": [
+            {
+              "path": [
+                "$.credentialSubject.KYCAMLAttestation.process",
+                "$.vc.credentialSubject.KYCAMLAttestation.process",
+                "$.KYCAMLAttestation.process"
+              ],
+              "purpose": "URL of an external `process` object known to this verifier is required for this credential's evaluation.",
+              "predicate": "required",
+              "filter": {
+                "type": "string"
+              }
+            },
+            {
+              "id": "subjectId",
+              "path": [
+                "$.credentialSubject.id",
+                "$.vc.credentialSubject.id",
+                "$.id"
+              ],
+              "purpose": "We need to evaluate VP presenter === VC subject. See https://identity.foundation/presentation-exchange/spec/v2.0.0/#term:holder-binding "
+            },
+            {
+              "id": "credentialSchema",
+              "path": ["$.credentialSchema.id", "$.vc.credentialSchema.id"],
+              "filter": {
+                "type": "string",
+                "pattern": "https://verite.id/definitions/schemas/0.0.1/KYCAMLAttestation"
+              },
+              "purpose": "We need to ensure the credential both links to and conforms to the expected schema."
+            },
+            {
+              "path": ["$.issuer.id", "$.issuer", "$.vc.issuer", "$.iss"],
+              "purpose": "Issuer must be registered in verifier's Trusted Issuer Registry. See https://verite.id/verite/issuers/issuer-registry-pvp .",
+              "filter": {
+                "type": "string",
+                "pattern": "^did:key:z[a-km-zA-HJ-NP-Z1-9]+$|^did:web:((?!-)[A-Za-z0-9-]{1, 63}(?<!-)\\.)+[A-Za-z]{2, 6}$"
+              }
+            }
+          ]
+        },
+        "format": {
+          "jwt": {
+            "alg": ["EdDSA", "ES256K", "ES384"]
+          },
+          "jwt_vc": {
+            "alg": ["EdDSA", "ES256K"]
+          },
+          "jwt_vp": {
+            "alg": ["EdDSA", "ES256K"]
+          },
+          "ldp": {
+            "proof_type": [
+              "JsonWebSignature2020",
+              "Ed25519Signature2018",
+              "EcdsaSecp256k1Signature2019"
+            ]
+          },
+          "ldp_vc": {
+            "proof_type": ["Ed25519Signature2018"]
+          },
+          "ldp_vp": {
+            "proof_type": ["Ed25519Signature2018", "EcdsaSecp256k1Signature2019"]
+          }
+        }
+      }
+    ]
+  }
+}

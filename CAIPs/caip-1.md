@@ -1,7 +1,7 @@
 ---
 caip: 1
 title: CAIP Purpose and Guidelines
-status: Active
+status: Review
 type: Meta
 author: ligi <ligi@ligi.de>
 created: 2019-08-31
@@ -10,15 +10,15 @@ updated: 2019-08-31
 
 ## What is an CAIP?
 
-CAIP stands for Chain Agnostic Improvement Proposal. An CAIP is a design document providing information to the community or describing a standard to be used across multiple chains. The CAIP should provide a concise technical specification of the feature and a rationale for the feature. The CAIP author is responsible for building consensus within the community and documenting dissenting opinions.
+CAIP stands for Chain Agnostic Improvement Proposal. A CAIP is a design document providing information to the community or describing a standard to be used across multiple chains. To be more precise, a CAIP may describe capabilities applicable to any sequential orderings of cryptographically hashed commitments, including non-blockchain systems that can interoperate with blockchains productively, such as DAGs, sharded systems, git systems using keyserver-based PKI, etc. The CAIP should provide a concise technical specification of the feature and a rationale for it. The CAIP author is responsible for building consensus within the community and documenting dissenting opinions.
 
 ## CAIP Rationale
 
-Currently it is often the case that a standard defined in one chain is also used in another chain. E.g. the usage of BIP39 in Ethereum applications. Also there is no real place to propose a standard that can be used for multiple chains (like mnemonics) currently. CAIPs are intended to fill this gap and be a place where such standards can live.
+Currently it is often the case that a standard defined in one chain is also used in another chain, e.g. the usage of BIP39 in Ethereum applications. Also, there is no real place to propose a standard that can be used for multiple chains (like mnemonics) currently. CAIPs are intended to fill this gap and be a place where such standards can live.
 
 ## CAIP Formats and Templates
 
-CAIPs should be written in [markdown] format.
+CAIPs should be written in [markdown][] format.
 Image files should be included in a subdirectory of the `assets` folder for that CAIP as follows: `assets/caip-N` (where **N** is to be replaced with the CAIP number). When linking to an image in the CAIP, use relative links such as `../assets/caip-1/image.png`.
 
 ## CAIP Header Preamble
@@ -31,13 +31,13 @@ Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) styl
 
 ` author:` <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s). Details are below.>
 
-` * discussions-to:` \<a url pointing to the official discussion thread\>
+` * discussions-to:` \<a URL pointing to the official discussion thread\>
 
-` status:` <Draft | Last Call | Accepted | Active | Abandoned | Rejected | Superseded>
+` status:` <Draft | Rejected | Review | Last Call | Withdrawn | Final | Superseded>
 
 `* review-period-end:` <date review period ends>
 
-` type:` <Standards Track (Core, Networking, Interface, ERC)  | Informational | Meta>
+` type:` <Standard | Informational | Meta>
 
 ` * category:` <Core | Networking | Interface | ERC>
 
@@ -45,11 +45,11 @@ Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) styl
 
 ` * updated:` <comma separated list of dates>
 
-` * requires:` <CAIP number(s)>
+` * requires:` <CAIP number(s); if multiple, use `[1,2]` format to create a YAML array>
 
-` * replaces:` <CAIP number(s)>
+` * replaces:` <CAIP number(s); if multiple, use `[1,2]` format to create a YAML array>
 
-` * superseded-by:` <CAIP number(s)>
+` * superseded-by:` <CAIP number(s) | URL of non-CAIP standard >
 
 Headers that permit lists must separate elements with commas.
 
@@ -75,13 +75,13 @@ if the email address is not given.
 
 #### `discussions-to` header
 
-While an CAIP is a draft, a `discussions-to` header will indicate the mailing list or URL where the CAIP is being discussed.
+While a CAIP is a draft, a `discussions-to` header will indicate the mailing list or URL where the CAIP is being discussed.
 
 As a single exception, `discussions-to` cannot point to GitHub pull requests.
 
 #### `type` header
 
-The `type` header specifies the type of CAIP: Standards Track, Meta, or Informational.
+The `type` header specifies the type of CAIP: Standard, Meta, or Informational.
 
 #### `created` header
 
@@ -93,11 +93,11 @@ The `updated` header records the date(s) when the CAIP was updated with "substan
 
 #### `requires` header
 
-CAIPs may have a `requires` header, indicating the CAIP numbers that this CAIP depends on.
+CAIPs may have a `requires` header, indicating the CAIP(s) on which this CAIP depends. Note that if the CAIP requires multiple others, the value should be an array of integers (no `"` needed) and/or URLs (wrapped in `"`s) within square brackets (`[]`).
 
 #### `superseded-by` and `replaces` headers
 
-CAIPs may also have a `superseded-by` header indicating that an CAIP has been rendered obsolete by a later document; the value is the number of the CAIP that replaces the current document. The newer CAIP must have a `replaces` header containing the number of the CAIP that it rendered obsolete.
+CAIPs may also have a `superseded-by` header indicating that a CAIP has been rendered obsolete by a later document; the value is the number of the CAIP that replaces the current document. The newer CAIP must have a `replaces` header containing the number of the CAIP that it rendered obsolete.
 
 ## Auxiliary Files
 
@@ -105,29 +105,27 @@ CAIPs may include auxiliary files such as diagrams. Such files must be named CAI
 
 ## Transferring CAIP Ownership
 
-It occasionally becomes necessary to transfer ownership of CAIPs to a new champion. In general, we'd like to retain the original author as a co-author of the transferred CAIP, but that's really up to the original author. A good reason to transfer ownership is because the original author no longer has the time or interest in updating it or following through with the CAIP process, or has fallen off the face of the 'net (i.e. is unreachable or isn't responding to email). A bad reason to transfer ownership is because you don't agree with the direction of the CAIP. We try to build consensus around an CAIP, but if that's not possible, you can always submit a competing CAIP.
+It occasionally becomes necessary to transfer ownership of CAIPs to a new champion. In general, we'd like to retain the original author as a co-author of the transferred CAIP, but that's really up to the original author. A good reason to transfer ownership is because the original author no longer has the time or interest in updating it or following through with the CAIP process, or has fallen off the face of the 'net (i.e. is unreachable or isn't responding to email). A bad reason to transfer ownership is because you don't agree with the direction of the CAIP. We try to build consensus around a CAIP, but if that's not possible, you can always submit a competing CAIP.
 
-If you are interested in assuming ownership of an CAIP, send a message asking to take over, addressed to both the original author and the CAIP editor. If the original author doesn't respond to email in a timely manner, the CAIP editor will make a unilateral decision (it's not like such decisions can't be reversed :)).
+If you are interested in assuming ownership of a CAIP, send a message asking to take over, addressed to both the original author and the CAIP editor. If the original author doesn't respond to email in a timely manner, the CAIP editor will make a unilateral decision (it's not like such decisions can't be reversed :)).
 
 ## CAIP Editors
 
-The current CAIP editors are
+Editorial duties to update and maintain the CAIPs is the primary duty of the chair of the editorial working group at CASA. For current working group chair, see [CASA's administrative homepage](https://github.com/chainagnostic/casa#working-groups).
 
-` * ligi <ligi@ligi.de>`
-
-## CAIP Editor Responsibilities
+## CAIP Editorial Process
 
 For each new CAIP that comes in, an editor does the following:
 
 - Read the CAIP to check if it is ready: sound and complete. The ideas must make technical sense, even if they don't seem likely to get to final status.
 - The title should accurately describe the content.
-- Check the CAIP for language (spelling, grammar, sentence structure, etc.), markup (Github flavored Markdown), code style
+- Check the CAIP for language (spelling, grammar, sentence structure, etc.), markup (Github flavored Markdown), code style.
 
 If the CAIP isn't ready, the editor will send it back to the author for revision, with specific instructions.
 
 Once the CAIP is ready for the repository, the CAIP editor will:
 
-- Assign an CAIP number (generally the PR number or, if preferred by the author, the Issue # if there was discussion in the Issues section of this repository about this CAIP)
+- Assign a CAIP number (generally the PR number or, if preferred by the author, the Issue # if there was discussion in the Issues section of this repository about this CAIP)
 
 - Merge the corresponding pull request
 
@@ -137,7 +135,7 @@ The editors don't pass judgment on CAIPs. We merely do the administrative & edit
 
 ## History
 
-This document was derived heavily from [Bitcoin's BIP-0001] written by Amir Taaki which in turn was derived from [Python's PEP-0001]. In many places text was simply copied and modified. Although the PEP-0001 text was written by Barry Warsaw, Jeremy Hylton, and David Goodger, they are not responsible for its use in the Ethereum Improvement Process, and should not be bothered with technical questions specific to CAIPs. Please direct all comments to the CAIP editors.
+This document was derived heavily from [Bitcoin's BIP-0001] written by Amir Taaki, which in turn was derived from [Python's PEP-0001]. In many places text was simply copied and modified. Although the PEP-0001 text was written by Barry Warsaw, Jeremy Hylton, and David Goodger, they are not responsible for its use in Chain Agnostic Improvement Proposals, and should not be bothered with technical questions specific to CAIPs. Please direct all comments to the CAIP editors.
 
 ### Bibliography
 
@@ -147,4 +145,4 @@ This document was derived heavily from [Bitcoin's BIP-0001] written by Amir Taak
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

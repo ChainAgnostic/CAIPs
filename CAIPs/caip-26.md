@@ -2,12 +2,13 @@
 caip: 26
 title: Blockchain Reference for the Tezos Namespace
 author: Stanly Johnson (@stanly-johnson)
-discussions-to: [https://github.com/ChainAgnostic/CAIPs/pull/36, https://gitlab.com/tezos/tezos/-/issues/1029]
-status: Draft
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/36, https://gitlab.com/tezos/tezos/-/issues/1029
+status: Superseded
 type: Standard
 created: 2020-12-12
 updated: 2020-12-12
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/tezos
 ---
 
 ## Simple Summary
@@ -32,6 +33,7 @@ The namespace "tezos" refers to the Tezos open-source blockchain platform.
 #### Reference Definition
 
 The definition for this namespace will use the `genesis-block-hash` as an indentifier for different Tezos chains. The method for calculating the chain ID is as follows
+
 ```
 tezosB58CheckEncode('Net',
   firstFourBytes(
@@ -62,6 +64,7 @@ tezos:NetXm8tYqnMWky1
 ## Links
 
 - [Implementation](https://gitlab.com/tezos/tezos/blob/e7612c5ffa46570cdcc612f7bcead771edc24283/src/lib_crypto/chain_id.ml)
+
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).

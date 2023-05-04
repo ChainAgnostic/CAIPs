@@ -3,11 +3,12 @@ caip: 5
 title: Blockchain Reference for the Cosmos Namespace
 author: Simon Warta (@webmaster128)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/5, https://github.com/ChainAgnostic/CAIPs/issues/6, https://github.com/ChainAgnostic/CAIPs/pull/1
-status: Draft
+status: Superseded
 type: Standard
 created: 2019-12-05
 updated: 2020-01-17
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/cosmos
 ---
 
 ## Simple Summary
@@ -88,6 +89,7 @@ curl -X GET "https://stargate.cosmos.network/node_info" -H "accept: application/
   }
 }
 ```
+
 The response will return a JSON object which will include node information and the blockchain reference can be retrieved from `node_info.network` to be CAIP-5 compatible.
 
 ## Rationale
@@ -145,4 +147,4 @@ cosmos:hashed-843d2fc87f40eeb9
 
 ## Copyright
 
-Copyright and related rights waived via [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+Copyright and related rights waived via [CC0](../LICENSE).
