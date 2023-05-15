@@ -16,8 +16,8 @@ If your CAIP requires images, the image files should be included in a subdirecto
 ## CAIP Status Terms
 
 - **Draft** - an CAIP that is undergoing rapid iteration and changes.
-- **Last Call** - an CAIP that is done with its initial iteration and ready for review by a wide audience.
-- **Accepted** - a core CAIP that has been in Last Call for at least 2 weeks and any technical changes that were requested have been addressed by the author.
+- **Review** - an CAIP that is done with its initial iteration and ready for review by a wide audience.
+- **Accepted** - a core CAIP that has been in Review for at least 2 weeks and any technical changes that were requested have been addressed by the author.
 
 ## CAIP Index
 
