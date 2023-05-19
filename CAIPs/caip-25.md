@@ -19,68 +19,65 @@ protocol.
 ## Abstract
 
 This proposal has the goal to define a standard procedure for decentralized
-applications to interface with cryptocurrency wallets which govern accounts on
-multiple chains and defining a set of rules to be followed during a session
-managed by a provider construct.
+applications to interface with chain agnostic cryptocurrency wallets and other
+user agents which govern identities (including accounts) in multiple
+cryptographic systems. It defines a lightweight protocol for negotiating and
+persisting authorizations during a session managed by a provider construct.
 
 ## Motivation
 
 The motivation comes from the lack of standardization across blockchains to
 expose accounts and define the expected JSON-RPC methods to be used by an
-application through a provider connecting to a wallet.
+application through a provider connecting to a signer or other user agent.
 
 ## Specification
 
-The session is defined by a wallet's response to a provider's request, and
-updated, extended, closed, etc by successive calls and notifications. The exact
-parameters and assumptions of that session abstraction are defined in
-[CAIP-171][], but note that a string identifier referring to it is absent from
-the initial call (if authorization is granted) and present in both the initial
-response and all future responses.
+The session is proposed by a caller and the response by the respondent is used
+as the baseline for an ongoing session that both parties will persist. The
+properties and authorization scopes that make up the session are expected to be
+persisted and tracked over time by both parties in a discrete data store,
+identified by an entropic [identifier][CAIP-171] assigned in the initial
+response. This object gets updated, extended, closed, etc. by successive calls
+and notifications, each tagged by this identifier. 
 
-Given the session model of [CAIP-171][], this interface outlines the
-authorization of a provider to handle a set of interfaces grouped into
-namespaces, as well as to interact with a session abstraction used by both
-caller and respondent to manage the authorization over time. The
-`sessionIdentifier` defined in [CAIP-171][] enables this mutual management and
-alignment across calls that are idempotent if identical. If a respondent (e.g. a
-wallet) needs to initiate a new session, whether due to user input, security
-policy, or session expiry reasons, it can simply generate a new session
-identifier to signal this notification to the calling provider; if a caller
-needs to initiate a new session, it can do so by sending a new request without
-`sessionIdentifier`. In such cases, a respondent (e.g. wallet) may choose to
-explicitly close all sessions upon generation of a new one from the same origin,
-or leave it to time-out; maintaining concurrent sessions is discouraged (see
-Security Considerations).
+If a respondent (e.g. a wallet) needs to initiate a new session, whether due to
+user input, security policy, or session expiry reasons, it can simply generate a
+new session identifier to signal this notification to the calling provider; if a
+caller needs to initiate a new session, it can do so by sending a new request
+without a `sessionIdentifier`. In such cases, a respondent (e.g. wallet) may
+choose to explicitly close all sessions upon generation of a new one from the
+same origin or identity, or leave it to time-out; maintaining concurrent
+sessions is discouraged (see Security Considerations).
 
-In the initial call, the application interfaces with a provider to populate a
-session with a base state describing authorized chains, methods, notification,
-and accounts.  This negotation takes place by sending the application's REQUIRED
-and REQUESTED authorizations of the session, grouped into objects scoping those
-authorizations which in turn are grouped into two top-level objects (named
-`requiredScopes` and `optionalScopes` respectively).  These two objects are not
-mutually exclusive (i.e., additional properties of a required scope may be
-requested under the same keyed scope object key in the requested object). Note
-that scopes can be keyed to an entire [CAIP-104][] "namespace", meaning
-applicable to *any* current or future [CAIP-2][] chainID within that namespace,
-or keyed to a specific [CAIP-2][] within that namespace.
+Initial and ongoing authorization requests are grouped into two top-level arrays
+of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
+respectively. These two objects are not mutually exclusive (i.e., additional
+properties of a required scope may be requested in a separate `scopeObject` in
+the optional array, keyed to the same scope string). Note that `scopeObject`s
+can be keyed to a specific [CAIP-2][], or to a [CAIP-104][] namespace; if the
+latter defines a [CAIP-2][] profile, a `scopes` array MAY be set within it
+containing multiple [CAIP-2][] strings; this is functionally equivalent to
+defining multiple identical `scopeObjects`, each keyed to one of the [CAIP-2][]s
+listed in the `scopes` array. See [CAIP-217][] for more details on the structure
+of the typed objects included in these arrays.
 
-If any properties in the required scope(s) are not authorized by the
-respondent (e.g. wallet), a failure response expressive of one or more specific
-failure states will be sent (see [#### failure states](#failure-states) below),
-with the exception of user denying consent. For privacy reasons, an `undefined`
-response (or no response, depending on implementation) should be sent to prevent
-incentivizing unwanted requests and to minimize the surface for fingerprinting
-of public web traffic (See Privacy Considerations below).
+If any properties in the required scope(s) are not authorized by the respondent,
+a failure response expressive of one or more specific failure states will be
+sent (see [#### failure states](#failure-states) below), with the exception of
+user denying consent. For privacy reasons, an `undefined` response (or no
+response, depending on implementation) should be sent to prevent incentivizing
+unwanted requests and to minimize the surface for fingerprinting of public web
+traffic (See Privacy Considerations below).
 
 Conversely, a succesful response will contain all the required properties *and
-the provider's choice of the optional properties* expressed as a unified set of
-parameters. In the case of identically-keyed scopes appearing in both arrays in
-the request where properties from both are returned as authorized, the two
-scopes MUST be merged in the response (see examples below). However, respondents
-MUST NOT restructure scopes (e.g., by folding properties from a [CAIP2][]-keyed,
-chain-specific scope object into a [CAIP-104][]-keyed, namespace-wide scope
-object) as this may introduce ambiguities (See Security Considerations below).
+the provider's choice of the optional properties* expressed in a single unified
+`scopeObject`. In the case of identically-keyed `scopeObject`s appearing in both
+arrays in the request where properties from both are returned as authorized, the
+two scopes MUST be merged in the response (see examples below). However,
+respondents MUST NOT restructure scopes (e.g., by folding properties from a
+[CAIP2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed,
+namespace-wide scope object) as this may introduce ambiguities (See Security
+Considerations below).
 
 ### Request
 
@@ -97,13 +94,17 @@ Example:
   "params": {
     "requiredScopes": {
       "eip155": {
-        "chains": ["eip155:1", "eip155:137"],
+        "scopes": ["eip155:1", "eip155:137"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"]
       },
       "eip155:10": {
         "methods": ["get_balance"],
         "notifications": ["accountsChanged", "chainChanged"]
+      },
+      "wallet": {
+        "methods": ["wallet_getPermissions", "wallet_switchEthereumChain", "wallet_creds_store", "wallet_creds_verify", "wallet_creds_issue", "wallet_creds_present"],
+        "notifications": []
       },
       "cosmos": {
         ...
@@ -122,34 +123,29 @@ Example:
 }
 ```
 
-The JSON-RPC method is labelled as `provider_authorize` and its `params` object
-contains "requiredScopes" and/or "optionalScopes" objects populated with "scope
-objects" each named after the scope of authorization requested:
-1. EITHER an entire [CAIP-104][] [namespace][]
-2. OR a specific [CAIP-2][]-identified chain in a specific namespace.
+The JSON-RPC method is labeled as `provider_authorize` and its `params` object
+contains "requiredScopes" and/or "optionalScopes" objects populated with
+[CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
+- The `requiredScopes` array MUST contain 1 or more `scopeObjects`, if present.
+- The `optionalScopes` array MUST contain 1 or more `scopeObjects`, if present.
 
-Each scope object contains the following parameters:
-- chains - array of [CAIP-2][]-compliant `chainId`'s. This parameter MAY be
-  omitted if a single-chain scope is already declared in the index of the object.
-- methods - array of JSON-RPC methods expected to be used during the session
-- notifications - array of JSON-RPC message/notifications expected to be emitted
-  during the session
-
-The `requiredScopes` array MUST contain 1 or more of these objects, if present;
-the `optionalScopes` array MUST contain 1 or more of them, if present.
-
-A third object is the `sessionProperties` object, all of whose properties MUST 
-be in the interpreted as optional, since requesting applications cannot mandate
-session variables to providers. Because they are optional, providers MAY respond
-with all of the requested properties, or a subset of the session properties, or no
+A third object is the `sessionProperties` object, all of whose properties MUST
+be interpreted as optional, since requesting applications cannot mandate session
+variables to providers. Because they are optional, providers MAY respond with
+all of the requested properties, or a subset of the session properties, or no
 `sessionProperties` object at all; they MAY even replace the values of the
-optional session properties with their own values.  The `sessionProperties` 
-object MUST contain 1 or more properties if present.
+optional session properties with their own values. Wallets may also interpret
+values of sessionProperties in how it assigns values (for example, which
+`accounts` to expose) based on flags or properties defined here. The
+`sessionProperties` object MUST contain 1 or more properties if present.
 
-Requesting applications are expected to track all of these returned properties in
-the session object identified by the `sessionId`. All properties and their values
-MUST conform to definitions in [CAIP-170][], and MUST be ignored (rather than 
-tracked) if they do not.
+Requesting applications are expected to persisted all of these returned
+properties in the session object identified by the `sessionId`. All properties
+in `sessionProperties` and their values MUST conform to definitions in
+[CAIP-170][], and MUST be ignored (rather than persisted) if they do not;
+similarly, nothing except valid [CAIP-217][] objects may be present in
+`requiredScopes`, `optionalScopes`, and `sessionScopes` arrays; all other
+array members should be dropped.
 
 ### Response
 
@@ -160,22 +156,19 @@ The wallet can respond to this method with either a success result or an error m
 The successful result contains one mandatory string (keyed as `sessionId` with a value 
 conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
 
-The first is called `sessionScopes` and contains 1 or more scope objects.
-* All required scope objects and all, none, or some of the optional scope object
-(at the discretion of the provider) MUST be included if successful.  
-* As in the request, each scope object object MUST contain `methods` and
-`notifications` objects, and a `chains` object if a specific chain is not
-specified in the object's index.
+The first is called `sessionScopes` and contains 1 or more `scopeObjects`.
+* All required `scopeObjects` and all, none, or some of the optional
+`scopeObject`s (at the discretion of the provider) MUST be included if
+successful.  
 * Unlike the request, each scope object MUST also contain an `accounts` array,
-containing 0 or more [CAIP-10][] conformant accounts authorized for the session
-and valid in the namespace and chain(s) authorized by the scope object they are
-in. Additional constraints on the accounts authorized for a given session MAY be
-specified in the corresponding [CAIP-104][] namespaces specification.
+containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
+and valid in that scope. Additional constraints on the accounts authorized for a
+given session MUST be applied conformant to the namespace's [CAIP-10][] profile,
+if one has been specified.
 
 A `sessionProperties` object MAY also be present, and its contents MAY
 correspond to the properties requested in the response or not (at the discretion
-of the provider) but MUST conform to the property names and value constraints
-described in [CAIP-170][]; any other MUST be dropped by the requester.
+of the provider).
 
 An example of a successful response follows:
 
@@ -201,6 +194,11 @@ An example of a successful response follows:
         "methods": ["personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
         "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
+      },
+      "wallet": {
+        "methods": ["wallet_getPermissions", "wallet_switchEthereumChain", "wallet_creds_store", "wallet_creds_verify", "wallet_creds_issue", "wallet_creds_present"],
+        "notifications": []
+      },
       "cosmos": {
         ...
       }
@@ -294,9 +292,10 @@ friction and user experience problems in the case of malformed requests.
     * code = 5301
     * message = "Session Properties can only be optional and global"
 
-Note: respondents are RECOMMENDED to implement support for core RPC Documents
-per each supported namespace to avoid sending error messages 5201 and 5202 in
-cases where 0, 5101 or 5102 would be more appropriate.
+Note: respondents SHOULD to implement support for core RPC Documents per each
+supported namespace to avoid sending error messages 5201 and 5202 in cases where
+0, 5101 or 5102 would be more appropriate. Failure to do so may leak versioning
+or feature-completeness information to a malicious or fingerprinting caller.
 
 ## Security Considerations
 
@@ -319,9 +318,9 @@ deanonymize browsers and/or wallets deductively based on response times, error
 codes, etc. To minimize this risk, and to minimize the data (including
 behavioral data) leaked by responses to potentially malicious CAIP-25 calls,
 respondents are recommended to ignore calls
-1. which the respondent does not authorize, 
-2. which are rejected by policy, or 
-3. requests which are rejected for unknown reasons. 
+1. which the respondent explicitly does not authorize, 
+2. which are rejected automatically or by policy, or 
+3. which are rejected for unknown reasons. 
  
 "Ignoring" these calls means responding to all three in a way that is
 *indistinguishable* to a malicious caller or observer which might deduce
@@ -354,6 +353,7 @@ was in violation of policy).
 
 ## Changelog
 
+- 2023-03-29: refactored out scopeObject syntax as separate CAIP-217, simplified
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement) 
 - 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
   consolidated variants across issues and forks post-Amsterdam Gathering
@@ -363,18 +363,18 @@ was in violation of policy).
 - [CAIP-2][] - Chain ID Specification
 - [CAIP-10][] - Account ID Specification
 - [CAIP-25][] - JSON-RPC Provider Request
-- [CAIP-75][] - Blockchain Reference for the Hedera namespace
-- [CAIP-171][] - Session Identifier Specification
+- [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
+- [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
-[CAIP-75]: https://chainagnostic.org/CAIPs/caip-75
 [CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
+[CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+[CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
-[CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
 
 ## Copyright
 
