@@ -3,10 +3,10 @@ caip: 196
 title: CACAO - Chain Agnostic CApability Object
 author: Sergey Ukustov (@ukstv), Haardik (@haardikk21), Irakli Gozalishvili (@Gozala), Joel Thorstensson (@oed)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/196
-status: Review
+status: Draft
 type: Standard
 created: 2021-11-01
-updated: 2023-01-31
+updated: 2023-05-19
 replaces: 74
 ---
 
