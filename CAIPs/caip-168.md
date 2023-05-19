@@ -7,7 +7,7 @@ status: Review
 type: Standard
 created: 2022-10-27
 updated: 2022-11-7
-requires: CAIP-74
+requires: 74
 ---
 
 ## Simple Summary 

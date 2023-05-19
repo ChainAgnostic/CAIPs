@@ -111,11 +111,9 @@ If you are interested in assuming ownership of a CAIP, send a message asking to 
 
 ## CAIP Editors
 
-The current CAIP editors are
+Editorial duties to update and maintain the CAIPs is the primary duty of the chair of the editorial working group at CASA. For current working group chair, see [CASA's administrative homepage](https://github.com/chainagnostic/casa#working-groups).
 
-` * ligi <ligi@ligi.de>`
-
-## CAIP Editor Responsibilities
+## CAIP Editorial Process
 
 For each new CAIP that comes in, an editor does the following:
 

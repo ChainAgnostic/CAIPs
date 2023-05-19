@@ -3,7 +3,7 @@ caip: 10
 title: Account ID Specification
 author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/10
-status: Review
+status: Final
 type: Standard
 created: 2020-03-13
 updated: 2022-10-23
@@ -45,7 +45,7 @@ The `account_id` is a case-sensitive string in the form
 ```
 account_id:        chain_id + ":" + account_address
 chain_id:          [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See [CAIP-2][])
-account_address:   [-.%a-zA-Z0-9]{1,64}
+account_address:   [-.%a-zA-Z0-9]{1,128}
 ```
 
 Note that `-`, `%` and `.` characters are allowed, but no other
