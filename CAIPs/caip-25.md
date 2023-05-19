@@ -168,8 +168,7 @@ if one has been specified.
 
 A `sessionProperties` object MAY also be present, and its contents MAY
 correspond to the properties requested in the response or not (at the discretion
-of the provider) but MUST conform to the property names and value constraints
-described in [CAIP-170][]; any other MUST be dropped by the requester.
+of the provider).
 
 An example of a successful response follows:
 
