@@ -3,7 +3,7 @@ caip: 10
 title: Account ID Specification
 author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/10
-status: Review
+status: Final
 type: Standard
 created: 2020-03-13
 updated: 2022-10-23
