@@ -99,7 +99,12 @@ three **required parameters**:
 
 Upon succesful validation, the respondent will submit or route the request to
 the targeted network. If the targeted network returns a response to the
-respondent, the respondent MAY forward this response to the caller.
+respondent, the respondent MAY forward this response to the caller. Constraints
+on, metadata about, or envelopes for response-forwarding MAY be set by namespace
+profiles of this CAIP.
+
+Similarly, error messages depend on the design of a given namespace, and MAY be
+defined by a namespace profile of this CAIP.
 
 ## Links
 
