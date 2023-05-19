@@ -131,12 +131,13 @@ session.
 
 ### CAIP-25 Example
 
-Since [CAIP-25][] obligates both parties to an authorization negotiation to
+Since [CAIP-25][] obligates both parties in an authorization negotiation to
 persist and honor whatever `scopeObject`s they agree to, including the ordering
 of arrays, it is important to resolve all implicit and explicit members at the
-same negotiation step as the merging of `requiredScopes` and `optionalScopes`
-into `sessionScopes`. To further extend the examples above, consider the
-following CAIP-25 example request:
+same negotiation step where `requiredScopes` and `optionalScopes` get merged
+into the `sessionScopes` both parties will persist. We can illustrate this
+resolution and all the possibilities open to a respondent by extending the
+examples above, in which a request omits implicit values Y1, Y2, Y3, and Z:
 
 ```jsonc
 {
@@ -157,11 +158,12 @@ following CAIP-25 example request:
 }
 ```
 
-Depending on the security posture of the respondent, they could answer with any
-of the three following responses, which would communicate unambiguously to the
-caller what sessions are available to them:
+Since the ordering of arrays expresses authority or priority in case of
+conflicts, we can illustrate three different security postures, explained below:
 
 ```jsonc
+
+// Security Posture 1: Implicit value prioritized, requested values treated as extensions
 {
   ...
   "sessionScopes": {
@@ -175,6 +177,7 @@ caller what sessions are available to them:
   ...
 }
 
+// Security Posture 2: Explicit prioritized, but implicit values preserved
 {
   ...
   "sessionScopes": {
@@ -188,6 +191,7 @@ caller what sessions are available to them:
   ...
 }
 
+//Security Posture 3: Requested values only, explicit deauthorization of implicit values.
 {
   ...
   "sessionScopes": {
@@ -203,6 +207,26 @@ caller what sessions are available to them:
 
 ```
 
+Option 1 would be the overwhelmingly most common, since implicit values are
+essentially the baseline consensus of an entire namespace (i.e. its network-wide
+basic RPC vocabulary), and any possible conflict between this and an extension
+should be sandboxed by not allowing an extension to override baseline.
+
+Option 2 would likely be quite rare, as a respondent and/or its controlling
+end-user would have to have a lot of out-of-band trust in an extension or local
+authority to allow it to override systemwide defaults. This could be thought of
+as "advanced mode" or "high-trust mode", and likely only enabled for a subset of
+end-users, perhaps negotiated by progressive re-authorization over time.
+
+Similarly, Option 3 would only make sense in special cases with meaningful
+consent of an end-user that knows they are entering a special-case and familiar
+UX and security assumptions. It could be thought of as "developer mode" or
+"alternate network configuration", and would getting meaningful consent from
+the end-user.
+
+Note that these three options are not exhaustive, just illustrative, and many
+combinations are also possible, i.e. combining the `rpcDocuments` in Option 1
+with the  `rpcEndpoints` value in Option 2.
 
 ## Privacy Considerations
 
