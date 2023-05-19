@@ -58,9 +58,9 @@ is the CAIP number, “Y” is a serial number (starting at 1), and “ext” is
 replaced by the actual file extension (e.g. “png”).
 
 Templates for both the [namespace
-reference](https://github.com/chainagnostic/namespaces/blob/main/namespace-reference-template.md)
+reference](https://github.com/ChainAgnostic/namespaces/blob/main/_template/README.md)
 and for each [namespace-caip
-reference](https://github.com/chainagnostic/namespaces/blob/main/namespace-caip-template.md)
+reference](https://github.com/ChainAgnostic/namespaces/blob/main/_template/caipX.md)
 are included in the namespaces repo folder for easy cloning.
 
 # Specification
