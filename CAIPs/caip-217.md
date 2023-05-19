@@ -31,11 +31,11 @@ authorization patterns, feature discovery, authority negotiation (See
 
 ## Specification
 
-An authorization scope is represented in JSON as an object which is keyed to a string that expresses its
-scope and a JSON object defining the bundle of properties authorized there. When
-embedded in any other JSON context (including the `params` of a JSON-RPC
-message), the object MUST be expressed as the value of a property named by the
-scope string. 
+An authorization scope is represented in JSON as an object which is keyed to a
+string that expresses its target network and contains arrays of strings
+expressing the various capabilities authorized there. When embedded in any other
+JSON context (including the `params` of a JSON-RPC message), the object MUST be
+expressed as the value of a property named by the scope string. 
 
 ### Language
 
