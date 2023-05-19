@@ -31,7 +31,7 @@ authorization patterns, feature discovery, authority negotiation (See
 
 ## Specification
 
-An authorization scope is represented in JSON as a string that expresses its
+An authorization scope is represented in JSON as an object which is keyed to a string that expresses its
 scope and a JSON object defining the bundle of properties authorized there. When
 embedded in any other JSON context (including the `params` of a JSON-RPC
 message), the object MUST be expressed as the value of a property named by the
@@ -46,13 +46,12 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Definition
 
-The syntax is as follows:
+The syntax of a `scopeObject` is as follows:
 
 ```jsonc
 
-scope: string 
 
-scopeObject: {
+[scopeString]: {
    *scopes: [(chainId)+],
    methods: [(method_name)+],
    notifications: [(notification_name)+],
@@ -64,7 +63,7 @@ scopeObject: {
 
 Where:
 
-- `string` (conditional) = A namespace identifier string registered in the CASA [namespaces][] registry to authorize multiple chains with identical properties OR a single, valid [CAIP-2][] identifier, i.e., a specific `chain_id` within a namespace.
+- {`scopeString`} (conditional) = EITHER a namespace identifier string registered in the CASA [namespaces][] registry to authorize multiple chains with identical properties OR a single, valid [CAIP-2][] identifier, i.e., a specific `chain_id` within a namespace.
 - `scopes` (conditional) = An array of 0 or more [CAIP-2][] `chainId`s. For each
   entry in `scopes`, all the other properties of the `scopeObject` apply, but in
   some cases, such as when members of `accounts` are specific to 1 or more
