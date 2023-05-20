@@ -7,7 +7,7 @@ status: Review
 type: Standard
 created: 2020-10-14
 updated: 2022-10-26
-requires: [2, 10, 171]
+requires: 2, 10, 171
 ---
 
 ## Simple Summary
