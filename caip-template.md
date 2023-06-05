@@ -4,7 +4,7 @@
 caip: CAIP-X <X will be changed to the PR number if accepted>
 title: <CAIP title>
 author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
-discussions-to: <URL>
+discussions-to: <URL(s); if multiple, list separated by , without " or []> 
 status: Draft
 type: <Standard | Meta | Informational>
 created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
