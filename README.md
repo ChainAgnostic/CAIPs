@@ -13,6 +13,8 @@ Your first PR should be a first draft of the final CAIP. An editor will manually
 
 If your CAIP requires images, the image files should be included in a subdirectory of the `assets` folder for that CAIP as follows: `assets/caip-N` (where **N** is to be replaced with the CAIP number). When linking to an image in the CAIP, use relative links such as `../assets/caip-1/image.png`.
 
+It is recommended that you render your PR locally to check the Jekyll syntax; to do so, run `bundle exec jekyll serve`.
+
 ## CAIP Status Terms
 
 - **Draft** - an CAIP that is undergoing rapid iteration and changes.
