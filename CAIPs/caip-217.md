@@ -2,7 +2,7 @@
 caip: 217
 title: Authorization Scopes
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88), Juan Caballero (@bumblefudge)
-discussions-to: ["https://github.com/ChainAgnostic/CAIPs/discussions/217","https://github.com/ChainAgnostic/CAIPs/discussions/211"]
+discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/217, https://github.com/ChainAgnostic/CAIPs/discussions/211
 status: Draft
 type: Standard
 created: 2022-11-09
