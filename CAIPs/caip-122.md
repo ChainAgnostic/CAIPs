@@ -68,7 +68,7 @@ The proposed string representation format, inspired from [EIP-4361][eip-4361], s
 
 ```
 ${domain} wants you to sign in with your **blockchain** account:
-${address}
+${account_address(address)}
 
 ${statement}
 
@@ -79,13 +79,18 @@ Issued At: ${issued-at}
 Expiration Time: ${expiration-time}
 Not Before: ${not-before}
 Request ID: ${request-id}
-Chain ID: ${chain-id}
+Chain ID: ${chain_id(address)}
 Resources:
 - ${resources[0]}
 - ${resources[1]}
 ...
 - ${resources[n]}
 ```
+
+Here:
+- `**blockchain**` represents a human-readable name of the ecosystem user account belongs to,
+- `account_address(address)` is an `account_address` part of [CAIP-10][caip-10] `address` of the data model,
+- `chain_id(address)` is a `chain_id` part of [CAIP-10][caip-10] `address` of the data model.
 
 As an example, [EIP-4361][eip-4361] directly conforms to this data model. Since EIP-155 chains can request personal signatures ([EIP-191][eip-191]) or contract signatures ([EIP-1271][eip-1271]) in plaintext, an example message to be signed could be
 
