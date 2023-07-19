@@ -350,7 +350,7 @@ Another option is centralizing trust in namespace-wide authorities queried in
 realtime, periodically publishing verifiable trust-list and allow-list documents
 in registries, etc.
 
-### Self-attested Capabilities and Dunning-Kroger Risks
+### Self-attested Capabilities and Dunning-Kruger Risks
 
 It is important to explicitly recognize that wallets and their callers may
 overstate their capabilities or their conformance to specific versions of those
