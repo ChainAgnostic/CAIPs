@@ -225,7 +225,7 @@ conflicts, we can illustrate three different security postures, explained below:
 
 ```jsonc
 
-// Security Posture 1: Implicit value prioritized, requested values treated as extensions
+// Security Posture 1: Implicit value prioritized, requested values treated as extensions of namespace-wide defaults 
 {
   ...
   "sessionScopes": {
@@ -239,7 +239,8 @@ conflicts, we can illustrate three different security postures, explained below:
   ...
 }
 
-// Security Posture 2: Explicit prioritized, but implicit values preserved
+// Security Posture 2: Requested values prioritized, but implicit values preserved as fallback
+// (requested override namespace-wide defaults)
 {
   ...
   "sessionScopes": {
@@ -253,7 +254,7 @@ conflicts, we can illustrate three different security postures, explained below:
   ...
 }
 
-//Security Posture 3: Requested values only, explicit deauthorization of implicit values.
+// Security Posture 3: Requested values only, explicit deauthorization of implicit values.
 {
   ...
   "sessionScopes": {
@@ -267,7 +268,8 @@ conflicts, we can illustrate three different security postures, explained below:
   ...
 }
 
-//Security Posture 4: Implicit values only, explicit deauthorization of requested values.
+// Security Posture 4: Implicit values (i.e. defaults) made explicit, and explicit rejection of requested values. 
+// Note that response looks quite unfamiliar to requester unless explicit values are already known
 {
   ...
   "sessionScopes": {
@@ -284,26 +286,37 @@ conflicts, we can illustrate three different security postures, explained below:
 
 ```
 
-Option 1 would be the overwhelmingly most common, since implicit values are
-essentially the baseline consensus of an entire namespace once they have been
-set namespace-wide (i.e. a canonical document defining all network-wide basic
-RPC functionality). Any possible conflict between this and an extension should
-be sandboxed by not allowing an extension to override baseline except in
-high-trust contexts.
+Security Posture 1 would be the overwhelmingly most common, since implicit
+values are essentially the baseline consensus of an entire namespace once they
+have been set namespace-wide (i.e. a canonical document defining all
+network-wide basic RPC functionality). Any possible conflict between this and an
+extension should be sandboxed by not allowing an extension to override baseline
+except in high-trust contexts.
 
-Option 2 would likely be quite rare, as a respondent and/or its controlling
+Security Posture 2 would likely be quite rare, as a respondent and/or its controlling
 end-user would have to have a lot of out-of-band trust in an extension or local
 authority to allow it to override systemwide defaults. This could be thought of
 as "advanced mode" or "high-trust mode", and likely only enabled for a subset of
 end-users, perhaps negotiated by progressive re-authorization over time.
 
-Similarly, Option 3 would only make sense in special cases with meaningful
+Security Posture 3 would only make sense in special cases with meaningful
 consent of an end-user that knows they are entering a special-case and familiar
 UX and security assumptions. It could be thought of as "developer mode" or
 "alternate network configuration", and would getting meaningful consent from
 the end-user.
 
-Note that these three options are not exhaustive, just illustrative, and many
+Security Posture 4 would make sense in a very different context from that of
+SP3, where the wallet has insufficient out-of-band or contextual trust to
+*evaluate* the values offered (by querying external authorities, fetching
+documents and parsing, etc), OR the wallet recognizes and understands the values
+and lacks the trust to authorize them at this time. (As mentioned below, this
+ambiguity is by design to avoid deanonymizing a wallet more than necessary.)
+Note that if the caller does not recognize the values in the response, they are
+not effectively "implicit" to the namespace yet, so this option may be confusing
+to callers until implicit values are effectively recognized in the developer
+community of the namespace.
+
+Note that these four options are not exhaustive, just illustrative, and many
 combinations are also possible, i.e. mixing and matching the `rpcDocuments`
 values and `rpcEndpoints` values of different security postures.
 
@@ -331,13 +344,16 @@ getting explicit user consent would rarely be justified in a namespace like the
 [CAIP-2][]-style chain identifiers have RPC endpoints definitively associated
 with them by an authoritative registry.
 
-The same three options apply when presented with an unknown RPC document, but in
-this case validating the document by fetching and parsing it is less of a
-security risk. Furthermore, fetching an unknown document "live" (at time of
-connection request) is more likely to justify the compute and delay, since
-comparing it to the union of all RPC documents known to the wallet (and/or to
-its own capabilities) could show the request to be a subset of these and
-permissible, in some cases even without user input.
+When a user-agent like a wallet received a request to connect that includes an
+unknown RPC document, the same three options are available (validate by querying
+authorities or trust registries; drop the request; respond with different
+values). In this case, however, validating the document by fetching and parsing
+it is less of a security risk. Furthermore, fetching an unknown document "live"
+(at time of connection request) is more likely to justify the compute and delay,
+since comparing it to the union of all RPC documents known to the wallet (and/or
+to its own capabilities) could show the request to be a subset of these and
+permissible, in some cases even without user input, and thus establish a
+reasonable degree of mutual trust on the fly.
 
 ### Trust Infrastructure & Out-of-Band Trust
 
@@ -355,11 +371,19 @@ in registries, etc.
 It is important to explicitly recognize that wallets and their callers may
 overstate their capabilities or their conformance to specific versions of those
 codified into stable documents, just as the URI identifiers used to point to
-those document may prove stabler than their referents (and have little way to
-enforce their counterparty's expectations of archival immutability and
-availability). Identifying malicious wallets impersonating other wallets or
-falsifying their capabilities is beyond the scope of this specification and will
-likely require orthogonal mechanisms.
+those document may prove stabler than their referents. If immutability, precise
+versioning, or tamper-proofing are desired (for example, to allow a known URI to
+be accepted without re-parsing), it is recommended that namespaces align on URI
+types which include some kind of checksum (IPFS CIDs, hashlinks URLs, etc) or
+URLs filtered on domain and path (such as commit-specific github links, etc).
+If expressive versioning (i.e. v2.1 or later of this RPC standard), conversely,
+*mutable* pointers to publication systems that work like package managers (i.e.
+IPNS) may be needed instead. In either case, the open-endedness of URIs can be
+constrained namespace-wide by consensus and profiling. 
+
+Identifying malicious wallets impersonating other wallets or falsifying their
+capabilities is beyond the scope of this specification and will likely require
+orthogonal mechanisms.
 
 ## Privacy Considerations
 
