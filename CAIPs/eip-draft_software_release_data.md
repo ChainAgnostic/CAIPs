@@ -51,10 +51,12 @@ The example below is JSON but any serializable format is equally acceptable.
 {
     height: "latest",
     chain_id: "EIP155:1",
-    known_clients: [
+    software: [
         {
             type: "validator",
             version: "v1.0.1",
+            description: "A nice shiny new release",
+            repository_url: "https://github.com/...",
             git_hash: "dfcsf2342fsfdfg..",
             asset_download_urls: [
                 {
@@ -70,7 +72,7 @@ The example below is JSON but any serializable format is equally acceptable.
             ],
             configuration_changes: true // this is important in a bare-metal context owing to configuration being decoupled from code version
             release_type: "nca", // This should be an enum: NCA = Non-Consensus Altering, CA = Consensus Altering
-            upgrade_height: "99999" // should be a string to cater for potential non-numeric chains
+            upgrade_height: "99999" // should be a string to cater for potential non-numeric chains, this is non-mandatory
         },
         ...
     ]
