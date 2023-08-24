@@ -77,10 +77,8 @@ Where:
 - `methods` = An array of 0 or more JSON-RPC methods that an application can call on the agent and/or an agent can call on an application.
 - `notifications` = An array of 0 or more JSON-RPC notifications that an application send to or expect from the agent.
 - `accounts` (optional) = An array of 0 or more [CAIP-10][] identifiers, each valid within the scope of authorization.
-- `rpcDocuments` (optional) = An array of URIs that each dereference to an RPC document specifying methods and notifications applicable in this scope. 
-  - These are ordered from most authoritative to least, i.e. methods defined more than once by the union of entries should be defined by their earliest definition only.
-- `rpcEndpoints` (optional) = An array of URLs that each dereference to an RPC endpoints for routing requests within this scope. 
-  - These are ordered from most authoritative to least, i.e. priority SHOULD be given to endpoints in the order given, as per the CAIP-211 profile for that [namespace][namespaces], if one has been specified.
+- `rpcDocuments` (optional) = An array of URIs that each dereference to an RPC document specifying methods and notifications applicable in this scope. See [CAIP-211][] for semantics and usage.
+- `rpcEndpoints` (optional) = An array of URIs that each dereference to an RPC endpoints for routing requests within this scope. See [CAIP-211][] for semantics and usage.
 
 Additional constraints MAY be imposed by the usage of `scopeObject`s in
 protocols such as [CAIP-25][], and specific [namespaces][] may have

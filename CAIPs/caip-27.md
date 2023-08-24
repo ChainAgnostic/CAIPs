@@ -13,19 +13,19 @@ requires: ["2", "25", "171", "217"]
 ## Simple Summary
 
 CAIP-27 defines a generic JSON-RPC method for routing method calls to a context
-defined by a valid [scopeObject][CAIP-217] and a tagged with a
+defined by a valid [scopeObject][CAIP-217] and tagged with a
 [sessionId][CAIP-171] for maintaining session continuity. 
 
 ## Abstract
 
-This proposal has the goal to define a standard method for decentralization
+This proposal has the goal of defining a standard method for decentralized
 applications to request JSON-RPC methods from user agents (such as
-cryptocurrency wallets) directed to a given previously-authorized target network
-(such as a specific blockchain or consensus community within a protocol). It
-requires a valid [scopeObject][CAIP-217] and a valid [sessionId][CAIP-171] for
-interoperability and composability. These two properties MAY be inherited from a
-persistent session created by [CAIP-25][], but could also be used as part of
-session management mechanisms.
+cryptocurrency wallets) directed to a given, previously-authorized target
+network (such as nodes of a specific blockchain or consensus community within a
+protocol). It requires a valid [scopeObject][CAIP-217] and a valid
+[sessionId][CAIP-171] for interoperability and composability. These two
+properties MAY be inherited from a persistent session created by [CAIP-25][],
+but could also be used as part of other session management mechanisms.
 
 ## Motivation
 
@@ -100,11 +100,11 @@ three **required parameters**:
 Upon succesful validation, the respondent will submit or route the request to
 the targeted network. If the targeted network returns a response to the
 respondent, the respondent MAY forward this response to the caller. Constraints
-on, metadata about, or envelopes for response-forwarding MAY be set by namespace
-profiles of this CAIP.
+on, metadata about, or envelopes for response-forwarding MAY be set by
+[namespace][namespaces] profiles of this CAIP.
 
 Similarly, error messages depend on the design of a given namespace, and MAY be
-defined by a namespace profile of this CAIP.
+defined by a [namespace][namespaces] profile of this CAIP.
 
 ## Links
 
@@ -112,6 +112,7 @@ defined by a namespace profile of this CAIP.
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
+[namespaces]: https://namespaces.chainagnostic.org/
 [RFC 2119]: https://www.ietf.org/rfc/rfc2119.txt
 
 ## Copyright
