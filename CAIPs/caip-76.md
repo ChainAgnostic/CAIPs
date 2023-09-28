@@ -7,7 +7,7 @@ status: Superseded
 type: Standard
 created: 2021-11-01
 updated: 2021-11-01
-requires: [10, 75]
+requires: 10, 75
 superseded-by: https://github.com/ChainAgnostic/namespaces/pull/16
 ---
 

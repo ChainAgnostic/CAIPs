@@ -7,7 +7,7 @@ status: Draft
 type: Informational
 created: 2023-02-02
 updated: 2023-02-02
-requires: [2, 10, 25, 171, 217]
+requires: 2, 10, 25, 171, 217
 ---
 
 ## Simple Summary
