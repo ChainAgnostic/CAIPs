@@ -3,11 +3,12 @@ caip: 7
 title: Blockchain Reference for the EOSIO Namespace
 author: Sebastian Montero (@sebastianmontero)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/32
-status: Draft
+status: Superseded
 type: Standard
 created: 2020-11-30
 updated: 2020-11-30
 requires: 2
+superseded-by: https://github.com/ChainAgnostic/namespaces/tree/main/antelope
 ---
 
 ## Simple Summary
