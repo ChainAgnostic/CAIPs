@@ -1,29 +1,29 @@
 ---
-caip: 1
-title: CAIP Purpose and Guidelines
-status: Review
-type: Meta
-author: ligi <ligi@ligi.de>
-created: 2019-08-31
-updated: 2019-08-31
+المقابلة: 1
+العنوان: الغرض والمبادئ التوجيهية من أجل مكافحة الفساد
+الحالة: الاستعراض
+النوع: meta
+         صاحب البلاغ: ليجي           <ligi@ligi.de>
+أنشئت: 2019-08-31
+تحديث: 2019-08-31
 ---
 
-## What is an CAIP?
+##           ما هو الـ (كايب) ؟         
 
-CAIP stands for Chain Agnostic Improvement Proposal. A CAIP is a design document providing information to the community or describing a standard to be used across multiple chains. To be more precise, a CAIP may describe capabilities applicable to any sequential orderings of cryptographically hashed commitments, including non-blockchain systems that can interoperate with blockchains productively, such as DAGs, sharded systems, git systems using keyserver-based PKI, etc. The CAIP should provide a concise technical specification of the feature and a rationale for it. The CAIP author is responsible for building consensus within the community and documenting dissenting opinions.
+ويقف فريق الخبراء عن اقتراح تحسين نظام التسلسل الأغاني. () الوثيقة الخاصة بالتصميم التي تقدم معلومات إلى المجتمع المحلي أو تصف معياراً يمكن استخدامه في مختلف سلاسل متعددة. ولكي يكون هذا أكثر دقة، يمكن أن يصف البرنامج القدرات المنطبقة على أي أوامر متتالية للالتزامات المتعجلة بشكل متقطع، بما في ذلك نظم السلاسل غير المجهزة التي يمكن أن تتفاعل مع سلاسل كتلة الإنتاج، مثل نظام المساعدة الإنمائية، والنظم المظلمة، ونظم الهدية التي تستخدم PKI القائمة على أساس الأسير، وما إلى ذلك. وينبغي أن يوفر فريق الخبراء الاستشاري تكنولوجيا موجزة.(ب) تحديد خاصية و أساس منطقي لها ويتولى صاحب البلاغ المعني بالبناء في مجال بناء توافق في الآراء داخل المجتمع المحلي وتوثيق الآراء المخالفة.
 
 ## CAIP Rationale
 
-Currently it is often the case that a standard defined in one chain is also used in another chain, e.g. the usage of BIP39 in Ethereum applications. Also, there is no real place to propose a standard that can be used for multiple chains (like mnemonics) currently. CAIPs are intended to fill this gap and be a place where such standards can live.
+وفي الوقت الراهن، كثيرا ما يُستخدم أيضاً في سلسلة أخرى، مثل استخدام BIP39 في تطبيقات الإيثروم. كما أنه لا يوجد مكان حقيقي لاقتراح معيار يمكن استخدامه في سلاسل متعددة (مثل الأمونيونيات) حالياً. والقصد من هذه الثغرة هو أن تكون مكاناً يمكن أن تعيش فيه هذه المعايير..
 
-## CAIP Formats and Templates
+## أشكال ونماذج CAIP
 
-CAIPs should be written in [markdown][] format.
-Image files should be included in a subdirectory of the `assets` folder for that CAIP as follows: `assets/caip-N` (where **N** is to be replaced with the CAIP number). When linking to an image in the CAIP, use relative links such as `../assets/caip-1/image.png`.
+         وينبغي أن تُكتب في هذه البرامج      [ألف - علامة][]     الشكل.        
+    الأصولالأصول`     () ملف هذا البرنامج على النحو التالي:     `الأصول/caip-n`     (أين)     **نون**     ومن المقرر الاستعاضة عن رقم البرنامج. عندما يرتبط بصورة في جهاز الاتصال المركزي، يستخدم روابط نسبية مثل     `./الأصول/caip-1/الصورة.png`.
 
-## CAIP Header Preamble
+##     ديباجة كايب هيدر   
 
-Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) style header preamble, preceded and followed by three hyphens (`---`). This header is also termed ["front matter" by Jekyll](https://jekyllrb.com/docs/front-matter/). The headers must appear in the following order. Headers marked with "*" are optional and are described below. All other headers are required.
+   يجب أن يبدأ كل من هذه البرامج     [(ف ف ف ج) 822](https://www.ietf.org/rfc/rfc822.txt)     ديباجة رأس الأسلوب، سبقها وتلها ثلاثة مبالغ)   `---`   هذا العنوان يُطلق عليه أيضاً     ["المادة الأولى" من قبل (جيكل)](https://jekyllrb.com/docs/front-matter/)ويجب أن يظهر العناوين حسب الترتيب التالي. وتتسم هذه العناية مع " "" اختيارية ويرد وصفها أدناه. جميع العناوين الأخرى مطلوبة.
 
 ` caip:` <CAIP number> (this is determined by the CAIP editor)
 
