@@ -53,9 +53,12 @@ The rationale fleshes out the specification by describing what motivated the des
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.
 
-## Links
-<!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.-->
-Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.
+## References 
+<!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations. See CONTRIBUTING.md#style-guide . -->
+
+- [CAIP-1][CAIP-1] defines the CAIP document structure
+
+[CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE).

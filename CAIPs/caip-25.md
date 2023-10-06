@@ -133,7 +133,7 @@ A third object is the `sessionProperties` object, which also MUST contain 1 or m
 All properties of the `sessionProperties` objects MUST be interpreted by the respondent as proposals rather than requirements. 
 In addition to making properties of the negotiated session itself explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing information about unfamiliar scopes or which accounts to expose to each).
 
-Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented; 
+Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety; 
 similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
 
 Requesting applications are expected to persist all of these returned properties in the session object identified by the `sessionId`. 
