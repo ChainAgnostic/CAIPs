@@ -14,22 +14,22 @@ updated: 2022-07-06
 Sign in With X describes how blockchain accounts should authenticate and authorize with off-chain services by signing a chain-agnostic message parameterized by scope, session details, and security mechanisms (e.g. a nonce).
 
 The goal of this specification is to define a chain-agnostic data model.
-When accompanied with chain-specific message forms and signing algorithms, along with chain-agnostic serialization format, this would allow for a self-custodied alternative to centralized identity providers, and improve interoperability across off-chain services for blockchain based authentication.
+When accompanied with chain-specific message forms and signing algorithms, along with chain-agnostic serialization format, this would allow for a self-custodied alternative to centralized identity providers, and improve interoperability across off-chain services for blockchain-based authentication.
 
 ## Motivation
 
-With [EIP-4361][eip-4361], we got introduced to Sign in With Ethereum - which standardized an Ethereum-focused workflow to authenticate Ethereum accounts on non-blockchain services. 
-This work is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of this specification, to work with all blockchains.
+As specified in [EIP-4361][], Sign in With Ethereum defined an Ethereum-focused workflow to authenticate Ethereum accounts on non-blockchain services. 
+This specification is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of a superset specification, which works with all blockchains.
 
-Additionally, with [CAIP-74][caip-74] we got a way to represent a chain-agnostic capability object (OCAP) by placing EIP-4361 message into CACAO container.
+Additionally, [CAIP-74][] specified a way to represent a chain-agnostic capability object (OCAP) by placing an EIP-4361 message into a CACAO container.
 
-With this specification, we hope to extend CAIP-74 to support blockchains other than Ethereum and allow for the creation of OCAPs in a chain-agnostic way.
+With this specification, we hope to extend [CAIP-74][] to support blockchains other than Ethereum and allow for the creation of Object Capabilities (OCAPs) in a chain-agnostic way.
 
 ## Specification
 
 ### Abstract Data Model
 
-We start with declaring an abstract data model, which contains all the requisite information, metadata, and security mechanisms to authenticate and authorize with a blockchain account securely. 
+We start by declaring an abstract data model, which contains all the requisite information, metadata, and security mechanisms to authenticate and authorize with a blockchain account securely. 
 We call this data model _SIWX_.
 
 The data model _MUST_ contain the following fields:
@@ -52,11 +52,11 @@ The data model _MUST_ contain the following fields:
 
 ### Namespace Specification
 
-A namespace specification _MUST_ provide:
+A [CAIP-104][] namespace that enables SIWX for that namespace needs to define an implementation profile for this specification which _MUST_ provide:
 
-1. signing algorithm, or multitude of those,
-2. accompanied by `type` strings that designate each signing algorithm,
-3. a procedure for creating a signing input from the data model specified in this document.
+1. a signing algorithm, or a finite set of these, where multiple different signing interfaces might be used,
+2. a `type` string(s) that designates each signing algorithm, for inclusion in the `signatureMeta.t` value of each signed response
+3. a procedure for creating a signing input from the data model specified in this document for each signing algorithm
 
 The signing algorithm _MUST_ cover:
 
@@ -65,10 +65,10 @@ The signing algorithm _MUST_ cover:
 
 ### Examples
 
-As a general suggestion for authors and implementers, the signing input should be based on string. 
-The string should be human-readable, so that the signing represents a fully informed consent of a user.
+As a general suggestion for authors and implementers, the signing input should be based on a string. 
+The string should be human-readable, so that the signing represents the fully-informed consent of a user.
 
-The proposed string representation format, inspired from [EIP-4361][eip-4361], should be as such:
+The proposed string representation format, adapted from [EIP-4361][eip-4361], should be as such:
 
 ```
 ${domain} wants you to sign in with your **blockchain** account:
@@ -92,8 +92,8 @@ Resources:
 ```
 
 Here:
-- `**blockchain**` represents a human-readable name of the ecosystem user account belongs to,
-- `account_address(address)` is an `account_address` part of [CAIP-10][caip-10] `address` of the data model,
+- `**blockchain**` represents a human-readable name of the ecosystem the user can recognize its account as belonging to,
+- `account_address(address)` is the `account_address` segment of a [CAIP-10][] `address` of the data model,
 - `chain_id(address)` is a `chain_id` part of [CAIP-10][caip-10] `address` of the data model.
 
 As an example, [EIP-4361][eip-4361] directly conforms to this data model. 
