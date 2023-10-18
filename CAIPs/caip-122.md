@@ -163,25 +163,27 @@ Not applicable.
 
 ## References
 
-[eip-4361]: https://eips.ethereum.org/EIPS/eip-4361
-[caip-74]: https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-74.md
-[rfc 4501]: https://www.rfc-editor.org/rfc/rfc4501.html
-[caip-10]: https://github.com/ChainAgnostic/CAIPs/blob/8fdb5bfd1bdf15c9daf8aacfbcc423533764dfe9/CAIPs/caip-10.md
-[caip-2]: https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md
-[rfc 3986]: https://www.rfc-editor.org/rfc/rfc3986
-[rfc 3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[caip-2]: https://chainagnostic.org/CAIPs/caip-2
+[caip-10]: https://chainagnostic.org/CAIPs/caip-10
+[caip-74]: https://chainagnostic.org/CAIPs/caip-74
+[caip-104]: https://chainagnostic.org/CAIPs/caip-104
 [eip-191]: https://eips.ethereum.org/EIPS/eip-191
 [eip-1271]: https://eips.ethereum.org/EIPS/eip-1271
+[eip-4361]: https://eips.ethereum.org/EIPS/eip-4361
+[rfc 3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[rfc 3986]: https://www.rfc-editor.org/rfc/rfc3986
+[rfc 4501]: https://www.rfc-editor.org/rfc/rfc4501.html
 
-- [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361): Sign-In with Ethereum
-- [CAIP-74](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-74.md): CACAO: Chain Agnostic CApability Object
-- [RFC 4501](https://www.rfc-editor.org/rfc/rfc4501.html): Domain Name System Uniform Resource Identifiers
-- [CAIP-10](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-10.md): Account ID Specification
-- [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/master/CAIPs/caip-2.md): Blockchain ID Specification
-- [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986): Uniform Resource Identifier (URI): Generic Syntax
-- [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6): Date and Time on the Internet: Timestamps
-- [EIP-191](https://eips.ethereum.org/EIPS/eip-191): Signed Data Standard
-- [EIP-1271](https://eips.ethereum.org/EIPS/eip-1271): Standard Signature Validation Method for Contracts
+- [CAIP-2][]: Blockchain ID Specification
+- [CAIP-10][]: Account ID Specification
+- [CAIP-74][]: CACAO: Chain Agnostic CApability Object
+- [CAIP-104][]: Account ID Specification
+- [EIP-191][]: Signed Data Standard
+- [EIP-1271][]: Standard Signature Validation Method for Contracts
+- [EIP-4361][]: Sign-In with Ethereum
+- [RFC 4501][]: Domain Name System Uniform Resource Identifiers
+- [RFC 3986][]: Uniform Resource Identifier (URI): Generic Syntax
+- [RFC 3339][]: Date and Time on the Internet: Timestamps
 
 ## Copyright
 
