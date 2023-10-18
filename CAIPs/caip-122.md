@@ -13,11 +13,13 @@ updated: 2022-07-06
 
 Sign in With X describes how blockchain accounts should authenticate and authorize with off-chain services by signing a chain-agnostic message parameterized by scope, session details, and security mechanisms (e.g. a nonce).
 
-The goal of this specification is to define a chain-agnostic data model. When accompanied with chain-specific message forms and signing algorithms, along with chain-agnostic serialization format, this would allow for a self-custodied alternative to centralized identity providers, and improve interoperability across off-chain services for blockchain based authentication.
+The goal of this specification is to define a chain-agnostic data model.
+When accompanied with chain-specific message forms and signing algorithms, along with chain-agnostic serialization format, this would allow for a self-custodied alternative to centralized identity providers, and improve interoperability across off-chain services for blockchain based authentication.
 
 ## Motivation
 
-With [EIP-4361][eip-4361], we got introduced to Sign in With Ethereum - which standardized an Ethereum-focused workflow to authenticate Ethereum accounts on non-blockchain services. This work is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of this specification, to work with all blockchains.
+With [EIP-4361][eip-4361], we got introduced to Sign in With Ethereum - which standardized an Ethereum-focused workflow to authenticate Ethereum accounts on non-blockchain services. 
+This work is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of this specification, to work with all blockchains.
 
 Additionally, with [CAIP-74][caip-74] we got a way to represent a chain-agnostic capability object (OCAP) by placing EIP-4361 message into CACAO container.
 
@@ -27,7 +29,8 @@ With this specification, we hope to extend CAIP-74 to support blockchains other 
 
 ### Abstract Data Model
 
-We start with declaring an abstract data model, which contains all the requisite information, metadata, and security mechanisms to authenticate and authorize with a blockchain account securely. We call this data model _SIWX_.
+We start with declaring an abstract data model, which contains all the requisite information, metadata, and security mechanisms to authenticate and authorize with a blockchain account securely. 
+We call this data model _SIWX_.
 
 The data model _MUST_ contain the following fields:
 
@@ -62,7 +65,8 @@ The signing algorithm _MUST_ cover:
 
 ### Examples
 
-As a general suggestion for authors and implementers, the signing input should be based on string. The string should be human-readable, so that the signing represents a fully informed consent of a user.
+As a general suggestion for authors and implementers, the signing input should be based on string. 
+The string should be human-readable, so that the signing represents a fully informed consent of a user.
 
 The proposed string representation format, inspired from [EIP-4361][eip-4361], should be as such:
 
@@ -92,7 +96,8 @@ Here:
 - `account_address(address)` is an `account_address` part of [CAIP-10][caip-10] `address` of the data model,
 - `chain_id(address)` is a `chain_id` part of [CAIP-10][caip-10] `address` of the data model.
 
-As an example, [EIP-4361][eip-4361] directly conforms to this data model. Since EIP-155 chains can request personal signatures ([EIP-191][eip-191]) or contract signatures ([EIP-1271][eip-1271]) in plaintext, an example message to be signed could be
+As an example, [EIP-4361][eip-4361] directly conforms to this data model. 
+Since EIP-155 chains can request personal signatures ([EIP-191][eip-191]) or contract signatures ([EIP-1271][eip-1271]) in plaintext, an example message to be signed could be
 
 ```
 service.org wants you to sign in with your Ethereum account:
@@ -110,7 +115,9 @@ Resources:
 - https://example.com/my-web2-claim.json
 ```
 
-Other chains, however, for example Solana, cannot do plaintext signatures and require signing over raw bytes. As such, signing input for the data model could be created as a string, similar to [EIP-4361][eip-4361] example above, that is represented as raw bytes. The signing input is then passed to Solana-specific signing algorithm. This should be defined in the Solana namespace for this CAIP specification.
+Other chains, however, for example Solana, cannot do plaintext signatures and require signing over raw bytes. 
+As such, signing input for the data model could be created as a string, similar to [EIP-4361][eip-4361] example above, that is represented as raw bytes. The signing input is then passed to Solana-specific signing algorithm. 
+This should be defined in the Solana namespace for this CAIP specification.
 
 Below is an example of the data model represented as a plain text similar Ethereum, and then converted to raw bytes.
 
