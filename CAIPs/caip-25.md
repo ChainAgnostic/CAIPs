@@ -129,23 +129,14 @@ contains "requiredScopes" and/or "optionalScopes" objects populated with
 - The `requiredScopes` array MUST contain 1 or more `scopeObjects`, if present.
 - The `optionalScopes` array MUST contain 1 or more `scopeObjects`, if present.
 
-A third object is the `sessionProperties` object, all of whose properties MUST
-be interpreted as optional, since requesting applications cannot mandate session
-variables to providers. Because they are optional, providers MAY respond with
-all of the requested properties, or a subset of the session properties, or no
-`sessionProperties` object at all; they MAY even replace the values of the
-optional session properties with their own values. Wallets may also interpret
-values of sessionProperties in how it assigns values (for example, which
-`accounts` to expose) based on flags or properties defined here. The
-`sessionProperties` object MUST contain 1 or more properties if present.
+A third object is the `sessionProperties` object, which also MUST contain 1 or more properties if present. 
+All properties of the `sessionProperties` objects MUST be interpreted by the respondent as proposals rather than requirements. 
+In addition to making properties of the negotiated session itself explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing information about unfamiliar scopes or which accounts to expose to each).
 
-Requesting applications are expected to persisted all of these returned
-properties in the session object identified by the `sessionId`. All properties
-in `sessionProperties` and their values MUST conform to definitions in
-[CAIP-170][], and MUST be ignored (rather than persisted) if they do not;
-similarly, nothing except valid [CAIP-217][] objects may be present in
-`requiredScopes`, `optionalScopes`, and `sessionScopes` arrays; all other
-array members should be dropped.
+Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety; 
+similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
+
+Requesting applications are expected to persist all of these returned properties in the session object identified by the `sessionId`. 
 
 ### Response
 
@@ -363,6 +354,7 @@ was in violation of policy).
 - [CAIP-2][] - Chain ID Specification
 - [CAIP-10][] - Account ID Specification
 - [CAIP-25][] - JSON-RPC Provider Request
+- [CAIP-104][] - Definition of Chain Agnostic Namespaces or CANs
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 
@@ -370,7 +362,6 @@ was in violation of policy).
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
-[CAIP-170]: https://chainagnostic.org/CAIPs/caip-170
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [namespaces]: https://namespaces.chainagnostic.org
