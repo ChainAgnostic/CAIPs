@@ -22,16 +22,15 @@ extending [CAIP-2][] chain id specification. This is useful for both
 decentralized applications and wallets to communicate user accounts (EOA in EVM
 terminology) or smart contracts/abstraction for multiple chains using string
 identifiers specific to each chain. Currently, wallets are usually designed for
-each chain and multi-chain wallets use proprietray data structures to
+each chain and multi-chain wallets using proprietary data structures to
 differentiate accounts. This proposal aims to standardize these identifiers for
 accounts to allow interoperability.
 
 ## Motivation
 
-The motivation for proposal stem from designing a chain-agnostic protocol for
-communication between dapps and wallets that was independent of any blockchain
-but provide the flexibility to be backwards compatible with existing
-applications.
+The motivation for the proposal stems from designing a chain-agnostic protocol for
+communication between dapps and wallets that is independent of any blockchain
+but provides backwards compatibility with existing applications.
 
 ## Specification
 
