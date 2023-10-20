@@ -77,7 +77,7 @@ The JSON-RPC method is labelled as `wallet_authenticate` and expects the followi
 - statement (optional) - Human-readable ASCII assertion that the user will sign. It _MUST NOT_ contain `\n`.
 - requestId (optional) - System-specific identifier used to uniquely refer to the authentication request.
 - resources (optional) - List of information or references to information the user wishes to have resolved as part of the authentication by the relying party; express as [RFC 3986][rfc 3986] URIs and separated by `\n`.
-- signatureTypes (optional) - Object specifying the supported signing algorithms by the application for each namespace. The namespace MUST be defined in the key, while the supported signing algoriths as `string[]` and MUST contain one or more values if present.
+- signatureTypes (optional) - Object specifying the supported signing algorithms by the application for each namespace. The namespace MUST be defined in the key, while the supported signing algorithms as `string[]` and MUST contain one or more values if present.
 
 Example of `signatureTypes`
 
