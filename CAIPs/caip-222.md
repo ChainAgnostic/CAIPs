@@ -32,7 +32,7 @@ This JSON-RPC method can be requested to a wallet provider without prior knowled
 
 The requester will provide parameters required by [CAIP-122][caip-122] plus a CACAO header type as specified by [CAIP-74][caip-74]
 
-The responder will return a signed CACAO(s) with a header type and payload matching the requested parameters
+The responder will return zero, one, or more signed CACAO(s) with a header type and payload matching the requested parameters.
 
 ### Request
 
