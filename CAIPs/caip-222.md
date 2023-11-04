@@ -94,7 +94,7 @@ The wallet will prompt the user with a dedicated UI to display the app requestin
 
 #### Success
 
-If approved, the wallet will return a list of signed CACAOs for each of the requested chains and/or selected blockchain account(s).
+If approved, the wallet will return a list of signed, valid CACAOs for each account authorized on the networks requested by the `chains` property.
 
 ```jsonc
 {
