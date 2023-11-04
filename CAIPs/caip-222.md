@@ -12,7 +12,7 @@ requires: 2, 10, 74, 122
 
 ## Simple Summary
 
-This CAIP defines a JSON-RPC method to authenticate wallet ownership/control of a blockchain account(s).
+This CAIP defines a JSON-RPC method to authenticate wallet ownership/control of one or more blockchain account(s), on one or more specific chains.
 
 ## Abstract
 
