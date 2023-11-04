@@ -66,7 +66,7 @@ The JSON-RPC method is labelled as `wallet_authenticate` and expects the followi
 
 - cacaov - Cacao version number
 - type - Cacao header message type
-- chains - List of [CAIP-2][]-defined `chains` to identify one or more chains or networks.
+- chains - List of [CAIP-2][]-defined `chainId`s to identify one or more networks to authorize.
 - domain - [RFC 4501][rfc 4501] `dnsauthority` that is requesting the signing.
 - aud - [RFC 3986][rfc 3986] URI referring to the resource that is the subject of the signing.
 - version - Current version of the message.
