@@ -1,17 +1,18 @@
 ---
 caip: 222
 title: Wallet Authenticate JSON-RPC Method
-author: Pedro Gomes (@pedrouid)
+author: Pedro Gomes (@pedrouid), Gancho Radkov (@ganchoradkov)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/222
 status: Draft
 type: Standard
 created: 2023-04-07
+updated: 2023-10-19
 requires: 2, 10, 74, 122
 ---
 
 ## Simple Summary
 
-This CAIP defines a JSON-RPC method to authenticate wallet ownership/control of a blockchain account.
+This CAIP defines a JSON-RPC method to authenticate wallet ownership/control of one or more blockchain account(s), on one or more specific chains.
 
 ## Abstract
 
@@ -31,7 +32,7 @@ This JSON-RPC method can be requested to a wallet provider without prior knowled
 
 The requester will provide parameters required by [CAIP-122][caip-122] plus a CACAO header type as specified by [CAIP-74][caip-74]
 
-The responder will return a signed CACAO with a header type and payload matching the requested parameters
+The responder will return zero, one, or more signed CACAO(s) with a header type and payload matching the requested parameters.
 
 ### Request
 
@@ -45,7 +46,7 @@ The application would interface with a provider to make request as follows:
   "params": {
       "cacaov": string,
       "type": string,
-      "chainId": string,
+      "chains": string[],
       "domain": string,
       "aud": string,
       "version": string,
@@ -56,6 +57,7 @@ The application would interface with a provider to make request as follows:
       "statement": string, // optional
       "requestId": string, // optional
       "resources": string[], // optional
+      "signatureTypes": Record<string, string[]> // optional
   }
 }
 ```
@@ -64,7 +66,7 @@ The JSON-RPC method is labelled as `wallet_authenticate` and expects the followi
 
 - cacaov - Cacao version number
 - type - Cacao header message type
-- chainId - [CAIP-2][]-defined `chainId` to identify specific chain or network.
+- chains - List of [CAIP-2][]-defined `chainId`s to identify one or more networks to authorize.
 - domain - [RFC 4501][rfc 4501] `dnsauthority` that is requesting the signing.
 - aud - [RFC 3986][rfc 3986] URI referring to the resource that is the subject of the signing.
 - version - Current version of the message.
@@ -75,6 +77,15 @@ The JSON-RPC method is labelled as `wallet_authenticate` and expects the followi
 - statement (optional) - Human-readable ASCII assertion that the user will sign. It _MUST NOT_ contain `\n`.
 - requestId (optional) - System-specific identifier used to uniquely refer to the authentication request.
 - resources (optional) - List of information or references to information the user wishes to have resolved as part of the authentication by the relying party; express as [RFC 3986][rfc 3986] URIs and separated by `\n`.
+- signatureTypes (optional) - Object specifying a list of the signing algorithms supported by the caller, for each namespace. The namespace MUST be defined in the key for each list. Each list should include the supported signing algorithms should be provided in the form of strings listed in each namespace's CAIP-222 profile and MUST contain one or more values if present. A request that does not set this value and constrain the signature types it will accept MAY be assumed to accept all signature TYPES, which may lead to unstable behavior in some contexts.
+Example of `signatureTypes`
+
+```
+signatureTypes: {
+  "eip155": ["eip191", "eip1271" ],
+  "cosmos": ["amino"]
+}
+```
 
 ### Response
 
@@ -82,13 +93,13 @@ The wallet will prompt the user with a dedicated UI to display the app requestin
 
 #### Success
 
-If approved, the wallet will return a signed CACAO with the selected blockchain account.
+If approved, the wallet will return a list of signed, valid CACAOs for each account authorized on the networks requested by the `chains` property.
 
 ```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "result": {
+  "result": [{
     "h": {
       "t": string,
     },
@@ -109,7 +120,7 @@ If approved, the wallet will return a signed CACAO with the selected blockchain 
       "t": string,
       "s": string
     }
-  }
+  }]
 }
 ```
 
@@ -136,6 +147,10 @@ The following Error responses MUST be used:
   - code = 6001
   - message = "Invalid Request Params"
 
+#### Not supported chains
+
+The wallet SHOULD ignore all unsupported chains and SHOULD NOT auto reject the request if there are supported chains to sign without explicit user rejection.
+
 ## Rationale
 
 This standard provides both benefits to users and developers by compiling two widely adopted patterns into a single request: connecting a wallet and signing an authentication message.
@@ -146,11 +161,11 @@ Developers have the ability to verify ownership of users' blockchain accounts si
 
 This also incentives more applications to prevent impersonation by verifying ownership of blockchain accounts upfront without needing to trust the wallet provider interface that optimistically exposes account on connection.
 
-This interface can be used with multiple accounts by simply calling it multiple times with a difference nonce and prompting the wallet user to authenticate each account individually without establishing a persistent connection.
+This interface can be used with multiple accounts by including in the response an array of signed CACAOs for each address.
 
 ## Test Cases
 
-Here is an example request and response exchange with `wallet_authenticate` method:
+Here is an example request and response exchange with `wallet_authenticate` method with single chain request:
 
 ```jsonc
 // Request
@@ -161,7 +176,7 @@ Here is an example request and response exchange with `wallet_authenticate` meth
   "params": {
       "cacaov": "2",
       "type": "eip4361",
-      "chainId": "eip155:1",
+      "chains": ["eip155:1"],
       "aud": "http://localhost:3000/login",
       "exp": "2022-03-10T18:09:21.481+03:00",
       "iat": "2022-03-10T17:09:21.481+03:00",
@@ -174,7 +189,10 @@ Here is an example request and response exchange with `wallet_authenticate` meth
         "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
         "https://example.com/my-web2-claim.json"
       ],
-      "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
+      "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos",
+      "signatureTypes": {
+        "eip155": ["eip191", "eip1271"]
+      }
   }
 }
 
@@ -183,7 +201,7 @@ Here is an example request and response exchange with `wallet_authenticate` meth
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "result": {
+  "result": [{
     "h": {
       "t": "eip4361",
     },
@@ -207,7 +225,96 @@ Here is an example request and response exchange with `wallet_authenticate` meth
       "t": "eip191",
       "s": "5ccb134ad3d874cbb40a32b399549cd32c953dc5dc87dc64624a3e3dc0684d7d4833043dd7e9f4a6894853f8dc555f97bc7e3c7dd3fcc66409eb982bff3a44671b",
     }
+  }]
+}
+```
+
+Example request and response with multiple chains
+
+```jsonc
+// Request
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "wallet_authenticate",
+  "params": {
+      "cacaov": "2",
+      "type": "eip4361",
+      "chains": ["eip155:1", "eip155:5"],
+      "aud": "http://localhost:3000/login",
+      "exp": "2022-03-10T18:09:21.481+03:00",
+      "iat": "2022-03-10T17:09:21.481+03:00",
+      "nbf": "2022-03-10T17:09:21.481+03:00",
+      "nonce": "328917",
+      "domain": "localhost:3000",
+      "version": "1",
+      "requestId": "request-id-random",
+      "resources": [
+        "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
+        "https://example.com/my-web2-claim.json"
+      ],
+      "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos",
+      "signatureTypes": {
+        "eip155": ["eip191", "eip1271"]
+      }
   }
+}
+
+
+// Response
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": [{
+    "h": {
+      "t": "eip4361",
+    },
+    "p": {
+      "iss": "did:pkh:eip155:1:0xBAc675C310721717Cd4A37F6cbeA1F081b1C2a07",
+      "aud": "http://localhost:3000/login",
+      "exp": "2022-03-10T18:09:21.481+03:00",
+      "iat": "2022-03-10T17:09:21.481+03:00",
+      "nbf": "2022-03-10T17:09:21.481+03:00",
+      "nonce": "328917",
+      "domain": "localhost:3000",
+      "version": "1",
+      "requestId": "request-id-random",
+      "resources": [
+        "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
+        "https://example.com/my-web2-claim.json"
+      ],
+      "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
+    },
+    "s": {
+      "t": "eip191",
+      "s": "5ccb134ad3d874cbb40a32b399549cd32c953dc5dc87dc64624a3e3dc0684d7d4833043dd7e9f4a6894853f8dc555f97bc7e3c7dd3fcc66409eb982bff3a44671b",
+    }
+  },
+  {
+    "h": {
+      "t": "eip4361",
+    },
+    "p": {
+      "iss": "did:pkh:eip155:5:0xFa2CD71C6F32EDdaA644DEa499ee0b91ebCE1E72",
+      "aud": "http://localhost:3000/login",
+      "exp": "2022-03-10T18:09:21.481+03:00",
+      "iat": "2022-03-10T17:09:21.481+03:00",
+      "nbf": "2022-03-10T17:09:21.481+03:00",
+      "nonce": "328917",
+      "domain": "localhost:3000",
+      "version": "1",
+      "requestId": "request-id-random",
+      "resources": [
+        "ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq",
+        "https://example.com/my-web2-claim.json"
+      ],
+      "statement": "I accept the ServiceOrg Terms of Service: https://service.org/tos"
+    },
+    "s": {
+      "t": "eip1271",
+      "s": "0xa33c2d454407eff97d96c39b0ae5dbfd1425a96aa9a52f83c5a1ab556f17157d5496dc2ea80428c6a126ec5eb2d43c8ef0c15c24d13a7994c5a0dc2e3135d7991c",
+    }
+  }]
 }
 ```
 
