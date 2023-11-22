@@ -54,7 +54,7 @@ An account owner can issue attestations about the following subjects:
 - Software Artifact (issuance of software artifact security assertions);
 - Software Artifact Security (issuance of endorsement / dispute assertions).
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/1978f81b-fb8d-4965-b348-476f0cd63cbc)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/ada8ef50-a743-4fda-9819-4f415a9cbfc2)
 
 *Diagram - Metamodel*
 
@@ -68,10 +68,7 @@ Assertion of trust to an account owner:
 "credentialSubject":
 {
   "id": "did:pkh:eth:0xfA045B2F2A25ad0B7365010eaf9AC2Dd9905895c",
-  "trustFor": {
-    "type": "doing",
-    "quality": "Software security", 
-  }
+  "trustFor": "Software security",
   "trustLevel": "high"
 },
 "proof": {}
@@ -101,7 +98,7 @@ Assertion of security to a software artifacts:
   "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ="
   "findings": "Critical",
   "reportURI": "ipfs://123...",
-  "applicableSecurityAssertion": [<CID>,]
+  "applicableSecurityAssertion": ["<CID>",]
 },
 "proof": {}
 ```
