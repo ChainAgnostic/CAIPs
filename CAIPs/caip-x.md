@@ -18,49 +18,56 @@ CAIP-x defines a way to assess trust in software artifacts in a decentralized ma
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-This proposal provides standardized data for assertions made by communities and for the trust score calculated to assess trust in software artifacts such as wallet extensions (i.e. MetaMask Snaps), Smart Contracts, decentralized applications, etc.
-This data gives shape to a trust graph, which can be used to calculate a trust score for software artifacts.
-The fundamental data required to assess trust in software artifacts 
-- **Assertions of trust in account owners** to identify trusted peers;
-- **Assertions of security in software artifacts** to leverage individual analysis;
-- **Endorsements and disputes in assertions of security** to leverage the community feedbacks.
+This proposal provides standardized data to uniformize the assertions made by communities, used to assess trust in software artifacts, as well as to uniformize the resulting trust score.
+Software artifacts can be any executable code, and in particular those from decentralized ecosystems such as self-custody wallets (such as MetaMask and their extensions (such as MetaMask snaps), decentralized network clients (such as geth), smart contracts, decentralized applications, etc.
+This data gives shape to trust graphs specific to each account owner usable to calculate software artifacts trust scores relative to their own trust graph.
 
-This data translates explicit trust signals that could be enriched with implicit on-chain and off-chain trust signals such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, etc.
+- **Assertions of trust / distrust in account owners** to enable anyone to claim their trusted peers and thus shape their trust graph;
+- **Assertions of security in software artifacts** to enable anyone to publish security insights regarding software artifacts;
+- **Endorsements and disputes of assertions of security** to enable anyone to provide feedbacks regarding published security insights.
+
+This data translates explicit trust signals that could be enriched with more implicit on-chain and off-chain trust signals such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, etc.
+
+The calculation of trust graphs leveraging a trust computer using trust algorithms (such as EigenTrust and / or Weighted Average) result in software artifacts' trust scores specific to each account owner's trust graph. 
+
+- **Assertion of trust score** to enable any trust computer to publish computed trust scores.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
 Software artifacts in a decentralized ecosystem tend to be distributed permissionlessly, which promotes permissionless innovation but at the same time opens the door to vulnerabilities and scams.
-The majority of solutions for assessing software artifacts are centralized and therefore require to trust intermediaries, which affects the decentralized property of the ecosystem.
-Standardizing data to shape a global trust graph would strengthen the reliability of assessments of software artifacts powered by the community.
+The majority of solutions for assessing software artifacts are centralized and therefore require trusted intermediaries, which affects the decentralized property of the ecosystem.
+Standardizing data to shape a global trust graph reusable in any context would strengthen the reliability of assessments of software artifacts powered by the community.
 
 ## Specification
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
 ### Subjects identification
-Decentralized Identifiers (DID) are used to identify accounts owners and software artifacts. Since account owners are issuing assertions to subjects (an account owner, a software artifact or an assertion) identifiers are need for each entity.
+Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) are used to identify subjects such as `accounts owners`, `software artifacts` or the `assertions` themselves. Since `account owners` and `trust computers` are issuing assertions about subjects, each of them need to be identifiable.
 
 - `PKH` DID method for account owners (e.g. `did:pkh:eth:<publicKeyHash>`, `did:pkh:btc:<publicKeyHash>`, `did:pkh:sol:<publicKeyHash>`);
 - Custom DID methods for software artifacts (e.g. `did:snap:1?version=1.2`, `did:snap:<checksum>`, `did:ethr:1:<smartContractAddress>`);
-- CID of the payload (`issuer`+`subjectCredential`) for assertions.
+- CID of the assertion (`issuer`+`subjectCredential`) for assertions (to be detailed).
 
 ### Data
-An account owner can issue attestations about several subjects:
-- Another account owner (Account Trust / Distrust assertions);
-- Software Artifact (Software Artifact Security assertions);
-- Software Artifact Security (endorsements / dispute assertions).
+An account owner can issue attestations about the following subjects:
+- Another account owner (issuance of account trust / distrust assertions);
+- Software Artifact (issuance of software artifact security assertions);
+- Software Artifact Security (issuance of endorsement / dispute assertions).
 
 ![image](https://github.com/dayksx/CAIPs/assets/77788154/1978f81b-fb8d-4965-b348-476f0cd63cbc)
 
 *Diagram - Metamodel*
 
+All subsequent documents follow the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the sake of representation, but this standard does not assume any particular document type, even if an internationally recognized standard can only be recommended.
+
 #### Incoming Data: assertions
 Assertion of trust to an account owner:
 ```json
 "type": "AccountTrustAssertion"
-"issuer": "did:pkh:eth:<publicKeyHash>"
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044"
 "credentialSubject":
 {
   "trustFor": "Software security", 
-  "trustLevel": ""
+  "trustLevel": "1"
 },
 "proof": {}
 ```
@@ -69,7 +76,7 @@ Assertion of trust to an account owner:
 Assertion of distrust to an account owner:
 ```json
 "type": "AccountDistrustAssertion"
-"issuer": "did:pkh:eth:<publicKeyHash>"
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044"
 "credentialSubject":
 {
   "distrustReason": "Scam activity"
