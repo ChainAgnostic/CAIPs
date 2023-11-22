@@ -44,8 +44,9 @@ Standardizing data to shape a global trust graph reusable in any context would s
 Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) are used to identify subjects such as `accounts owners`, `software artifacts` or the `assertions` themselves. Since `account owners` and `trust computers` are issuing assertions about subjects, each of them need to be identifiable.
 
 - `PKH` DID method for account owners (e.g. `did:pkh:eth:<publicKeyHash>`, `did:pkh:btc:<publicKeyHash>`, `did:pkh:sol:<publicKeyHash>`);
-- Custom DID methods for software artifacts (e.g. `did:snap:1?version=1.2`, `did:snap:<checksum>`, `did:ethr:1:<smartContractAddress>`);
-- CID of the assertion (`issuer`+`subjectCredential`) for assertions (to be detailed).
+- Custom DID methods for software artifacts (e.g. `did:snap:1?version=1.2`, `did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=`, `did:ethr:1:<smartContractAddress>`);
+- CID of the assertion (`issuer`+`subjectCredential`) for assertions, generated leveraging [RFC 8785
+JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785)) standard.
 
 ### Data
 An account owner can issue attestations about the following subjects:
@@ -62,38 +63,42 @@ All subsequent documents follow the [Verifiable Credential Data Model](https://w
 #### Incoming Data: assertions
 Assertion of trust to an account owner:
 ```json
-"type": "AccountTrustAssertion"
-"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044"
+"type": "AccountTrustAssertion",
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
+  "id": "did:pkh:eth:eriko.eth",
   "trustFor": "Software security", 
-  "trustLevel": "1"
+  "trustLevel": "high"
 },
 "proof": {}
 ```
-*Example of values for `trustFor`:  "Software security", "Software development", "Honesty".*
+*Example of values for `trustFor`:  "doing/Software security", "doing/Software development", "being/Honest", "being/Generous".*
+*Enum for `trustLevel`:  "Low", "Medium", "High".*
 
 Assertion of distrust to an account owner:
 ```json
-"type": "AccountDistrustAssertion"
-"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044"
+"type": "AccountDistrustAssertion",
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "distrustReason": "Scam activity"
+  "id": "did:pkh:eth:sbf.eth",
+  "distrustReason": "Scam"
 },
 "proof": {}
 ```
-*Example of values for `distrustReason`:  "Scam", "Hack".*
+*Example of values for `distrustReason`:  "doing/Scam", "doing/Hack".*
 
 Assertion of security to a software artifacts:
 ```json
-"type": "SoftwareArtifactSecurityAssertion"
-"issuer": "did:tbd:..."
+"type": "SoftwareArtifactSecurityAssertion",
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-    "findings": "Critical",
-    "reportURI": "ipfs://123...",
-    "applicableSecurityAssertion": ""
+  "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ="
+  "findings": "Critical",
+  "reportURI": "ipfs://123...",
+  "applicableSecurityAssertion": [<CID>,]
 },
 "proof": {}
 ```
@@ -104,35 +109,47 @@ Security assertions can be linked together (`applicableSecurityAssertion`) to en
 
 Endorsement or dispute to an Assertion of security:
 ```json
-"type": "SoftwareArtifactSecurityAssertion"
-"issuer": "did:tbd:..."
+"type": ["DisputeAssertion", "EndorsementAssertion"],
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "currentStatus": "Dispute",
-  "statusReason": "IncorrectFindings"
+  "id": "<CID>",
+  "currentStatus": "Disputed",
+  "statusReason": "Scam"
 },
 "proof": {}
 ```
-*Enum for `status`:  "Dispute", "Endorsed".*
-*Example of values for `statusReason`:  "Scam", "Inadequate findings".*
+*Enum for `status`:  "Disputed", "Endorsed".*
+*Example of values for `statusReason`:  "Scam", "Incomplete".*
 
 #### Outgoing data: Trust score
-This incoming data enables to compute a trust score for a software artifacts according to the concerned person's trust graph, with the following steps:
+This incoming data enables to compute a trust score for software artifacts according to the concerned account owner's trust graph, with the following steps:
 1. Retrieve the relevent trust graph;
 2. Retrieve all the concerned accounts (accounts having issued endorsements, disputes, security assertions and if possible the software artifact developers) and calculate their trust scores;
 3. Weight the endorsements and the disputes according to the issuers' trust scores;
 4. Weight the security assertions according to the weight of the endorsements and disputes + the security assertions issuers' trust scores;
-5. Weight the software artifact trust score according to the weight of the security assertions + if possible the software artifact's developers.
+5. Weight the software artifact trust score according to the weight of each security assertion + if possible the software artifact's developers trust score.
 
-Software Artifact Trust score:
+Software artifact trust score:
 ```json
 "type": "SoftwareArtifactTrustScore"
 "issuer": "did:tbd:..."
 "credentialSubject":
 {
-  "trustComputerType": "",
+  "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+  "trustComputerType": "Karma3 Labs Reputation Protocol",
   "trustScore": "",
-  "proof": ""
+  "scoreSetIdentifier": "ipfs://?",
+},
+"proof": {}
+```
+
+```json
+"type": "ScoreSetIdentifier"
+{
+  "id": ""
+  "inputData": {},
+  "proof": {}
 },
 "proof": {}
 ```
