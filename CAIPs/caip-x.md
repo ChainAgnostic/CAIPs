@@ -67,13 +67,16 @@ Assertion of trust to an account owner:
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "did:pkh:eth:eriko.eth",
-  "trustFor": "Software security", 
+  "id": "did:pkh:eth:0xfA045B2F2A25ad0B7365010eaf9AC2Dd9905895c",
+  "trustFor": {
+    "type": "doing",
+    "quality": "Software security", 
+  }
   "trustLevel": "high"
 },
 "proof": {}
 ```
-*Example of values for `trustFor`:  "doing/Software security", "doing/Software development", "being/Honest", "being/Generous".*
+*Example of values for `trustFor`:  "doing/Software security", "doing/Software development", "being/Honest", "being/...".*
 *Enum for `trustLevel`:  "Low", "Medium", "High".*
 
 Assertion of distrust to an account owner:
@@ -82,8 +85,8 @@ Assertion of distrust to an account owner:
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "did:pkh:eth:sbf.eth",
-  "distrustReason": "Scam"
+  "id": "did:pkh:eth:0xB3764761E297D6f121e79C32A65829Cd1dDb4D32",
+  "distrustReason": "Scam",
 },
 "proof": {}
 ```
