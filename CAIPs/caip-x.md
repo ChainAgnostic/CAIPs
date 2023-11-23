@@ -75,8 +75,12 @@ Assertion of trust to an account owner:
 },
 "proof": {}
 ```
-*Example of values for `trustFor`:  "doing/Software security", "doing/Software development", "being/Honest", "being/...".*
-*Enum for `trustLevel`:  "Low", "Medium", "High".*
+Trust in someone can be conceptualized along the following two dimensions:
+1. Trust someone for who they are (Honest, Insightful...).
+2. Trust someone for what they do (Software development, Software security...).
+
+- *Example of values for `trustFor`: trust someone for doing "Software security", "Software development", and trust someone for being "Honest", "Insightful"...*
+- *Enum for `trustLevel`:  "Low", "Medium", "High".*
 
 Assertion of distrust to an account owner:
 ```json
@@ -89,7 +93,7 @@ Assertion of distrust to an account owner:
 },
 "proof": {}
 ```
-*Example of values for `distrustReason`:  "doing/Scam", "doing/Hack".*
+- *Example of values for `distrustReason`:  "doing/Scam", "doing/Hack".*
 
 Assertion of security to a software artifacts:
 ```json
@@ -104,8 +108,8 @@ Assertion of security to a software artifacts:
 },
 "proof": {}
 ```
-*Enum for `findings`:  "None", "Low", "Medium", "Critical".*
-*Content for `reportURI`:  Standard JSON document.*
+- *Enum for `findings`:  "None", "Low", "Medium", "Critical".*
+- *Content for `reportURI`:  Standard JSON document.*
 
 Security assertions can be linked together (`applicableSecurityAssertion`) to enable the issuer to only assess the gap between two assessed software versions. 
 
@@ -121,8 +125,8 @@ Endorsement or dispute of an Assertion of security:
 },
 "proof": {}
 ```
-*Enum for `status`:  "Disputed", "Endorsed".*
-*Example of values for `statusReason`:  "Scam", "Incomplete".*
+- *Enum for `status`:  "Disputed", "Endorsed".*
+- *Example of values for `statusReason`:  "Scam", "Incomplete".*
 
 #### Outgoing data: Trust score
 The incoming data enables to compute ougoing data, i.e. trust scores for software artifacts, with differents steps according to the used algorithm.
@@ -192,18 +196,22 @@ did:pkh:solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ:CKg5d12Jhpej1JqtmxLJgaFqqeYjxgPq
 did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK
 
 # Software Artifacts / Wallet: MetaMask
-nkbihfbeogaeaoehlefnkodbefgpgknn
+nkbihfbeogaeaoehlefnkodbefgpgknn (id)
+
 # Software Artifacts / Wallet extension: MetaMask Snaps
 CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ= (sha-256)
+
 # Software Artifacts / Smart contract deployed in Ethereum
-did:pkh:eip155:1:0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984
+did:pkh:eip155:1:0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984 (public address)
+
 # Software Artifacts / dApp deployed in IPFS
-ipfs://QmUqy1Yrv2R81mcYA5sM3qUinkwk6RaKJ4qq1XE6F3BDhM
+ipfs://QmUqy1Yrv2R81mcYA5sM3qUinkwk6RaKJ4qq1XE6F3BDhM (ipfs CID)
+
 # Software Artifacts / client: Geth
 4dbe63f7f8c03f655ee5c090369703b6 (MD5)
 
 # Assertions
-QmUqy1Yrv2R81mcYA5sM3qUinkwk6RaKJ4qq1XE6F3BDhM
+QmUqy1Yrv2R81mcYA5sM3qUinkwk6RaKJ4qq1XE6F3BDhM (CID)
 ```
 ### Snaps permissionless distribution
 Snaps permissionless distribution aim at providing trust insights leveraging trust scores to guide the end-users for expanding their MetaMask Wallet with snaps developed by the community.
@@ -212,6 +220,7 @@ Snaps permissionless distribution aim at providing trust insights leveraging tru
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
 A community-powered trust assessment presents several risks due to its permissionless nature.
+All the potential attacks should be considered when setting up the trust computer.
 
 ### Sybil attack
 Subversion of the reputation system by creating a large number of pseudonymous accounts and uses them to gain a disproportionately large influence, and promote vulnerable software or, on the contrary, reduce trust in trustworthy software.
