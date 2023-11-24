@@ -14,23 +14,23 @@ requires (*optional):
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-CAIP-x defines a way to assess trust in software artifacts in a decentralized manner.
+CAIP-x defines a way to assess trust in software artifacts in a decentralized manner leveraging the social relationships of trust and the community feedbacks.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
 This proposal provides standardized data to uniformize the assertions made by communities, used to assess trust in software artifacts, as well as to uniformize the resulting trust score.
-Software artifacts can be any executable code, in particular those from decentralized ecosystems such as self-custody wallets (such as MetaMask) and their extensions (such as Snaps), decentralized network clients (such as Geth), smart contracts, decentralized applications, etc.
-This data gives shape to trust graphs specific to each account owner:
+Software artifacts can be any executable code, in particular those from decentralized ecosystems such as self-custodial wallets (such as MetaMask) and their extensions (such as Snaps), decentralized network clients (such as Geth), smart contracts, decentralized applications, etc.
+This data gives shape to trust graphs specific to each account owner composed of:
 
 - **Assertions of trust / distrust in account owners** to enable anyone to claim their trusted peers and thus shape their trust graph;
 - **Assertions of security in software artifacts** to enable anyone to publish security insights regarding software artifacts;
 - **Endorsements / disputes of assertions of security in software artifacts** to enable anyone to provide feedbacks regarding published security insights.
 
-This data translates explicit trust signals that could be enriched with more implicit on-chain and off-chain trust signals such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, etc.
+This data translating explicit trust signals could be enriched with more implicit on-chain and off-chain trust signals such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, etc.
 
-The calculation of trust graphs leveraging trust computers implementing recursive trust algorithms (such as EigenTrust and / or Weighted Average) provide trust scores relative to each account owner's trust graph.
+The processing of trust graphs leveraging trust computers (implementing recursive trust algorithms such as EigenTrust and Weighted Average) can calculate trust scores relative to each account owner's trust graph:
 
-- **Assertion of trust score** to enable any trust computer to publish computed trust scores.
+- **Assertion of trust score** to enable any trust computer to publish computed trust scores about software artifacts and / or accounts owners.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
@@ -41,63 +41,85 @@ Standardizing data to shape a global trust graph reusable in any context would s
 ## Specification
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
 ### Subjects identification
-Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) are used to identify subjects such as `accounts owners`, `software artifacts` or the `assertions` themselves. 
-Since `account owners` and `trust computers` are issuing assertions about subjects, issuers and subjects need to be identifiable.
+Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are used to identify subjects such as `accounts owners`, `software artifacts` or the `assertions` themselves. 
+Since `account owners` and `trust computers` are issuing assertions about subjects: issuers and subjects need to be identifiable.
 
 - `PKH` DID method for account owners (e.g. `did:pkh:eip155:1:<publicKeyHash>`, `did:pkh:bip122:<publicKeyHash>`, `did:pkh:solana:<publicKeyHash>`);
-- Custom DID methods for software artifacts (e.g. `did:snap:1?version=1.2`, `did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=`, `did:pkh:eip155:1:<smartContractAddress>`);
-- CID of the assertion (`issuer`+`subjectCredential`) for assertions, generated leveraging [RFC 8785
-JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785)) standard.
-- `KEY` DID method for trust computers
+- Custom Identifiers for software artifacts such as the checksum (e.g. `did:snap:1?version=1.2`, `did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=`, `did:pkh:eip155:1:<smartContractAddress>`);
+- CID of the assertion (`issuer`+`subjectCredential`) for assertions, generated respecting [RFC 8785
+JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785));
+- `KEY` DID method for trust computers.
 
 ### Data
-An account owner can issue attestations about the following subjects:
+An account owner can issue assertions about the following subjects:
 - Another account owner (issuance of account trust / distrust assertions);
-- Software Artifact (issuance of software artifact security assertions, issuance of endorsement / dispute assertions by the end-users);
+- Software Artifact (issuance of software artifact security assertions, issuance of endorsement / dispute assertions);
 - Software Artifact Security (issuance of endorsement / dispute assertions).
 
 ![image](https://github.com/dayksx/CAIPs/assets/77788154/ada8ef50-a743-4fda-9819-4f415a9cbfc2)
 
-*View - Software Artifact Trust Metamodel*
+*View - Software Artifact Trust Assessment Metamodel*
 
-All subsequent documents follow the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the sake of representation, but this standard does not assume any particular document type, even if an internationally recognized standard can only be recommended.
+All subsequent documents follow the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the sake of representation, but this standard does not assume any particular document type, even if internationally recognized standards can only be recommended.
 
 #### Incoming Data: assertions
 Assertion of trust to an account owner:
 ```json
-"type": "AccountTrustAssertion",
+"type": "AccountTrustCredential",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "did:pkh:eth:0xfA045B2F2A25ad0B7365010eaf9AC2Dd9905895c",
-  "trustFor": "Software security",
-  "trustLevel": "High"
+  "id": "did:pkh:eip155:1:0xfA045B2F2A25ad0B7365010eaf9AC2Dd9905895c",
+  "trustworthiness": [
+  {
+    "type": "Quality",
+    "scope": "Reliability",
+    "level": "High"
+  },
+  {
+    "type": "Ability",
+    "scope": "Software development",
+    "level": "Very high"
+  },
+  {
+    "type": "Ability",
+    "scope": "Software security",
+    "level": "Moderate"
+  }
+  ]
 },
 "proof": {}
 ```
-Trust in someone can be conceptualized along the following two dimensions:
-1. Trust someone for who they are (Honest, Insightful...).
-2. Trust someone for what they do (Software development, Software security...).
+Modeling trust between people can be a complex task due to the subjective and multifaceted nature of trust. Here is a proposal to conceptualized trust regarding a person with the following attributes:
+- `type`: Definition of the type of trust placed in a person, if the trust relate to an overall `quality` of the person or to a specific `ability` of the person;
+- `scope`: Definition of the scope of trust (`scope` should be a noun). 
+- `level`: Definition of the extent of trust. The "level" property in the above verifiable credential is subjective and can be defined according to the needs of the specific use case (for interoperability purpose the standard recommend to remain in the following range: "Very low", "Low", "Moderate", "High", "Very High").
 
-- *Example of values for `trustFor`: trust someone for doing "Software security", "Software development", and trust someone for being "Honest", "Insightful"...*
-- *Enum for `trustLevel`:  "Low", "Medium", "High".*
+Trust `scope` needs to be standardized for interoperability purpose, but also need to be extendable (cf. below `View - Trust abilities specialization Data Model`). 
+
+This standard defines the folowing abilities as a scope of trust: `Software security`, `Software development`, `Software design`, as well as the follow qualities : `Honesty`, `Reliability` and `Integrity`.
+
+![image](https://github.com/dayksx/CAIPs/assets/77788154/eb36574a-bde9-44ff-9665-39d1cd1931ab)
+
+*View - Scope of trust Data Model*
 
 Assertion of distrust to an account owner:
 ```json
-"type": "AccountDistrustAssertion",
+"type": "AccountDistrustCredential",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "did:pkh:eth:0xB3764761E297D6f121e79C32A65829Cd1dDb4D32",
-  "distrustReason": "Scam",
+  "id": "did:pkh:eip155:1:0xB3764761E297D6f121e79C32A65829Cd1dDb4D32",
+  "distrustReason": "Scam"
 },
 "proof": {}
 ```
-- *Example of values for `distrustReason`:  "doing/Scam", "doing/Hack".*
+Ditrust modeling is deliberately less nuanced, because we consider that a distrust is a radical negative signal.
+- *Example of values for `distrustReason`:  "Scam", "Hack".*
 
 Assertion of security to a software artifacts:
 ```json
-"type": "SoftwareArtifactSecurityAssertion",
+"type": "SoftwareSecurityCredential",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -111,11 +133,11 @@ Assertion of security to a software artifacts:
 - *Enum for `findings`:  "None", "Low", "Medium", "Critical".*
 - *Content for `reportURI`:  Standard JSON document.*
 
-Security assertions can be linked together (`applicableSecurityAssertion`) to enable the issuer to only assess the gap between two assessed software versions. 
+Security assertions can be linked together (`applicableSecurityAssertion`) to reuse previous assessment to enable assessing only the gap between two assessed versions. 
 
 Endorsement or dispute of an Assertion of security:
 ```json
-"type": ["DisputeAssertion", "EndorsementAssertion"],
+"type": ["DisputeCredential", "EndorsementCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -129,44 +151,41 @@ Endorsement or dispute of an Assertion of security:
 - *Example of values for `statusReason`:  "Scam", "Incomplete".*
 
 #### Outgoing data: Trust score
-The incoming data enables to compute ougoing data, i.e. trust scores for software artifacts, with differents steps according to the used algorithm.
-Here, as an indication, are the main steps that a trust algorithm executes:
-1. Retrieve the relevent trust graph (all the nodes from the accounts owners' graph with direct or indirect relationshio with the software artifact);
-2. Retrieve all the concerned accounts (accounts having issued endorsements, disputes, security assertions and if available the software artifact developers accounts) and calculate their trust scores;
-3. Weight the endorsements and the disputes according to the issuers' trust scores;
-4. Weight the security assertions according to the weight of the endorsements and disputes + the security assertions issuers' trust scores;
-5. Weight the software artifact final trust score according to the weight of the security assertions + if available the software artifact's developers trust score.
+The incoming data is used to compute trust scores outgoing data for software artifacts. The computation steps might vary according to the trust computer algorithm, but in general they can be summarized as follows:
+1. Retrieve the relevent trust graph (all the nodes from the accounts owners' graph with direct and indirect relationships with the software artifact);
+2. Retrieve the concerned `accounts` (accounts having issued endorsements, disputes, security assertions and if available the software artifact developers account) and calculate the `accounts trust scores`;
+3. Weight the `endorsements` and the `disputes` according to the issuers' `accounts trust scores`;
+4. Weight the `security assertions` according to the weight of the `endorsements` and `disputes` + the issuers' `account trust scores`;
+5. Weight the `software artifact` final trust score according to the weight of the `security assertions` + if available the software artifact's developers `account trust score`.
 
 Software artifact trust score (to be refined):
 ```json
-"type": "SoftwareArtifactTrustScore"
-"issuer": "did:tbd:..."
+"type": "SoftwareTrustScoreCredential",
+"issuer": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+"issuanceDate": "2023-11-24T12:24:42Z",
 "credentialSubject":
 {
   "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
   "trustScoreType": "EigenTrust",
   "trustScore": "0.10113570942",
   "scoreset": "ipfs://123...",
-  "timestamp": "1700733480"
 },
 "proof": {}
 ```
 
 Scoreset (to be defined):
 ```json
-"type": "Scoreset"
 {
   "algorithm": {},
   "inputData": {},
   "proof": {}
-},
-"proof": {}
+}
 ```
-The scoreset provide all the input data, the algorithm used to computed the trust score.
+The scoreset provide all the input data and information about the algorithm used to compute the trust score.
 
 ### Data and trust score storage
-Incoming and outgoing data can be stored in any datastore but it should meet some minimal requirements:
-- Data availability: The datastore should make the assertions & proofs continuously available for consumption and verification purpose;
+Incoming and outgoing data can be stored in any datastore but it should meet some minimal requirements for verifiability and sustainability purpose:
+- Data availability: The datastore should make the assertions & proofs publicly available (availability ratio depends of the use-case) for consumption and verification purpose;
 - Tamper-proof: The datastore should provide assertions data with proofs of completeness, i.e. that none have been alterned or obstructed;
 - Scalability: The datastore should scale to meet the evolving demand of issued assertions.
 
@@ -174,10 +193,12 @@ Incoming and outgoing data can be stored in any datastore but it should meet som
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
 ### Subjects identification
-Decentralized identifiers (DID) offer a way to identify in a decentralized and chain-agnostic way any subjects.
+DID and CID are decentralized identification methods, free from any centralized identity provider and therefore more sustainable.
+1. Decentralized identifiers (DID) using `pkh` and `key` methods enable to identify accounts owners or trust computers in a chain-agnostic manner.
+2. Content Identifiers (CID) enable anyone to uniquely generate identifiers based on the content of the document.
 
 ### Data
-1. The trust of an account owner is based on the quality of a person, what they are, or what they do; trust is not binary; trust evolves over time;
+1. Trust in a person is based on the qualities of a person, what they are, or what they do; trust is not binary; trust evolves over time;
 2. Distrust assertions enable to capture suspicious behaviors;
 3. The security of software artifacts is assessed based on security audit findings;
 4. Endorsement and dispute solicit community feedback on issued security assertions;
