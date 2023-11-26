@@ -45,7 +45,7 @@ Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Id
 Since `account owners` and `trust computers` are issuing assertions about subjects, issuers and subjects need to be identifiable.
 
 - `PKH` DID method for account owners (e.g. `did:pkh:eip155:1:<publicKeyHash>`, `did:pkh:bip122:<publicKeyHash>`, `did:pkh:solana:<publicKeyHash>`);
-- Custom Identifiers for software components such as the checksum (e.g. `did:snap:1?version=1.2`, `did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=`, `did:pkh:eip155:1:<smartContractAddress>`);
+- Custom Identifiers for software components such as the checksum (e.g. `did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=`, `did:pkh:eip155:1:<smartContractAddress>`);
 - CID of the assertion (`issuer`+`subjectCredential`) for assertions, generated respecting [RFC 8785
 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785));
 - `KEY` DID method for trust computers.
@@ -56,7 +56,7 @@ An account owner can issue assertions about the following subjects:
 - Software component (issuing software component security assertions, issuing endorsement / dispute assertions);
 - Software component Security (issuing endorsement / dispute assertions).
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/ada8ef50-a743-4fda-9819-4f415a9cbfc2)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/448793ff-88ce-485a-84a6-531501ee0fed)
 
 *View - Software component Trust Assessment Metamodel*
 
@@ -235,10 +235,10 @@ did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK
 nkbihfbeogaeaoehlefnkodbefgpgknn (id)
 
 # Software components / Wallet extension: MetaMask Snaps
-CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ= (sha-256)
+did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ= (sha-256)
 
 # Software components / Smart contract deployed in Ethereum
-did:pkh:eip155:1:0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984 (public address)
+did:pkh:eip155:1:0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984 (ethereum address)
 
 # Software components / dApp deployed in IPFS
 ipfs://QmUqy1Yrv2R81mcYA5sM3qUinkwk6RaKJ4qq1XE6F3BDhM (ipfs CID)
