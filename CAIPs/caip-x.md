@@ -146,16 +146,29 @@ The distrust model is based on the same schema as the trust model.
 "credentialSubject":
 {
   "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ="
-  "findings": "Critical",
-  "reportURI": "ipfs://123...",
+  "securityReview": {
+    "result": "Critical",
+    "findings": [
+      {
+        "criticity": "Critical",
+        "description": "Private key leak"
+      },
+      {
+        "criticity": "Medium",
+        "description": "Buffer Overflow"
+      },
+    ],
+  "reportURI": "ipfs://123..."
+  }
   "applicableSoftwareSecurityCredential": ["<CID>"]
 },
 "proof": {}
 ```
-- *Enum for `findings`:  "None", "Low", "Medium", "Critical".*
-- *Content for `reportURI`:  URI to a standard JSON document.*
+- *Enum for `result`, and `findings`:  "None", "Low", "Medium", "Critical".*
+- *Content for `reportURI` (optional):  URI to any additional security report.*
 
-`Findings` corresponds to the highest security findings in the code, the findings details can be found in the full security `report`.
+
+`result` corresponds to the highest security findings in the code, the findings details can be found in `findings`.
 
 A security assertion can be based on another one (`applicableSoftwareSecurityCredential`) in order to reuse previous assessments to limit the assertion to the gap between two software component versions. 
 
@@ -168,7 +181,7 @@ View - Applicable Security Assertions example
 
 **Endorsement or dispute of an Assertion of security:**
 ```json
-"type": ["DisputeCredential", "EndorsementCredential"],
+"type": ["DisputeCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -182,6 +195,16 @@ View - Applicable Security Assertions example
 "proof": {}
 ```
 The [Disputecredential](https://www.w3.org/TR/vc-data-model/#disputes) is defined by the W3C in the Verifiable Credentials Data Model.
+```json
+"type": ["EndorsementCredential"],
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
+"credentialSubject":
+{
+  "id": "<CID>",
+  "currentStatus": "Endorsed"
+},
+"proof": {}
+```
 - *Enum for `currentStatus`:  "Disputed", "Endorsed".*
 
 
