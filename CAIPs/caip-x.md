@@ -20,10 +20,10 @@ CAIP-x defines a way to assess trust in software components leveraging social re
 <!--A short (~200 word) description of the technical issue being addressed.-->
 This proposal provides standardized data to uniformize the assertions made by communities useful to assess the trustworthiness in software components, as well as to uniformize the resulting trust score.
 Software components can be any executable code, in particular those from decentralized ecosystems such as self-custodial wallets (such as MetaMask) and their extensions (such as Snaps), decentralized network clients (such as Geth), smart contracts, decentralized applications, etc.
-This data gives shape to accounts owner-specific trust graphs primarily comprised of:
+This data gives shape to accounts owner-specific trust graphs comprised of:
 
-- **Assertions of trust / distrust in account owners** to enable anyone to claim their trusted peers and thus shape their trust graph;
-- **Assertions of security in software components** to enable anyone to publish security insights regarding software components;
+- **Assertions of trustworthiness (trust / distrust) in account owners** to enable anyone to claim their trusted peers and thus shape their trust graph;
+- **Assertions of security in software components** to enable anyone to publish security insights regarding any software components;
 - **Endorsements / disputes of assertions of security in software components** to enable anyone to provide feedbacks regarding published security insights.
 
 This data translating explicit trust signals can be enriched with more implicit on-chain and off-chain trust signals such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, etc.
@@ -45,10 +45,10 @@ Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Id
 Since `account owners` and `trust computers` are issuing assertions about subjects, issuers and subjects need to be identifiable.
 
 - `PKH` DID method for account owners (e.g. `did:pkh:eip155:1:<publicKeyHash>`, `did:pkh:bip122:<publicKeyHash>`, `did:pkh:solana:<publicKeyHash>`);
-- Custom Identifiers for software components such as the checksum (e.g. `did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=`, `did:pkh:eip155:1:<smartContractAddress>`);
+- Custom Identifiers for software components such as the checksum (e.g. `did:snap:<codeChecksum>`, `did:pkh:eip155:1:<smartContractAddress>`);
 - CID of the assertion (`issuer`+`subjectCredential`) for assertions, generated respecting [RFC 8785
 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785));
-- `KEY` DID method for trust computers.
+- `KEY` or `PKH` DID method for trust computers.
 
 ### Data
 An account owner can issue assertions about the following subjects:
@@ -62,77 +62,84 @@ An account owner can issue assertions about the following subjects:
 
 All subsequent documents follow the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the sake of representation, but this standard does not assume any particular document type, even if internationally recognized standards can only be recommended.
 
-#### Incoming Data: assertions
-Assertion of trust to an account owner:
+#### Incoming Data: Trust signals
+
+**Assertion of trust to an account owner:**
 ```json
 "type": "AccountTrustCredential",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "did:pkh:eip155:1:0xfA045B2F2A25ad0B7365010eaf9AC2Dd9905895c",
-  "trustworthiness": [
-  {
-    "type": "Quality",
-    "scope": "Reliability",
-    "level": "High"
-  },
-  {
-    "type": "Ability",
-    "scope": "Software development",
-    "level": "Moderate"
-  },
-  {
-    "type": "Ability",
-    "scope": "Software security",
-    "level": "Very high",
-    "reason": ["White Hat", "Auditor"]
-  }
+  "trustworthiness":
+  [
+    {
+      "type": "Quality",
+      "scope": "Reliability",
+      "level": "High"
+    },
+    {
+      "type": "Ability",
+      "scope": "Software development",
+      "level": "Moderate"
+    },
+    {
+      "type": "Ability",
+      "scope": "Software security",
+      "level": "Very high",
+      "reason": ["White Hat", "Auditor"]
+    }
   ]
 },
 "proof": {}
 ```
-Modeling trust between people can be a complex task due to the subjective and multifaceted nature of trust. Here is a proposal to conceptualized trust regarding a person with the following attributes:
-- `type`: Definition of the type of trust placed in a person, if the trust relate to an overall `quality` of the person or to a specific `ability` of the person;
+Modeling trust between people can be a complex task due to the subjective and multifaceted nature of trust. 
+Here is a proposal to conceptualized trust:
+- `type`: Definition of the type of trust placed in a person, if the trust relate to an overall `quality` or `flaw` of the person or to a specific `ability` of the person;
 - `scope`: Definition of the scope of trust (`scope` should be a noun);
-- `level`: Definition of the extent of trust.
-- `reason` (optional): Definition of the reason of trust
+- `level`: Definition of the extent of trust;
+- `reason` (optional): Definition of the cause of trust.
 
-Trust `type` enable to introduce different applicabilities understandable by computers, for example a `quality` or a `flaw` is general and applicable for any use-case, whereas an `abilitity` is useful only for specific situations.
-Trust `scope` needs to be standardized for interoperability purpose, but also need to be extendable (cf. below `View - Trust abilities specialization Data Model`).
-Trust `level` is subjective, therefore the level range can be flexible according to the use-case, but it must nevertheless remain inthe following range for interoperability purpose: `Very low`, `Low`, `Moderate`, `High`, `Very High`.
+The `type` of trust enable to introduce different applicabilities understandable by computers, for example a `quality` or a `flaw` is a general assertion applicable globally for any use-case, whereas an `abilitity` is only useful for specific situations.
+The `scope` of trust needs to be standardized for interoperability purpose, but also need to be extendable (cf. below `View - Scope of trustworthiness Data Model`).
+The `level` of trust is subjective, therefore the level range can be flexible according to the use-case, but it must nevertheless remain in the following range for interoperability purpose: `Very low`, `Low`, `Moderate`, `High`, `Very High`.
 
-This standard defines the folowing abilities as a scope of trust: `Software security`, `Software development`; as well as the follow qualities : `Honesty`, `Reliability`; but can be extended by inheriting high-level scopes.
+This standard defines the folowing abilities as a scope of trust: `Software security`, `Software development`; as well as the following qualities : `Honesty`, `Reliability`; as well as the following flaws : `Dishonesty`, `Unlawful`; but can be extended by inheriting high-level scopes.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/eb36574a-bde9-44ff-9665-39d1cd1931ab)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/b4956bb8-42f3-4ae5-b1b3-bc6e405faec8)
 
-*View - Scope of trust Data Model*
+*View - Scope of trustworthiness Data Model*
 
-Assertion of distrust to an account owner:
+
+**Assertion of distrust to an account owner:**
 ```json
 "type": "AccountDistrustCredential",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "did:pkh:eip155:1:0xC3764761E297D6f121e79C32A65829Cd1dDb4D33",
-  "trustworthiness": [
-  {
-    "type": "Flaw",
-    "scope": "Dishonesty",
-    "level": "High"
-    "reason": ["Scam", "Rug pull"]
-  },
-  {
-    "type": "Flaw",
-    "scope": "Unlawful",
-    "level": "Low"
-    "reason": ["Money laundering", "Piracy"]
-  }
+  "trustworthiness":
+  [
+    {
+      "type": "Flaw",
+      "scope": "Dishonesty",
+      "level": "High"
+      "reason": ["Scam", "Rug pull"]
+    },
+    {
+      "type": "Flaw",
+      "scope": "Unlawful",
+      "level": "Low",
+      "reason": ["Money laundering", "Piracy"]
+    }
+  ]
 },
 "proof": {}
 ```
-The model is similar for trust and distrust.
+The distrust model is based on the same schema as the trust model.
 
-Assertion of security to a software components:
+
+**Assertion of security to a software components:**
 ```json
 "type": "SoftwareSecurityCredential",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
@@ -141,16 +148,25 @@ Assertion of security to a software components:
   "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ="
   "findings": "Critical",
   "reportURI": "ipfs://123...",
-  "applicableSecurityAssertion": ["<CID>"]
+  "applicableSoftwareSecurityCredential": ["<CID>"]
 },
 "proof": {}
 ```
 - *Enum for `findings`:  "None", "Low", "Medium", "Critical".*
-- *Content for `reportURI`:  Standard JSON document.*
+- *Content for `reportURI`:  URI to a standard JSON document.*
 
-Security assertions can be linked together (`applicableSecurityAssertion`) to reuse previous assessment to enable assessing only the gap between two assessed versions. 
+`Findings` corresponds to the highest security findings in the code, the findings details can be found in the full security `report`.
 
-Endorsement or dispute of an Assertion of security:
+A security assertion can be based on another one (`applicableSoftwareSecurityCredential`) in order to reuse previous assessments to limit the assertion to the gap between two software component versions. 
+
+*In the below example, the security assertion for the `snap version 2.0.1` is leveraging the previous security assertion for the `snap version 2.0.0`, since the gap between the two versions if just a patch on backward compatible bug fixes.*
+
+![image](https://github.com/dayksx/CAIPs/assets/77788154/d8d28a53-8ef0-41ab-888d-affb109bf5c8)
+
+View - Applicable Security Assertions example 
+
+
+**Endorsement or dispute of an Assertion of security:**
 ```json
 "type": ["DisputeCredential", "EndorsementCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
@@ -158,17 +174,23 @@ Endorsement or dispute of an Assertion of security:
 {
   "id": "<CID>",
   "currentStatus": "Disputed",
-  "statusReason": "Scam"
+  "statusReason": {
+    "value": "Suspicious activities",
+    "lang": "en"
+  },
 },
 "proof": {}
 ```
-- *Enum for `status`:  "Disputed", "Endorsed".*
-- *Example of values for `statusReason`:  "Scam", "Incomplete".*
+The [Disputecredential](https://www.w3.org/TR/vc-data-model/#disputes) is defined by the W3C in the Verifiable Credentials Data Model.
+- *Enum for `currentStatus`:  "Disputed", "Endorsed".*
+
 
 #### Outgoing data: Trust score
-The incoming data is used to compute trust scores outgoing data for software components. The computation steps might vary according to the trust computer algorithm, but in general they can be summarized as follows:
-1. Retrieve the relevent trust graph (all the nodes from the accounts owners' graph with direct and indirect relationships with the software component);
-2. Retrieve the concerned `accounts` (accounts having issued endorsements, disputes, security assertions and if available the software component developers account) and calculate the `accounts trust scores`;
+
+The trust signals (incoming data) are used to compute trust scores (outgoing data) for software components. 
+The computation steps might vary according to the trust computer algorithm, but we generally find these main steps:
+1. Retrieve the relevent trust graph (all the acounts owners graph's nodes with direct and indirect relationships with the software component);
+2. Retrieve the concerned `accounts` (accounts having issued endorsements, disputes, security assertions and if available the account of the developers of the software component) and calculate the `accounts trust scores`;
 3. Weight the `endorsements` and the `disputes` according to the issuers' `accounts trust scores`;
 4. Weight the `security assertions` according to the weight of the `endorsements` and `disputes` + the issuers' `account trust scores`;
 5. Weight the `software component` final trust score according to the weight of the `security assertions` + if available the software component's developers `account trust score`.
@@ -183,24 +205,20 @@ software component trust score (to be refined):
   "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
   "trustScoreType": "EigenTrust",
   "trustScore": "0.10113570942",
-  "scoreset": "ipfs://123...",
+  "scoreset": {
+    "algorithm": {},
+    "inputData": {},
+  },
 },
 "proof": {}
 ```
 
-Scoreset (to be defined):
-```json
-{
-  "algorithm": {},
-  "inputData": {},
-  "proof": {}
-}
-```
 The scoreset provide all the input data and information about the algorithm used to compute the trust score.
+
 
 ### Data and trust score storage
 Incoming and outgoing data can be stored in any datastore but it should meet some minimal requirements for verifiability and sustainability purpose:
-- Data availability: The datastore should make the assertions & proofs publicly available (availability ratio depends of the use-case) for consumption and verification purpose;
+- Data availability: The datastore should make the assertions & proofs publicly available for consumption and verification purpose;
 - Tamper-proof: The datastore should provide assertions data with proofs of completeness, i.e. that none have been alterned or obstructed;
 - Scalability: The datastore should scale to meet the evolving demand of issued assertions.
 
