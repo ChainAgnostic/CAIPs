@@ -22,9 +22,10 @@ This proposal provides standardized data to uniformize the assertions made by co
 Software components can be any executable code, in particular those from decentralized ecosystems such as self-custodial wallets (such as MetaMask) and their extensions (such as Snaps), decentralized network clients (such as Geth), smart contracts, decentralized applications, etc.
 This data gives shape to accounts owner-specific trust graphs comprised of:
 
-- **Assertions of trustworthiness (trust / distrust) in account owners** to enable anyone to claim their trusted peers and thus shape their trust graph;
-- **Assertions of security in software components** to enable anyone to publish security insights regarding any software components;
-- **Endorsements / disputes of assertions of security in software components** to enable anyone to provide feedbacks regarding published security insights.
+- **Trust / distrust assertions in account owners** to enable anyone to claim their trusted peers and thus shape their trust graph;
+- **Software component security reports** to enable anyone to publish security insights regarding any software components;
+- **Endorsements / disputes of security reports** to enable anyone to provide security feedbacks regarding published security insights.
+- **Endorsements / disputes of software components** to enable anyone to provide any kind of feedbacks directly about software components.
 
 This data translating explicit trust signals can be enriched with more implicit on-chain and off-chain trust signals such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, etc.
 
@@ -53,10 +54,10 @@ JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785));
 ### Data
 An account owner can issue assertions about the following subjects:
 - Another account owner (issuing account trust / distrust assertions);
-- Software component (issuing software component security assertions, issuing endorsement / dispute assertions);
+- Software component (issuing security reports, issuing endorsement / dispute assertions);
 - Software component Security (issuing endorsement / dispute assertions).
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/448793ff-88ce-485a-84a6-531501ee0fed)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/cc5a0e42-b90b-4b0e-85ec-90c5f9c1338e)
 
 *View - Software component Trust Assessment Metamodel*
 
@@ -106,11 +107,6 @@ The `level` of trust is subjective, therefore the level range can be flexible ac
 
 This standard defines the folowing abilities as a scope of trust: `Software security`, `Software development`; as well as the following qualities : `Honesty`, `Reliability`; as well as the following flaws : `Dishonesty`, `Unlawful`; but can be extended by inheriting high-level scopes.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/b4956bb8-42f3-4ae5-b1b3-bc6e405faec8)
-
-*View - Scope of trustworthiness Data Model*
-
-
 **Assertion of distrust to an account owner:**
 ```json
 "type": "AccountDistrustCredential",
@@ -136,31 +132,47 @@ This standard defines the folowing abilities as a scope of trust: `Software secu
 },
 "proof": {}
 ```
-The distrust model is based on the same schema as the trust model.
 
+![image](https://github.com/dayksx/CAIPs/assets/77788154/b4956bb8-42f3-4ae5-b1b3-bc6e405faec8)
+
+*View - Scope of trustworthiness Data Model*
+
+The distrust model is based on the same schema as the trust model.
 
 **Assertion of security to a software components:**
 ```json
-"type": "SoftwareSecurityCredential",
+"type": "SecurityReportCredential",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ="
-  "securityReview": {
+  "securityReport": {
     "result": "Critical",
     "findings": [
       {
         "criticity": "Critical",
-        "description": "Private key leak"
+        "type": "Key leak",
+        "description": "`snap_getBip44Entropy` makes the parent key accessible through `onRpcRequest`"
       },
       {
         "criticity": "Medium",
-        "description": "Buffer Overflow"
+        "type": "Buffer Overflow"
       },
     ],
-  "reportURI": "ipfs://123..."
   }
-  "applicableSoftwareSecurityCredential": ["<CID>"]
+},
+"proof": {}
+```
+Security report with no findings:
+```json
+"type": "SecurityReportCredential",
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
+"credentialSubject":
+{
+  "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ="
+  "securityReport": {
+    "result": "None"
+  }
 },
 "proof": {}
 ```
@@ -176,7 +188,7 @@ A security assertion can be based on another one (`applicableSoftwareSecurityCre
 
 ![image](https://github.com/dayksx/CAIPs/assets/77788154/d8d28a53-8ef0-41ab-888d-affb109bf5c8)
 
-View - Applicable Security Assertions example 
+View - Applicable Security Reports example 
 
 
 **Endorsement or dispute of an Assertion of security:**
@@ -213,10 +225,10 @@ The [Disputecredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 The trust signals (incoming data) are used to compute trust scores (outgoing data) for software components. 
 The computation steps might vary according to the trust computer algorithm, but we generally find these main steps:
 1. Retrieve the relevent trust graph (all the acounts owners graph's nodes with direct and indirect relationships with the software component);
-2. Retrieve the concerned `accounts` (accounts having issued endorsements, disputes, security assertions and if available the account of the developers of the software component) and calculate the `accounts trust scores`;
+2. Retrieve the concerned `accounts` (accounts having issued endorsements, disputes, security reports and if available the account of the developers of the software component) and calculate the `accounts trust scores`;
 3. Weight the `endorsements` and the `disputes` according to the issuers' `accounts trust scores`;
-4. Weight the `security assertions` according to the weight of the `endorsements` and `disputes` + the issuers' `account trust scores`;
-5. Weight the `software component` final trust score according to the weight of the `security assertions` + if available the software component's developers `account trust score`.
+4. Weight the `security reports` according to the weight of the `endorsements` and `disputes` + the issuers' `account trust scores`;
+5. Weight the `software component` final trust score according to the weight of the `security reports` + if available the software component's developers `account trust score`.
 
 software component trust score (to be refined):
 ```json
@@ -257,7 +269,7 @@ DID and CID are decentralized identification methods, free from any centralized 
 1. Trust in a person is based on the qualities of a person, what they are, or what they do; trust is not binary; trust evolves over time;
 2. Distrust assertions enable to capture suspicious behaviors;
 3. The security of software components is assessed based on security audit findings;
-4. Endorsement and dispute solicit community feedback on issued security assertions;
+4. Endorsement and dispute solicit community feedback on issued security reports;
 5. This data enables any trust score computer using trust graphs to be set up and to calculate a software component trust graph.
 
 ## Test Cases
