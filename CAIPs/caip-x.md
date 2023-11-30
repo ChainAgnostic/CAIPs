@@ -46,7 +46,7 @@ Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Id
 Given that `account owners` and `trust computers` are issuing assertions about subjects, they both need to be identifiable.
 
 - `PKH` DID method for account owners (e.g. `did:pkh:eip155:1:<publicAddress>`, `did:pkh:bip122:<publicAddress>`, `did:pkh:solana:<publicAddress>`);
-- Custom Identifiers for software components such as the checksum (e.g. `did:snap:<checksum>`, `did:pkh:eip155:1:<contractAddress>`);
+- Custom Identifiers for software components such as the checksum (e.g. `snap://<checksum>`, `did:pkh:eip155:1:<contractAddress>`);
 - CID of the assertion (`issuer`+`subjectCredential`) for assertions, generated according to [RFC 8785
 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785);
 - `KEY` or `PKH` DID method for trust computers.
@@ -164,7 +164,7 @@ This standard introduce the folowing abilities/disabilities as initial scopes of
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
   "result": "Critical",
   "findings": [
     {
@@ -192,7 +192,7 @@ Security report with no findings:
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
   "result": "None"
 },
 "proof": {}
@@ -243,7 +243,7 @@ The [Disputecredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 **Endorsement or dispute of a Software Component:**
 ```json
 "type": ["DisputeCredential"],
-"issuer": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+"issuer": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
 "credentialSubject":
 {
   "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
@@ -274,7 +274,7 @@ software component trust score (to be refined):
 "issuanceDate": "2023-11-24T12:24:42Z",
 "credentialSubject":
 {
-  "id": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
   "trustScoreType": "EigenTrust",
   "trustScore": "0.10113570942",
   "scoreset": {
@@ -325,7 +325,7 @@ did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK
 nkbihfbeogaeaoehlefnkodbefgpgknn (id)
 
 # Software components / Wallet extension: MetaMask Snaps
-did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ= (sha-256)
+snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ= (sha-256)
 
 # Software components / Smart contract deployed in Ethereum
 did:pkh:eip155:1:0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984 (ethereum address)
