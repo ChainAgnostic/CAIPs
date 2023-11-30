@@ -18,9 +18,9 @@ CAIP-x defines a way to assess trust in software components leveraging social re
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-This proposal introduces a standardized data framework aimed at harmonizing the assertions made by communities intrumental in evaluating the trustworthiness in software components, and in harmonizing the resulting trust score.
-Software components encompass be any executable code, particularly those originating from decentralized ecosystems. Examples includes self-custodial wallets (e.g., MetaMask), associated extensions (e.g., Snaps), decentralized network clients (e.g., Geth), smart contracts, decentralized applications, and more.
-The proposed data framework shape trust graphs specific to each account owner, comprising:
+This proposal introduces a standardized data framework aimed at uniformizing the assertions made by communities intrumental in evaluating the trustworthiness in software components, and in uniformizing the resulting trust score.
+Software components encompass can be any executable code, particularly those originating from decentralized ecosystems. Examples includes self-custodial wallets (e.g., MetaMask), associated extensions (e.g., Snaps), decentralized network clients (e.g., Geth), smart contracts, decentralized applications, and more.
+The proposed data framework shape trust graphs specific to account owner, comprising:
 
 - **Trust/distrust assertions in account owners:** This allows individuals to identify their trusted peers, thereby shaping their trust graph;
 - **Software component security reports:** This enables anyone to publish security insights about any software components;
@@ -159,6 +159,7 @@ This standard introduce the folowing abilities/disabilities as initial scopes of
 
 **Assertion of security to a software components:**
 ```json
+"id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
 "type": "SecurityReportCredential",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
@@ -170,6 +171,7 @@ This standard introduce the folowing abilities/disabilities as initial scopes of
       "criticity": "Critical",
       "type": "Key leak",
       "description": "`snap_getBip44Entropy` makes the parent key accessible"
+      "lang": "en"
     },
     {
       "criticity": "Medium",
@@ -180,7 +182,7 @@ This standard introduce the folowing abilities/disabilities as initial scopes of
       "type": "Phishing"
     },
   ],
-  "applicableSecurityReport": "Critical",
+  "applicableSecurityReport": "2b6fd6f70528912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
 },
 "proof": {}
 ```
@@ -215,7 +217,7 @@ View - Applicable Security Reports example
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "<CID>",
+  "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
   "currentStatus": "Disputed",
   "statusReason": {
     "value": "Sybil attack",
@@ -230,13 +232,30 @@ The [Disputecredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "<CID>",
+  "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
   "currentStatus": "Endorsed"
 },
 "proof": {}
 ```
 - *Enum for `currentStatus`:  "Disputed", "Endorsed".*
 
+- 
+**Endorsement or dispute of a Software Component:**
+```json
+"type": ["DisputeCredential"],
+"issuer": "did:snap:CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+"credentialSubject":
+{
+  "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
+  "currentStatus": "Disputed",
+  "statusReason": {
+    "type": "Scam",
+    "value": "Interact with a fraudulent smart contract",
+    "lang": "en"
+  },
+},
+"proof": {}
+```
 
 #### Outgoing data: Trust score
 
