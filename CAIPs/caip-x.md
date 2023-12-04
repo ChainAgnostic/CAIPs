@@ -66,7 +66,7 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
 
 **Assertion of trust to an account owner:**
 ```json
-"type": "AccountTrustCredential",
+"type": "TrustCredential",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -95,7 +95,7 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
 ```
 **Assertion of distrust to an account owner:**
 ```json
-"type": "AccountTrustCredential",
+"type": "TrustCredential",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -268,7 +268,7 @@ While the computation steps may vary based on the trust computer algorithm, the 
 
 software component trust score (to be refined):
 ```json
-"type": "SoftwareTrustScoreCredential",
+"type": "TrustScoreCredential",
 "issuer": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
 "issuanceDate": "2023-11-24T12:24:42Z",
 "credentialSubject":
