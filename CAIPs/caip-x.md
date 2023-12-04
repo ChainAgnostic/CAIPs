@@ -41,9 +41,8 @@ By standardizing data to form a universally applicable trust graph reusable in a
 
 ## Specification
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
-### Subjects identification
-Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are utilized to identify subjects such as `accounts owners`, `software components` or the `assertions` themselves. 
-Given that `account owners` and `trust computers` are issuing assertions about subjects, they both need to be identifiable.
+### Identification
+Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are utilized to identify subjects such as `accounts owners`, `software components` or the `assertions` themselves, as well as issuers such as `account owners` and `trust computers`.
 
 - `PKH` DID method for account owners (e.g. `did:pkh:eip155:1:<publicAddress>`, `did:pkh:bip122:<publicAddress>`, `did:pkh:solana:<publicAddress>`);
 - Custom Identifiers for software components such as the checksum (e.g. `snap://<checksum>`, `did:pkh:eip155:1:<contractAddress>`);
@@ -151,7 +150,7 @@ The `scope` of trust needs to be standardized for interoperability purpose, but 
 
 The `level` of trust is subjective, therefore the level range can be flexible according to the use-case. However, for interoperability purposes, it must remain within the following range: `Very low`, `Low`, `Moderate`, `High`, `Very High`.
 
-This standard introduce the folowing abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
+This standard introduce the folowing reference abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following reference qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
 
 ![image](https://github.com/dayksx/CAIPs/assets/77788154/ff5eb499-8a99-44c9-9f9f-cef17bed3082)
 
@@ -182,7 +181,7 @@ This standard introduce the folowing abilities/inabilities as initial scopes of 
       "type": "Phishing"
     },
   ],
-  "applicableSecurityReport": "2b6fd6f70528912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
+  "applicableSecurityReport": ["2b6fd6f70528912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2"],
 },
 "proof": {}
 ```
@@ -213,7 +212,7 @@ View - Applicable Security Reports example
 
 **Endorsement or dispute of an Assertion of security:**
 ```json
-"type": ["DisputeCredential"],
+"type": ["StatusCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -226,9 +225,9 @@ View - Applicable Security Reports example
 },
 "proof": {}
 ```
-The [Disputecredential](https://www.w3.org/TR/vc-data-model/#disputes) is defined by the W3C in the Verifiable Credentials Data Model.
+The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is defined by the W3C in the Verifiable Credentials Data Model.
 ```json
-"type": ["EndorsementCredential"],
+"type": ["StatusCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -239,10 +238,10 @@ The [Disputecredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 ```
 - *Enum for `currentStatus`:  "Disputed", "Endorsed".*
 
-- 
+
 **Endorsement or dispute of a Software Component:**
 ```json
-"type": ["DisputeCredential"],
+"type": ["StatusCredential"],
 "issuer": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
 "credentialSubject":
 {
@@ -297,7 +296,7 @@ Incoming and outgoing data can be stored in any datastore, but it should meet so
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-### Subjects identification
+### Udentification
 DID and CID are decentralized identification methods that are not reliant on any centralized identity provider, making them more sustainable.
 1. Decentralized identifiers (DID) using `pkh` and `key` methods allow for the identification of account owners or trust computers in a chain-agnostic manner.
 2. Content Identifiers (CID) enable anyone to generate identifiers based on the content of a document.
