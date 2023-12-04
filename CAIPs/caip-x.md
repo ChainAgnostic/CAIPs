@@ -76,7 +76,7 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
   [
     {
       "type": "Quality",
-      "scope": "Reliability",
+      "scope": "Trustworthy",
       "level": "High"
     },
     {
@@ -105,7 +105,7 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
   [
     {
       "type": "Inability",
-      "scope": "Privacy enforcement",
+      "scope": "Data protection",
       "level": "Very high",
       "reason": ["Data monetization", "Data leak"]
     },
@@ -117,7 +117,7 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
     },
     {
       "type": "Inability",
-      "scope": "Software design",
+      "scope": "User experience design",
       "level": "High",
       "reason": ["Poor UX"]
     },
@@ -151,11 +151,11 @@ The `scope` of trust needs to be standardized for interoperability purpose, but 
 
 The `level` of trust is subjective, therefore the level range can be flexible according to the use-case. However, for interoperability purposes, it must remain within the following range: `Very low`, `Low`, `Moderate`, `High`, `Very High`.
 
-This standard introduce the folowing abilities/disabilities as initial scopes of trust/distrust: `Software security`, `Software development`; as well as the following qualities/flows : `Honesty`, `Reliability` `Dishonesty`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can  be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
+This standard introduce the folowing abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/f84f0133-1c39-41e2-aa2b-8d93f3300ae8)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/ff5eb499-8a99-44c9-9f9f-cef17bed3082)
 
-*View - Scope of trustworthiness Data Model*
+*View - Scope of trust Data Model*
 
 **Assertion of security to a software components:**
 ```json
