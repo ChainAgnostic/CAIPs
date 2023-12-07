@@ -74,19 +74,18 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
   "trustworthiness":
   [
     {
-      "type": "Quality",
       "scope": "Trustworthy",
-      "level": "High"
+      "level": "High",
+      "reason": ["Alumnus"]
     },
     {
-      "type": "Ability",
       "scope": "Software development",
-      "level": "Moderate"
+      "level": "Very high",
+      "reason": ["Software engineer", "Ethereum core developer"]
     },
     {
-      "type": "Ability",
       "scope": "Software security",
-      "level": "Very high",
+      "level": "High",
       "reason": ["White Hat", "Auditor"]
     }
   ]
@@ -103,33 +102,28 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
   "trustworthiness":
   [
     {
-      "type": "Inability",
       "scope": "Data protection",
-      "level": "Very high",
+      "level": "Very low",
       "reason": ["Data monetization", "Data leak"]
     },
     {
-      "type": "Inability",
       "scope": "Software security",
-      "level": "Moderate",
-      "reason": ["Poor track record", "Lack of transparency", "Insufficient Testing"]
+      "level": "Low",
+      "reason": ["Poor track record", "Lack of transparency"]
     },
     {
-      "type": "Inability",
       "scope": "User experience design",
-      "level": "High",
+      "level": "Low",
       "reason": ["Poor UX"]
     },
     {
-      "type": "Flaw",
-      "scope": "Dishonesty",
-      "level": "High"
+      "scope": "Honesty",
+      "level": "Very low"
       "reason": ["Scam", "Rug pull"]
     },
     {
-      "type": "Flaw",
-      "scope": "Unlawful",
-      "level": "Moderate",
+      "scope": "Lawful",
+      "level": "Very low",
       "reason": ["Money laundering", "Piracy", "Non-compliance"]
     }
   ]
@@ -138,13 +132,10 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
 ```
 Modeling trust and distrust towards an individual or entity can be a complex task due to the subjective and multifaceted nature of trust. 
 This standard proposes the followinge conceptualization for the trust concept:
-- `type`: This defines the kind of trust or distrust placed in a person. It could relate to an overall `quality` or `flaw`, or to a specific `ability` or `disability` of an individual or entity;
+
 - `scope`: This defines the applicable trust perimeter (`scope` should be a noun);
 - `level`: This defines the extent of trust;
 - `reason` (optional): This defines the motivation of trust.
-
-The `type` of trust allows for the introduction of different applicabilities that can be understood by computers. 
-For instance a `quality` or a `flaw` is a general assertion applicable globally for any situation, whereas an `abilitity` is only useful for specific situations.
 
 The `scope` of trust needs to be standardized for interoperability purpose, but also need to be extendable to fit any use-case (cf. below `View - Scope of trustworthiness Data Model`).
 
@@ -152,7 +143,7 @@ The `level` of trust is subjective, therefore the level range can be flexible ac
 
 This standard introduce the folowing reference abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following reference qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/ff5eb499-8a99-44c9-9f9f-cef17bed3082)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/7564794e-0a15-4498-b091-5d64ec715e65)
 
 *View - Scope of trust Data Model*
 
