@@ -75,17 +75,17 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
   [
     {
       "scope": "Trustworthy",
-      "level": "High",
+      "level": 0.5,
       "reason": ["Alumnus"]
     },
     {
       "scope": "Software development",
-      "level": "Very high",
+      "level": 1,
       "reason": ["Software engineer", "Ethereum core developer"]
     },
     {
       "scope": "Software security",
-      "level": "High",
+      "level": 0.5,
       "reason": ["White Hat", "Auditor"]
     }
   ]
@@ -103,27 +103,27 @@ All subsequent documents adhere to the [Verifiable Credential Data Model](https:
   [
     {
       "scope": "Data protection",
-      "level": "Very low",
+      "level": -1,
       "reason": ["Data monetization", "Data leak"]
     },
     {
       "scope": "Software security",
-      "level": "Low",
+      "level": -0.5,
       "reason": ["Poor track record", "Lack of transparency"]
     },
     {
       "scope": "User experience design",
-      "level": "Low",
+      "level": -0.5,
       "reason": ["Poor UX"]
     },
     {
       "scope": "Honesty",
-      "level": "Very low"
+      "level": -1
       "reason": ["Scam", "Rug pull"]
     },
     {
       "scope": "Lawful",
-      "level": "Very low",
+      "level": -1,
       "reason": ["Money laundering", "Piracy", "Non-compliance"]
     }
   ]
@@ -139,9 +139,9 @@ This standard proposes the followinge conceptualization for the trust concept:
 
 The `scope` of trust needs to be standardized for interoperability purpose, but also need to be extendable to fit any use-case (cf. below `View - Scope of trustworthiness Data Model`).
 
-The `level` of trust is subjective, therefore the level range can be flexible according to the use-case. However, for interoperability purposes, it must remain within the following range: `Very low`, `Low`, `Moderate`, `High`, `Very High`.
+The `level` of trust is subjective, therefore the level range can be flexible according to the use-case. However, for interoperability purposes, it must remain within the following range: [-1,1]; Here is a proposed interpretation: `Very low` (-1), `Low` (-0.5), `Neutral` (0), `High` (0.5), `Very High` (1).
 
-This standard introduce the folowing reference abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following reference qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
+This standard introduce the folowing references abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following references qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
 
 ![image](https://github.com/dayksx/CAIPs/assets/77788154/7564794e-0a15-4498-b091-5d64ec715e65)
 
@@ -207,7 +207,7 @@ View - Applicable Security Reports example
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
+  "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
   "currentStatus": "Disputed",
   "statusReason": {
     "value": "Sybil attack",
@@ -233,10 +233,10 @@ The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 **Endorsement or dispute of a Software Component:**
 ```json
 "type": ["StatusCredential"],
-"issuer": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
+  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
   "currentStatus": "Disputed",
   "statusReason": {
     "type": "Scam",
