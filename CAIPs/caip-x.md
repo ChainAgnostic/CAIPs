@@ -68,7 +68,7 @@ The standard presumes that both the `issuer` property and the complete content o
 
 **Assertion of trust to an account owner:**
 ```json
-"type": "TrustCredential",
+"type": ["TrustCredential"],
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -76,7 +76,7 @@ The standard presumes that both the `issuer` property and the complete content o
   "trustworthiness":
   [
     {
-      "scope": "Trustworthy",
+      "scope": "Honesty",
       "level": 0.5,
       "reason": ["Alumnus"]
     },
@@ -96,13 +96,18 @@ The standard presumes that both the `issuer` property and the complete content o
 ```
 **Assertion of distrust to an account owner:**
 ```json
-"type": "TrustCredential",
+"type": ["TrustCredential"],
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "did:pkh:eip155:1:0xC3764761E297D6f121e79C32A65829Cd1dDb4D33",
   "trustworthiness":
   [
+    {
+      "scope": "Honesty",
+      "level": -1
+      "reason": ["Scam", "Rug pull"]
+    },
     {
       "scope": "Data protection",
       "level": -1,
@@ -117,11 +122,6 @@ The standard presumes that both the `issuer` property and the complete content o
       "scope": "User experience design",
       "level": -0.5,
       "reason": ["Poor UX"]
-    },
-    {
-      "scope": "Honesty",
-      "level": -1
-      "reason": ["Scam", "Rug pull"]
     },
     {
       "scope": "Lawful",
@@ -152,7 +152,7 @@ This standard introduce the folowing references abilities/inabilities as initial
 **Security report to a software components:**
 ```json
 "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
-"type": "SecurityReportCredential",
+"type": ["SecurityReportCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -185,7 +185,7 @@ This standard introduce the folowing references abilities/inabilities as initial
 ```
 Security report with no findings:
 ```json
-"type": "SecurityReportCredential",
+"type": ["SecurityReportCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -268,7 +268,7 @@ While the computation steps may vary based on the trust computer algorithm, the 
 
 software component trust score (to be refined):
 ```json
-"type": "TrustScoreCredential",
+"type": ["TrustScoreCredential"],
 "issuer": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
 "issuanceDate": "2023-11-24T12:24:42Z",
 "credentialSubject":
