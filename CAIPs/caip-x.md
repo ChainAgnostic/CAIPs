@@ -149,7 +149,7 @@ This standard introduce the folowing references abilities/inabilities as initial
 
 *View - Scope of trust Data Model*
 
-**Assertion of security to a software components:**
+**Security report to a software components:**
 ```json
 "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
 "type": "SecurityReportCredential",
@@ -205,7 +205,7 @@ A security report can be based on a previous one (`applicableSecurityReport`) to
 View - Applicable Security Reports example 
 
 
-**Endorsement or dispute of an Assertion of security:**
+**Endorsement or dispute of an Security report:**
 ```json
 "type": ["StatusCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
