@@ -139,7 +139,7 @@ This standard proposes the followinge conceptualization for the trust concept:
 
 The `scope` of trust needs to be standardized for interoperability purpose, but also need to be extendable to fit any use-case (cf. below `View - Scope of trustworthiness Data Model`).
 
-The `level` of trust is subjective, therefore the level range can be flexible according to the use-case. However, for interoperability purposes, it must remain within the following range: [-1,1]; Here is a proposed interpretation: `Very low` (-1), `Low` (-0.5), `Neutral` (0), `High` (0.5), `Very High` (1).
+The `level` of trust must remain within the following range: [-1,1]; Meanings: `Very low` (-1), `Low` (-0.5), `Neutral` (0), `High` (0.5), `Very High` (1).
 
 This standard introduce the folowing references abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following references qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
 
@@ -149,30 +149,30 @@ This standard introduce the folowing references abilities/inabilities as initial
 
 **Assertion of security to a software components:**
 ```json
-"id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
+"id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
 "type": "SecurityReportCredential",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "result": "Critical",
-  "findings": [
+  "securityStatus": "Unsecured",
+  "securityFindings": [
     {
-      "criticity": "Critical",
+      "criticity": 1,
       "type": "Key leak",
       "description": "`snap_getBip44Entropy` makes the parent key accessible"
       "lang": "en"
     },
     {
-      "criticity": "Medium",
+      "criticity": 0.5,
       "type": "Buffer Overflow"
     },
     {
-      "criticity": "Low",
+      "criticity": 0.25,
       "type": "Phishing"
     },
   ],
-  "applicableSecurityReport": ["2b6fd6f70528912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2"],
+  "applicableSecurityReport": ["ipfs://6qL5KqZv3qRtb9sLq1WJSGaHPTafmqc56AUsiLilvM78Qv"],
 },
 "proof": {}
 ```
@@ -183,12 +183,14 @@ Security report with no findings:
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "result": "None"
+  "securityStatus": "Secured"
 },
 "proof": {}
 ```
-- *Enumerations for `result`, and `criticity`:  "None", "Low", "Medium", "Critical".*
-- `findings` (optional) list the security findings.
+- The `securityStatus` is the final result of the security assessment, that can be either `Secured` or `Unsecured`.
+- The `findings` (optional) lists the security findings.
+- The `criticity` of findings must remain within the following range: [0,1]; Meanings: `None` (0), `Low` (0.25), `Medium` (0.5), `High` (0.75), `Critical` (1).
+
 - `applicableSecurityReport` (optional) list the applicable security reports for the analysis.
 The `result` corresponds to the highest security findings in the code, with the details of these findings listed under `findings`.
 
