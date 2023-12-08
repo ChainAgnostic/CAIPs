@@ -173,6 +173,11 @@ This standard introduce the folowing references abilities/inabilities as initial
       "criticity": 0.25,
       "type": "Phishing"
     },
+    {
+      "criticity": 0,
+      "type": "Data leak",
+      "description": "API can communicate data to a centralized server"
+    },
   ],
   "applicableSecurityReport": ["ipfs://6qL5KqZv3qRtb9sLq1WJSGaHPTafmqc56AUsiLilvM78Qv"],
 },
