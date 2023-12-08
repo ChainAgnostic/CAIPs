@@ -60,7 +60,9 @@ An account owner can issue assertions about the following subjects:
 
 *View - Software component Trust Assessment Metamodel*
 
-All subsequent documents adhere to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for representation purposes. However this this standard does not prescribe any specific document type, even though internationally recognized standards are recommended.
+All subsequent documents adhere to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for representation purposes. 
+However this this standard does not prescribe any specific document type, even though internationally recognized standards are recommended.
+The standard presumes that both the `issuer` property and the complete content of the `credentialSubject` will be only utilized once the wire-formats/signed-envelopes have been verified.
 
 #### Incoming Data: Trust signals
 
