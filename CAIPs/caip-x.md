@@ -151,7 +151,7 @@ This standard introduce the folowing references abilities/inabilities as initial
 
 **Security report to a software components:**
 ```json
-"id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
+"id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
 "type": ["SecurityReportCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
@@ -160,29 +160,30 @@ This standard introduce the folowing references abilities/inabilities as initial
   "securityStatus": "Unsecured",
   "securityFindings": [
     {
-      "criticity": 1,
+      "criticality": 1,
       "type": "Key leak",
       "description": "`snap_getBip44Entropy` makes the parent key accessible"
       "lang": "en"
     },
     {
-      "criticity": 0.5,
+      "criticality": 0.5,
       "type": "Buffer Overflow"
     },
     {
-      "criticity": 0.25,
+      "criticality": 0.25,
       "type": "Phishing"
     },
     {
-      "criticity": 0,
+      "criticality": 0,
       "type": "Data leak",
       "description": "API can communicate data to a centralized server"
     },
   ],
-  "applicableSecurityReport": ["ipfs://6qL5KqZv3qRtb9sLq1WJSGaHPTafmqc56AUsiLilvM78Qv"],
+  "applicableSecurityReport": ["6qL5KqZv3qRtb9sLq1WJSGaHPTafmqc56AUsiLilvM78Qv"],
 },
 "proof": {}
 ```
+
 Security report with no findings:
 ```json
 "type": ["SecurityReportCredential"],
@@ -196,7 +197,14 @@ Security report with no findings:
 ```
 - The `securityStatus` is the final result of the security assessment, that can be either `Secured` or `Unsecured`.
 - The `findings` (optional) lists the security findings.
-- The `criticity` of findings must remain within the following range: [0,1]; Meanings: `None` (0), `Low` (0.25), `Medium` (0.5), `High` (0.75), `Critical` (1).
+- The `criticality` of findings must remain within the following range: [0,1]; Meanings: `None` (0), `Low` (0.25), `Medium` (0.5), `High` (0.75), `Critical` (1).
+
+This standard introduce the folowing references findings: `Key Exposure`, `Data Breach`, `Phishing`... As the trust scopes, these findings are not prescritive, but serve as guidance to achieve higher interoperability. They can be augmented or extended by inheriting high-level findings to accomodate any use-case.
+
+![image](https://github.com/dayksx/CAIPs/assets/77788154/e2393fb3-17a4-4ade-ae35-057aa3a2427e)
+
+*View - Security findings Types*
+
 
 - `applicableSecurityReport` (optional) list the applicable security reports for the analysis.
 The `result` corresponds to the highest security findings in the code, with the details of these findings listed under `findings`.
@@ -216,7 +224,7 @@ View - Applicable Security Reports example
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
+  "id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
   "currentStatus": "Disputed",
   "statusReason": {
     "value": "Sybil attack",
