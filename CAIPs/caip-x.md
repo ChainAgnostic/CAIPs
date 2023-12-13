@@ -56,7 +56,7 @@ An account owner can issue assertions about the following subjects:
 - Software component, by issuing security reports or  endorsement/dispute assertions;
 - Software component security report, by issuing endorsement/dispute assertions.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/cc5a0e42-b90b-4b0e-85ec-90c5f9c1338e)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/03312c28-1502-47fb-a9a2-906fb65152f5)
 
 *View - Software component Trust Assessment Metamodel*
 
