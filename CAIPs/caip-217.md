@@ -90,6 +90,7 @@ specification.
 
 ## References
 
+[CAIP-2]: https://chainAgnostic.org/CAIPs/CAIP-2
 [CAIP-10]: https://chainAgnostic.org/CAIPs/CAIP-10
 [CAIP-25]: https://chainAgnostic.org/CAIPs/CAIP-25
 [CAIP-27]: https://chainAgnostic.org/CAIPs/CAIP-27
