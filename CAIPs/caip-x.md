@@ -56,7 +56,7 @@ An account owner can issue assertions about the following subjects:
 - Software component, by issuing security reports or  endorsement/dispute assertions;
 - Software component security report, by issuing endorsement/dispute assertions.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/03312c28-1502-47fb-a9a2-906fb65152f5)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/43ffae91-32d5-40f7-a612-a7a10ed71b05)
 
 *View - Software component Trust Assessment Metamodel*
 
@@ -220,7 +220,7 @@ View - Applicable Security Reports example
 
 **Endorsement or dispute of an Security report:**
 ```json
-"type": ["StatusCredential"],
+"type": ["ReviewCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -235,7 +235,7 @@ View - Applicable Security Reports example
 ```
 The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is defined by the W3C in the Verifiable Credentials Data Model.
 ```json
-"type": ["StatusCredential"],
+"type": ["ReviewCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -249,7 +249,7 @@ The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 
 **Endorsement or dispute of a Software Component:**
 ```json
-"type": ["StatusCredential"],
+"type": ["ReviewCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
