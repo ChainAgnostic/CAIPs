@@ -75,7 +75,7 @@ the provider's choice of the optional properties* expressed in a single unified
 arrays in the request where properties from both are returned as authorized, the
 two scopes MUST be merged in the response (see examples below). However,
 respondents MUST NOT restructure scopes (e.g., by folding properties from a
-[CAIP2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed,
+[CAIP-2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed,
 namespace-wide scope object) as this may introduce ambiguities (See Security
 Considerations below).
 
