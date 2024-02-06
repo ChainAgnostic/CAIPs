@@ -14,61 +14,70 @@ requires (*optional):
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-CAIP-x defines a way to assess trust in software components leveraging social relationships of trust.
+CAIP-x defines a way to assess trust in software components leveraging community claims and social relationships of trust.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-This proposal introduces a standardized data framework aimed at uniformizing the assertions made by communities intrumental in evaluating the trustworthiness in software components, and in uniformizing the resulting trust score.
-Software components encompass can be any executable code, particularly those originating from decentralized ecosystems. Examples includes self-custodial wallets (e.g., MetaMask), associated extensions (e.g., Snaps), decentralized network clients (e.g., Geth), smart contracts, decentralized applications, and more.
-The proposed data framework shape trust graphs specific to account owner, comprising:
+This proposal introduces a standardized data framework with the aim to standardize:
+- the claims made by communities (peers) about software components,
+- the claims made by communities about peers,
+- the community-derived trust scores of software components and/or peers.
 
-- **Trust/distrust assertions in account owners:** This allows individuals to identify their trusted peers, thereby shaping their trust graph;
-- **Software component security reports:** This enables anyone to publish security insights about any software components;
-- **Endorsements/disputes of security reports:** This allows technical individuals to provide feedbacks on published security insights.
-- **Endorsements/disputes of software components** This enables any individual to provide feedback directly about software components.
+These data elements can be used independently. 
+For building a community-powered trust assessment mechanism, it's necessary to identify and gather the relevant data in accordance with the requirements of the intended trust scores computation.
+These data can then be leveraged to effectively calculate trust scores, reflecting the overall sentiment of the communit.
 
-This data which translates  explicit trust signals, can be supplemented with more implicit on-chain and off-chain trust signals. These may include `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, and more.
+The standardized data framework includes:
 
-Trust graphs can be processed through trust computers (i.e., protocols that leverage recursive algorithms such as `EigenTrust`) to calculate trust scores relative to each account owner. This includes:
+- **Trust:** This allows individuals to define their trusted peers, shaping their trust graph;
+- **Security Report:** This enables security expert to publish security insights about software components;
+- **Review:** This allows individuals to endorse or dispute any claims as well as any entity such as software components;
+- **Trust score:** This enables any trust computer to publish computed trust scores about software components and/or peers.
 
-- **Assertion of trust score:** This enables any trust computer to publish the computed trust scores about software components.
+This data which translates explicit trust signals, can be supplemented with more implicit on-chain and/or off-chain trust signals, such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, and more.
+
+Software components can encompass any executable code, particularly those derived from decentralized ecosystems. This encompasses self-custodial wallets (like MetaMask), wallet extensions (such as Snaps), decentralized network clients (for instance, Geth), smart contracts, decentralized applications, among others.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
-Software components within a decentralized ecosystem tend to be distributed permissionlessly. While this fosters permissionless innovation, it simultaneously exposes the system to potential vulnerabilities and scams.
+Software components within a decentralized web tend to be distributed permissionlessly. While this fosters permissionless innovation, it simultaneously exposes the system to potential vulnerabilities and scams.
 Most existing solutions for evaluating software components are centralized, necessitating trusted intermediaries. This reliance on intermediaries compromises the decentralized property of the ecosystem.
 By standardizing data to form a universally applicable trust graph reusable in any context, we strengthen the reliability of software components assessments powered by the communities.
 
 ## Specification
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
 ### Identification
-Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are utilized to identify subjects such as `accounts owners`, `software components` or the `assertions` themselves, as well as issuers such as `account owners` and `trust computers`.
+Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are used to identify subjects such as peers, software components as well as the claims / assertions themselves.
+They can also identify any issuers, which could be peers or a software entity like a trust computers.
 
-- `PKH` DID method for account owners (e.g. `did:pkh:eip155:1:<publicAddress>`, `did:pkh:bip122:<publicAddress>`, `did:pkh:solana:<publicAddress>`);
-- Custom Identifiers for software components such as the checksum (e.g. `snap://<checksum>`, `did:pkh:eip155:1:<contractAddress>`);
-- CID of the assertion (`issuer`+`subjectCredential`) for assertions, generated according to [RFC 8785
+The standardized data framework specifies the use of the following identifiers:
+- **Peers:** `PKH` DID method (e.g. `did:pkh:eip155:1:<publicAddress>`, `did:pkh:bip122:<publicAddress>`, `did:pkh:solana:<publicAddress>`);
+- **Software components:** Custom identifiers for software components such as the checksum (e.g. `snap://<checksum>`, `did:pkh:eip155:1:<contractAddress>`);
+- **Assertions:** CID generated based on their contents according to [RFC 8785
 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785);
-- `KEY` or `PKH` DID method for trust computers.
+- **Software entities:** `KEY` or `PKH` DID method.
 
 ### Data
-An account owner can issue assertions about the following subjects:
-- Another account owner, by issuing trust or distrust assertions;
-- Software component, by issuing security reports or  endorsement/dispute assertions;
-- Software component security report, by issuing endorsement/dispute assertions.
+A peer can issue assertions about the following subjects:
+- Another peer, by issuing **Trust** assertions,
+- A Software component, by issuing **Security Report** or **Review** assertions,
+- A Security report, by issuing **Review** assertions.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/43ffae91-32d5-40f7-a612-a7a10ed71b05)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/3b803811-eb45-4c56-8554-2628fb4d9cff)
 
 *View - Software component Trust Assessment Metamodel*
 
 All subsequent documents adhere to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for representation purposes. 
-However this this standard does not prescribe any specific document type, even though internationally recognized standards are recommended.
-The standard presumes that both the `issuer` property and the complete content of the `credentialSubject` will be only utilized once the wire-formats/signed-envelopes have been verified.
+However this standard does not prescribe any specific document type, even though internationally recognized standards are recommended.
+The standard presumes that both the `issuer` property and the complete content of the `credentialSubject` will be only utilized once the wire-formats and signed-envelopes have been verified.
 
 #### Incoming Data: Trust signals
 
 **Assertion of trust to an account owner:**
 ```json
-"type": ["TrustCredential"],
+
+"type": ["VerifiableCredential", "TrustCredential"],
+"issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -88,7 +97,7 @@ The standard presumes that both the `issuer` property and the complete content o
     {
       "scope": "Software security",
       "level": 0.5,
-      "reason": ["White Hat", "Auditor"]
+      "reason": ["White Hat", "Smart Contract Auditor"]
     }
   ]
 },
@@ -96,7 +105,8 @@ The standard presumes that both the `issuer` property and the complete content o
 ```
 **Assertion of distrust to an account owner:**
 ```json
-"type": ["TrustCredential"],
+"type": ["VerifiableCredential", "TrustCredential"],
+"issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -137,22 +147,23 @@ This standard proposes the followinge conceptualization for the trust concept:
 
 - `scope`: This defines the applicable trust perimeter (`scope` should be a noun);
 - `level`: This defines the extent of trust;
-- `reason` (optional): This defines the motivation of trust.
+- `reason` (optional): This defines the motivation of the trust.
 
-The `scope` of trust needs to be standardized for interoperability purpose, but also need to be extendable to fit any use-case (cf. below `View - Scope of trustworthiness Data Model`).
+The `level` of trust must remain within the following range: [-1,1]. This could be interpreted as follows: `Very low` (-1), `Low` (-0.5), `Neutral` (0), `High` (0.5), `Very High` (1).
 
-The `level` of trust must remain within the following range: [-1,1]; Meanings: `Very low` (-1), `Low` (-0.5), `Neutral` (0), `High` (0.5), `Very High` (1).
+The `scope` has reference values for interoperability purposes, but also need to be extendable to fit any use-case (cf. below `View - Scope of trustworthiness Data Model`).
 
-This standard introduce the folowing references abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`, `Responsiveness`, `User support`; as well as the following references qualities/flows : `Honesty`, `Reliability`, `Lawful`, `Dishonesty`, `Unreliability`, `Unlawful`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
+This standard introduce the folowing references abilities/inabilities as initial scopes of trust/distrust: `Software security`, `Software development`, `Data protection`, `User experience design`; as well as the following references qualities/flows : `Honesty`, `Reliability`. These scopes are not prescritive, but serve as guidance to achieve higher interoperability. They can be reviewed or extended by inheriting high-level scopes to accomodate any use-case.
 
-![image](https://github.com/dayksx/CAIPs/assets/77788154/7564794e-0a15-4498-b091-5d64ec715e65)
+![image](https://github.com/dayksx/CAIPs/assets/77788154/278e91ea-3859-498f-b84b-f49519637150)
 
 *View - Scope of trust Data Model*
 
 **Security report to a software components:**
 ```json
 "id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
-"type": ["SecurityReportCredential"],
+"type": ["VerifiableCredential", "SecurityReportCredential"],
+"issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -178,15 +189,15 @@ This standard introduce the folowing references abilities/inabilities as initial
       "type": "Data leak",
       "description": "API can communicate data to a centralized server"
     },
-  ],
-  "applicableSecurityReport": ["6qL5KqZv3qRtb9sLq1WJSGaHPTafmqc56AUsiLilvM78Qv"],
+  ]
 },
 "proof": {}
 ```
 
 Security report with no findings:
 ```json
-"type": ["SecurityReportCredential"],
+"type": ["VerifiableCredential", "SecurityReportCredential"],
+"issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -197,30 +208,18 @@ Security report with no findings:
 ```
 - The `securityStatus` is the final result of the security assessment, that can be either `Secured` or `Unsecured`.
 - The `findings` (optional) lists the security findings.
-- The `criticality` of findings must remain within the following range: [0,1]; Meanings: `None` (0), `Low` (0.25), `Medium` (0.5), `High` (0.75), `Critical` (1).
+- The `criticality` of findings must remain within the following range: [0,1]; This could be interpreted as follows: `None` (0), `Low` (0.25), `Medium` (0.5), `High` (0.75), `Critical` (1).
 
-This standard introduce the folowing references findings: `Key Exposure`, `Data Breach`, `Phishing`... As the trust scopes, these findings are not prescritive, but serve as guidance to achieve higher interoperability. They can be augmented or extended by inheriting high-level findings to accomodate any use-case.
+This standard introduce the folowing references findings: `Key Exposure`, `Data Breach`, `Phishing`... As the trust scopes, these finding types are not prescritive, but serve as guidance to achieve higher interoperability. They can be augmented or extended by inheriting high-level findings to accomodate any use-case.
 
 ![image](https://github.com/dayksx/CAIPs/assets/77788154/e2393fb3-17a4-4ade-ae35-057aa3a2427e)
 
 *View - Security findings Types*
 
-
-- `applicableSecurityReport` (optional) list the applicable security reports for the analysis.
-The `result` corresponds to the highest security findings in the code, with the details of these findings listed under `findings`.
-
-A security report can be based on a previous one (`applicableSecurityReport`) to reuse prior assessments and limit the report scope to the difference between two software component versions. 
-
-*In the example below, the security report for the `snap version 2.0.1` leverages the previous security report for the `snap version 2.0.0` as the gap between the two versions if merely a patch for backward compatible bug fixes.*
-
-![image](https://github.com/dayksx/CAIPs/assets/77788154/f8b5d888-7746-4eb3-9424-5afef6ef5c86)
-
-View - Applicable Security Reports example 
-
-
-**Endorsement or dispute of an Security report:**
+**Review of a Security Report:**
 ```json
-"type": ["ReviewCredential"],
+"type": ["VerifiableCredential", "ReviewCredential", "DisputeCredential"],
+"issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -235,7 +234,7 @@ View - Applicable Security Reports example
 ```
 The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is defined by the W3C in the Verifiable Credentials Data Model.
 ```json
-"type": ["ReviewCredential"],
+"type": ["VerifiableCredential", "ReviewCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -247,9 +246,10 @@ The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 - *Enum for `currentStatus`:  "Disputed", "Endorsed".*
 
 
-**Endorsement or dispute of a Software Component:**
+**Review of a Software Component:**
 ```json
-"type": ["ReviewCredential"],
+"type": ["VerifiableCredential", "ReviewCredential"],
+"issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
@@ -263,40 +263,60 @@ The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 },
 "proof": {}
 ```
+Reviews can be used on any subject to provide a postive (endorsement) or a negative (dispute) opinion.
 
 #### Outgoing data: Trust score
 
-The trust signals (incoming data) are utilized to compute trust scores (outgoing data) for software components. 
-While the computation steps may vary based on the trust computer algorithm, the following main steps give an idea of the processing:
-1. Retrieve the relevant trust graph (all the acounts owners graph's nodes with direct and indirect relationships with the software component);
-2. Retrieve the relevant `accounts` (accounts that have issued endorsements, disputes, security reports and if available, the account of the software component's developers) and calculate the `accounts trust scores`;
-3. Weight the `endorsements` and `disputes` based on the issuers' `accounts trust scores`;
-4. Weight the `security reports` based on the weight of the `endorsements` and `disputes` as wellas the issuers' `account trust scores`;
-5. Determinate the final trust score for the `software component`based on the weight of the `security reports`, and if available, the software component's developers `account trust score`.
+Please note that the method for calculating the trust scores is entirely open, and this standard does not provide specific guidelines for it.
 
-software component trust score (to be refined):
+The trust signals (incoming data) are leveraged to calculate the trust scores (outgoing data) for peers and software components.
+While the computation steps may vary based on the chosen trust score computation, the following main steps give an idea of the possible processing logic from a given peer point of view:
+1. Retrieve the `peers` (directly and indirectly connected peers that have issued reviews and security reports);
+2. Calculate the peers' `trust scores`
+3. Weight the `endorsements` and `disputes` based on the issuers' `peers scores`;
+4. Weight the `security reports` based on the weight of the `endorsements` and `disputes` as well as the issuers' `peers scores`;
+5. Calculate the software component's `trust score` based on the weight of the `security reports`, and if available, the software component's developers `peer trust score`.
+
+software component trust score:
 ```json
-"type": ["TrustScoreCredential"],
-"issuer": "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK",
+"type": ["VerifiableCredential", "TrustScoreCredential"],
 "issuanceDate": "2023-11-24T12:24:42Z",
+"issuer": "did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0",
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "trustScoreType": "EigenTrust",
-  "trustScore": "0.10113570942",
-  "scoreset": {
-    "algorithm": {},
-    "inputData": {},
+  "trustScore": {
+    "confidence": 0.0555555559694767,
+    "value": 1
   },
+  "trustScoreType": "IssuerTrustWeightedAverage"
 },
 "proof": {}
 ```
 
-The scoreset provides all the input data and information about the algorithm used to compute the trust score.
+peer trust score:
 
+```json
+"type": ["VerifiableCredential", "TrustScoreCredential"],
+"issuanceDate": "2023-11-24T12:24:42Z",
+"issuer": "did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0",
+"credentialSubject":
+{
+  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+  "trustScore": {
+    "confidence": null,
+    "value": 0.19191918793049725
+  },
+  "trustScoreType": "EigenTrust"
+},
+"proof": {}
+```
 
 ### Data and trust score storage
-Incoming and outgoing data can be stored in any datastore, but it should meet some minimal requirements for verifiability and sustainability:
+
+Please note that the assertions storage is entirely open, and this standard does not provide specific guidelines for it.
+
+Incoming and outgoing data can be stored in any datastore, but the standard recommend some minimal requirements for verifiability and sustainability:
 - Data availability: The datastore should make the assertions and proofs publicly available for consumption and verification purpose;
 - Tamper-proof: The datastore should provide assertions data with proofs of completeness, ensuring that none have been alterned or obstructed;
 - Scalability: The datastore should scale to meet the evolving demand of issued assertions.
@@ -304,17 +324,23 @@ Incoming and outgoing data can be stored in any datastore, but it should meet so
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-### Udentification
+### Modularity and extensibility
+The standard has been designed with modularity and solution-agnosticism, to maximize flexibility and reusability:
+- Data elements are independent from each other, allowing for the use of only a subset if needed,
+- The data framework is agnostic to any specific trust computer, enabling computation by any logic,
+- The flexible data structure facilitates the creation of tailored user experiences.
+- The data has been designed to be agnostic, enabling the reusability of the data across different use-cases
+
+### Identification
 DID and CID are decentralized identification methods that are not reliant on any centralized identity provider, making them more sustainable.
 1. Decentralized identifiers (DID) using `pkh` and `key` methods allow for the identification of account owners or trust computers in a chain-agnostic manner.
 2. Content Identifiers (CID) enable anyone to generate identifiers based on the content of a document.
 
 ### Data
-1. Trust in an individual or entity is based on their qualities, or their abilities; it is not binary and evolves over time;
-2. Distrust assertions allow for the capture of suspicious behaviors;
-3. The security of software components is assessed based on findings from security reports;
-4. Endorsement and dispute solicit community feedback on issued security reports;
-5. This data enables any trust score computer using trust graphs to be set up and calculate a software component trust score.
+1. Trust in an individual or entity is based on their qualities, or their abilities; it is not binary and evolves over time,
+2. Distrust assertions allow for the capture of suspicious behaviors,
+3. The security of software components is assessed based on findings from security reports,
+4. The security reports can be approved or challenged by the community, through endorsement and dispute form community,
 
 ## Test Cases
 <!--Please add diverse test cases here if applicable. Any normative definition of an interface requires test cases to be implementable. -->
@@ -347,8 +373,15 @@ ipfs://QmUqy1Yrv2R81mcYA5sM3qUinkwk6RaKJ4qq1XE6F3BDhM (ipfs CID)
 QmUqy1Yrv2R81mcYA5sM3qUinkwk6RaKJ4qq1XE6F3BDhM (CID)
 ```
 ### Snaps permissionless distribution
-Snaps permissionless distribution aim at providing trust insights leveraging trust scores to guide the end-users for expanding their MetaMask Wallet with snaps developed by the community.
+MetaMask is a wallet that can be extended through community-built features, known as Snaps. 
+The distribution of Snaps aims to be permissionless, enabling the community to distribute Snaps without the need for central intermediaries, while still ensuring security and a seamless user experience. 
+To facilitate this, Snaps is implementing a community-powered trust assessment mechanism.
 
+### Other possible use-cases
+- Any open source software,
+- App stores,
+- AI models market places,
+- Scam/Phishing detectors...
 
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
@@ -358,17 +391,14 @@ All the potential attacks should be considered when setting up the trust compute
 ### Sybil attack
 Subversion of the reputation system by creating a large number of pseudonymous accounts and uses them to gain a disproportionately large influence, and promote vulnerable software or, on the contrary, reduce trust in trustworthy software.
 
-### Bored influencer
-An account becomes popular during a rapid growth stage of one sub-community. 
-Later, the community becomes much less appealing/active resulting in many others that expressed trust in the account becoming unavailable/disengaged. 
-There is noone to revoke the trust in the original influencer account. 
-The influencer account becomes malicious and can have disproportionate impact on the outcomes (their endorsement of a malicious software component is way stronger than multiple negative audits or counter-recommendations formed in a much less active community where there's less trust to throw around).
-Early users being the most trusted is not uncomon. 
-See stackoverflow - certain levels of reputation that exist in the community are no longer reachable and never will be. 
-
-### Trickle sybil
-Assuming a mechanism exists to prevent "bored influencer" or trust scores are being diminished over time or as participation dwindles, the effect can be used to disproportionately grow influence over time.
-An account  with malicious intentions could slowly grow a following (either fake or real, but devoted) and ensure that while the natural community dynamic is on a downwards trend, they keep their supporters active. Over time their influence grows substantially.
+Mitigations:
+The following mitigations can be implemented at the trust computer level
+- Each account is allocated a limited budget for trusting other accounts,
+- An account's influence is determined by their level of proof of humanity,
+- An account's influence diminishes the further it is from the pre-trusted accounts within the graph,
+- An account's reputation decreases over time,
+- A software component is only considered as trustworthy after it has received a certain threshold of positive security reports,
+- A software component is considered as untrustworthy after it has reached a certain threshold of negative security reports.
 
 ## Privacy Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
