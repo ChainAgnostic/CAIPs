@@ -271,11 +271,11 @@ Please note that the method for calculating the trust scores is entirely open, a
 
 The trust signals (incoming data) are leveraged to calculate the trust scores (outgoing data) for peers and software components.
 While the computation steps may vary based on the chosen trust score computation, the following main steps give an idea of the possible processing logic from a given peer point of view:
-1. Retrieve the `peers` (directly and indirectly connected peers that have issued reviews and security reports);
-2. Calculate the peers' `trust scores`
-3. Weight the `endorsements` and `disputes` based on the issuers' `peers scores`;
-4. Weight the `security reports` based on the weight of the `endorsements` and `disputes` as well as the issuers' `peers scores`;
-5. Calculate the software component's `trust score` based on the weight of the `security reports`, and if available, the software component's developers `peer trust score`.
+1. Retrieve the peers (directly and indirectly connected peers that have issued reviews, security reports of the given software component),
+2. Calculate the peers' trust scores (relatively to the requesting peer point of view),
+3. Weight the reviews (endorsements and disputes) based on the issuers' peers scores,
+4. Weight the security reports based on the weight of the endorsements and disputes as well as the issuers' peers scores;
+5. Calculate the software component's trust score based on the weight of the security reports, and if available, the software component's developers peer trust score.
 
 software component trust score:
 ```json
@@ -326,10 +326,10 @@ Incoming and outgoing data can be stored in any datastore, but the standard reco
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
 ### Modularity and extensibility
 The standard has been designed with modularity and solution-agnosticism, to maximize flexibility and reusability:
-- Data elements are independent from each other, allowing for the use of only a subset if needed,
-- The data framework is agnostic to any specific trust computer, enabling computation by any logic,
-- The flexible data structure facilitates the creation of tailored user experiences.
-- The data has been designed to be agnostic, enabling the reusability of the data across different use-cases
+- Data elements are independent from each other, allowing for the use of only a subset of it,
+- The data framework is agnostic to any specific trust computer, enabling any trust score computation logic,
+- Flexible data ranges leveraging floats type facilitating the creation of tailored user experiences,
+- Data structures has been designed to be agnostic, enabling the reusability of the data across different use-cases.
 
 ### Identification
 DID and CID are decentralized identification methods that are not reliant on any centralized identity provider, making them more sustainable.
