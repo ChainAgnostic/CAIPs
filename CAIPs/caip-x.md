@@ -217,22 +217,21 @@ This standard introduce the folowing references findings: `Key Exposure`, `Data 
 *View - Security findings Types*
 
 **Review of a Security Report:**
+Reviews are used to express an opinion on any subject, such as a security report.
+
 ```json
-"type": ["VerifiableCredential", "ReviewCredential", "DisputeCredential"],
+"type": ["VerifiableCredential", "ReviewCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
   "currentStatus": "Disputed",
-  "statusReason": {
-    "value": "Sybil attack",
-    "lang": "en"
-  },
+  "reason": ["Missed Vulnerability"],
 },
 "proof": {}
 ```
-The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is defined by the W3C in the Verifiable Credentials Data Model.
+
 ```json
 "type": ["VerifiableCredential", "ReviewCredential"],
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
@@ -243,10 +242,10 @@ The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 },
 "proof": {}
 ```
-- *Enum for `currentStatus`:  "Disputed", "Endorsed".*
 
 
 **Review of a Software Component:**
+Reviews can also be used directly on a software component to provide a non technical review. 
 ```json
 "type": ["VerifiableCredential", "ReviewCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
@@ -255,15 +254,25 @@ The [DisputeCredential](https://www.w3.org/TR/vc-data-model/#disputes) is define
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
   "currentStatus": "Disputed",
-  "statusReason": {
-    "type": "Scam",
-    "value": "Interact with a fraudulent smart contract",
-    "lang": "en"
-  },
+  "reason": ["Scam", "Phishing"]
 },
 "proof": {}
 ```
-Reviews can be used on any subject to provide a postive (endorsement) or a negative (dispute) opinion.
+```json
+"type": ["VerifiableCredential", "ReviewCredential"],
+"issuanceDate": "2024-02-15T07:05:56.273Z",
+"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
+"credentialSubject":
+{
+  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+  "currentStatus": "Endorsed",
+  "reason": ["User-Friendly", "Usefull", "Seems secured"]
+},
+"proof": {}
+```
+- `currentStatus`: This defines the review status, that can be either `Disputed` or `Endorsed`.
+- `reason` (optional): This defines the reason of the review status.
+
 
 #### Outgoing data: Trust score
 
@@ -302,7 +311,7 @@ peer trust score:
 "issuer": "did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0",
 "credentialSubject":
 {
-  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
+  "id": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
   "trustScore": {
     "confidence": null,
     "value": 0.19191918793049725
