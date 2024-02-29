@@ -379,7 +379,7 @@ The standard has been designed with modularity and solution-agnosticism, to maxi
 1. Trust in an individual or entity is based on their qualities, or their abilities; it is not binary and evolves over time,
 2. Distrust assertions allow for the capture of suspicious behaviors,
 3. The security of software components is assessed based on findings from security reports,
-4. The security reports can be approved or challenged by the community, through endorsement and dispute form community,
+4. The security reports can be approved or challenged by the community, through endorsement and dispute from community,
 
 ## Test Cases
 
