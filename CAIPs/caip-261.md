@@ -177,7 +177,7 @@ This standard introduce the folowing references abilities/inabilities as initial
 Example security audit report about a specific software component:
 
 ```json
-"id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
+"id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
 "type": ["VerifiableCredential", "SecurityReportCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
@@ -246,7 +246,7 @@ Reviews are used to express an opinion on any subject, such as a security report
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
+  "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
   "currentStatus": "Disputed",
   "reason": ["Missed Vulnerability"],
 },
@@ -258,7 +258,7 @@ Reviews are used to express an opinion on any subject, such as a security report
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
+  "id": "ipfs://d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
   "currentStatus": "Endorsed"
 },
 "proof": {}
