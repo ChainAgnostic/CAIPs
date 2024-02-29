@@ -61,19 +61,12 @@ By standardizing data to form a universally applicable trust graph reusable acro
 Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are used to identify subjects such as peers, software components as well as the claims / assertions themselves.
 They can also identify any issuers, which could be peers or a software entity like a trust computer.
 
-### Identifier Scheme
-
-The flexibility of the system requires stable and translatable identifiers for both actors and resources.
-We chose to identify all actors (including software actors like trust computers or oracles) by [Decentralized Identifiers][DID] and all static resources (as well as the claims, trust assertions, and other data points) by [Content Identifiers][CID].
-
-Our data framework has been prototyped to use the following identifiers, although other systems might apply additional identifier and serialization schemes:
-
-- **Peers:** This model has been prototyped using the [`PKH` DID method][did:pkh] (e.g. `did:pkh:eip155:1:<publicAddress>`, `did:pkh:bip122:<publicAddress>`, `did:pkh:solana:<publicAddress>`) because it allows offchain and offline verification of signatures without a resolution-step, but other DID methods may be used in systems where the additional resolver complexity is justified
-- **Resources:** Custom identifiers were used per category of software components, such as checksum for specific builds/binaries (e.g. `snap://<checksum>`) and onchain addresses for deployed smart contracts (e.g. _ `did:pkh:eip155:1:<contractAddress>`
-- **Assertions:** Documents like those defined and excerpted below were encoded as JSON and canonicalized according to the [JSON Canonicalization Scheme][JCS] before being serialized as a [multihash][] with a ["raw JSON" prefix][multicodec-json] to be stored in a IPFS-style syncing-friendly, [CID-queryable][CID] key/value store.
-- **Software entities:** Our prototype addressed all offchain entities that produce or consume trust assertions by `did:key` public-key identifiers to simplify mutual authentication and data authentication, and all onchain entities by `did:pkh` for the addresses to which they were deployed.
-
-### Data Model
+Entities identifiers:
+- **Peers:** Any key pair based DID such as `PKH` DID method (e.g. `did:pkh:eip155:1:<publicAddress>`, `did:pkh:bip122:<publicAddress>`, `did:pkh:solana:<publicAddress>`), `KEY` DID method, etc.;
+- **Software components:** Custom identifiers for software components such as the checksum (e.g. `snap://<checksum>`, `did:pkh:eip155:1:<contractAddress>`);
+- **Assertions:** CID generated based on their contents according to [RFC 8785
+JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785);
+- **Software entities:** `KEY` or `PKH` DID method.
 
 A peer can issue assertions about the following subjects:
 
