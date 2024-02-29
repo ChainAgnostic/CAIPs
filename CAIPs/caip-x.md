@@ -48,7 +48,7 @@ By standardizing data to form a universally applicable trust graph reusable in a
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
 ### Identification
 Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are used to identify subjects such as peers, software components as well as the claims / assertions themselves.
-They can also identify any issuers, which could be peers or a software entity like a trust computers.
+They can also identify any issuers, which could be peers or a software entity like a trust computer.
 
 The standardized data framework specifies the use of the following identifiers:
 - **Peers:** `PKH` DID method (e.g. `did:pkh:eip155:1:<publicAddress>`, `did:pkh:bip122:<publicAddress>`, `did:pkh:solana:<publicAddress>`);
