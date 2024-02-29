@@ -338,7 +338,7 @@ The standard has been designed with modularity and solution-agnosticism, to maxi
 - Data elements are independent from each other, allowing for the use of only a subset of it,
 - The data framework is agnostic to any specific trust computer, enabling any trust score computation logic,
 - Flexible data ranges leveraging floats type facilitating the creation of tailored user experiences,
-- Data structures has been designed to be agnostic, enabling the reusability of the data across different use-cases.
+- Data structures have been designed to be agnostic, enabling the reusability of the data across different use-cases.
 
 ### Identification
 DID and CID are decentralized identification methods that are not reliant on any centralized identity provider, making them more sustainable.
