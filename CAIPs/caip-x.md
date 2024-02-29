@@ -70,6 +70,8 @@ A peer can issue assertions about the following subjects:
 All subsequent documents adhere to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for representation purposes. 
 However this standard does not prescribe any specific document type, even though internationally recognized standards are recommended.
 The standard presumes that both the `issuer` property and the complete content of the `credentialSubject` will be only utilized once the wire-formats and signed-envelopes have been verified.
+Please note that while subsequent documents do not detail any proof property, it is expected that any credential used MUST be cryptographically verifiable, tamper-evident, and must bind the issuer to the claims being made.
+
 
 #### Incoming Data: Trust signals
 
