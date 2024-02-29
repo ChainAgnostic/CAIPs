@@ -56,6 +56,10 @@ This reliance on trusted intermediaries near the edges compromises the decentral
 By standardizing data to form a universally applicable trust graph reusable across layers of the system, we strengthen the reliability of software components assessments powered by communities.
 
 ## Specification
+<!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
+### Identification
+Decentralized Identifiers ([DID](https://www.w3.org/TR/did-core/)) or Content Identifier (CID) are used to identify subjects such as peers, software components as well as the claims / assertions themselves.
+They can also identify any issuers, which could be peers or a software entity like a trust computer.
 
 ### Identifier Scheme
 
