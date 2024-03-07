@@ -3,7 +3,7 @@
 # See https://jekyllrb.com/docs/front-matter/ to learn more about this concept.
 caip: CAIP-261
 title: Community-powered trust assessment in software components
-author: Dayan | dayan.lens | dayksx.eth (@dayksx) <dayksx@protonmail.com>
+author: Dayan | dayan.fc | dayan.lens | dayksx.eth | (@dayksx) <dayksx@protonmail.com>
 discussions-to: <URL(s); if multiple, list separated by , without " or []> 
 status: Draft
 type: Standard
