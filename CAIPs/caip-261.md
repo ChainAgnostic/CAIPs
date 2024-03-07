@@ -14,7 +14,7 @@ requires (*optional):
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-CAIP-x defines a way to assess trust in software components leveraging community claims and social relationships of trust.
+CAIP-261 defines a way to assess trust in software components leveraging community claims and social relationships of trust.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
