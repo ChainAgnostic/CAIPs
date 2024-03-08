@@ -64,7 +64,7 @@ We should have users sign a message to prove they have an EOA (Greg to fill out 
 
 ## Links
 
-- [CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
+- CAIP-10: https://ChainAgnostic.org/CAIPs/caip-10
 
 
 ## Copyright
