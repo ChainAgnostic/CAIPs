@@ -4,7 +4,7 @@ title: EOA extension to CAIP-10
 author: Griff Green (@griffgreen), Krati Jain (@jainkrati), Greg-the-Greek (Please edit Greg!)
 status: Draft
 type: Standard
-created: 2024-03-4
+created: 2024-03-07
 ---
 
 
