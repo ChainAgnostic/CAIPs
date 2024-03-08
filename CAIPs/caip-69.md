@@ -18,13 +18,12 @@ using the chain ID of 0.
 ## Abstract
 
 This proposal aims to facilitate specifying EOAs as multichain accounts
-extending CAIP-10 chain id specification. This is useful for both
-decentralized applications to communicate that EOAs can be used for multiple 
-chains using a chainID of 0 to specify that the account is an EOA. Currently, 
-addresses are usually assigned to only one chain using CAIP-10 and an EOA
-would be required to be assigned multiple times for each chain. This proposal 
-aims to extend the CAIP-10 standard so EOAs can be designated as an EOA once,
-and be treated as an EOA on every applicable chain.
+extending CAIP-10's chainID specification. This will enable decentralized
+applications to specify EOAs as an address with chainID 0 signifying that it can
+live on multiple networks. Currently, addresses are usually assigned to only one
+chain using CAIP-10 and an EOA would be required to be assigned multiple times 
+for each chain. This proposal aims to extend the CAIP-10 standard so EOAs can be 
+designated as an EOA once, and be treated as an EOA on every applicable chain.
 
 
 ## Motivation
@@ -38,7 +37,7 @@ designation will greatly simplify their use in cross chain applications.
 ## Specification
 
 The account id specification will follow CAIP-10, but for EOAs use the 
-prefix `eip155:10:` before teh EOA account address
+prefix `eip155:0:` before the EOA account address
 
 
 ## Rationale
