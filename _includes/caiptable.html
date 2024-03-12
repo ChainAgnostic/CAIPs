@@ -22,14 +22,16 @@
           {% endif %}
         </thead>
         {% for page in caips %}
-          <tr>
-            <td class="num"><a href="{{page.url|relative_url}}">{{page.caip|xml_escape}}</a></td>
-            {% if status == "Last Call" and page.last-call-deadline != undefined %}
-              <td class="date">{{ page.last-call-deadline | xml_escape }}</td>
-            {% endif %}
-            <td class="title">{{page.title|xml_escape}}</td>
-            <td class="author">{% include authorlist.html authors=page.author %}</td>
-          </tr>
+          {% unless page.path contains "final" %}
+            <tr>
+              <td class="num"><a href="{{page.url|relative_url}}">{{page.caip|xml_escape}}</a></td>
+              {% if status == "Last Call" and page.last-call-deadline != undefined %}
+                <td class="date">{{ page.last-call-deadline | xml_escape }}</td>
+              {% endif %}
+              <td class="title">{{page.title|xml_escape}}</td>
+              <td class="author">{% include authorlist.html authors=page.author %}</td>
+            </tr>
+          {% endunless %}
         {% endfor %}
       </table>
     {% endif %}

@@ -24,11 +24,7 @@ layout: default
     <tr>
       <th>Status</th>
       <td>
-        {% if page.status contains "Final" %}
-        <a href=/final/{{ page.slug | xml_escape }}>Final</a>
-        {% else %}
-          {{ page.status | xml_escape }}
-        {% endif %}
+        {{ page.status | xml_escape }}
         {% if page.last-call-deadline != undefined %}
       </td>
     </tr>
