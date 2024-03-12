@@ -68,6 +68,8 @@ Entities identifiers:
 JSON Canonicalization Scheme (JCS)](https://www.rfc-editor.org/rfc/rfc8785);
 - **Software entities:** `KEY` or `PKH` DID method.
 
+
+### Data
 A peer can issue assertions about the following subjects:
 
 - Another peer, by issuing **Trust** assertions,
@@ -79,6 +81,7 @@ A peer can issue assertions about the following subjects:
 #### Software component Trust Assessment Metamodel
 
 All subsequent documents adhere to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for representation purposes.
+
 However this standard does not prescribe any specific document type, even though internationally recognized standards are recommended.
 The standard presumes that both the `issuer` property and the complete content of the `credentialSubject` will be only utilized once the wire-formats and signed-envelopes have been verified.
 Please note that while subsequent documents do not detail any proof property, it is expected that any credential used MUST be cryptographically verifiable, tamper-evident, and must bind the issuer to the claims being made.
@@ -240,6 +243,7 @@ They can be augmented or extended by inheriting high-level findings to accomodat
 
 Review of a Security Report:
 
+
 Reviews are used to express an opinion on any subject, such as a security report.
 
 ```json
@@ -299,15 +303,18 @@ Reviews can also be used directly on a software component to provide a non techn
 - `currentStatus`: This defines the review status, that can be either `Disputed` or `Endorsed`.
 - `reason` (optional): This defines the reason for a given review status.
 
+
 #### Outgoing data: Trust score
 
 Please note that the method for calculating the trust scores is entirely open, and this standard does not provide specific guidelines for it.
 
 The trust signals (incoming data) are leveraged to calculate the trust scores (outgoing data) for peers and software components.
+
 While the computation steps may vary based on the chosen trust score computation, the following main steps give an idea of some generic processing logic from a given peer point of view:
 
 1. Retrieve the peers (directly and indirectly connected peers that have issued reviews, security reports of the given software component),
 2. Calculate the peers' trust scores (relatively to the requesting peer's point of view),
+
 3. Weight the reviews (endorsements and disputes) based on the issuers' peers scores,
 4. Weight the security reports based on the weight of the endorsements and disputes as well as the issuers' peers scores;
 5. Calculate the software component's trust score based on the weight of the security reports, and if available, the software component's developers peer trust score.
@@ -364,6 +371,7 @@ Incoming and outgoing data can be stored in any datastore, but we recommend some
 
 The standard has been designed with modularity and solution-agnosticism, to maximize flexibility and reusability:
 
+
 - Data elements are independent from each other, allowing for the use of only a subset of it,
 - The data framework is agnostic to any specific trust computer, enabling any trust score computation logic,
 - Flexible data ranges leveraging floats type facilitating the creation of tailored user experiences,
@@ -377,6 +385,7 @@ The standard has been designed with modularity and solution-agnosticism, to maxi
 2. [Content Identifiers][CID] enable anyone to deterministically generate identifiers based on the canonicalized content of a given JSON document, and store it in a compact, tamper-evident way conducive to merging, syncing, or even CRDT patterns.
 
 ### Data
+
 
 1. Trust in an individual or entity is based on their qualities, or their abilities; it is not binary and evolves over time,
 2. Distrust assertions allow for the capture of suspicious behaviors,
@@ -436,6 +445,7 @@ The following mitigations can be implemented at the trust computer level:
 
 - Each account is allocated a finite budget for trusting other accounts,
 - An account's influence is determined by their level of proof-of-humanity,
+
 - An account's influence diminishes the further it is from the pre-trusted accounts within the graph,
 - An account's reputation decreases over time,
 - A software component is only considered as trustworthy after it has received a certain threshold of positive security reports,
@@ -446,6 +456,7 @@ The following mitigations can be implemented at the trust computer level:
 Issuing assertions makes public the opinion of issuers (identified by their public address), and therefore should be informed about the consequence of their action.
 
 ## References
+
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations. See CONTRIBUTING.md#style-guide . -->
 
 - [CAIP-1][CAIP-1] defines the CAIP document structure
@@ -459,5 +470,6 @@ Issuing assertions makes public the opinion of issuers (identified by their publ
 [JCS]: <https://www.rfc-editor.org/rfc/rfc8785>
 
 ## Copyright
+
 
 Copyright and related rights waived via [CC0](../LICENSE).
