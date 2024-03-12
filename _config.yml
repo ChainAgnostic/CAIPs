@@ -21,7 +21,7 @@
 title: Chain Agnostic Improvement Proposals
 description: >- # this means to ignore newlines until "baseurl:"
   Chain Agnostic Improvement Proposals (CAIPs) describe standards for blockchain projects that are not specific to a single chain.
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: ChainAgnostic
 repository: ChainAgnostic/CAIPs
 
@@ -35,13 +35,18 @@ markdown: kramdown
 plugins:
   - jekyll-feed
 
-permalink: /:slug
+permalink: /:path
 
 defaults:
   - scope:
       path: "CAIPs"
     values:
       layout: "caip"
+  - scope:
+      path: "final"
+    values:
+      layout: "caip-final"
 
 exclude:
   - caip-template.md
+

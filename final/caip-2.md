@@ -4,7 +4,6 @@ title: Blockchain ID Specification
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid), Antoine Herzog (@antoineherzog)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/1, https://github.com/UCRegistry/registry/pull/13, https://ethereum-magicians.org/t/caip-2-blockchain-references/3612,
 status: Final
-slug: caip-2
 type: Standard
 created: 2019-12-05
 updated: 2021-08-25
