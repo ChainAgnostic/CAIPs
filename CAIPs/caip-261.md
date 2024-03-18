@@ -9,7 +9,7 @@ status: Draft
 type: Standard
 created: 2023-11-21
 updated: 2023-11-21
-requires (*optional): 
+requires: CAIP-261
 ---
 
 ## Simple Summary
@@ -30,7 +30,7 @@ These data can then be leveraged to compute synthetic trust scores which reflect
 
 The data framework modeled below incorporates the following basic primitives as inputs:
 
-- **Trust List:** This allows individuals to define their trusted peers, shaping their trust graph;
+- **Peer Trust:** This allows individuals to define their trusted peers, shaping their trust graph;
 - **Expert Report:** This enables experts to publish insights and conclusions about a given resource (e.g. an audit in the case of software components);
 - **Peer Review:** This allows individuals to endorse or dispute claims made about resources by peers;
 - **Trust Score:** This enables any trust computer to publish computed trust scores about resources and/or about the actors behind the other 3 primitives.
