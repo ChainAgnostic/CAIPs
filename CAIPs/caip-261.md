@@ -3,7 +3,7 @@
 # See https://jekyllrb.com/docs/front-matter/ to learn more about this concept.
 caip: CAIP-261
 title: Web of Trust Primitives
-author: Dayan | dayan.fc | dayan.lens | dayanb.eth | (@dayksx) <dayksx@protonmail.com>
+author: Dayan | dayan.fc | dayan.lens | dayanx.eth | (@dayksx) <dayksx@protonmail.com>
 status: Draft
 type: Standard
 created: 2023-11-21
