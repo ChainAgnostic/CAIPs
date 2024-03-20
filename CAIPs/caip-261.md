@@ -18,11 +18,11 @@ CAIP-261 introduces a data framework to represent trust assertions among peers, 
 
 A web of trust establishes peer-to-peer trust graphs through trust and/or distrust assertions among peers, offering the possibility to calculate valuable insights such as reputation scores by using graph theory.
 
-This proposal outlines a comprehensive data framework designed to facilitate the representation, management and verification of explicit trust assertions for peers within a decentralized environment.
+This proposal outlines a comprehensive data framework designed to facilitate the representation, management, verification and consumption of explicit trust assertions for peers within a decentralized environment.
 
 The proposed data framework is designed to be flexible, extensible, and scalable, ensuring compatibility across any ecosystem and facilitating a wide range of reputation based use-cases.
 
-By establishing a common language for peer trust assertions, CAIP-261 enables diverse ecosystems to interoperate with a shared understanding of trust, benefiting from each other and creating synergies that strengthen  insights calculated from the web of trust.
+By establishing a common language for peer trust assertions, CAIP-261 enables diverse ecosystems to interoperate with a shared understanding of trust, benefiting from each other and creating synergies that strengthen insights calculated from the web of trust.
 
 ## Specification
 
@@ -41,16 +41,21 @@ In the following diagram, we depict the process where an issuer formally asserts
 ##### Peers Identification
 Trust assertions are made about, and by, peers identifiable through any form of public key derivatives, effectively bound to their owners.
 
-Identification of peers SHOULD be done with [Decentralized Identifiers][DID] to ensure interoperability, with a preference for DID methods that are based on cryptographic keys, due to their inherent autonomy.
+Identification of peers SHOULD be done with [Decentralized Identifiers][DID] to ensure interoperability, preferably DID methods that are based on cryptographic keys, due to their inherent autonomy.
 
-- **did:pkh (Public Key Hash):** This method is designed to be chain-agnostic, allowing for the creation of DIDs based on public key hashes from various blockchains (e.g., Ethereum, Bitcoin, Solana). This universality facilitates interoperability and simplifies identity management across different ecosystems.
-- **did:key:** This method generates DIDs directly from a variety of cryptographic public keys, supporting multiple key types (e.g., Ed25519, RSA). This method is straightforward and self-contained, requiring no interaction with blockchain networks, which makes it fast and cost-effective for operations that don't need decentralized verification.
-- **did:web:** Though not directly tied to key pairs in the same way as others, DID:Web utilizes domain names to create DIDs, enabling organizations to leverage their existing domain infrastructure for identity purposes. This method bridges traditional web infrastructure with the decentralized identity ecosystem, enhancing trust and verifiability through well-known web standards.
-- Blockhain tight DID such as did:btcr, did:ethr, did:sol, etc.
+- **did:pkh (Public Key Hash):** This method is designed to be chain-agnostic, enabling the creation of DIDs based on public key hashes from a variety of blockchains. Its universality promotes interoperability and simplifies identity management across diverse ecosystems. This approach is particularly useful for applications that aim to operate across multiple blockchain platforms without being tied to any specific one.
+- **did:key:** This method allows for the generation of DIDs directly from cryptographic public keys, supporting various key types such as ECDSA, EdDSA, Schnorr Signatures, and RSA. It is straightforward and self-contained, with no need for interaction with blockchain networks. This makes it fast and cost-effective for scenarios that do not require decentralized verification.
+- **did:web:** Though not directly tied to key pairs in the same way as others, did:web utilizes domain names to create DIDs, enabling organizations to leverage their existing domain infrastructure for identity purposes. This method bridges traditional web infrastructure with the decentralized identity ecosystem, enhancing trust and verifiability through well-known web standards.
+- **Blockchain-specific DIDs:** These methods are tightly integrated with specific blockchain platforms, such as Bitcoin (did:btcr), Ethereum (did:ethr), and Solana (did:sol).
 
 ##### Assertions Identification
-Assertions themselves need to be identifiable and can use a [Content Identifier][CID], which is self-containt and facilitates their unique identification and retrieval. 
-To complement the CID, a Uniform Resource Identifier (URI), such as ipfs, SHOULD be employed to provide a resolvable address for accessing the assertion.
+Assertions themselves need to be identifiable for referencing or updating purposes. 
+They can utilize a [Content Identifier][CID], which is self-contained and facilitates their unique identification and retrieval. 
+The CID SHOULD be encapsulated within a Uniform Resource Identifier (URI), such as the IPFS one (ipfs://), to offer a contextual identifier.
+
+The identifier of an assertion is not embedded within the document itself; however, it inherently exists and is calculable by anyone. 
+A Content Identifier (CID) is generated by hashing the content with a cryptographic hash function. 
+This hash, along with metadata about the hash function, is then encoded in the Multihash format.
 
 #### Data Model
 
@@ -100,9 +105,10 @@ This standard proposes the following conceptualization for the trust concept:
 },
 "proof": {}
 ```
-*The above example represents an assertion identified "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt" issued by the issuer "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044". It asserts the trustworthiness of the subject "did:pkh:eip155:1:0xfA045B2F2A25ad0B7365010eaf9AC2Dd9905895c" in areas such as honesty, software development, and software security, at some extend and reasons provided for each scope.*
-
-Note: The assertion's identifier exists independently of its inclusion in the document; it is inherently calculable by anyone. A Content Identifier (CID) is generated by hashing the content with a cryptographic hash function, then encoding this hash along with metadata about the hash function in the Multihash format.
+*The example above represents an assertion identified by ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt. 
+It is issued by the issuer identified as did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044. 
+This assertion vouches for the trustworthiness of the subject, identified as did:pkh:eip155:1:0xfA045B2F2A25ad0B7365010eaf9AC2Dd9905895c, in areas such as honesty, software development, and software security to some extent. 
+The assertion provides reasons for each scope.*
 
 **Assertion of distrust to a peer:**
 ```json
@@ -148,7 +154,9 @@ Note: The assertion's identifier exists independently of its inclusion in the do
 },
 "proof": {}
 ```
-*The above example represents an assertion issued by the issuer "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044". It express distrust of the subject "did:pkh:eip155:1:0xC3764761E297D6f121e79C32A65829Cd1dDb4D33" in areas such as honesty, software development, and software security, at some extend and reasons provided for each scope.*
+*The example represents an assertion issued by the issuer identified as did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044. 
+It expresses distrust towards the subject identified as did:pkh:eip155:1:0xC3764761E297D6f121e79C32A65829Cd1dDb4D33 in areas such as honesty, software development, and software security to some extent. 
+The assertion provides reasons for each scope.*
 
 #### Validity Period
 Trust, being inherently dynamic, can be managed within the document by specifying a validity period, after which the credential must be renewed to maintain its validity.
@@ -163,32 +171,28 @@ A validity limitation can be introduced with the fields `validFrom` and `validUn
 ```
 
 ### Trust Management
-Initially, issued trust assertions should be properly persisted to ensure their availability for consumption. 
-Subsequently, as trust between peers evolves over time, CAIP-261 outlines a method for managing the entire lifecycle of these assertions, encompassing their creation, update, and eventual revocation.
+Initially, issued trust assertions should be properly persisted to ensure their availability according to the use-case.
+Subsequently, as trust between peers evolves over time, this proposal outlines a method for managing the entire lifecycle of these assertions, encompassing their creation, update, and eventual revocation.
 
 #### Trust Peristance
-Peer Trust Assertions SHOULD be persisted using mechanisms that ensure immutability and prevent any unauthorized alteration or censorship. 
-This includes ensuring data availability and employing tamper-proof technologies to safeguard the integrity of the assertions.
+Trust Assertions issued by peers are composing a verifiable trust graph that can be consumed for trustless reputation-based use cases. To fulfill its purpose, these assertions SHOULD be persisted using mechanisms that meet these properties relative to the use-case:
+- Security,
+- Data integrity,
+- Data ownership,
+- Interoperabiltiy,
+- Scalability,
+- Censorship resistance,
+- Sustainability.
 
 #### Trust Update
-When a trust assertion needs to be updated, the issuer generates a new assertion with the updated information. 
-This new assertion will have its own unique identifier and will reference the identifier of the credential it's updating in the `credentialStatus`.
+When an issuer needs to update a trust assertion, they simply generate a new assertion containing the revised information. 
+This new assertion, when issued, will supersede any previous assertions of the same type, issued by the same entity, and pertaining to the same subject. 
+Consequently, the most recent assertion effectively replaces the older ones in the context of the trust graph, ensuring that the trust information remains current and accurate.
 
-**Update of trust assertion:**
-```json
-"@context": ["https://www.w3.org/2018/credentials/v1"],
-"type": ["VerifiableCredential", "PeerTrustCredential"],
-"issuanceDate": "2024-02-29T14:31:56.273Z",
-"issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
-"credentialStatus": {
-    "id": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
-    "type": "CredentialStatus",
-    "statusPurpose": "update",
-},
-```
 #### Trust Revocation
-Similarly, when a trust assertion needs to be revoked, the issuer generates a new assertion. 
-This new assertion will have its own unique identifier and will reference the identifier of the revoked credential.
+When an issuer decides to revoke a previously issued trust assertion, they should generate a new assertion that includes a 'credentialStatus' attribute, with a 'statusPurpose' set to 'revocation'. 
+This new assertion should explicitly reference the assertion being revoked. 
+By doing so, the system and its participants can easily identify the revocation status of any assertion, ensuring the trust graph remains accurate and up-to-date with the current trust relationships.
 
 **Revocation of trust assertion:**
 ```json
@@ -203,22 +207,20 @@ This new assertion will have its own unique identifier and will reference the id
 },
 ```
 #### Trust Graph Expension
-
 ##### Implicit Trust Assertions
 While the Peer Trust Assertion model outlined previously focuses on explicit trust signals, the trust graph can be further enriched with additional implicit on-chain and/or off-chain trust signals related to its peers. These can include Proof of Humanity, Proof of Membership, Proof of Contributions, Proof of Attendance, Social Graphs, among others. 
 This standard does not define the handling of implicit trust; it leaves the integration of relevant data to the discretion of the final consumer, depending on the specific use-case. 
 
 ##### Additional Explicit Trust Assertions
-The trust graph can also be enhanced with additional explicit trust signals derived from various models, broadening the scope of trust assessment
+The trust graph can also be enhanced with additional explicit trust signals derived from any model, broadening the scope of trust assessment.
 
 ### Trust Assertions Verification
-
 The standard presumes that both the `issuer` property will be dereferenced and the complete contents of the `credentialSubject` will be consumed only after the wire-formats and signed-envelopes have been verified.
 
 #### Signature Verification
 
 The veracity and integrity of trust assertions are paramount to ensuring unbiased insights. 
-All trust assertions MUST be cryptographically signed by the issuer using strong cryptographic methods and verified prior to consumption. 
+All trust assertions SHOULD be cryptographically signed by the issuer using strong cryptographic methods and verified prior to consumption. 
 The standard supports any strong signature methods, such as: ECDSA, EdDSA, Schnorr Signatures, RSA...
 
 EIP-712 should be considered a complementary cryptographic proof method alongside others like ECDSA, EdDSA, Schnorr, and RSA for on-chain verifiable credentials. 
@@ -236,8 +238,9 @@ It is noteworthy that EIP-712 mandates the presence of all fields, even if some 
 ```
 
 #### Format Verification
-The Assertions SHOULD respect the defined schema in order to be valid.
-For verifiable credentials, "credentialSchema" top level properties, provide verifiers with information to determine whether the provided data conforms to the provided schema(s).
+Assertions MUST adhere to the predefined schema to be deemed valid. 
+For example, in the context of verifiable credentials document, it MUST include a 'credentialSchema' as a top-level property. 
+Such property provides verifiers with the necessary information to assess whether the data presented conforms to the established schema(s). 
 
 ```json
 "@context": ["https://www.w3.org/2018/credentials/v1"],
@@ -245,35 +248,36 @@ For verifiable credentials, "credentialSchema" top level properties, provide ver
     "id": "ipfs://QmcwYEnLysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gl",
     "type": "JsonSchema"
   },
-
 ```
 
 #### Validity Verification
-The verification process MUST check the assertions storage to ensure the existence of verifiable credentials that render any previous ones obsolete due to "revocation" or "update" status.
-The verification MUST check as well the validity periode if it exists.
+Prior to their consumption, assertions MUST undergo a thorough validation process to ascertain their current validity. 
+This process includes several critical checks: 
+- Determining whether an assertion has been superseded by a more recent one,
+- Verifying if the assertion has been formally revoked, and
+- Confirming that the assertion is within its designated validity period and has not expired.
 
 ### Trust Assertions Consumption
-Following the verification process, the trust graph can be utilized by any consumer to calculate insight relative to any use-case.
+After the verification process, the consumer can utilize the trust graph for generating insights relevant to their specific use-case.
 
 #### Processing
-
-The consumption of the trust graph typically involves recursive calculations across the graph, following specific rules, to derive peers reputation scores. 
-This process can utilize various existing or newly developed algorithms tailored to the unique requirements of the trust graph.
-
+The consumption of the trust graph typically involves recursive calculations across the graph, following specific rules, to derive peers insights such as reputation scores. 
+This process can utilize various existing or newly developed algorithms tailored to the unique requirements of the use-case.
 This standard remains inopiniated regarding this processing.
-However, the standard does offer some guidelines to ensure integrity and transparency in the processing of the trust graph.
 
-- Calculations made using the established trust graph MUST be fully provable, necessitating the disclosure of all sourced data and the computation algorithm used. This level of transparency guarantees that trust-based calculations are both replicable and verifiable, allowing any interested party to understand or question the outcomes,
+However, the standard does offer some guidelines to ensure integrity and transparency in the processing of the trust graph:
+- Calculations made using the established trust graph SHOULD be fully provable, necessitating the disclosure of all consumed data and the computation algorithm used. This level of transparency guarantees that trust-based calculations are both replicable and verifiable, allowing any interested party to understand or question the outcomes,
 - Trust assertions COULD be disregarded or given less weight given any rules (for example a minimum activity, the ownership of an asset, or if entries are not recognized)
 
 #### Reputation Score
-The outcome of the trust graph processing commonly resullt in trust scores.
+In addition to detailing the structure of incoming assertions, this proposal also outlines the generation of outgoing assertions, which correspond to the issuance of peer trust scores calculated leveraging the trust graph.
 
-- `trustScoreScope`: This defines the used trust perimeter(s) to calculate the trust score.
+- `trustScoreScope`: This defines the used trust perimeter(s) to calculate the trust score;
 - `value`: Calculated score;
-- `trustScoreType`: Algorithm used to process the trust score; 
-Additional data can be added according to the trust score type.
+- `result`: Interpretation of the score up to the trust computer; It MUST remain within the following range: [-1,1]. This could be translated as follows: 'Highly distrusted' (-1), 'Distrusted' (-0.5), 'Neutral' (0), 'Trusted' (0.5), 'Higly Trusted' (1);
+- `trustScoreType`: Algorithm used to process the trust score;
 
+This structure can be enriched according to the trust score kind.
 
 **Peer Trust Score**
 ```json
@@ -286,14 +290,16 @@ Additional data can be added according to the trust score type.
   "id": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
   "trustScore": {
     "trustScoreScope": ["SoftwareDevelopment"],
-    "value": 0.19191918793049725
+    "value": 0.19191918793049725,
+    "result": 0.7,
     "creationAt": "2024-02-27T10:28:00.000Z"
   },
   "trustScoreType": "EigenTrust"
 },
 "proof": {}
 ```
-*The above example represents an assertion issued by the issuer "did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0". It claims a certain level of trust to the subject "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044" in the area of software development calculated with the EigenTrust algorithm.*
+*The above example represents an assertion issued by the issuer "did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0". 
+It claims a certain level of trust to the subject "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044" in the area of software development calculated with the EigenTrust algorithm.*
 
 ## Rationale
 
@@ -315,6 +321,10 @@ Individuals and entities can manage their identities and trust relationships dir
 
 1. Trust in an individual or entity is based on their qualities, or their abilities; it is not binary and evolves over time,
 2. Distrust assertions allow for the capture of suspicious behaviors,
+
+### Verification
+The verification process is crucial to ensure the use of valid and up-to-date assertions, thus maintaining the trust system's reliability and accuracy. 
+This step ensures the integrity and reliability of the assertions, which is essential for supporting trust and interoperability within the ecosystem.
 
 ## Test Cases
 
