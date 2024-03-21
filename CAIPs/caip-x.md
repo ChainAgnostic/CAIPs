@@ -14,46 +14,35 @@ requires: CAIP-261
 
 ## Simple Summary
 
-CAIP-x defines a way to assess trust in discreet resources (e.g. software components, packages, documents, etc.) by leveraging community claims and pulling in trust data from social graphs and webs of trust.
+CAIP-x introduces a data framework to represent assertions for evaluating discreet resources, such as software components, packages, or media files, by utilizing community assertions and pulling in trust data from webs of trust and other implicit trust signals.
 
 ## Abstract
 
-This proposal introduces a standardized data framework with the aim to propose lightweight interfaces for:
+The evaluation of discrete resources necessitates different kind of community feedback according to the specific purpose of the assessment. 
+Whether assessing resources for security concerns or for their user-friendliness, the type and depth of feedback required differ significantly. 
 
-1. claims made by actors in an open, peer-to-peer network about discreet resources (software components in all the examples that follow),
-2. claims made by these actors about each other,
-3. community-derived trust scores for the discreet resources and/or actors.
+Since these feedback are issues by peers part of a peer-to-peer network incorporating pseudonimous peers and potential malicious peers, peers reputation needs to be evaluated by calculating insight from web of trust. 
+CAIP-261: Web of Trust Primitives introduces a data framework to represent trust assertions among peers;
 
-These three data elements can be used independently of one another.
-For building a community-powered trust assessment mechanism, it's necessary to identify and gather the relevant data in accordance with the requirements of the intended trust scores computation.
-These data can then be leveraged to compute synthetic trust scores which reflect the overall sentiment of the community.
+**Peers**
+- **Peer Trust Assertion:** (Defined in the CAIP-261) This constitute web of trust, with trust and distrust assertions among peers;
+- **Peer Trust Score:** (Defined in the CAIP-261) This represent the calculated trust scores of a peer at some point in time.
 
-The data framework modeled below incorporates the following basic primitives as inputs:
+This proposal incorporates the following basic primitives for Resources assessment as inputs :
+**Discreet Resources**
+- **Report Assertion:** This represents detailed presentation of factual information and objective analysis. (e.g. an audit in the case of software components);
+- **Review Assertion:** This represents a subjective assessment reflecting personal opinions and experiences;
+- **Reaction Assertion:** This represents a quantifiable expression of agreement or disagreement with a report or a review's content, typically reflecting the collective sentiment of the audience.
+- **Resource Trust Score:** This represent the calculated trust scores of a resource at some point in time
 
-- **Peer Trust Assertion:** This allows individuals to define their trusted peers, shaping their trust graph (cf. CAIP-261 Web of Trust Primitives);
-- **Expert Report Assertion:** This enables experts to publish insights and conclusions about a given resource (e.g. an audit in the case of software components);
-- **Peer Review Assertion:** This allows individuals to endorse or dispute claims made about resources by peers;
-- **Resource Trust Score:** This enables any trust computer to publish computed trust scores about resources and/or about the actors behind the other 3 primitives.
-
-The peer-to-peer actor model described here operated on explicit trust signals, but is intended for contexts where actors are long-lived and public identifiers (such as a blockchain environment), such that trust assessments can be supplemented with more implicit on-chain and/or off-chain trust signals associated with its actors, such as `Proof of Humanity`, `Proof of Membership`, `Proof of Contributions`, `Proof of Attendences`, `Social Graphs`, and more.
-
-While the trust-data input model is fairly general, the prototyping work to date has been focused on the software components associated with a blockchain-centric software environment, where actor identification and data formats tend to be relatively easy to connect into a graph.
-Categories of discreet software resources we imagine this could be useful to describe include:
-
-- self-custodial wallets (like MetaMask)
-- wallet extensions (such as Snaps)
-- decentralized network clients (for instance, Geth and other blockchain clients)
-- smart contracts or other onchain compiled artefacts
-- web-based decentralized applications for interacting with on-chain artefacts
+All these data can be ultimately utilized to compute synthetic resource's trust scores which reflect the overall sentiment of the community.
 
 ## Motivation
-<!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
-
-Software components within a decentralized web tend to be distributed permissionlessly.
+Discreet Resources within a decentralized web tend to be distributed permissionlessly.
 While this fosters permissionless innovation, it simultaneously exposes the system to potential vulnerabilities and scams, for lack of open trust and reputation mechanisms.
-Most existing solutions for evaluating software components are centralized, necessitating trusted intermediaries.
+Most existing solutions for evaluating discreet resources are centralized, necessitating trusted intermediaries.
 This reliance on trusted intermediaries near the edges compromises the decentralized properties of the core of the ecosystem.
-By standardizing data to form a universally applicable trust graph reusable across layers of the system, we strengthen the reliability of software components assessments powered by communities.
+By standardizing data to form a universally applicable trust graph reusable across layers of the system, we strengthen the reliability of discreet resources assessments powered by communities.
 
 ## Specification
 
@@ -64,61 +53,50 @@ We chose to identify all actors (including software actors like trust computers 
 
 Our data framework has been prototyped to use the following identifiers, although other systems might apply additional identifier and serialization schemes:
 
-- **Peers:** cf. CAIP-261 Web of Trust primitive
-
+- **Peers:** Describe in CAIP-261: Web of Trust primitive
 - **Resources:** Custom identifiers were used per category of software components, such as checksum for specific builds/binaries (e.g. `snap://<checksum>`) and onchain addresses for deployed smart contracts (e.g. _ `did:pkh:eip155:1:<contractAddress>`
 - **Assertions:** Documents like those defined and excerpted below were encoded as JSON and canonicalized according to the [JSON Canonicalization Scheme][JCS] before being serialized as a [multihash][] with a ["raw JSON" prefix][multicodec-json] to be stored in a IPFS-style syncing-friendly, [CID-queryable][CID] key/value store.
 - **Software entities:** Our prototype addressed all offchain entities that produce or consume trust assertions by `did:key` public-key identifiers to simplify mutual authentication and data authentication, and all onchain entities by `did:pkh` for the addresses to which they were deployed.
 
 ### Data Model
 
-A peer can issue assertions about the following subjects:
+In order to assess discreet resources, a peer can issue assertions about a discreet resource or about reviews or reports to react on their content.
 
-- Another peer, by issuing **Trust** assertions,
-- A Software component, by issuing **Security Report** or **Review** assertions,
-- A Security report, by issuing **Review** assertions.
 
 ![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/e58a0368-8164-4175-b77d-1491a6c719d1)
 
-#### Software component Trust Assessment Metamodel
+#### Discreet Resource Trust Assessment Metamodel
+All subsequent documents conform to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the purpose of representation. 
+However, this standard does not prescribe any specific document type, though it may recommend internationally recognized standards. 
 
-All subsequent documents adhere to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for representation purposes.
-However this standard does not prescribe any specific document type, even though internationally recognized standards are recommended.
-The standard presumes that both the `issuer` property will be dereferenced and the complete contents of the `credentialSubject` will be consumed only after the wire-formats and signed-envelopes have been verified.
-
-#### Incoming Data: Trust signals
-
-**Peer trust assertion:**
-cf. CAIP-261 Web of Trust primitive
-
-
-##### Scope of Trust Data Model
-
-Example security audit report about a specific software component:
+#### Report Assertion
+A report presents a detailed presentation of factual information and objective analysis.
 
 ```json
-"id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
-"type": ["VerifiableCredential", "SecurityReportCredential"],
+"type": ["VerifiableCredential", "ReportCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "securityStatus": "Unsecured",
-  "securityFindings": [
+  "type": "Security",
+  "result": -1,
+  "issues": [
     {
       "criticality": 1,
       "type": "Key leak",
-      "description": "`snap_getBip44Entropy` makes the parent key accessible"
-      "lang": "en"
+      "description": "`snap_getBip44Entropy` makes the parent key accessible",
+      "uri": "ipfs://QmEQtreH3vm6qcASGqAUsq78MQa9Ctb56afRZg1WJ5sKLdq"
     },
     {
       "criticality": 0.5,
-      "type": "Buffer Overflow"
+      "type": "Buffer Overflow",
+      "uri": "ipfs://QmDlreH3vm6qcASGqAUsq78MQa9Ctb56afRZg1WJ5sKCqd"
     },
     {
       "criticality": 0.25,
-      "type": "Phishing"
+      "type": "Phishing",
+      "uri": "ipfs://QmElreH3vm6qcASGqAUsq78MQa9Ctb56afRZg1WJ5sKLpl"
     },
     {
       "criticality": 0,
@@ -133,73 +111,62 @@ Example security audit report about a specific software component:
 Security report with no findings:
 
 ```json
-"type": ["VerifiableCredential", "SecurityReportCredential"],
+"type": ["VerifiableCredential", "ReviewCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "securityStatus": "Secured"
+  "type": "Security",
+  "result": 1,
 },
 "proof": {}
 ```
 
-- The `securityStatus` is the final result of the security assessment, that can be either `Secured` or `Unsecured`.
-- The `findings` (optional) lists the security findings.
+- The `result` is the final result of the security assessment; It MUST remain within the following range: [-1,1]. This could be translated as follows: 'Very Negative' (-1), 'Negative' (-0.5), 'Neutral' (0), 'Positive' (0.5), 'Very Positive' (1);
+- The `issues` (optional) lists the issues.
 - The `criticality` of findings must remain within the following range: [0,1]; This could be interpreted as follows: `None` (0), `Low` (0.25), `Medium` (0.5), `High` (0.75), `Critical` (1).
 
-This standard introduce the folowing references findings: `Key Exposure`, `Data Breach`, `Phishing`.
-As with the trust scopes, these finding types are not prescriptive, but arbitrary examples are given to serve as guidance to achieve higher interoperability.
-They can be augmented or extended by inheriting high-level findings to accomodate any use-case.
+Any standard inheriting this CAIP COULD propose reference lists of "type" to facilitate interoperability across different systems.
 
-![diagram3](../assets/CAIP-261/diagram3.png)
-
-###### Expert Report Types
-
-Review of a Security Report:
-
-Reviews are used to express an opinion on any subject, such as a security report.
+#### Review Assertion
+A reaction represents a quantifiable expression of agreement or disagreement with the report's content, typically reflecting the collective sentiment of the community.
 
 ```json
-"type": ["VerifiableCredential", "ReviewCredential"],
+"type": ["VerifiableCredential", "ReactionCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
-  "currentStatus": "Disputed",
-  "reason": ["Missed Vulnerability"],
+  "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
+  "rating": 0.6,
+  "comment": "",
+  "tag": ["user-friendly", "useful"]
 },
 "proof": {}
 ```
 
+###### Reaction Assertion
+
+A reaction represents a quantifiable expression of agreement or disagreement with the report's content, typically reflecting the collective sentiment of the community.
+
+
+**A reaction on a report**
 ```json
-"type": ["VerifiableCredential", "ReviewCredential"],
-"issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
-"credentialSubject":
-{
-  "id": "d6f7052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
-  "currentStatus": "Endorsed"
-},
-"proof": {}
-```
-
-Review of a Software Component:
-
-Reviews can also be used directly on a software component to provide a non technical review.
-
-```json
-"type": ["VerifiableCredential", "ReviewCredential"],
+"type": ["VerifiableCredential", "ReactionCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
 {
-  "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "currentStatus": "Disputed",
-  "reason": ["Scam", "Phishing"]
+  "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
+  "reaction": "Endorsed",
+  "reason": ["Provide important context", "Vulnerabilities clearly defined"],
 },
 "proof": {}
 ```
+
+**A reaction on a discreet resource**
+Reaction can also be used directly on a software component to share a reaction.
 
 ```json
 "type": ["VerifiableCredential", "ReviewCredential"],
@@ -208,16 +175,94 @@ Reviews can also be used directly on a software component to provide a non techn
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "currentStatus": "Endorsed",
-  "reason": ["User-Friendly", "Usefull", "Seems secured"]
+  "reaction": "Disputed",
+  "reason": ["Scam"]
 },
 "proof": {}
 ```
 
-- `currentStatus`: This defines the review status, that can be either `Disputed` or `Endorsed`.
+- `reaction`: This defines the reaction, the standard define `Disputed` or `Endorsed` as reaction, but this can be extend to any reaction.
 - `reason` (optional): This defines the reason for a given review status.
 
-#### Outgoing data: Trust score
+### Assertions Management
+#### Assertions Peristance
+Peer Trust Assertions SHOULD be persisted using mechanisms that ensure immutability and prevent any unauthorized alteration or censorship. 
+This includes ensuring data availability and employing tamper-proof technologies to safeguard the integrity of the assertions.
+
+#### Assertions Update
+When a trust assertion needs to be updated, the issuer generates a new assertion with the updated information. 
+This new assertion will have its own unique identifier and will reference the identifier of the credential it's updating in the `credentialStatus`.
+
+**Update of trust assertion:**
+```json
+"@context": ["https://www.w3.org/2018/credentials/v1"],
+"type": ["VerifiableCredential", "PeerTrustCredential"],
+"issuanceDate": "2024-02-29T14:31:56.273Z",
+"issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
+"credentialStatus": {
+    "id": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
+    "type": "CredentialStatus",
+    "statusPurpose": "update",
+},
+```
+#### Assertions Revocation
+Similarly, when a trust assertion needs to be revoked, the issuer generates a new assertion. 
+This new assertion will have its own unique identifier and will reference the identifier of the revoked credential.
+
+**Revocation of trust assertion:**
+```json
+"@context": ["https://www.w3.org/2018/credentials/v1"],
+"type": ["VerifiableCredential", "PeerTrustCredential"],
+"issuanceDate": "2024-02-29T14:31:56.273Z",
+"issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
+"credentialStatus": {
+    "id": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
+    "type": "CredentialStatus",
+    "statusPurpose": "revocation",
+},
+```
+
+### Assertions Verification
+The standard presumes that both the `issuer` property will be dereferenced and the complete contents of the `credentialSubject` will be consumed only after the wire-formats and signed-envelopes have been verified.
+
+#### Signature Verification
+The veracity and integrity of trust assertions are paramount to ensuring unbiased insights. 
+All trust assertions MUST be cryptographically signed by the issuer using strong cryptographic methods and verified prior to consumption. 
+The standard supports any strong signature methods, such as: ECDSA, EdDSA, Schnorr Signatures, RSA...
+
+EIP-712 should be considered a complementary cryptographic proof method alongside others like ECDSA, EdDSA, Schnorr, and RSA for on-chain verifiable credentials. 
+Its inclusion emphasizes the importance of user-friendly, secure, and efficient interactions with blockchain-based identity and credential systems.
+It is noteworthy that EIP-712 mandates the presence of all fields, even if some are left empty in order to enable their verification.
+
+**EIP-712 proof**
+```json
+  "proof": {
+      "verificationMethod": "did:pkh:eip155:59144:0x3892967AA898d7EeBf1B08d3E1F31B2F4C84317A#blockchainAccountId",
+      "created": "2024-01-27T07:05:56.273Z",
+      "proofPurpose": "assertionMethod",
+      "type": "EthereumEip712Signature2021"
+  }
+```
+
+#### Format Verification
+The Assertions SHOULD respect the defined schema in order to be valid.
+For verifiable credentials, "credentialSchema" top level properties, provide verifiers with information to determine whether the provided data conforms to the provided schema(s).
+
+```json
+"@context": ["https://www.w3.org/2018/credentials/v1"],
+  "credentialSchema": [{
+    "id": "ipfs://QmcwYEnLysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gl",
+    "type": "JsonSchema"
+  },
+
+```
+
+#### Validity Verification
+The verification process MUST check the assertions storage to ensure the existence of verifiable credentials that render any previous ones obsolete due to "revocation" or "update" status.
+The verification MUST check as well the validity periode if it exists.
+
+### Assertions Consumption
+Following the verification process, the trust graph can be utilized by any consumer to calculate insight relative to any use-case.
 
 Please note that the method for calculating the trust scores is entirely open, and this standard does not provide specific guidelines for it.
 
@@ -248,16 +293,6 @@ Resource Trust Score:
 "proof": {}
 ```
 
-### Data and Trust Score Storage
-
-Please note that the storage of assertions is entirely open, and this standard does not provide specific guidelines for it.
-
-Incoming and outgoing data can be stored in any datastore, but we recommend some minimal requirements for verifiability and sustainability:
-
-- Data availability: The datastore should make the assertions and proofs publicly available for consumption and verification purposes;
-- Tamper-proof: The datastore should provide assertion data with proofs of completeness, ensuring that none have been altered or obstructed them;
-- Scalability: The datastore should scale to meet the evolving demand of issued assertions.
-
 ## Rationale
 
 ### Modularity and extensibility
@@ -283,10 +318,8 @@ The standard has been designed with modularity and solution-agnosticism, to maxi
 
 ## Test Cases
 
-## Security Considerations
 
 ## Privacy Considerations
-<!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
 Issuing assertions makes public the opinion of issuers (identified by their public address), and therefore should be informed about the consequence of their action.
 
 ## References
