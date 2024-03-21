@@ -78,7 +78,7 @@ A peer can issue assertions about the following subjects:
 - A Software component, by issuing **Security Report** or **Review** assertions,
 - A Security report, by issuing **Review** assertions.
 
-![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/1c5a0216-e9f5-4fed-a503-814b69ae9364)
+![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/e58a0368-8164-4175-b77d-1491a6c719d1)
 
 #### Software component Trust Assessment Metamodel
 
