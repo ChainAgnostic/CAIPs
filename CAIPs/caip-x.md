@@ -111,7 +111,7 @@ A report presents a detailed presentation of factual information and objective a
 Security report with no findings:
 
 ```json
-"type": ["VerifiableCredential", "ReviewCredential"],
+"type": ["VerifiableCredential", "ReportCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
@@ -133,7 +133,7 @@ Any standard inheriting this CAIP COULD propose reference lists of "type" to fac
 A reaction represents a quantifiable expression of agreement or disagreement with the report's content, typically reflecting the collective sentiment of the community.
 
 ```json
-"type": ["VerifiableCredential", "ReactionCredential"],
+"type": ["VerifiableCredential", "ReviewCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
@@ -141,7 +141,6 @@ A reaction represents a quantifiable expression of agreement or disagreement wit
   "id": "ipfs://QmPTqvH3vm6qcZSGqAUsq78MQa9Ctb56afRZg1WJ5sKLiu",
   "rating": 0.6,
   "comment": "",
-  "tag": ["user-friendly", "useful"]
 },
 "proof": {}
 ```
@@ -169,7 +168,7 @@ A reaction represents a quantifiable expression of agreement or disagreement wit
 Reaction can also be used directly on a software component to share a reaction.
 
 ```json
-"type": ["VerifiableCredential", "ReviewCredential"],
+"type": ["VerifiableCredential", "ReactionCredential"],
 "issuanceDate": "2024-02-15T07:05:56.273Z",
 "issuer": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
 "credentialSubject":
@@ -185,81 +184,10 @@ Reaction can also be used directly on a software component to share a reaction.
 - `reason` (optional): This defines the reason for a given review status.
 
 ### Assertions Management
-#### Assertions Peristance
-Peer Trust Assertions SHOULD be persisted using mechanisms that ensure immutability and prevent any unauthorized alteration or censorship. 
-This includes ensuring data availability and employing tamper-proof technologies to safeguard the integrity of the assertions.
-
-#### Assertions Update
-When a trust assertion needs to be updated, the issuer generates a new assertion with the updated information. 
-This new assertion will have its own unique identifier and will reference the identifier of the credential it's updating in the `credentialStatus`.
-
-**Update of trust assertion:**
-```json
-"@context": ["https://www.w3.org/2018/credentials/v1"],
-"type": ["VerifiableCredential", "PeerTrustCredential"],
-"issuanceDate": "2024-02-29T14:31:56.273Z",
-"issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
-"credentialStatus": {
-    "id": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
-    "type": "CredentialStatus",
-    "statusPurpose": "update",
-},
-```
-#### Assertions Revocation
-Similarly, when a trust assertion needs to be revoked, the issuer generates a new assertion. 
-This new assertion will have its own unique identifier and will reference the identifier of the revoked credential.
-
-**Revocation of trust assertion:**
-```json
-"@context": ["https://www.w3.org/2018/credentials/v1"],
-"type": ["VerifiableCredential", "PeerTrustCredential"],
-"issuanceDate": "2024-02-29T14:31:56.273Z",
-"issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
-"credentialStatus": {
-    "id": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
-    "type": "CredentialStatus",
-    "statusPurpose": "revocation",
-},
-```
+cf. caip-261.md
 
 ### Assertions Verification
-The standard presumes that both the `issuer` property will be dereferenced and the complete contents of the `credentialSubject` will be consumed only after the wire-formats and signed-envelopes have been verified.
-
-#### Signature Verification
-The veracity and integrity of trust assertions are paramount to ensuring unbiased insights. 
-All trust assertions MUST be cryptographically signed by the issuer using strong cryptographic methods and verified prior to consumption. 
-The standard supports any strong signature methods, such as: ECDSA, EdDSA, Schnorr Signatures, RSA...
-
-EIP-712 should be considered a complementary cryptographic proof method alongside others like ECDSA, EdDSA, Schnorr, and RSA for on-chain verifiable credentials. 
-Its inclusion emphasizes the importance of user-friendly, secure, and efficient interactions with blockchain-based identity and credential systems.
-It is noteworthy that EIP-712 mandates the presence of all fields, even if some are left empty in order to enable their verification.
-
-**EIP-712 proof**
-```json
-  "proof": {
-      "verificationMethod": "did:pkh:eip155:59144:0x3892967AA898d7EeBf1B08d3E1F31B2F4C84317A#blockchainAccountId",
-      "created": "2024-01-27T07:05:56.273Z",
-      "proofPurpose": "assertionMethod",
-      "type": "EthereumEip712Signature2021"
-  }
-```
-
-#### Format Verification
-The Assertions SHOULD respect the defined schema in order to be valid.
-For verifiable credentials, "credentialSchema" top level properties, provide verifiers with information to determine whether the provided data conforms to the provided schema(s).
-
-```json
-"@context": ["https://www.w3.org/2018/credentials/v1"],
-  "credentialSchema": [{
-    "id": "ipfs://QmcwYEnLysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gl",
-    "type": "JsonSchema"
-  },
-
-```
-
-#### Validity Verification
-The verification process MUST check the assertions storage to ensure the existence of verifiable credentials that render any previous ones obsolete due to "revocation" or "update" status.
-The verification MUST check as well the validity periode if it exists.
+cf. caip-261.md
 
 ### Assertions Consumption
 Following the verification process, the trust graph can be utilized by any consumer to calculate insight relative to any use-case.
