@@ -22,54 +22,55 @@ The evaluation of discrete resources necessitates different kind of community fe
 Whether assessing resources for security concerns or for their user-friendliness, the type and depth of feedback required differ significantly. 
 
 Since these feedback are issues by peers part of a peer-to-peer network incorporating pseudonimous peers and potential malicious peers, peers reputation needs to be evaluated by calculating insight from web of trust. 
-CAIP-261: Web of Trust Primitives introduces a data framework to represent trust assertions among peers;
+CAIP-261: Web of Trust Primitives introduces a data framework to represent trust assertions among peers.
 
 **Peers**
 - **Peer Trust Assertion:** (Defined in the CAIP-261) This constitute web of trust, with trust and distrust assertions among peers;
-- **Peer Trust Score:** (Defined in the CAIP-261) This represent the calculated trust scores of a peer at some point in time.
+- **Peer Trust Score:** (Defined in the CAIP-261) This represent the calculated synthetic trust scores of a peer which reflect the overall sentiment of the community.
 
 This proposal incorporates the following basic primitives for Resources assessment as inputs :
-**Discreet Resources**
-- **Report Assertion:** This represents detailed presentation of factual information and objective analysis. (e.g. an audit in the case of software components);
-- **Review Assertion:** This represents a subjective assessment reflecting personal opinions and experiences;
-- **Reaction Assertion:** This represents a quantifiable expression of agreement or disagreement with a report or a review's content, typically reflecting the collective sentiment of the audience.
-- **Resource Trust Score:** This represent the calculated trust scores of a resource at some point in time
 
-All these data can be ultimately utilized to compute synthetic resource's trust scores which reflect the overall sentiment of the community.
+**Discreet Resources**
+- **Report Assertion:** This represents detailed presentation of factual information and objective analysis. This type of content is factual and analytical, often backed by data, research, and objective methodologies. It's designed to inform or provide insights based on evidence and analysis, such as security or compliance report;
+- **Review Assertion:** This represents a subjective assessment reflecting personal opinions and experiences. Unlike report assertions, review assertions are inherently subjective, based on personal viewpoints, experiences, or interpretations of the reviewer;
+- **Reaction Assertion:** This represents a quantifiable expression of agreement or disagreement with a report or a review's content, typically reflecting the collective sentiment of the audience. This is a more interactive form of content, where the audience engages with the content through likes, dislikes, endorsements, or disputes.
+- **Resource Trust Score:** This represent the calculated synthetic trust scores of a resource which reflect the overall sentiment of the community.
 
 ## Motivation
-Discreet Resources within a decentralized web tend to be distributed permissionlessly.
-While this fosters permissionless innovation, it simultaneously exposes the system to potential vulnerabilities and scams, for lack of open trust and reputation mechanisms.
-Most existing solutions for evaluating discreet resources are centralized, necessitating trusted intermediaries.
-This reliance on trusted intermediaries near the edges compromises the decentralized properties of the core of the ecosystem.
-By standardizing data to form a universally applicable trust graph reusable across layers of the system, we strengthen the reliability of discreet resources assessments powered by communities.
+In the evolving landscape of the decentralized web, the permissionless distribution of discreet resources fosters innovation and participation without gatekeepers but also exposes the ecosystem to vulnerabilities such as misinformation, scams, and security threats. 
+
+Currently, in the absence of a robust, decentralized, community-powered trust assessment mechanism, verification is nearly absent or still heavily reliant on centralized solutions. 
+This reliance on trusted intermediaries inadvertently creates bottlenecks and control points, compromising the decentralized properties of the ecosystem.
+
+Therefore, the motivation behind standardizing data for community-powered assessment extends beyond merely enhancing the reliability of discreet resources. 
+It aims to establish a universally applicable trust graph, reusable across various use-cases, to further mature and fortify the decentralized nature of the ecosystem.
 
 ## Specification
 
-### Identifier Scheme
+### Resources Trust Representation 
+#### Identifier Scheme
+##### Discreet Resource identification
+Discreet resources, by their nature, are static entities and should be identified with an identifier that points to a specific, unchangeable version of the resource. 
+To ensure the integrity and traceability of these resources, each new version must be assigned a unique identifier, distinct from its predecessors.
 
-The flexibility of the system requires stable and translatable identifiers for both actors and resources.
-We chose to identify all actors (including software actors like trust computers or oracles) by [Decentralized Identifiers][DID] and all static resources (as well as the claims, trust assertions, and other data points) by [Content Identifiers][CID].
+A recommended approach for generating these identifiers is to use the resource content's fingerprint, such as its hash. Utilizing a [Content Identifier (CID)] is an effective method for this purpose. 
+CIDs offer a robust, cryptographic hash of the resource's content, is self-contained and ensure that any alteration of the content would result in a different identifier, thereby preserving the integrity of the resource.
 
-Our data framework has been prototyped to use the following identifiers, although other systems might apply additional identifier and serialization schemes:
+To further enhance accessibility and integration within the decentralized web, the CID should be encapsulated within a Uniform Resource Identifier (URI). 
+This encapsulation allows for the use of familiar and widely supported schemes, such as the IPFS scheme (ipfs://), or a custom scheme (e.g., example://). 
+By doing so, it provides a contextual identifier that not only points to the resource in a static, immutable manner but also offers insights into the nature or origin of the resource through the choice of URI scheme.
 
-- **Peers:** Describe in CAIP-261: Web of Trust primitive
-- **Resources:** Custom identifiers were used per category of software components, such as checksum for specific builds/binaries (e.g. `snap://<checksum>`) and onchain addresses for deployed smart contracts (e.g. _ `did:pkh:eip155:1:<contractAddress>`
-- **Assertions:** Documents like those defined and excerpted below were encoded as JSON and canonicalized according to the [JSON Canonicalization Scheme][JCS] before being serialized as a [multihash][] with a ["raw JSON" prefix][multicodec-json] to be stored in a IPFS-style syncing-friendly, [CID-queryable][CID] key/value store.
-- **Software entities:** Our prototype addressed all offchain entities that produce or consume trust assertions by `did:key` public-key identifiers to simplify mutual authentication and data authentication, and all onchain entities by `did:pkh` for the addresses to which they were deployed.
+##### Assertions Identification
+cf. CAIP-261
 
-### Data Model
-
+#### Data Model
 In order to assess discreet resources, a peer can issue assertions about a discreet resource or about reviews or reports to react on their content.
+![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/1948e150-f964-4975-b3ee-ec6fe0a1545e)
 
-
-![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/e58a0368-8164-4175-b77d-1491a6c719d1)
-
-#### Discreet Resource Trust Assessment Metamodel
 All subsequent documents conform to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the purpose of representation. 
 However, this standard does not prescribe any specific document type, though it may recommend internationally recognized standards. 
 
-#### Report Assertion
+##### Report Assertion
 A report presents a detailed presentation of factual information and objective analysis.
 
 ```json
@@ -129,7 +130,7 @@ Security report with no findings:
 
 Any standard inheriting this CAIP COULD propose reference lists of "type" to facilitate interoperability across different systems.
 
-#### Review Assertion
+##### Review Assertion
 A reaction represents a quantifiable expression of agreement or disagreement with the report's content, typically reflecting the collective sentiment of the community.
 
 ```json
@@ -145,10 +146,8 @@ A reaction represents a quantifiable expression of agreement or disagreement wit
 "proof": {}
 ```
 
-###### Reaction Assertion
-
+##### Reaction Assertion
 A reaction represents a quantifiable expression of agreement or disagreement with the report's content, typically reflecting the collective sentiment of the community.
-
 
 **A reaction on a report**
 ```json
@@ -183,13 +182,13 @@ Reaction can also be used directly on a software component to share a reaction.
 - `reaction`: This defines the reaction, the standard define `Disputed` or `Endorsed` as reaction, but this can be extend to any reaction.
 - `reason` (optional): This defines the reason for a given review status.
 
-### Assertions Management
+### Resources Trust Management
 cf. caip-261.md
 
-### Assertions Verification
+### Resources Trust Verification
 cf. caip-261.md
 
-### Assertions Consumption
+### Resources Trust Consumption
 Following the verification process, the trust graph can be utilized by any consumer to calculate insight relative to any use-case.
 
 Please note that the method for calculating the trust scores is entirely open, and this standard does not provide specific guidelines for it.
