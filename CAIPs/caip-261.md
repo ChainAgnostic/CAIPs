@@ -34,7 +34,7 @@ The application of graph theory to utilize these assertions is beyond the scope 
 
 In the following diagram, we depict the process where an issuer formally asserts their trust in a subject, highlighting the foundational relationship within a peer-to-peer trust-based system.
 
-![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/757fdc05-46b9-4d1d-b119-6247db060c07)
+![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/e14b4bcb-afc2-4578-9e33-1c0c8bb927e2)
 
 #### Identifier Scheme
 
@@ -61,6 +61,8 @@ This hash, along with metadata about the hash function, is then encoded in the M
 
 All subsequent documents conform to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the purpose of representation. 
 However, this standard does not prescribe any specific document type, though it may recommend internationally recognized standards. 
+
+![diagram2](https://github.com/dayksx/CAIPs/assets/77788154/479df06f-3dd5-4c88-b396-4cfae01ff8d6)
 
 **Peer Trust Assertions:**
 
