@@ -31,8 +31,8 @@ CAIP-261: Web of Trust Primitives introduces a data framework to represent trust
 This proposal incorporates the following basic primitives for Resources assessment as inputs :
 
 **Discrete Resources**
-- **Report Assertion:** This represents detailed presentation of factual information and objective analysis. This type of content is factual and analytical, often backed by data, research, and objective methodologies. It's designed to inform or provide insights based on evidence and analysis, such as security or compliance report;
-- **Review Assertion:** This represents a subjective assessment reflecting personal opinions and experiences. Unlike report assertions, review assertions are inherently subjective, based on personal viewpoints, experiences, or interpretations of the reviewer;
+- **Report Assertion:** This represents detailed presentation of factual information and objective analysis. This type of content is often backed by data, research, and objective methodologies. It's designed to inform or provide insights based on evidence and analysis, such as security or compliance report;
+- **Review Assertion:** This represents a subjective assessment reflecting personal opinions and experiences. Unlike report, review assertions are based on personal viewpoints, experiences, or interpretations of the reviewer;
 - **Reaction Assertion:** This represents a quantifiable expression of agreement or disagreement with a report or a review's content, typically reflecting the collective sentiment of the audience. This is a more interactive form of content, where the audience engages with the content through likes, dislikes, endorsements, or disputes.
 - **Resource Trust Score:** This represent the calculated synthetic trust scores of a resource which reflect the overall sentiment of the community.
 
