@@ -2,7 +2,7 @@
 # Every document starts with a front matter in YAML enclosed by triple dashes.
 # See https://jekyllrb.com/docs/front-matter/ to learn more about this concept.
 caip: CAIP-x
-title: Community-Powered Trust Assessment
+title: Community-Powered Assessment of Trust in Discrete Resources
 author: Dayan | dayan.fc | dayan.lens | dayanx.eth | (@dayksx) <dayksx@protonmail.com>
 discussions-to: <URL(s); if multiple, list separated by , without " or []> 
 status: Draft
@@ -14,7 +14,7 @@ requires: CAIP-261
 
 ## Simple Summary
 
-CAIP-x introduces a data framework to represent assertions for evaluating discreet resources, such as software components, packages, or media files, by utilizing community assertions and pulling in trust data from webs of trust and other implicit trust signals.
+CAIP-x introduces a data framework to represent assertions for evaluating discrete resources, such as software components, packages, or media files, by utilizing community assertions and pulling in trust data from webs of trust and other implicit trust signals.
 
 ## Abstract
 
@@ -30,27 +30,27 @@ CAIP-261: Web of Trust Primitives introduces a data framework to represent trust
 
 This proposal incorporates the following basic primitives for Resources assessment as inputs :
 
-**Discreet Resources**
+**Discrete Resources**
 - **Report Assertion:** This represents detailed presentation of factual information and objective analysis. This type of content is factual and analytical, often backed by data, research, and objective methodologies. It's designed to inform or provide insights based on evidence and analysis, such as security or compliance report;
 - **Review Assertion:** This represents a subjective assessment reflecting personal opinions and experiences. Unlike report assertions, review assertions are inherently subjective, based on personal viewpoints, experiences, or interpretations of the reviewer;
 - **Reaction Assertion:** This represents a quantifiable expression of agreement or disagreement with a report or a review's content, typically reflecting the collective sentiment of the audience. This is a more interactive form of content, where the audience engages with the content through likes, dislikes, endorsements, or disputes.
 - **Resource Trust Score:** This represent the calculated synthetic trust scores of a resource which reflect the overall sentiment of the community.
 
 ## Motivation
-In the evolving landscape of the decentralized web, the permissionless distribution of discreet resources fosters innovation and participation without gatekeepers but also exposes the ecosystem to vulnerabilities such as misinformation, scams, and security threats. 
+In the evolving landscape of the decentralized web, the permissionless distribution of discrete resources fosters innovation and participation without gatekeepers but also exposes the ecosystem to vulnerabilities such as misinformation, scams, and security threats. 
 
 Currently, in the absence of a robust, decentralized, community-powered trust assessment mechanism, verification is nearly absent or still heavily reliant on centralized solutions. 
 This reliance on trusted intermediaries inadvertently creates bottlenecks and control points, compromising the decentralized properties of the ecosystem.
 
-Therefore, the motivation behind standardizing data for community-powered assessment extends beyond merely enhancing the reliability of discreet resources. 
+Therefore, the motivation behind standardizing data for community-powered assessment extends beyond merely enhancing the reliability of discrete resources. 
 It aims to establish a universally applicable trust graph, reusable across various use-cases, to further mature and fortify the decentralized nature of the ecosystem.
 
 ## Specification
 
 ### Resources Trust Representation 
 #### Identifier Scheme
-##### Discreet Resource identification
-Discreet resources, by their nature, are static entities and should be identified with an identifier that points to a specific, unchangeable version of the resource. 
+##### Discrete Resource identification
+Discrete resources, by their nature, are static entities and should be identified with an identifier that points to a specific, unchangeable version of the resource. 
 To ensure the integrity and traceability of these resources, each new version must be assigned a unique identifier, distinct from its predecessors.
 
 A recommended approach for generating these identifiers is to use the resource content's fingerprint, such as its hash. Utilizing a [Content Identifier (CID)] is an effective method for this purpose. 
@@ -64,7 +64,7 @@ By doing so, it provides a contextual identifier that not only points to the res
 cf. CAIP-261
 
 #### Data Model
-In order to assess discreet resources, a peer can issue assertions about a discreet resource or about reviews or reports to react on their content.
+In order to assess discrete resources, a peer can issue assertions about a discrete resource or about reviews or reports to react on their content.
 ![diagram1](https://github.com/dayksx/CAIPs/assets/77788154/1948e150-f964-4975-b3ee-ec6fe0a1545e)
 
 All subsequent documents conform to the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) for the purpose of representation. 
@@ -163,7 +163,7 @@ A reaction represents a quantifiable expression of agreement or disagreement wit
 "proof": {}
 ```
 
-**A reaction on a discreet resource**
+**A reaction on a discrete resource**
 Reaction can also be used directly on a software component to share a reaction.
 
 ```json
