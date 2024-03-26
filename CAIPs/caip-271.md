@@ -1,7 +1,7 @@
 ---
 # Every document starts with a front matter in YAML enclosed by triple dashes.
 # See https://jekyllrb.com/docs/front-matter/ to learn more about this concept.
-caip: CAIP-x
+caip: CAIP-271
 title: Community-Powered Assessment of Trust in Discrete Resources
 author: Dayan | dayan.fc | dayan.lens | dayanx.eth | (@dayksx) <dayksx@protonmail.com>
 discussions-to: <URL(s); if multiple, list separated by , without " or []> 
@@ -14,7 +14,7 @@ requires: CAIP-261
 
 ## Simple Summary
 
-CAIP-x introduces a data framework to represent assertions for evaluating discrete resources, such as software components, packages, or media files, by utilizing community assertions and pulling in trust data from webs of trust and other implicit trust signals.
+CAIP-271 introduces a data framework to represent assertions for evaluating discrete resources, such as software components, packages, or media files, by utilizing community assertions and pulling in trust data from webs of trust and other implicit trust signals.
 
 ## Abstract
 
