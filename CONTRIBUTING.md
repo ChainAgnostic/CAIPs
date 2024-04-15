@@ -5,14 +5,23 @@
 3.  Add your CAIP to your fork of the repository. There is a [template CAIP here](caip-template.md).
 4.  Submit a Pull Request to Chain Agnostics's [CAIPs repository](https://github.com/ChainAgnostic/CAIPs).
 
-Your first PR should be a first draft of the complete and implementable CAIP. 
-An editor will manually review the first PR for a new CAIP and assign it a number before merging it.
+Your first Pull Request (hereafter "PR") should be a first draft of the complete and implementable CAIP; the CAIP number will be taken from the PR that creates it, unless a different number is requested or assigned by an editor.
+An editor will manually review the first PR and, if necessary, [re-]assign a number before merging it.
 Make sure you include a `discussions-to` header with the URL of an issue or discussion on this repository, or any other forum where you would welcome discussion.
 
 If your CAIP requires images, the image files should be included in a subdirectory of the `assets` folder for that CAIP as follows: `assets/caip-N` (where **N** is to be replaced with the CAIP number). 
 When linking to an image in the CAIP, use relative links such as `../assets/caip-1/image.png`.
 
 It is recommended that you render your PR locally to check the Jekyll syntax; to do so, run `bundle exec jekyll serve`.
+
+## Status Lifecycle (see CAIP-1)
+
+We recommend all specifications be published in "Draft" status initially.
+We recommend not changing the status to "Review" until there is at least 1 reviewable implementation and other potential implementers are evaluating or considering implementing.
+Editors reserve the right to mark a "Draft" as "Stale" after significant periods of inactivity, or authors can mark them as such themselves.
+We recommend moving from "Review" to "Final" only when interoperability and further adoption is hindered by the risk of breakage.
+
+Note: When opening a PR to "Final" status that a second, identical copy of the file and any assets or attachments should be placed in the "/final" folder to render a second copy at the `/final` path (this allows "Final"-status CAIPs to be marked as such at archival URLs).
 
 ## Style Guide
 
