@@ -95,9 +95,13 @@ The `updated` header records the date(s) when the CAIP was updated with "substan
 
 CAIPs may have a `requires` header, indicating the CAIP(s) on which this CAIP depends. Note that if the CAIP requires multiple others, the value should be an array of integers (no `"` needed) and/or URLs (wrapped in `"`s) within square brackets (`[]`).
 
-#### `superseded-by` and `replaces` headers
+#### `status` header
 
-CAIPs may also have a `superseded-by` header indicating that a CAIP has been rendered obsolete by a later document; the value is the number of the CAIP that replaces the current document. The newer CAIP must have a `replaces` header containing the number of the CAIP that it rendered obsolete.
+The status header refers to the editorial lifecycle, as attested by the author(s) of a given proposal. 
+
+`Review` and `Last Call` (an optional subset of `Review` expressing urgency to reviewers) should used in combination with the optional parameter sub-field `review-period-end` to express the review deadline to which the author is commits themself. 
+
+`Superseded` is a variant of `Withdrawn` which redirects readers to another proposal; here as well, the optional parameters `superseded-by` (on the superseded proposal) and `replaces` (on the superseding proposal) help link these proposals. `Final` proposals cannot be changed to `Withdrawn` or `Superseded`.
 
 ## Auxiliary Files
 
@@ -129,9 +133,9 @@ Once the CAIP is ready for the repository, the CAIP editor will:
 
 - Merge the corresponding pull request
 
-- Send a message back to the CAIP author with the next step.
+- Leave a comment making explicit to the CAIP author(s) what the next steps are.
 
-The editors don't pass judgment on CAIPs. We merely do the administrative & editorial part.
+The editors don't pass judgment on CAIPs. We merely do the administrative & editorial part. Substantive and normative judgments should be made by author(s) whenever possible.
 
 ## History
 
