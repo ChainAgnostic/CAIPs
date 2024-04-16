@@ -5,7 +5,7 @@ status: Review
 type: Meta
 author: ligi <ligi@ligi.de>
 created: 2019-08-31
-updated: 2019-08-31
+updated: 2024-04-15
 ---
 
 ## What is an CAIP?
@@ -33,7 +33,7 @@ Each CAIP must begin with an [RFC 822](https://www.ietf.org/rfc/rfc822.txt) styl
 
 ` * discussions-to:` \<a URL pointing to the official discussion thread\>
 
-` status:` <Draft | Rejected | Review | Last Call | Withdrawn | Final | Superseded>
+` status:` <Draft | Rejected | Review | Last Call | Withdrawn | Superseded | Final>
 
 `* review-period-end:` <date review period ends>
 
@@ -99,7 +99,7 @@ CAIPs may have a `requires` header, indicating the CAIP(s) on which this CAIP de
 
 The status header refers to the editorial lifecycle, as attested by the author(s) of a given proposal. 
 
-`Review` and `Last Call` (an optional subset of `Review` expressing urgency to reviewers) should used in combination with the optional parameter sub-field `review-period-end` to express the review deadline to which the author is commits themself. 
+`Review` and `Last Call` (an optional subset of `Review` expressing urgency to reviewers) should used in combination with the optional parameter `review-period-end` to express the review deadline to which the author is commits themself. 
 
 `Superseded` is a variant of `Withdrawn` which redirects readers to another proposal; here as well, the optional parameters `superseded-by` (on the superseded proposal) and `replaces` (on the superseding proposal) help link these proposals. `Final` proposals cannot be changed to `Withdrawn` or `Superseded`.
 
