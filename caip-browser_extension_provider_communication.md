@@ -18,7 +18,7 @@ This CAIP establishes a standard way for JSON-RPC providers to communicate with 
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-This CAIP establishes how providers can communicate with web extensions. Two overall strategies are described, one for `externally_connectable` web extensions, and one for `contentscript` web extensions.
+This CAIP establishes how providers can communicate with web extensions over `externally_connectable`.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
@@ -36,6 +36,7 @@ However, the injected API strategy has many disadvantages:
 
 An alternative strategy would be for a website to embed its own provider. A provider could be offered as a library, to be embedded by the website author. This strategy can address all disadvantages of the injected provider approach:
 * If this strategy became widespread enough, it would allow some web extensions to stop asking for write access to all pages.
+  * NOTE: Should mention discovery somewhere since that will require injection still
 * The website author can control when the provider is initialized, and fine-tune performance.
 * No code needs to be injected, so websites would no longer be broken by injected code.
 * The provider library can be published with breaking changes, allowing changes to the API without needing to embed legacy code in each website.
@@ -58,11 +59,7 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Summary
 
-Two strategies are described below; one for `externally_connectable` web extensions, and one for `contentscript` web extensions. Each strategy is intended to work with a different web extension permission.
-
-A web extension MUST support at least one of these strategies. A web extension MAY support multiple strategies.
-
-Both strategies use the same message format.
+...
 
 ### Message format
 
@@ -87,23 +84,26 @@ Both strategies use the same message format.
 }
 ```
 
-### `externally_connectable` web extensions
+### `externally_connectable`
 
-A web extension can use the `externally_connectable` manifest field to accept messages from websites. This permission can be configured to limit which sites can message the web extension. How this permission is configured is out-of-scope for this proposal; this proposal only concerns sites that the web extension allows messages from.
-
-A web extension can receive messages using `browser.runtime.onMessage`. Incoming messages should be validated according to the
+A web extension can use the [`externally_connectable`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/externally_connectable) manifest field to accept messages from websites and other extensions. This permission can be configured to limit which sites and other extensions can send messages to the web extension. How this permission is configured is out-of-scope for this proposal; this proposal only concerns sites that the web extension allows messages from.
 
 
-The `target` field MUST be unset for all messages from either the provider or the web extension.
+The web extension can:
+* handle a connection from the website or other extensions by using `chrome.runtime.onConnectExternal.addListener((port) => {...})`
+* send messages by using `port.posMessage()`
+* receive messages by using `port.onMessage.addListener()`
+  * incoming messages should be validated according to the message format specification above
 
-The provider should send messages using `runtime.sendMessage`.
+The provider can:
+* initiate a connection with the web extension by using `port = browser.runtime.connect()`
+* send messages by using `port.postMessage()`
+* receive messages by using `port.onMessage.addListener()`
 
-The web extension should recieve messages using `runtime.onMessage`.
-
-
-### `contentscript` web extensions
-
-The provider should send messages using the format
+Caveats:
+* No firefox support yet
+* Extension Ids may be different across different family of browsers
+  * Discoverability should address this
 
 
 ## Rationale
@@ -112,6 +112,8 @@ The provider should send messages using the format
 
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
+
+This is meant to eventually replace connection over contentscript...
 
 ## Test Cases
 <!--Please add test cases here if applicable.-->
