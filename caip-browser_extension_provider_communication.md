@@ -14,7 +14,7 @@ created: 2022-11-28
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-This CAIP establishes a standard way for JSON-RPC providers to communicate with web extensions.
+The proposal aims to standardize how JSON-RPC providers with web extensions communicate, making the process more efficient and secure.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
@@ -59,7 +59,7 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Summary
 
-...
+Web extensions should expose a standard interface over [`externally_connectable`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/externally_connectable) to enable the inter-operability of embedded providers.
 
 ### Message format
 
@@ -84,14 +84,19 @@ uppercase in this document are to be interpreted as described in [RFC
 }
 ```
 
+TODO: should type be more defined here? Seems weird to specify the envelop but no types it can be used with?
+Does `data` need to be a JSON-RPC message specifically?
+Should `type` be something besides `caip-x`?
+
+
 ### `externally_connectable`
 
-A web extension can use the [`externally_connectable`](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/externally_connectable) manifest field to accept messages from websites and other extensions. This permission can be configured to limit which sites and other extensions can send messages to the web extension. How this permission is configured is out-of-scope for this proposal; this proposal only concerns sites that the web extension allows messages from.
+A web extension can use the `externally_connectable` manifest field to accept messages from websites and other extensions. This permission can be configured to limit which sites and other extensions can send messages to the web extension. How this permission is configured is out-of-scope for this proposal; this proposal only concerns sites that the web extension allows messages from.
 
 
 The web extension can:
 * handle a connection from the website or other extensions by using `chrome.runtime.onConnectExternal.addListener((port) => {...})`
-* send messages by using `port.posMessage()`
+* send messages by using `port.postMessage()`
 * receive messages by using `port.onMessage.addListener()`
   * incoming messages should be validated according to the message format specification above
 
@@ -101,25 +106,28 @@ The provider can:
 * receive messages by using `port.onMessage.addListener()`
 
 Caveats:
-* No firefox support yet
+* No firefox support yet, but they are considering implementing it
 * Extension Ids may be different across different family of browsers
   * Discoverability should address this
 
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
+While web extensions could realize the benefits of `externally_connectable` without using it with a standardized interface, this would mean that every web extension would have to ship a provider library that worked specifically for their interface and that Dapps would need to import them. It wouldn't be feasible for Dapps to import every single web extension's specific provider implementation, making this approach non-viable as it would not see widespread adoption.
 
+Web extension inter-operability is the key to enabling generalized provider implementations. This allows Dapps to import a single library to connect to numerous web extensions.
 
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
-
-This is meant to eventually replace connection over contentscript...
+This CAIP does not require discontinuing usage of contentscript. It is RECOMMENDED that wallets start implementing this alternative connection strategy and encouraging it's usage so that the ecosystem can eventually remove contentscript injection entirely. As an optional transitionary step, wallets can migrate their injected provider to start making connections over `externally_connectable` with no user-facing impact (not sure if true since this has caveats).
 
 ## Test Cases
 <!--Please add test cases here if applicable.-->
 
 ## Links
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.-->
+* [externally_connectable](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/externally_connectable)
+* [Mozilla bug report: "Implement externally_connectable from a website"](https://bugzilla.mozilla.org/show_bug.cgi?id=1319168)
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE).
