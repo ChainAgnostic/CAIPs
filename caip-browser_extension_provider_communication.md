@@ -122,9 +122,11 @@ Web extension inter-operability is the key to enabling generalized provider impl
 
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
+`externally_connectable` has seen a decade of usage via extensions on Chrome. It has a strictly better security when compared to postMessage over contentscript.
 
 ## Privacy Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
+Exposing the wallet API over `externally_connectable` opens a migration path towards a bring-your-own provider model in which web extensions can reduce their fingerprint by no longer having to inject their own provider into every webpage.
 
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
