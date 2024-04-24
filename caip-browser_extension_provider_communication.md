@@ -113,16 +113,22 @@ Caveats:
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-While web extensions could realize the benefits of `externally_connectable` without using it with a standardized interface, this would mean that every web extension would have to ship a provider library that worked specifically for their interface and that Dapps would need to import them. It wouldn't be feasible for Dapps to import every single web extension's specific provider implementation, making this approach non-viable as it would not see widespread adoption.
+While web extensions could realize the benefits of `externally_connectable` without using it with a standardized interface, this would mean that every web extension would have to ship a provider library that worked specifically for their interface and that Dapps would need to import them. It wouldn't be feasible for Dapps to import every single web extension's specific provider implementation, making this approach less viable.
 
-Web extension inter-operability is the key to enabling generalized provider implementations. This allows Dapps to import a single library to connect to numerous web extensions.
+Web extension inter-operability is the key to enabling generalized provider implementations. Generalized provider implementations allows for convenient adoption by Dapps, leading to more wide spread adoption of the standard as a result.
+
+## Test Cases
+<!--Please add test cases here if applicable.-->
+
+## Security Considerations
+<!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
+
+## Privacy Considerations
+<!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
 
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 This CAIP does not require discontinuing usage of contentscript. It is RECOMMENDED that wallets start implementing this alternative connection strategy and encouraging it's usage so that the ecosystem can eventually remove contentscript injection entirely. As an optional transitionary step, wallets can migrate their injected provider to start making connections over `externally_connectable` with no user-facing impact (not sure if true since this has caveats).
-
-## Test Cases
-<!--Please add test cases here if applicable.-->
 
 ## Links
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.-->
