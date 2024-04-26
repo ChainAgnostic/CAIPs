@@ -14,11 +14,11 @@ created: 2022-11-28
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-The proposal aims to standardize how JSON-RPC providers with web extensions communicate, making the process more efficient and secure.
+The proposal aims to standardize how providers communicate with web extensions, making the process more efficient and secure.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-This CAIP establishes how providers can communicate with web extensions over `externally_connectable`.
+This CAIP establishes how providers can communicate with web extensions over `externally_connectable` in an extensible manner.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
