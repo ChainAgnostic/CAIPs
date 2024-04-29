@@ -2,7 +2,7 @@
 caip: CAIP-X
 title: Domain Wallet Authentication
 author: Chris Cassano (@glitch003), David Sneider (@davidlsneider), Federico Amura (@FedericoAmura), Gregory Markou (@GregTheGreek)
-discussions-to: <link to discussion forum or pull request>
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/275
 status: Draft
 type: Standards Track
 Standard created: 2024-04-29
