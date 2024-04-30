@@ -29,7 +29,7 @@ This injected API strategy has some advantages:
 * It allows websites to support any web extension following this standard with no additional effort.
 
 However, the injected API strategy has many disadvantages:
-* It depends upon the web extension having read and write access to every website, which is a scary permission that web extension authors might otherwise be able to avoid asking for.
+* It depends upon the web extension having read and write access to every website the user visits, which is a scary permission that web extension authors might otherwise be able to avoid asking for.
 * It slows down every website by injecting additional code to be parsed and executed. It even slows down the initial page load in most cases, because many web extensions inject the provider synchronously to maintain compatibility with websites that expect it to be available immediately.
 * Injecting code into a website can break it.
 * It provides no way for web extension authors to safely make breaking changes to their provider API, resulting in even more code being injected to support legacy APIs.
