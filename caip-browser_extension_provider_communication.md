@@ -45,7 +45,7 @@ A provider library can be similarly easy to use for website authors as well, req
 
 Web extension inter-operability is a challenge for embeded providers though. That is what this proposal means to address. Today there is no way to write a provider such that it is compatible with any web extension. Web extensions differ today in how they communicate with wallets, from the messaging system used to the messaging format. These details often aren't publicly documented or treated as a public-facing API, so they can change without notice, making it risky even to embed support for popular conventions used today.
 
-A standard method for providers to communicate with web extebsions would allow website authors to embed their own providers without losing web extension inter-operability.
+A standard method for providers to communicate with web extensions would allow website authors to embed their own providers without losing web extension inter-operability.
 
 ## Specification
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
