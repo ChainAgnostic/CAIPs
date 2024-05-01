@@ -29,7 +29,7 @@ This injected API strategy has some advantages:
 * It allows websites to support any web extension following this standard with no additional effort.
 
 However, the injected API strategy has many disadvantages:
-* It depends upon the web extension having read and write access to every website, which is a scary permission that web extension authors might otherwise be able to avoid asking for.
+* It depends upon the web extension having read and write access to every website the user visits, which is a scary permission that web extension authors might otherwise be able to avoid asking for.
 * It slows down every website by injecting additional code to be parsed and executed. It even slows down the initial page load in most cases, because many web extensions inject the provider synchronously to maintain compatibility with websites that expect it to be available immediately.
 * In some cases, injecting code into a webpage may break its original intended behaviors.
 * It provides no way for web extension authors to safely make breaking changes to their provider API, resulting in even more code being injected to support legacy APIs.
@@ -43,9 +43,9 @@ An alternative strategy would be for a website to embed its own provider. A prov
 
 A provider library can be similarly easy to use for website authors as well, requiring nothing more than a single script tag to import a library and get an equivalent experience to using an the injected provider.
 
-Web extension inter-operability is a challenge for embeded providers though. That is what this proposal means to address. Today there is no way to write a provider such that it is compatible with any web extension. Web extensions differ today in how they communicate with wallets, from the messaging system used to the messaging format. These details often aren't publicly documented or treated as a public-facing API, so they can change without notice, making it risky even to embed support for popular conventions used today.
+Web extension inter-operability is a challenge for embedded providers though. That is what this proposal means to address. Today there is no way to write a provider such that it is compatible with any web extension. Web extensions differ today in how they communicate with wallets, from the messaging system used to the messaging format. These details often aren't publicly documented or treated as a public-facing API, so they can change without notice, making it risky even to embed support for popular conventions used today.
 
-A standard method for providers to communicate with web extebsions would allow website authors to embed their own providers without losing web extension inter-operability.
+A standard method for providers to communicate with web extensions would allow website authors to embed their own providers without losing web extension inter-operability.
 
 ## Specification
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
