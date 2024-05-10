@@ -44,7 +44,8 @@ Example of a response to retrieve the "authenticator" text record:
 The User can provide their authentication flow by providing a URL where Web3 applications can fetch it.
 The user is responsible for choosing what to record in his Crypto Domain NFT system, based on his subjective opinion of paying enough gas for storing it and taking care of keeping that record updated, or delegating that responsibility to an authentication flow provider. Due to the simplicity of the flow definition, it can be self hosted to get the best of both worlds
 
-The Authentication flow definition JSON must have the following schema
+The Authentication flow definition JSON MUST conform to the following Draft 7 [JSON Schema
+`]: ``
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
