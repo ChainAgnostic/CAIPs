@@ -21,7 +21,7 @@ Current blockchain authentication methods primarily rely on connecting wallets v
 
 Crypto domains provide a human-readable, user-friendly way to represent wallet addresses. By enabling authentication directly with crypto domains, this standard aims to improve usability and adoption of web3 logins.
 
-Additionally, standardizing the way domain NFT metadata specifies its associated authentication provider allows any compatible domain NFT to become a domain wallet or any key management or authentication method. Additionally, any login modal or dApp can easily integrate domain-based logins.
+Additionally, standardizing the way domain NFT metadata specifies its supported authentication mechanisms allows any compatible domain NFT to abstract out authentication methods and key management. This abstraction allows both login modals and dApps to easily integrate domain-based logins.
 
 # Specification
 
