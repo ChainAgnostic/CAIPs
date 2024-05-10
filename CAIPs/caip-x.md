@@ -31,7 +31,7 @@ Any system capable of resolving text records can be used for the name in this sy
 authenticator (string, required): A URL that dereferences to a JSON objection containing configuration information, in particular information about how to authenticate the domain's subject.  e.g. 
 
 `http://www.authprovider.com/auth/examplename.tld`
-The application will craft the final URL to get the configuration, where "{}" will be substituted for the user's whole crypto domain name, so for "chrisc.eth" the final URL would be "http://www.authprovider.com/auth/chrisc.eth"
+The application will craft the final URL to get the configuration, where `exampledomain.tld` will be substituted for the user's whole crypto domain name, so for an ENS domain like `chrisc.eth`  the final URL would be `http://www.authprovider.com/auth/chrisc.eth`
 
 The actual standard used to store this "authenticator" text record will vary depending on the Crypto Domain NFT system used.  For example, on ENS, a ENSIP-5 record should be created, with a "key" of "authenticator".  You can lookup the authenticator on an ENS domain using the text(bytes32 node, string key) function where "node" is the ENS domain being queried and "key" is the string "authenticator".
 
