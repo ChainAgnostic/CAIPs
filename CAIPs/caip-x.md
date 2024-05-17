@@ -5,13 +5,15 @@ This CAIP aims to standardize the method by which extension based wallets can an
 
 ### Motivation
 
-So Why Wallet Discovery?
-
-Given the benefits of `externally_connectable` as describe in CAIP-X (TODO ADD LINK HERE WHEN AVAILABLE) we need to solve for a key area where it fails to match the injected provider pattern.  
-`externally_connectable` requires that the webpage attempting to connect with the wallet know the extension's canonical extension id. Currently, there is no standard method for these wallets to provide their extension IDs to dApps. A standardized approach will improve interoperability, security, and user experience by ensuring that dApps can reliably identify and communicate with the intended wallet.
+Given the benefits of `externally_connectable` as describe in CAIP-X (TODO ADD LINK HERE WHEN AVAILABLE) we need to solve for a key area where it fails to match the injected provider pattern. `externally_connectable` requires that the webpage attempting to connect with the wallet know the extension's canonical extension id. Currently, there is no standard method for these wallets to provide their extension IDs to dApps. A standardized approach will improve interoperability, security, and user experience by ensuring that dApps can reliably identify and communicate with the intended wallet.
 
 Ideally browsers would eventually provide an API by which wallets can register the capabilities that they offer which webpages could access and choose to communicate with in a way that avoids the need for this additional discovery step.
-  
+
+#### Why not a centralized registry?
+
+Using a centralized repository to manage wallet extension IDs creates potential security vulnerabilities and central points of failure. By allowing wallets to directly announce their IDs to dApps, we eliminate reliance on a single source, enhancing security and adhering to blockchain's decentralization principles. This method minimizes risks such as data tampering and spoofing, ensuring safer and more reliable dApp interactions. It would also just introduce another layer of central authority to the stack which we ought to avoid.
+
+
 ### Specification
 
 **Extension ID Announcement Protocol:**
@@ -56,7 +58,7 @@ extensionId: 'your_extension_id_here'
 
 ```javascript
 
-document.addEventListener('walletExtensionIdAnnouncement', function(e) {
+window.addEventListener('walletExtensionIdAnnouncement', function(e) {
 
 const walletExtensionId = e.detail.extensionId;
 
@@ -65,10 +67,6 @@ const walletExtensionId = e.detail.extensionId;
 });
 
 ```
-**Browser Manifest Adjustments:**
-
- Wallets can configure the `externally_connectable` section of their browser extension manifest to specify which domains are allowed to communicate with the extension. To avoid restricting communication to a pre-defined list of sites, wallets may use wildcards (e.g., `*.example.com`). 
- 
 
 **Backward Compatibility:**
 This protocol should be implemented in such a way that it does not interfere with existing implementations of EIP-1193 providers. Wallets may need to support both the new extension ID-based communication protocol and the traditional EIP-1193 provider interface.
