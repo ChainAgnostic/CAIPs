@@ -19,7 +19,7 @@ When accompanied with chain-specific message forms and signing algorithms, along
 ## Motivation
 
 As specified in [EIP-4361][], Sign in With Ethereum defined an Ethereum-focused workflow to authenticate Ethereum accounts on non-blockchain services. 
-This specification is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of a superset specification, which works with all blockchains.
+This work is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of this specification, to work with any cryptographic system's namespace expressable in [CAIP-10][] and [CAIP-2][] formats.
 
 Additionally, [CAIP-74][] specified a way to represent a chain-agnostic capability object (OCAP) by placing an EIP-4361 message into a CACAO container.
 
@@ -37,7 +37,7 @@ The data model _MUST_ contain the following fields:
 | Name              | Type            | Mandatory | Description                                                                                                                                                                                       |
 | ----------------- | --------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `domain`          | string          | ✓         | [RFC 4501][rfc 4501] `dnsauthority` that is requesting the signing.                                                                                                                               |
-| `address`         | string          | ✓         | Blockchain address, as defined by [CAIP-10][caip-10], performing the signing; should include [CAIP-2][caip-2] chain id namespace                                                                  |
+| `account_address`         | string          | ✓         | Blockchain address performing the signing, expressed as the `account_address` segment of a [CAIP-10][caip-10] address; should NOT include [CAIP-2][caip-2] `chain_id`.| namespace                                                                  |
 | `uri`             | string          | ✓         | [RFC 3986][rfc 3986] URI referring to the resource that is the subject of the signing i.e. the subject of the claim.                                                                              |
 | `version`         | string          | ✓         | Current version of the message.                                                                                                                                                                   |
 | `statement`       | string          |           | Human-readable ASCII assertion that the user will sign. It _MUST NOT_ contain `\n`.                                                                                                               |
@@ -46,6 +46,7 @@ The data model _MUST_ contain the following fields:
 | `expiration-time` | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message is no longer valid.                                                                                        |
 | `not-before`      | string          |           | [RFC 3339][rfc 3339] `date-time` that indicates when the signed authentication message starts being valid.                                                                                        |
 | `request-id`      | string          |           | System-specific identifier used to uniquely refer to the authentication request.                                                                                                                  |
+| `chain_id`        | string          | ✓         | The `chain_id` segment of a [CAIP-10][caip-10], i.e., a [CAIP-2][caip-2] identifier for locating the address listed separately above.| 
 | `resources`       | List of strings |           | List of information or references to information the user wishes to have resolved as part of the authentication by the relying party; express as [RFC 3986][rfc 3986] URIs and separated by `\n`. |
 | `signature`       | bytes           | ✓         | Signature of the message signed by the wallet.                                                                                                                                                    |
 | `type`            | string          | ✓         | Type of the signature to be generated, as defined in the namespaces for this CAIP.                                                                                                                |
@@ -133,7 +134,7 @@ URI: https://service.org/login
 Version: 1
 Nonce: 32891757
 Issued At: 2021-09-30T16:25:24.000Z
-Chain ID: 1
+Chain ID: 5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d
 Resources:
 - ipfs://Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu
 - https://example.com/my-web2-claim.json
