@@ -90,7 +90,7 @@ This construction allows a dApp to uniformly request a SIWx signature regardless
 
 ### Signature Verification
 
-Signature signing and verification should follow the workflow as specified in the [CAIP-122]() namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows, resulting in a message conformant with EIP-4361:
+Signature signing and verification should follow the workflow as specified in the [CAIP-122] namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows, resulting in a message conformant with EIP-4361:
 
 ```
 {.p.domain} wants you to sign in with your Ethereum account:
@@ -185,12 +185,19 @@ Present version of CAIP-74 updates and clarifies the previous versions:
 
 ## Links
 
-- [CAIP-122 "Sign-in with X"](https://github.com/ChainAgnostic/CAIPs/pull/122)
-- [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md)
-- [did:pkh Method Specification](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md)
-- [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6)
-- [EIP-191: Signed Data Standard](https://eips.ethereum.org/EIPS/eip-191)
-- [EIP-1271: Standard Signature Validation Method for Contracts](https://eips.ethereum.org/EIPS/eip-1271)
+- [CAIP-122 "Sign-in with X"][CAIP-122]
+- [EIP-4361 "Sign-in with Ethereum"][EIP-4361]
+- [did:pkh Method Specification][did:pkh]
+- [RFC 3339][RFC 3339]
+- [EIP-191: Signed Data Standard][EIP-191]
+- [EIP-1271: Standard Signature Validation Method for Contracts][EIP-1271]
+
+[CAIP-122]: https://chainagnostic.org/CAIPs/caip-122
+[EIP-191]: https://eips.ethereum.org/EIPS/eip-191
+[EIP-1271]: https://eips.ethereum.org/EIPS/eip-1271
+[EIP-4361]: https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md
+[RFC 3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[did:pkh]: https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md
 
 ## Copyright
 
