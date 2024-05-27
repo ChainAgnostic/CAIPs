@@ -1,5 +1,5 @@
 ---
-caip: CAIP-X
+caip: 275
 title: Domain Wallet Authentication
 author: Chris Cassano (@glitch003), David Sneider (@davidlsneider), Federico Amura (@FedericoAmura), Gregory Markou (@GregTheGreek)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/275
