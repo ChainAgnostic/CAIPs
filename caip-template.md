@@ -4,7 +4,7 @@
 caip: CAIP-X <X will be changed to the PR number if accepted>
 title: <CAIP title>
 author: <a list of the author's or authors' name(s) and/or username(s), or name(s) and email(s), e.g. (use with the parentheses or triangular brackets): FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
-discussions-to: <URL>
+discussions-to: <URL(s); if multiple, list separated by , without " or []> 
 status: Draft
 type: <Standard | Meta | Informational>
 created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
@@ -53,9 +53,12 @@ The rationale fleshes out the specification by describing what motivated the des
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.
 
-## Links
-<!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.-->
-Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.
+## References 
+<!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations. See CONTRIBUTING.md#style-guide . -->
+
+- [CAIP-1][CAIP-1] defines the CAIP document structure
+
+[CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE).
