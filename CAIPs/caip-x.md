@@ -12,7 +12,7 @@ Ideally, browsers would eventually provide an API by which wallets can register 
 
 #### Why not a centralized registry?
 
-Using a centralized repository to manage wallet extension IDs creates potential security vulnerabilities and central points of failure. By allowing wallets to directly announce their IDs to dApps, we eliminate reliance on a single source, enhancing security and adhering to blockchain's decentralization principles. This method minimizes risks such as data tampering and spoofing, ensuring safer and more reliable dApp interactions. It would also just introduce another layer of central authority to the stack which we ought to avoid.
+Using a centralized repository to manage wallet extension IDs creates potential security vulnerabilities, a central point of failure and a another layer of central authority to the wallet stack which we ought to avoid. By allowing wallets to directly announce their IDs to dApps, we eliminate reliance on a single source, enhancing security and adhering to blockchain's decentralization principles. This method minimizes risks such as data tampering and spoofing, ensuring safer and more reliable dApp interactions.
 
 ### Specification
 
@@ -20,18 +20,17 @@ Using a centralized repository to manage wallet extension IDs creates potential 
 
 Each wallet provider will be announced with the following interface. The values in the `ProviderInfo` object must be included. The `ProviderInfo` object may also include additional properties. If a dApp does not recognize these properties, it should ignore them.
 
-- **uuid**: A globally unique identifier for the Wallet Provider, compliant with UUIDv4, ensuring unique identification of different provider sessions during the lifetime of the page.
+- **extensionId**: The canonical extension ID of the wallet provider for the active browser. This value is used by dApps to establish a connection with the wallet using the `externally_connectable` API.
 - **name**: A human-readable alias of the Wallet Provider to be displayed to the user on the dApp (e.g., "Example Wallet Extension" or "Awesome Example Wallet").
 - **icon**: A URI pointing to an image, recommended to be a square with a minimum resolution of 96x96px.
 - **rdns**: A reverse DNS domain name identifying the wallet provider (e.g., `com.example.wallet`). This value should be stable throughout the development of the wallet.
 
 ```typescript
 interface ProviderInfo {
-  uuid: string;
+  extensionId: string;
   name: string;
   icon: string;
   rdns: string;
-  extensionId: string;
 }
 ```
 
@@ -42,14 +41,6 @@ Each wallet extension must implement a mechanism to announce its extension ID al
 **Modification to dApp Listening Mechanisms**:
 
 dApps must modify their initialization routines to listen for the wallet's `ProviderInfo` announcement event. Upon capturing the event, the dApp can store the extension ID and use it to establish a connection using the `externally_connectable` API.
-
-**Content Script Utilization**:
-
-While this CAIP significantly advances the way wallets interact with dApps through the `externally_connectable` API, it still necessitates the use of a content script. This script, however, requires fewer permissions compared to traditional methods and can be injected synchronously to facilitate the initial communication process. This adjustment is necessary to bridge the current browser limitations and set the stage for future enhancements.
-
-- **Synchronous Injection**: The content script can be injected synchronously with the page load, ensuring that the wallet's extension ID is available as soon as the dApp begins its initialization process. This method avoids the delays and potential conflicts associated with asynchronous script loading, leading to a smoother and more predictable interaction pattern.
-    
-- **Security and Efficiency**: Although using a content script still presents a minimal footprint on the user's browsing experience, this approach is a compromise that balances current browser capabilities with the need for enhanced security and performance. By minimizing the script's functionality to only what is necessary for ID transmission, the risks associated with broader access permissions are mitigated.
 
 
 **Request Provider Mechanism**:
@@ -94,6 +85,13 @@ window.addEventListener('walletExtensionIdAnnouncement', function(e) {
 
 window.dispatchEvent(new Event("requestWalletExtensionId"));
 ```
+
+**Content Script Utilization**:
+While this CAIP significantly advances the way wallets interact with dApps through the `externally_connectable` API, it still necessitates the use of a content script. This script, however, requires fewer permissions compared to traditional methods and can be injected synchronously to facilitate the initial communication process. This adjustment is necessary to bridge the current browser limitations and set the stage for future enhancements.
+
+- **Synchronous Injection**: The content script can be injected synchronously with the page load, ensuring that the wallet's extension ID is available as soon as the dApp begins its initialization process. This method avoids the delays and potential conflicts associated with asynchronous script loading, leading to a smoother and more predictable interaction pattern.
+    
+- **Security and Efficiency**: Although using a content script still presents a minimal footprint on the user's browsing experience, this approach is a compromise that balances current browser capabilities with the need for enhanced security and performance. By minimizing the script's functionality to only what is necessary for ID transmission, the risks associated with broader access permissions are mitigated.
 
 **Browser Manifest Adjustments**:
 
