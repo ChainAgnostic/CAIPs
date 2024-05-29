@@ -22,7 +22,7 @@ This CAIP establishes how providers can communicate with web extensions over `ex
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
-Web extensions today will typically inject a JavaScript provider API into websites as a global variable. For example, in the Ethereum ecosystem this provider API is standardized in EIP-1193, and is conventionally injected as `window.ethereum`.
+Web extension wallets today will typically inject a JavaScript provider API into websites as a global variable. For example, in the Ethereum ecosystem this provider API is standardized in EIP-1193, and is conventionally injected as `window.ethereum`.
 
 This injected API strategy has some advantages:
 * For websites developers, using a global variable is simple and requires no effort on their part to setup.
