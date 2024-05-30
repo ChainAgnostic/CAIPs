@@ -21,7 +21,7 @@ When interfacing with decentralized applications users install wallets in their 
 
 Currently, decentralized applications are required to install a multitude of SDKs to support many different wallet providers to broaden its userbase with different wallets of choice. However this creates a big overhead for applications to support more and more proprietrary SDKs that increase its size and also creates vendor lockin for major wallet providers that can allocate resources to reach more applications.
 
-Users are already installing a wallet applicationg in their devices and given its presence in the browser environment it should be unnecessary for application developers to also have to install extra software to support these wallet providers. This situation is only present due to lack of standardization and interoperability between the interfaces and also discovery mechanisms for different wallet providers.
+Users are already installing a wallet application on their devices and given its presence in the browser environment it should be unnecessary for application developers to also have to install extra software to support these wallet providers. This situation is only present due to lack of standardization and interoperability between the interfaces and also discovery mechanisms for different wallet providers.
 
 This results not only in a degraded user experience but also increases the barrier to entry for new wallet providers as users are incentivized to use more popular wallet providers that are more widely supported in more applications.
 
