@@ -59,16 +59,16 @@ Here is the expected logic from the blockchain library:
 const wallets = {};
 
 // blockchain library starts listening on init
-window.addEventListener("caipxxx:announceWallet", (event) => {
+window.addEventListener("caip282:announceWallet", (event) => {
   // when an announce message was received then the library can index it by uuid
   wallets[event.data.uuid] = event.data;
 });
 
 // blockchain library publishes on init
 window.postMessage("message", {
-  event: "caipxxx:promptWallet",
+  event: "caip282:promptWallet",
   data: {
-    //  if the blockchain library supports CAIP-275 then it can include a name in its prompt
+    //  if the blockchain library supports CAIP-275 then it can include a name
     name: "", // optional
   },
 });
@@ -88,16 +88,16 @@ const data = {
 
 // wallet provider publishes on init
 window.postMessage("message", {
-  event: "caipxxx:announceWallet",
+  event: "caip282:announceWallet",
   data,
 });
 
 
 // wallet providers starts listenning on init
-window.addEventListener("caipxxx:promptWallet", (event) => {
+window.addEventListener("caip282:promptWallet", (event) => {
   // when a prompt message was received then the wallet will announces again
   window.postMessage("message", {
-    event: "caipxxx:announceWallet",
+    event: "caip282:announceWallet",
     data,
   });
 });
@@ -108,7 +108,7 @@ window.addEventListener("caipxxx:promptWallet", (event) => {
 Whenever a new wallet provider is discovered the blockchain library would index them in order for the decentralized application to display them and prompt the user for selecting their wallet of choice for this connection. Each wallet announced will share the following data:
 
 ```typescript
-interface CAIPXXXWalletData {
+interface caip282WalletData {
   uuid: string;
   name: string;
   icon: string;
@@ -128,13 +128,13 @@ Here is the expected logic from the blockchain library:
 
 ```js
 // blockchain library listens for responses
-window.addEventListener("caipxxx:respond:<wallet_provider_uuid>", (event) => {
+window.addEventListener("caip282:respond:<wallet_provider_uuid>", (event) => {
   console.log(event.data);
 });
 
 // blockchain library publishes for requests
 window.postMessage("message", {
-  event: "caipxxx:request:<wallet_provider_uuid>",
+  event: "caip282:request:<wallet_provider_uuid>",
   data: { ... },
 });
 ```
@@ -143,13 +143,13 @@ Here is the expected logic from the wallet provider:
 
 ```js
 // wallet provider listens for request
-window.addEventListener("caipxxx:request:<wallet_provider_uuid>", (event) => {
+window.addEventListener("caip282:request:<wallet_provider_uuid>", (event) => {
   console.log(event.data);
 });
 
 // wallet provider publishes for reponses
 window.postMessage("message", {
-  event: "caipxxx:respond:<wallet_provider_uuid>",
+  event: "caip282:respond:<wallet_provider_uuid>",
   data: { ... },
 });
 ```
