@@ -135,7 +135,7 @@ window.addEventListener("caipxxx:respond:<wallet_provider_uuid>", (event) => {
 // blockchain library publishes for requests
 window.postMessage("message", {
   event: "caipxxx:request:<wallet_provider_uuid>",
-  data: { name: "test" },
+  data: { ... },
 });
 ```
 
@@ -150,7 +150,7 @@ window.addEventListener("caipxxx:request:<wallet_provider_uuid>", (event) => {
 // wallet provider publishes for reponses
 window.postMessage("message", {
   event: "caipxxx:respond:<wallet_provider_uuid>",
-  data: { name: "test" },
+  data: { ... },
 });
 ```
 
