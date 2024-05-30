@@ -6,7 +6,7 @@ This CAIP aims to standardize the method by which extension-based wallets can an
 
 ### Motivation
 
-Given the benefits of `externally_connectable` as described in CAIP-X (TODO ADD LINK HERE WHEN AVAILABLE), we need to solve for a key area where it fails to match the injected provider pattern. `Externally_connectable` requires that the webpage attempting to connect with the wallet know the extension's canonical extension ID. Currently, there is no standard method for these wallets to provide their extension IDs to dApps. A standardized approach will improve interoperability, security, and user experience by ensuring that dApps can reliably identify and communicate with the intended wallet.
+Given the benefits of `externally_connectable` as described in CAIP-X (TODO ADD LINK HERE WHEN AVAILABLE), we need to solve for a key area where it fails to match the injected provider pattern. `externally_connectable` requires that the webpage attempting to connect with the wallet know the extension's canonical ID. Currently, there is no standard method for wallets that implement `externally_connectable` to provide their extension IDs to dApps. A standardized approach will improve interoperability, security, and user experience by ensuring that dApps can reliably identify and communicate with the intended wallet.
 
 Ideally, browsers would eventually provide an API by which wallets can register the capabilities that they offer which webpages could access and choose to communicate with in a way that avoids the need for this additional discovery step.
 
