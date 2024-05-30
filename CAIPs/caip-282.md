@@ -1,11 +1,11 @@
 ---
-caip: xxx
+caip: 282
 title: Browser Wallet Messaging Interface
 author: Pedro Gomes (@pedrouid)
-discussions-to: TODO
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/282
 status: Draft
 type: Standard
-created: 2023-05-28
+created: 2023-05-30
 requires: 2, 10, 25, 27, 222, 275
 ---
 
