@@ -105,11 +105,8 @@ The provider can:
 * send messages by using `port.postMessage()`
 * receive messages by using `port.onMessage.addListener()`
 
-Caveats:
-* No firefox support yet, but they are considering implementing it
-* Extension Ids may be different across different family of browsers
-  * Discoverability should address this
-
+### Caveats
+Currently Firefox does not support `externally_connectable` yet, but they are [considering implementing it](https://bugzilla.mozilla.org/show_bug.cgi?id=1319168). Meanwhile, extension wallets on Firefox will need to continue injecting an inpage provider for the dApp.
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
