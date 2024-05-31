@@ -32,7 +32,7 @@ However, the injected API strategy has many disadvantages:
 * It depends upon the web extension having read and write access to every website the user visits, which is a scary permission that web extension authors might otherwise be able to avoid asking for.
 * It slows down every website by injecting additional code to be parsed and executed. It even slows down the initial page load in most cases, because many web extensions inject the provider synchronously to maintain compatibility with websites that expect it to be available immediately.
 * In some cases, injecting code into a webpage may break its original intended behaviors.
-* It provides no way for web extension authors to safely make breaking changes to their provider API, resulting in even more code being injected to support legacy APIs.
+* It provides no way for web extension authors to safely make breaking changes to their provider API without having to also inject extra code for the purposes of maintaining backwards compability for dApps that may still rely on those legacy APIs.
 
 An alternative strategy would be for a website to embed its own provider. A provider could be offered as a library, to be embedded by the website author. This strategy can address all disadvantages of the injected provider approach:
 * If this strategy became widespread enough, it would allow some web extensions to stop asking for write access to all pages.
