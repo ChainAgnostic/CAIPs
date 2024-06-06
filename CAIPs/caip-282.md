@@ -15,7 +15,7 @@ Standardized messaging for wallet interface in browser environments.
 
 ## Abstract
 
-When interfacing with decentralized applications users install wallets in their browser to manage their blockchain accounts which apps require to sign messages and transactions. Leveraging existing browser messaging APIs these are are used for messaging to initiate a dapp-wallet connection in a browser environment.
+When interfacing with decentralized applications users install browser wallets to manage their blockchain accounts which apps require to sign messages and transactions. Leveraging existing browser messaging APIs these are are used for messaging to initiate a dapp-wallet connection in a browser environment.
 
 ## Motivation
 
