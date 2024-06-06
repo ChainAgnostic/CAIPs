@@ -323,7 +323,7 @@ window.postMessage("message", {
 
 // 4. Once the connection is established then the Wallet provider can receive
 // incoming CAIP-27 requests which will be prompted to the user to sign and
-// once signed the response is sent back to the dapp
+// once signed the response is sent back to the dapp with the expected result
 const request = {}
 window.addEventListener("caip282:request:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
   request = event.data
