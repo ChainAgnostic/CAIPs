@@ -101,8 +101,6 @@ window.addEventListener("caip282:promptWallet", (event) => {
     data,
   });
 });
-
-
 ```
 
 Whenever a new wallet provider is discovered the blockchain library would index them in order for the decentralized application to display them and prompt the user for selecting their wallet of choice for this connection. Each wallet announced will share the following data:
@@ -182,7 +180,164 @@ Finally the use of CAIP-27 leverages the work above to properly target signing r
 
 ## Test Cases
 
-TODO
+Here is a test case where we demonstrate a scenario with logic from both a blockchain library and a wallet provider
+
+Logic from the blockchain library:
+
+```js
+// 1. blockchain library initializes by listening to announceWallet messages and
+// also by posting a prompt message
+const wallets = {};
+window.addEventListener("caip282:announceWallet", (event) => {
+  wallets[event.data.uuid] = event.data;
+});
+window.postMessage("message", { event: "caip282:promptWallet", data: {} });
+
+// 2. User presses "Connect Wallet" and the library display the discovered wallets
+
+// 3. User selects a Wallet with UUID = "350670db-19fa-4704-a166-e52e178b59d2" and
+// blockchain library will send a CAIP-25 request to establish a wallet connection
+let session = {};
+window.addEventListener("caip282:respond:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
+  if (event.data.error) throw new Error(event.data.error.message);
+  session = event.data.result;
+});
+window.postMessage("message", {
+  event: "caip282:request:350670db-19fa-4704-a166-e52e178b59d2",
+  data: {
+    id: 1,
+    jsonrpc: "2.0",
+    method: "provider_authorize",
+    params: {
+      optionalScopes: {
+        eip155: {
+          scopes: ["eip155:1", "eip155:10"],
+          methods: ["eth_sendTransaction", "personal_sign"],
+          notifications: ["accountsChanged", "chainChanged"],
+        },
+      },
+      sessionProperties: {
+        expiry: "2024-06-06T13:10:48.155Z",
+      },
+    },
+  },
+});
+
+// 4. After the response was received by the blockchain library from the wallet
+// provider then the session is established with a sessionId matchin the UUID
+// thus signing requests can be using a CAIP-27 request to the wallet user
+let result = {};
+window.addEventListener("caip282:respond:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
+  if (event.data.error) throw new Error(event.data.error.message);
+  result = event.data.result;
+});
+window.postMessage("message", {
+  event: "caip282:request:350670db-19fa-4704-a166-e52e178b59d2",
+  data: {
+    {
+      id: 2,
+      jsonrpc: "2.0",
+      method: "provider_request",
+      params: {
+        sessionId: "350670db-19fa-4704-a166-e52e178b59d2",
+        scope: "eip155:10",
+        request: {
+          method: "eth_sendTransaction",
+          params: [
+            {
+              type: "0x2",
+              nonce: "0x01",
+              value: "0x00",
+              maxFeePerGas: "0x9143798a4",
+              maxPriorityFeePerGas: "0x59682f00",
+              from: "0x43e3ca49c7be4f429abce408da6b738f879d02a0",
+              to: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+              data: "0xa9059cbb000000000000000000000000677d6d2747955ecf1e9fad3521d29512fb599e7b0000000000000000000000000000000000000000000000000de0b6b3a7640000",
+            }
+          ]
+        }
+      }
+    }
+  },
+});
+
+```
+
+Logic from the wallet provider:
+
+```js
+// 1. wallet provider sets their wallet data and then listens to promptWallet message
+// and also immediatelly posts a message with the wallet data as announceWallet type
+const data = {
+  uuid: generateUUID(); // eg. "350670db-19fa-4704-a166-e52e178b59d2"
+  name: "Example Wallet",
+  icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
+  rdns: "com.example.wallet";
+}
+window.addEventListener("caip282:promptWallet", (event) => {
+  // when a prompt message was received then the wallet will announces again
+  window.postMessage("message", {
+    event: "caip282:announceWallet",
+    data,
+  });
+});
+window.postMessage("message", {
+  event: "caip282:announceWallet",
+  data,
+});
+
+// 2. User presses "Connect Wallet" on the application webpage which will select UUID
+
+// 3. Wallet provider receives a CAIP-25 request to establish a wallet connection
+// prompts the user to approve and once its approved it can respond back to app
+// wallet provider listens for request
+const request = {}
+window.addEventListener("caip282:request:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
+  request = event.data
+});
+// wallet provider publishes for reponses
+window.postMessage("message", {
+  event: "caip282:respond:350670db-19fa-4704-a166-e52e178b59d2",
+  data: {
+    id: request.id, // 1
+    jsonrpc: "2.0",
+    result: {
+      sessionId: "350670db-19fa-4704-a166-e52e178b59d2",
+      sessionScopes: {
+        eip155: {
+          scopes: ["eip155:1", "eip155:10"],
+          methods: ["eth_sendTransaction", "personal_sign"],
+          notifications: ["accountsChanged", "chainChanged"],
+          accounts: [
+            "eip155:1:0x43e3ca49c7be4f429abce408da6b738f879d02a0",
+            "eip155:10:0x43e3ca49c7be4f429abce408da6b738f879d02a0"
+          ]
+        },
+      },
+      sessionProperties: {
+        expiry: "2024-06-06T13:10:48.155Z",
+      }
+    }
+  },
+});
+
+// 4. Once the connection is established then the Wallet provider can receive
+// incoming CAIP-27 requests which will be prompted to the user to sign and
+// once signed the response is sent back to the dapp
+const request = {}
+window.addEventListener("caip282:request:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
+  request = event.data
+});
+// wallet provider publishes for reponses
+window.postMessage("message", {
+  event: "caip282:respond:350670db-19fa-4704-a166-e52e178b59d2",
+  data: {
+    id: request.id, // 2
+    jsonrpc: "2.0",
+    result: "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"
+  },
+});
+```
 
 ## Security Considerations
 
