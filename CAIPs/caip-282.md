@@ -158,9 +158,27 @@ window.postMessage("message", {
 
 This same channel uuid can then be used for a connected session using the [CAIP-27][caip-27] which then would use the sessionId from the established connection to identify incoming payloads that need to be respond and also which chainId is being targetted.
 
+#### UUIDs
+
+The generation of UUIDs is crucial for this messaging interface to work seamlessly for the users.
+
+A wallet provider MUST generate UUIDs always distinctly for each webpage loaded and they must not be re-used without a session being established between the application and the wallet with the user's consent.
+
+A UUID can be re-used as a sessionId if and only if the CAIP-25 or CAIP-222 has been prompted to the user and the user has approved its permissions to allow the application to make future signing requests.
+
+Once established the UUID is used as sessionId also for the CAIP-27 payloads which can verify that incoming messages are being routed through the appropriate channels.
+
 ## Rationale
 
-TODO
+Browser wallets differentiate themselves because they can be installed by users without the application developer require any further integration. Therefore we optimize for a messaging interface that leverages the two-way communication available to browser wallets to make themselves discoverable and negotiate a set of parameters that enable not only easy human readability with a clear name and icon but also machine-readability using strong identifiers with uuid and rdns.
+
+The choice for using window.postMessage is motivated by expanding the range of wallet providers it can support which would include not only browser extensions that can alternatively use window.dispatchEvent but instead it would cover also Inline Frames, Service Workers, Shared Workers, etc.
+
+The use of UUID for message routing is important because while RDNS is useful for identifying the wallet provider, it causes issues when it comes to the session management of different webpages connected to the same wallet provider or even managing stale sessions which can be out-of-sync. Since UUID generation is derived dynamically on page load then wallet providers can track these sessions more granularly rather than making assumptions around webpage URL and RDNS relationship.
+
+The existing standards around provider authorization (CAIP-25) and wallet authentication (CAIP-222) are fundamental to this experience because they create clear intents for a wallet to "connect" with a webpage url after it's been discovered. This standard does not enforce either one but strongly recommends these standards as the preferred interface for connecting or authenticating a wallet.
+
+Finally the use of CAIP-27 leverages the work above to properly target signing requests that are intended to be prompt to wallet users which will include a sessionId and chainId in parallel with the pre-established sessions using either CAIP-25 or CAIP-222
 
 ## Test Cases
 
@@ -168,15 +186,29 @@ TODO
 
 ## Security Considerations
 
-TODO
+The advantage of using window.postMessage over existing standards that leverage window.dispatchEvent is the prevention of prototype pollution but that still does not mean that there aren't existing attacks that must be considered:
+
+### Wallet Imitation and Manipulation
+
+Application developers are expected to actively detect for misbehavior of properties or functions being modified in order to tamper with or modify other wallets. One way this can be easily achieved is to look for when the uuid property within two Wallet Data objects match. Applications and Libraries are expected to consider other potential methods that the Wallet Data objects are being tampered with and consider additional mitigation techniques to prevent this as well in order to protect the user.
+
+### Prevent SVG Javascript Execution
+
+The use of SVG images introduces a cross-site scripting risk as they can include JavaScript code. This Javascript executes within the context of the page and can therefore modify the page or the contents of the page. So when considering the experience of rendering the icons, DApps need to take into consideration how they’ll approach handling these concerns in order to prevent an image being used as an obfuscation technique to hide malicious modifications to the page or to other wallets.
 
 ## Privacy Considerations
 
-TODO
+Any form of wallet discoverability must alwasys take in consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Thus wallet providers can abstain from publishing announceWallet messages on every page load and wait for incoming promptWallet messages. Yet this open the possiblity for race conditions where wallet providers could be initialized after the promptWallet message was published therefore be undiscoverable. It is recommended that if wallet providers do offer this more "private connect" feature that is only enabled optionally by users rather than set by default.
 
 ## Backwards Compatibility
 
-TODO
+It's important to note that existing blockchain ecosystems already have standards that overlap with the scope of this standard and backwards-compatibility must be considered for a smooth adoption by both wallet and application developers.
+
+For EIP155 (Ethereum) ecosystem there are already interfaces for discoverability of browser wallets through either legacy window.ethereum or EIP-6963 events. These existing mechanisms should be supported in parallel in order to receive incoming requests either through this new messaging interface or legacy ones.
+
+Similarly the Solana and BIP122 (Bitcoin) ecosystems have used similar patterns around window.solana and window.bitcoin respectively plus the wallet-standard events. Yet these can also be supported in parallel without conflict with this new messaging interface.
+
+The Wallet Data exposed in this messaging interface is also compatible with EIP-6963 events and wallet-standard events therefore wallet providers can re-use the same identifiers and assets already being used in these existing integrations.
 
 ## Links
 
