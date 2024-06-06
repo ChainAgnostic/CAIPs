@@ -43,7 +43,7 @@ Blockchain Library: A library or piece of software that assists a DApp to intera
 
 ### Messaging APIs
 
-The browser has available two APIs that can be used for messaging across different parts of the stack. Using `window.addEventListener` and `window.postMessage` enables communication between browser window, iframes and extensions.
+The browser exposes two APIs that can be used for messaging across different parts of the stack. Using `window.addEventListener` and `window.postMessage` enables communication between browser window, iframes and extensions.
 
 This provides the foundation for any wallet provider to interface with a decentralized application using a blockchain library which implements this standard.
 
