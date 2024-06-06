@@ -11,7 +11,7 @@ requires: 2, 10, 25, 27, 222, 275
 
 ## Simple Summary
 
-Standardized messaging for wallet interface in browser environments.
+Standardized messaging interface for browser wallets.
 
 ## Abstract
 
