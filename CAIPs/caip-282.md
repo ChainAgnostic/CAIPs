@@ -118,7 +118,7 @@ interface caip282WalletData {
 
 The parameters `name` and `icon` are used to display to the user to be easily recognizable while the `rdns` and `uuid` are only used internally for de-duping while they must always be unique, the `rdns` will always be the same but `uuid` is ephemeral per browser session.
 
-#### Connection
+#### Handshake
 
 After the wallet has been selected by the user then the blockchain library MUST publish a message to share its intent to establish a connection. This can be either done as a [CAIP-25][caip-25] request or [CAIP-222][caip-222] authentication.
 
