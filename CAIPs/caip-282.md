@@ -5,7 +5,7 @@ author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/282
 status: Draft
 type: Standard
-created: 2023-05-30
+created: 2024-05-30
 requires: 2, 10, 25, 27, 222, 275
 ---
 
