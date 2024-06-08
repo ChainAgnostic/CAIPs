@@ -15,19 +15,19 @@ CAIP-282 defines a standardized messaging interface for browser wallets.
 
 ## Abstract
 
-When interfacing with decentralized applications users install browser wallets to manage their blockchain accounts which apps require to sign messages and transactions. Leveraging existing browser messaging APIs these are are used for messaging to initiate a dapp-wallet connection in a browser environment.
+To interface with decentralized applications (dapps), users install browser wallets to manage their blockchain accounts, which are required to sign messages and transactions. Leveraging existing browser messaging APIs, these are used to initiate a dapp-wallet connection in a browser environment.
 
 ## Motivation
 
 Currently, in order for decentralized applications to be able to support all users they need to support all browser wallet APIs. Similarly, in order for browser wallets to support all decentralized applications they need to support all APIs. This is not only complicated but also results in a larger bundle size of applications.
 
-Users are already installing a wallet application on their devices and given its presence in the browser environment it should be unnecessary for application developers to also have to install extra software to support these wallet providers. This situation is only present due to lack of standardization and interoperability between the interfaces and also discovery mechanisms for different wallet providers.
+Users are already installing a wallet application on their devices, and given its presence in the browser environment, it should be unnecessary for application developers to install extra software to support these wallet providers. This situation is only present due to the lack of standardization and interoperability between interfaces and discovery mechanisms for different wallet providers.
 
 This results not only in a degraded user experience but also increases the barrier to entry for new wallet providers as users are incentivized to use more popular wallet providers that are more widely supported in more applications.
 
-This situation is further aggravated by differences between blockchain networks such as Ethereum, Cosmos, Solana, Tezos, etc. While some solutions amttept to solve this such as WalletConnect, EIP-6963, Solana Wallet Protocol, etc. They are not covering all wallets and are not chain-angostic.
+This situation is further aggravated by differences between blockchain networks such as Ethereum, Cosmos, Solana, Tezos, etc. While some solutions attempt to solve this, such as WalletConnect, [EIP-6963][eip-6963], Solana Wallet Protocol, etc., they do not cover all wallets and are not chain-angostic.
 
-In this proposal, we present a solution that focused on optimizing interoperability for multiple Wallet Providers and fostering fairier competition by reducing the barriers to entry for new Wallet Providers, along with enhancing the user experience across all blockchain networks.
+In this proposal, we present a solution focused on optimizing interoperability for multiple Wallet Providers, fostering fairer competition by reducing the barriers to entry for new Wallet Providers, and enhancing user experience across all blockchain networks.
 
 ## Specification
 
@@ -39,7 +39,7 @@ Wallet Provider: A user agent that manages accounts and facilitates transactions
 
 Decentralized Application (DApp): A web page that relies upon one or many Web3 platform APIs which are exposed to the web page via the Wallet.
 
-Blockchain Library: A library or piece of software that assists a DApp to interact with blockchain and interface with the Wallet.
+Blockchain Library: A library or piece of software that assists a DApp to interact with a blockchain and interface with the Wallet.
 
 ### Messaging APIs
 
@@ -47,7 +47,7 @@ The browser exposes two APIs that can be used for messaging across different par
 
 This provides the foundation for any wallet provider to interface with a decentralized application using a blockchain library which implements this standard.
 
-There are different loading times that can be affected by multiple factors which makes it non-deterministic to publish and listen messages from different sources within the browser.
+Different loading times can be affected by multiple factors, which makes it non-deterministic to publish and listen to messages from different sources within the browser.
 
 #### Discovery
 
@@ -120,7 +120,7 @@ The parameters `name` and `icon` are used to display to the user to be easily re
 
 After the wallet has been selected by the user then the blockchain library MUST publish a message to share its intent to establish a connection. This can be either done as a [CAIP-25][caip-25] request or [CAIP-222][caip-222] authentication.
 
-The communication will use the `uuid` shared by the initial wallet provider announcement payload which the wallet provider will be listening to for any incoming requests and consequently the blockchain library will also use for publishing messages. The same will happen again the other way around but vice-versa where the wallet provider will be the blockchain library will be listening to for any incoming responses and consequently the wallet provider will also use for publishing messages.
+The communication will use the `uuid` shared by the initial wallet provider announcement payload, which the wallet provider will listen to for any incoming requests, and consequently, the blockchain library will also be used for publishing messages. The same will happen again the other way around but vice-versa, where the wallet provider will be the blockchain library that will be listening to any incoming responses, and consequently, the wallet provider will also use it for publishing messages.
 
 Here is the expected logic from the blockchain library:
 
@@ -154,33 +154,33 @@ window.postMessage("message", {
 
 #### Signing
 
-This same channel uuid can then be used for a connected session using the [CAIP-27][caip-27] which then would use the sessionId from the established connection to identify incoming payloads that need to be respond and also which chainId is being targetted.
+This same channel `uuid` can then be used for a connected session using [CAIP-27][caip-27] which then would use the `sessionId` from the established connection to identify incoming payloads that need to be respond to, and also which `chainId` is being targetted.
 
 #### UUIDs
 
 The generation of UUIDs is crucial for this messaging interface to work seamlessly for the users.
 
-A wallet provider MUST generate UUIDs always distinctly for each webpage loaded and they must not be re-used without a session being established between the application and the wallet with the user's consent.
+A wallet provider MUST always generate UUIDs distinctly for each web page loaded, and they must not be re-used without a session being established between the application and the wallet with the user's consent.
 
-A UUID can be re-used as a sessionId if and only if the CAIP-25 or CAIP-222 has been prompted to the user and the user has approved its permissions to allow the application to make future signing requests.
+A UUID can be re-used as a `sessionId` if and only if the [CAIP-25] or [CAIP-222] procedure has been prompted to the user and the user has approved its permissions to allow the application to make future signing requests.
 
-Once established the UUID is used as sessionId also for the CAIP-27 payloads which can verify that incoming messages are being routed through the appropriate channels.
+Once established, the UUID is used as `sessionId` for the [CAIP-27] payloads, which can verify that incoming messages are being routed through the appropriate channels.
 
 ## Rationale
 
-Browser wallets differentiate themselves because they can be installed by users without the application developer require any further integration. Therefore we optimize for a messaging interface that leverages the two-way communication available to browser wallets to make themselves discoverable and negotiate a set of parameters that enable not only easy human readability with a clear name and icon but also machine-readability using strong identifiers with uuid and rdns.
+Browser wallets differentiate themselves because they can be installed by users without the application developer requiring any further integration. Therefore, we optimize for a messaging interface that leverages the two-way communication available to browser wallets to make themselves discoverable, and negotiate a set of parameters that enable not only easy human readability with a clear name and icon but also machine-readability using strong identifiers with uuids and rdns.
 
-The choice for using window.postMessage is motivated by expanding the range of wallet providers it can support which would include not only browser extensions that can alternatively use window.dispatchEvent but instead it would cover also Inline Frames, Service Workers, Shared Workers, etc.
+The choice for using `window.postMessage` is motivated by expanding the range of wallet providers it can support, including browser extensions that can alternatively use `window.dispatchEvent` but instead it would also cover Inline Frames, Service Workers, Shared Workers, and more.
 
-The use of UUID for message routing is important because while RDNS is useful for identifying the wallet provider, it causes issues when it comes to the session management of different webpages connected to the same wallet provider or even managing stale sessions which can be out-of-sync. Since UUID generation is derived dynamically on page load then wallet providers can track these sessions more granularly rather than making assumptions around webpage URL and RDNS relationship.
+The use of UUID for message routing is important because while RDNS is useful for identifying the wallet provider, it causes issues when it comes to the session management of different webpages connected to the same wallet provider or even managing stale sessions, which can be out-of-sync. Since UUID generation is derived dynamically on page load, wallet providers can track these sessions more granularly rather than making assumptions around the webpage URL and RDNS relationship.
 
 The existing standards around provider authorization (CAIP-25) and wallet authentication (CAIP-222) are fundamental to this experience because they create clear intents for a wallet to "connect" with a webpage url after it's been discovered. This standard does not enforce either one but strongly recommends these standards as the preferred interface for connecting or authenticating a wallet.
 
-Finally the use of CAIP-27 leverages the work above to properly target signing requests that are intended to be prompt to wallet users which will include a sessionId and chainId in parallel with the pre-established sessions using either CAIP-25 or CAIP-222
+Finally the use of CAIP-27 leverages the work above to properly target signing requests that are intended to be prompt to wallet users which will include a `sessionId` and `chainId` in parallel with the pre-established sessions using either CAIP-25 or CAIP-222
 
 ## Test Cases
 
-Here is a test case where we demonstrate a scenario with logic from both a blockchain library and a wallet provider
+Here is a test case where we demonstrate a scenario with logic from both a blockchain library and a wallet provider.
 
 Logic from the blockchain library:
 
@@ -341,7 +341,7 @@ window.postMessage("message", {
 
 ## Security Considerations
 
-The advantage of using window.postMessage over existing standards that leverage window.dispatchEvent is the prevention of prototype pollution but that still does not mean that there aren't existing attacks that must be considered:
+The advantage of using `window.postMessage` over existing standards that leverage `window.dispatchEvent` is the prevention of prototype pollution, but that still does not mean that there aren't existing attacks that must be considered:
 
 ### Wallet Imitation and Manipulation
 
@@ -349,30 +349,32 @@ Application developers are expected to actively detect for misbehavior of proper
 
 ### Prevent SVG Javascript Execution
 
-The use of SVG images introduces a cross-site scripting risk as they can include JavaScript code. This Javascript executes within the context of the page and can therefore modify the page or the contents of the page. So when considering the experience of rendering the icons, DApps need to take into consideration how they’ll approach handling these concerns in order to prevent an image being used as an obfuscation technique to hide malicious modifications to the page or to other wallets.
+The use of SVG images introduces a cross-site scripting risk as they can include JavaScript code. This JavaScript executes within the context of the page and can modify the page or the contents of the page. So, when considering the experience of rendering the icons, DApps need to take into consideration how they’ll approach handling these concerns in order to prevent an image from being used as an obfuscation technique to hide malicious modifications to the page or to other wallets.
 
 ## Privacy Considerations
 
-Any form of wallet discoverability must alwasys take in consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Thus wallet providers can abstain from publishing announceWallet messages on every page load and wait for incoming promptWallet messages. Yet this open the possiblity for race conditions where wallet providers could be initialized after the promptWallet message was published therefore be undiscoverable. It is recommended that if wallet providers do offer this more "private connect" feature that is only enabled optionally by users rather than set by default.
+Any form of wallet discoverability must alwasys take in consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Wallet providers can abstain from publishing `announceWallet` messages on every page load and wait for incoming `promptWallet` messages. Yet this opens the possibility for race conditions where wallet providers could be initialized after the `promptWallet` message was published and therefore be undiscoverable. It is recommended that wallet providers offer this more "private connect" feature that users only enable optionally, rather than set by default.
 
 ## Backwards Compatibility
 
 It's important to note that existing blockchain ecosystems already have standards that overlap with the scope of this standard and backwards-compatibility must be considered for a smooth adoption by both wallet and application developers.
 
-For EIP155 (Ethereum) ecosystem there are already interfaces for discoverability of browser wallets through either legacy window.ethereum or EIP-6963 events. These existing mechanisms should be supported in parallel in order to receive incoming requests either through this new messaging interface or legacy ones.
+For the EIP155 (Ethereum) ecosystem there are already interfaces for the discoverability of browser wallets through either legacy `window.ethereum` or [EIP-6963] events. These existing mechanisms should be supported in parallel in order to receive incoming requests either through this new messaging interface or legacy ones.
 
-Similarly the Solana and BIP122 (Bitcoin) ecosystems have used similar patterns around window.solana and window.bitcoin respectively plus the wallet-standard events. Yet these can also be supported in parallel without conflict with this new messaging interface.
+Similarly the Solana and BIP122 (Bitcoin) ecosystems have used similar patterns around `window.solana` and `window.bitcoin` respectively plus the wallet-standard events. Yet these can also be supported in parallel without conflict with this new messaging interface.
 
 The Wallet Data exposed in this messaging interface is also compatible with EIP-6963 events and wallet-standard events therefore wallet providers can re-use the same identifiers and assets already being used in these existing integrations.
 
 ## Links
 
+- [EIP-6963][eip-6963] - Multi Injected Provider Discovery
 - [CAIP-2][caip-2] - Blockchain ID Specification
 - [CAIP-10][caip-10] - Account ID Specification
 - [CAIP-27][caip-27] - Blockchain ID Specification
 - [CAIP-25][caip-25] - Blockchain ID Specification
 - [CAIP-222][caip-222] - Account ID Specification
 
+[eip-6963]: https://eips.ethereum.org/EIPS/eip-6963
 [caip-2]: https://chainagnostic.org/CAIPs/caip-2
 [caip-10]: https://chainagnostic.org/CAIPs/caip-10
 [caip-27]: https://chainagnostic.org/CAIPs/caip-27
