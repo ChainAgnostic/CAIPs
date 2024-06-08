@@ -11,7 +11,7 @@ requires: 2, 10, 25, 27, 222, 275
 
 ## Simple Summary
 
-Standardized messaging interface for browser wallets.
+CAIP-282 defines a standardized messaging interface for browser wallets.
 
 ## Abstract
 
