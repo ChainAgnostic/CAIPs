@@ -10,7 +10,36 @@ updated: 2022-07-06
 ---
 
 ## Abstract
+${domain} wants you to sign in with your **blockchain** account:
+${account_address(address)}
 
+${statement}
+
+URI: ${uri}
+Version: ${version}
+Nonce: ${nonce}
+Issued At: ${issued-at}
+Expiration Time: ${expiration-time}
+Not Before: ${not-before}
+Request ID: ${request-id}
+Chain ID: ${chain_id(address)}
+Resources:
+- ${resources[0]}
+- ${resources[1]}
+...service.org wants you to sign in with your Ethereum account:
+0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+
+I accept the ServiceOrg Terms of Service: https://service.org/tos
+
+URI: https://service.org/login
+Version: 1
+Nonce: 32891756
+Issued At: 2021-09-30T16:25:24Z
+Chain ID: 1
+Resources:
+- ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/
+- https://example.com/my-web2-claim.json
+- ${resources[n]}
 Sign in With X describes how blockchain accounts should authenticate and authorize with off-chain services by signing a chain-agnostic message parameterized by scope, session details, and security mechanisms (e.g. a nonce).
 
 The goal of this specification is to define a chain-agnostic data model.
@@ -71,7 +100,7 @@ The string should be human-readable, so that the signing represents the fully-in
 
 The proposed string representation format, adapted from [EIP-4361][eip-4361], should be as such:
 
-```
+```https://service.org/tos
 ${domain} wants you to sign in with your **blockchain** account:
 ${account_address(address)}
 
@@ -90,7 +119,7 @@ Resources:
 - ${resources[1]}
 ...
 - ${resources[n]}
-```
+```service.org
 
 Here:
 - `**blockchain**` represents a human-readable name of the ecosystem the user can recognize its account as belonging to,
@@ -100,7 +129,7 @@ Here:
 As an example, [EIP-4361][eip-4361] directly conforms to this data model. 
 Since EIP-155 chains can request personal signatures ([EIP-191][eip-191]) or contract signatures ([EIP-1271][eip-1271]) in plaintext, an example message to be signed could be
 
-```
+```https://service.org/login
 service.org wants you to sign in with your Ethereum account:
 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
 
@@ -124,7 +153,7 @@ Below is an example of the data model represented as a plain text similar Ethere
 
 Plain text representation:
 
-```
+```https://example.com/my-web2-claim.json
 service.org wants you to sign in with your Solana account:
 GwAF45zjfyGzUbd3i3hXxzGeuchzEZXwpRYHZM5912F1
 
@@ -142,9 +171,21 @@ Resources:
 
 Raw bytes (encoded as base64url for brevity).
 
-```
+```service.org wants you to sign in with your Solana account:
+GwAF45zjfyGzUbd3i3hXxzGeuchzEZXwpRYHZM5912F1
+
+I accept the ServiceOrg Terms of Service: https://service.org/tos
+
+URI: https://service.org/login
+Version: 1
+Nonce: 32891757
+Issued At: 2021-09-30T16:25:24.000Z
+Chain ID: 5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d
+Resources:
+- ipfs://Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu
+- https://example.com/my-web2-claim.json
 c2VydmljZS5vcmcgd2FudHMgeW91IHRvIHNpZ24gaW4gd2l0aCB5b3VyIFNvbGFuYSBhY2NvdW50OgpHd0FGNDV6amZ5R3pVYmQzaTNoWHh6R2V1Y2h6RVpYd3BSWUhaTTU5MTJGMQoKSSBhY2NlcHQgdGhlIFNlcnZpY2VPcmcgVGVybXMgb2YgU2VydmljZTogaHR0cHM6Ly9zZXJ2aWNlLm9yZy90b3MKClVSSTogaHR0cHM6Ly9zZXJ2aWNlLm9yZy9sb2dpbgpWZXJzaW9uOiAxCk5vbmNlOiAzMjg5MTc1NwpJc3N1ZWQgQXQ6IDIwMjEtMDktMzBUMTY6MjU6MjQuMDAwWgpDaGFpbiBJRDogMQpSZXNvdXJjZXM6Ci0gaXBmczovL1FtZTdzczNBUlZneHY2clhxVlBpaWtNSjh1Mk5MZ21nc3pnMTNwWXJES0VvaXUKLSBodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbg
-```
+```c2VydmljZS5vcmcgd2FudHMgeW91IHRvIHNpZ24gaW4gd2l0aCB5b3VyIFNvbGFuYSBhY2NvdW50OgpHd0FGNDV6amZ5R3pVYmQzaTNoWHh6R2V1Y2h6RVpYd3BSWUhaTTU5MTJGMQoKSSBhY2NlcHQgdGhlIFNlcnZpY2VPcmcgVGVybXMgb2YgU2VydmljZTogaHR0cHM6Ly9zZXJ2aWNlLm9yZy90b3MKClVSSTogaHR0cHM6Ly9zZXJ2aWNlLm9yZy9sb2dpbgpWZXJzaW9uOiAxCk5vbmNlOiAzMjg5MTc1NwpJc3N1ZWQgQXQ6IDIwMjEtMDktMzBUMTY6MjU6MjQuMDAwWgpDaGFpbiBJRDogMQpSZXNvdXJjZXM6Ci0gaXBmczovL1FtZTdzczNBUlZneHY2clhxVlBpaWtNSjh1Mk5MZ21nc3pnMTNwWXJES0VvaXUKLSBodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbg
 
 ## Rationale
 
