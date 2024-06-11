@@ -1,5 +1,4 @@
 ---
-
 caip: XX
 title: JSON-RPC Provider Lifecycle Methods for Session Management
 author: [Alex Donesky] (@adonesky1)
@@ -20,7 +19,7 @@ This proposal aims to extend the CAIP-25 standard by defining new JSON-RPC metho
 
 ## Motivation
 
-The motivation behind this proposal is to enhance the flexibility of CAIP-25 by enabling management of session permissions without sessionIds which don't map well to extension based wallet's dapp connections and could add new constraints and burdens to existing flows. The proposed methods provide an intuitive way to add, revoke, and retrieve permissions within an existing session, simplifying the management of session lifecycles.
+The motivation behind this proposal is to enhance the flexibility of CAIP-25 by enabling management of session permissions without sessionIds which don't map well to extension based wallet's dapp connections and could therefore add constraints and burdens to existing flows. The proposed methods provide an intuitive way to add, revoke, and retrieve permissions within an existing session, simplifying the management of session lifecycles.
 
 ### Use Case Scenarios
 
@@ -32,13 +31,13 @@ The motivation behind this proposal is to enhance the flexibility of CAIP-25 by 
 2. **Wallet Initiated Adding Permissions To an Existing Session:**
 
    - **Current Method:** CAIP-25 does not make it very clear how a respondent (wallet), can modify the permissions of an existing session. The following excerpt is the closest we get: "The properties and authorization scopes that make up the session are expected to be persisted and tracked over time by both parties in a discrete data store, identified by an entropic identifier assigned in the initial response. This object gets updated, extended, closed, etc. by successive calls and notifications, each tagged by this identifier."
-   - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `providerAuthorizationUpdated` with the new full sessionScope.
+   - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `providerAuthorizationChanged` with the new full sessionScope.
 
 3. **Wallet Initiated Permissions Revocation:**
 
    - **Current Method:** "If a respondent (e.g. a wallet) needs to initiate a new session, whether due to user input, security policy, or session expiry reasons, it can simply generate a new session identifier to signal this notification to the calling provider."
    - Given this language it is unclear if a wallet can revoke permissions without creating a new session. It is also therefore unclear if a wallet can revoke some subset of permissions without creating a new session.
-   - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `providerAuthorizationUpdated` with the new full sessionScope.
+   - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `providerAuthorizationChanged` with the new full sessionScope.
 
 4. **Dapp Initiated Permissions Revocation:**
 
@@ -54,7 +53,7 @@ The motivation behind this proposal is to enhance the flexibility of CAIP-25 by 
 
 ### New Methods
 
-#### `provider_augment`
+#### `provider_augment` // open to a different name here!
 
 Adds new permissions to an existing session.
 
@@ -69,11 +68,13 @@ Adds new permissions to an existing session.
 {
   "eip155:1": {
     "methods": ["eth_signTransaction"],
-    "notifications": ["accountsChanged"]
+    "notifications": ["accountsChanged"],
+    "accounts": ["eip155:1:0xabc123"]
   },
   "eip155:137": {
     "methods": ["eth_sendTransaction"],
-    "notifications": ["chainChanged"]
+    "notifications": ["chainChanged"],
+    "accounts": ["eip155:137:0xdef456"]
   }
 }
 ```
@@ -107,11 +108,13 @@ Adds new permissions to an existing session.
     "updatedScopes": {
       "eip155:1": {
         "methods": ["eth_signTransaction", "eth_sendTransaction"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": ["eip155:1:0xabc123"]
       },
       "eip155:137": {
         "methods": ["eth_sendTransaction"],
-        "notifications": ["chainChanged"]
+        "notifications": ["chainChanged"],
+        "accounts": ["eip155:137:0xdef456"]
       }
     }
   }
@@ -137,11 +140,13 @@ Revokes permissions from an existing session.
 {
   "eip155:1": {
     "methods": ["eth_signTransaction", "eth_sendTransaction"],
-    "notifications": ["accountsChanged", "chainChanged"]
+    "notifications": ["accountsChanged", "chainChanged"],
+    "accounts": ["eip155:1:0xabc123", "eip155:1:0xdef456"]
   },
   "eip155:137": {
     "methods": ["eth_sendTransaction"],
-    "notifications": ["chainChanged"]
+    "notifications": ["chainChanged"],
+    "accounts": ["eip155:137:0xdef456"]
   }
 }
 ```
@@ -157,7 +162,8 @@ Revokes permissions from an existing session.
     "scopes": {
       "eip155:1": {
         "methods": ["eth_sendTransaction"],
-        "notifications": ["chainChanged"]
+        "notifications": ["chainChanged"],
+        "accounts": ["eip155:1:0xabc123"]
       }
     }
   }
@@ -175,11 +181,13 @@ Revokes permissions from an existing session.
     "updatedScopes": {
       "eip155:1": {
         "methods": ["eth_signTransaction"],
-        "notifications": ["accountsChanged"]
+        "notifications": ["accountsChanged"],
+        "accounts": ["eip155:1:0xdef456"]
       },
       "eip155:137": {
         "methods": ["eth_sendTransaction"],
-        "notifications": ["chainChanged"]
+        "notifications": ["chainChanged"],
+        "accounts": ["eip155:137:0xdef456"]
       }
     }
   }
@@ -188,9 +196,9 @@ Revokes permissions from an existing session.
 
 **Explanation:**
 
-- The `provider_revoke` method removes the specified methods and notifications from the current session's permissions. If the scope no longer has any methods or notifications after revocation, it is removed from the session.
+- The `provider_revoke` method removes the specified methods, notifications, and accounts from the current session's permissions. If the scope no longer has any methods, notifications, or accounts after revocation, it is removed from the session. If no scopes remain in the session, the session is considered closed. If no accounts remain in a scope, and only write methods the entire scope is removed.
 
-#### `provider_getSession`
+#### `provider_getSession` // open to a different name here!
 
 Retrieves the current permissions of an existing session.
 
@@ -204,11 +212,13 @@ Retrieves the current permissions of an existing session.
 {
   "eip155:1": {
     "methods": ["eth_signTransaction"],
-    "notifications": ["accountsChanged"]
+    "notifications": ["accountsChanged"],
+    "accounts": ["eip155:1:0xabc123"]
   },
   "eip155:137": {
     "methods": ["eth_sendTransaction"],
-    "notifications": ["chainChanged"]
+    "notifications": ["chainChanged"],
+    "accounts": ["eip155:137:0xdef456"]
   }
 }
 ```
@@ -234,11 +244,13 @@ Retrieves the current permissions of an existing session.
     "scopes": {
       "eip155:1": {
         "methods": ["eth_signTransaction"],
-        "notifications": ["accountsChanged"]
+        "notifications": ["accountsChanged"],
+        "accounts": ["eip155:1:0xabc123"]
       },
       "eip155:137": {
         "methods": ["eth_sendTransaction"],
-        "notifications": ["chainChanged"]
+        "notifications": ["chainChanged"],
+        "accounts": ["eip155:137:0xdef456"]
       }
     }
   }
@@ -247,11 +259,11 @@ Retrieves the current permissions of an existing session.
 
 **Explanation:**
 
-- The `provider_getSession` method returns the current permissions for the session. It lists all scopes along with their methods and notifications.
+- The `provider_getSession` method returns the current permissions for the session. It lists all scopes along with their methods, notifications, and accounts.
 
 ### Events
 
-#### `providerAuthorizationUpdated`
+#### `providerAuthorizationChanged`
 
 This event is published by the wallet to notify the caller/dapp of updates to the session authorization scopes. The event payload indicates how the scopes have changed, showing additions and removals in the permissions.
 
@@ -266,11 +278,13 @@ This event is published by the wallet to notify the caller/dapp of updates to th
 {
   "eip155:1": {
     "methods": ["eth_signTransaction"],
-    "notifications": ["accountsChanged"]
+    "notifications": ["accountsChanged"],
+    "accounts": ["eip155:1:0xabc123"]
   },
   "eip155:137": {
     "methods": ["eth_sendTransaction"],
-    "notifications": ["chainChanged"]
+    "notifications": ["chainChanged"],
+    "accounts": ["eip155:137:0xdef456"]
   }
 }
 ```
@@ -279,24 +293,25 @@ This event is published by the wallet to notify the caller/dapp of updates to th
 
 ```json
 {
-  "event": "providerAuthorizationUpdated",
+  "event": "providerAuthorizationChanged",
   "data": {
-    "sessionId": "0xdeadbeef",
     "scopes": {
       "eip155:1": {
         "methods": ["eth_signTransaction", "eth_sendTransaction"],
-        "notifications": ["accountsChanged"]
+        "notifications": ["accountsChanged"],
+        "accounts": ["eip155:1:0xabc123"]
       },
       "eip155:137": {
         "methods": ["eth_sendTransaction"],
-        "notifications": []
+        "notifications": [],
+        "accounts": ["eip155:137:0xdef456"]
       }
     }
   }
 }
 ```
 
-This example event indicates how the scopes have changed by comparing the updated scopes with the initial session scopes. In the example, the method `eth_sendTransaction` was added to `eip155:1`, and the notification `chainChanged` was removed from `eip155:137`.
+This event indicates how the scopes have changed by comparing the updated scopes with the initial session scopes. In the example, the method `eth_sendTransaction` was added to `eip155:1`, and the notification `chainChanged` was removed from `eip155:137`.
 
 ### Optional SessionIds
 
@@ -322,5 +337,3 @@ Managing permissions within an existing session reduces the need to create multi
 ## Copyright
 
 Copyright and related rights waived via [CC0](../LICENSE).
-
----
