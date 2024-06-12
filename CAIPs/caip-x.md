@@ -26,7 +26,7 @@ The motivation behind this proposal is to enhance the flexibility of CAIP-25 by 
 1. **Dapp Initiated Adding Permissions To an Existing Session:**
 
    - **Current Method:** Call `provider_authorize` again with an existing session identifier and new scopes/methods to add. This is actually somewhat ambiguous in CAIP-25 where it’s unclear if incremental permissions adds should include the full object or just scopes to add: "This object gets updated, extended, closed, etc. by successive calls and notifications, each tagged by this identifier."
-   - **Proposed Method:** Use `provider_augment` to add new permissions to the existing session. Alternatively, this could be achieved with more specific language indicating that a subsequent `provider_authorize` call with new scopes/permissions could simply add to an existing session.
+   - **Proposed Method:** Use `provider_augment` to add new permissions to the existing session. Alternatively, this could be achieved with more specific language indicating that a subsequent `provider_authorize` call with new scopes/permissions could simply add to an existing session. If we pursue this latter approach one flow that will need clarity is what happens if a subsequent `provider_authorize` request includes `requiredScopes` which the respondent does not authorize. In this case I would expect that this does not revoke the existing session but rather only the new request is rejected.
 
 2. **Wallet Initiated Adding Permissions To an Existing Session:**
 
