@@ -1,7 +1,7 @@
 ---
 caip: 169
 title: Simple Credential Interface Provider
-author: Oliver Terbu (@awoie), Mircea Nistor (@mirceanis), Juan Caballero (@bumblefudge)
+author: Oliver Terbu (@awoie), Mircea Nistor (@mirceanis), Bumblefudge (@bumblefudge)
 discussions-to: https://github.com/veramolabs/credential-provider-eip/pulls?q=is%3Apr+
 status: Draft
 type: Standard 

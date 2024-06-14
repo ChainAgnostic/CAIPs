@@ -3,7 +3,7 @@ caip: 104
 title: Namespace Reference Purpose and Guidelines
 status: Review
 type: Meta
-author: Juan Caballero (@bumblefudge), Wayne Chang (@wyc)
+author: Bumblefudge (@bumblefudge), Wayne Chang (@wyc)
 created: 2022-03-27
 ---
 
