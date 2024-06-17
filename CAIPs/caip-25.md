@@ -33,10 +33,13 @@ If a respondent (e.g. a wallet) needs to initiate a new session, whether due to 
 
 Initial and ongoing authorization requests are grouped into two top-level arrays of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
 respectively.
-These two objects are not mutually exclusive (i.e., additional properties of a required scope may be requested in a separate `scopeObject` in the optional array, keyed to the same scope string).
-Note that each `scopeObject` in either array must be uniquely keyed, and can be keyed to a specific [CAIP-2][], or to a [CAIP-104][]-conformant [namespace][namespaces];
-if the latter defines a [CAIP-2][] profile, a `scopes` array MAY be set within it containing multiple [CAIP-2][] strings;
-this is functionally equivalent to defining multiple identical `scopeObjects`, each keyed to one of the [CAIP-2][]s listed in the `scopes` array. See [CAIP-217][] for more details on the structure of the typed objects included in these arrays.
+Each `scopeObject` in either array MUST be keyed uniquely within its parent, but these keys CAN appear in both
+(i.e., additional properties of an authorization target in `requiredScopes` may be requested in a separate `scopeObject` with the same key in the `optionalScopes` array).
+
+Each `scopeObject` in these arrays can be keyed to a specific [CAIP-2][] network identifier, or to an entire [CAIP-104][] namespace.
+`scopeObjects` keyed to an entire [CAIP-104][] namespace SHOULD contain a non-empty `chains` array to be actionable, making them functionally equivalent to a series of identical `scopeObjects`, each keyed to one of the members of `chains` expressed as a [CAIP-2][] scope.
+An empty or absent `chains` array SHOULD NOT be interpreted as a namespace-wide authorization (i.e. authorization for ANY network therein), but rather as a null authorization of 0 specied chains within that namespace.
+(See [CAIP-217][] for more details on the structure of the typed objects included in these arrays.)
 
 If any properties in the required scope(s) are not authorized by the respondent, a failure response expressive of one or more specific failure states will be sent (see [#### failure states](#failure-states) below), with the exception of user denying consent.
 For privacy reasons, an `undefined` response (or no response, depending on implementation) should be sent to prevent incentivizing unwanted requests and to minimize the surface for fingerprinting of public web traffic (See Privacy Considerations below).
