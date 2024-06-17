@@ -34,15 +34,15 @@ If a respondent (e.g. a wallet) needs to initiate a new session, whether due to 
 Initial and ongoing authorization requests are grouped into two top-level arrays of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
 respectively.
 These two objects are not mutually exclusive (i.e., additional properties of a required scope may be requested in a separate `scopeObject` in the optional array, keyed to the same scope string).
-Note that `scopeObject`s can be keyed to a specific [CAIP-2][], or to a [CAIP-104][]-conformant [namespace][namespaces];
+Note that each `scopeObject` in either array must be uniquely keyed, and can be keyed to a specific [CAIP-2][], or to a [CAIP-104][]-conformant [namespace][namespaces];
 if the latter defines a [CAIP-2][] profile, a `scopes` array MAY be set within it containing multiple [CAIP-2][] strings;
 this is functionally equivalent to defining multiple identical `scopeObjects`, each keyed to one of the [CAIP-2][]s listed in the `scopes` array. See [CAIP-217][] for more details on the structure of the typed objects included in these arrays.
 
 If any properties in the required scope(s) are not authorized by the respondent, a failure response expressive of one or more specific failure states will be sent (see [#### failure states](#failure-states) below), with the exception of user denying consent.
 For privacy reasons, an `undefined` response (or no response, depending on implementation) should be sent to prevent incentivizing unwanted requests and to minimize the surface for fingerprinting of public web traffic (See Privacy Considerations below).
 
-Conversely, a succesful response will contain all the required properties *and the provider's choice of the optional properties* expressed in a single unified `scopeObject`.
-In the case of identically-keyed `scopeObject`s appearing in both arrays in the request where properties from both are returned as authorized, the two scopes MUST be merged in the response (see examples below).
+Conversely, a succesful response will contain all the required properties *and the provider's choice of the optional properties* expressed in a single unified array of `scopeObject`s called `sessionScopes`.
+In the case of identically-keyed `scopeObject`s appearing in both arrays in the request (`requestedScopes` and `optionalScopes`), the identically-scoped objects MUST be merged in the response such that no redundant keys appear in `sessionScopes`, (see examples below).
 However, respondents MUST NOT restructure scopes (e.g., by folding properties from a [CAIP-2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed, namespace-wide scope object) as this may introduce ambiguities (See Security Considerations below).
 
 ### Request
