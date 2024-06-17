@@ -65,7 +65,7 @@ efficiently publish a blockchain anchor by publishing only the Merkle root over
 a set of inputs and allowing verification that a given piece of data was
 included in the set through a Merkle proof. 
 
-Again IPLD offers a natural and standard way to to encode a Merkle tree, with
+Again IPLD offers a natural and standard way to encode a Merkle tree, with
 the added benefit of allowing anyone to easily resolve the entire tree, paths or
 subset of the tree when verifying a Merkle proof. We suggest encoding a IPLD
 Merkle tree as follows, but IPLD is self descriptive enough that verification is
@@ -185,7 +185,7 @@ based IPLD data structure mapping to the prior CID in a log.
 The following algorithm describes the steps required to verify a given anchor
 proof. If any step fails, an error MUST be raised. 
 
-1) Resolve blockhain anchor CID (anchor_proof.proof).
+1) Resolve blockchain anchor CID (anchor_proof.proof).
 2) Resolve blockchain transaction by `txHash` CID and `chainId`.
 3) Verify that the blockchain transaction includes the blockchain anchor root
    (`blockchain_anchor.root`) in its payload. How it is included in the
