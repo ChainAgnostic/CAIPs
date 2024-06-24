@@ -53,6 +53,45 @@ Different loading times can be affected by multiple factors, which makes it non-
 
 Both Wallet Providers and blockchain libraries must listen to incoming messages that might be published after their initialization. Additionally both Wallet Providers and blockchain libraries must publish a message to both announce themselves and their intent to connect, respectively.
 
+This discovery would use the following JSON-RPC request params:
+
+```typescript
+// for "wallet_prompt" method
+interface WalletPromptRequestParams {
+  chains: string[];
+  authName: string;
+}
+
+// for "wallet_announce" method
+interface WalletAnnounceRequestParams {
+  uuid: string;
+  name: string;
+  icon: string;
+  rdns: string;
+  scopes?: AuthorizationScopes;
+}
+```
+
+Whenever a new Wallet Provider is discovered the Blockchain Library would index them in order for the Decentralized Application to display them and prompt the user for selecting their wallet of choice for this connection.
+
+The parameters `name` and `icon` are used to display to the user to be easily recognizable while the `rdns` and `uuid` are only used internally for de-duping while they must always be unique, the `rdns` will always be the same but `uuid` is ephemeral per browser session.
+
+The only optional parameter is `scps` which is defined by CAIP-217 authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts.
+
+```typescript
+// Defined by CAIP-217
+interface AuthorizationScopes {
+  [scopeString: string]: {
+    scopes?: string[];
+    methods: string[];
+    notifications: string[];
+    accounts?: string[];
+    rpcDocuments?: string[];
+    rpcEndpoints?: string[];
+  };
+}
+```
+
 Here is the expected logic from the Blockchain Library:
 
 ```js
@@ -84,20 +123,14 @@ Here is the expected logic from the Wallet Provider:
 
 ```js
 // Wallet Provider sets data on init
-const walletData = {
-  uuid: "";
-  name: "";
-  icon: "";
-  rdns: "";
-}
-
+const walletData = { ... }
 
 // Wallet Provider publishes on init
 window.postMessage({
   id: 2,
   jsonrpc: "2.0"
   method: "wallet_announce",
-  params: data
+  params: walletData
 });
 
 
@@ -109,42 +142,10 @@ window.addEventListener("message", (event) => {
       id: 2,
       jsonrpc: "2.0"
       method: "wallet_announce",
-      params: data
+      params: walletData
     });
   }
 });
-```
-
-#### WalletData
-
-Whenever a new Wallet Provider is discovered the Blockchain Library would index them in order for the Decentralized Application to display them and prompt the user for selecting their wallet of choice for this connection. Each wallet announced will share the following data:
-
-```typescript
-interface WalletData {
-  uuid: string;
-  name: string;
-  icon: string;
-  rdns: string;
-  scps?: AuthorizationScopes;
-}
-```
-
-The parameters `name` and `icon` are used to display to the user to be easily recognizable while the `rdns` and `uuid` are only used internally for de-duping while they must always be unique, the `rdns` will always be the same but `uuid` is ephemeral per browser session.
-
-The only optional parameter is `scps` which is defined by CAIP-217 authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts.
-
-```typescript
-// Defined by CAIP-217
-interface AuthorizationScopes {
-  [scopeString: string]: {
-    scopes?: string[];
-    methods: string[];
-    notifications: string[];
-    accounts?: string[];
-    rpcDocuments?: string[];
-    rpcEndpoints?: string[];
-  };
-}
 ```
 
 #### Handshake
@@ -152,6 +153,10 @@ interface AuthorizationScopes {
 After the wallet has been selected by the user then the Blockchain Library MUST publish a message to share its intent to establish a connection. This can be either done as a [CAIP-25][caip-25] request or [CAIP-222][caip-222] authentication.
 
 The communication will use the `uuid` shared by the initial Wallet Provider announcement payload, which the Wallet Provider will listen to for any incoming requests, and consequently, the Blockchain Library will also be used for publishing messages. The same will happen again the other way around but vice-versa, where the Wallet Provider will be the Blockchain Library that will be listening to any incoming responses, and consequently, the Wallet Provider will also use it for publishing messages.
+
+#### Signing
+
+This same channel `uuid` can then be used for a connected session using [CAIP-27][caip-27] which then would use the `sessionId` from the established connection to identify incoming payloads that need to be respond to, and also which `chainId` is being targetted.
 
 Here is the expected logic from the Blockchain Library:
 
@@ -214,10 +219,6 @@ const response = {
 window.postMessage("message", response);
 ```
 
-#### Signing
-
-This same channel `uuid` can then be used for a connected session using [CAIP-27][caip-27] which then would use the `sessionId` from the established connection to identify incoming payloads that need to be respond to, and also which `chainId` is being targetted.
-
 #### UUIDs
 
 The generation of UUIDs is crucial for this messaging interface to work seamlessly for the users.
@@ -270,7 +271,7 @@ window.postMessage({
 // 3. User selects a Wallet with UUID = "350670db-19fa-4704-a166-e52e178b59d2" and
 // Blockchain Library will send a CAIP-25 request to establish a wallet connection
 
-const request = {
+const sessionRequest = {
   id: 123,
   jsonrpc: "2.0",
   method: "wallet_createSession",
@@ -288,85 +289,57 @@ const request = {
   },
 };
 
-let session = {}
+let sessionResult = {}
 
 window.addEventListener("message", (event) => {
-  if (event.data.id === request.id) {
+  if (event.data.id === sessionRequest.id) {
     // Get JSON-RPC response
     if (event.data.error) {
       console.error(event.data.error.message);
     } else {
-      console.log(event.data.result);
+      sessionResult = event.data.result
     }
   }
 });
 
-window.postMessage(request);
+window.postMessage(sessionRequest);
 
-let session = {};
-window.addEventListener("message", "caip282:respond:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
-  if (event.data.error) throw new Error(event.data.error.message);
-  session = event.data.result;
-});
-window.postMessage("message", {
-  event: "caip282:request:350670db-19fa-4704-a166-e52e178b59d2",
-  data: {
-    id: 1,
-    jsonrpc: "2.0",
-    method: "provider_authorize",
-    params: {
-      optionalScopes: {
-        eip155: {
-          scopes: ["eip155:1", "eip155:10"],
-          methods: ["eth_sendTransaction", "personal_sign"],
-          notifications: ["accountsChanged", "chainChanged"],
-        },
-      },
-      sessionProperties: {
-        expiry: "2024-06-06T13:10:48.155Z",
-      },
-    },
-  },
-});
 
 // 4. After the response was received by the Blockchain Library from the wallet
 // provider then the session is established with a sessionId matchin the UUID
 // thus signing requests can be using a CAIP-27 request to the wallet user
-let result = {};
-window.addEventListener("message", "caip282:respond:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
-  if (event.data.error) throw new Error(event.data.error.message);
-  result = event.data.result;
-});
-window.postMessage("message", {
-  event: "caip282:request:350670db-19fa-4704-a166-e52e178b59d2",
-  data: {
-    {
-      id: 2,
-      jsonrpc: "2.0",
-      method: "provider_request",
-      params: {
-        sessionId: "350670db-19fa-4704-a166-e52e178b59d2",
-        scope: "eip155:10",
-        request: {
-          method: "eth_sendTransaction",
-          params: [
-            {
-              type: "0x2",
-              nonce: "0x01",
-              value: "0x00",
-              maxFeePerGas: "0x9143798a4",
-              maxPriorityFeePerGas: "0x59682f00",
-              from: "0x43e3ca49c7be4f429abce408da6b738f879d02a0",
-              to: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
-              data: "0xa9059cbb000000000000000000000000677d6d2747955ecf1e9fad3521d29512fb599e7b0000000000000000000000000000000000000000000000000de0b6b3a7640000",
-            }
-          ]
-        }
-      }
-    }
+const signingRequest = {
+  id: 456,
+  jsonrpc: "2.0",
+  method: "wallet_request",
+  params: {
+    // UUID from WalletData is used as SessionId
+    sessionId: walletData.uuid,
+    scope: "chain:777",
+    request: {
+      method: "chain_signMessage",
+      params: [
+        "Verifying my wallet with this message",
+        "0xa89Df33a6f26c29ea23A9Ff582E865C03132b140",
+      ],
+    },
   },
+};
+
+let signingResult = {}
+
+window.addEventListener("message", (event) => {
+  if (event.data.id === signingRequest.id) {
+    // Get JSON-RPC response
+    if (event.data.error) {
+      console.error(event.data.error.message);
+    } else {
+      signingResult = event.data.result
+    }
+  }
 });
 
+window.postMessage(signingRequest);
 ```
 
 Logic from the Wallet Provider:
@@ -380,16 +353,24 @@ const walletData = {
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
   rdns: "com.example.wallet",
 }
-window.addEventListener("message", "caip282:promptWallet", (event) => {
-  // when a prompt message was received then the wallet will announces again
-  window.postMessage("message", {
-    event: "caip282:announceWallet",
-    data,
-  });
+
+window.postMessage({
+  id: 2,
+  jsonrpc: "2.0"
+  method: "wallet_announce",
+  params: walletData
 });
-window.postMessage("message", {
-  event: "caip282:announceWallet",
-  data,
+
+window.addEventListener("message", (event) => {
+  if (event.data.method === 'wallet_prompt') {
+    // when a prompt message was received then the wallet will announces again
+    window.postMessage({
+      id: 2,
+      jsonrpc: "2.0"
+      method: "wallet_announce",
+      params: walletData
+    });
+  }
 });
 
 // 2. User presses "Connect Wallet" on the application webpage which will select UUID
@@ -397,51 +378,55 @@ window.postMessage("message", {
 // 3. Wallet Provider receives a CAIP-25 request to establish a wallet connection
 // prompts the user to approve and once its approved it can respond back to app
 // Wallet Provider listens for request
-const request = {}
-window.addEventListener("message", "caip282:request:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
-  request = event.data
-});
-// Wallet Provider publishes for reponses
-window.postMessage("message", {
-  event: "caip282:respond:350670db-19fa-4704-a166-e52e178b59d2",
-  data: {
-    id: request.id, // 1
-    jsonrpc: "2.0",
-    result: {
-      sessionId: "350670db-19fa-4704-a166-e52e178b59d2",
-      sessionScopes: {
-        eip155: {
-          scopes: ["eip155:1", "eip155:10"],
-          methods: ["eth_sendTransaction", "personal_sign"],
-          notifications: ["accountsChanged", "chainChanged"],
-          accounts: [
-            "eip155:1:0x43e3ca49c7be4f429abce408da6b738f879d02a0",
-            "eip155:10:0x43e3ca49c7be4f429abce408da6b738f879d02a0"
-          ]
-        },
-      },
-      sessionProperties: {
-        expiry: "2024-06-06T13:10:48.155Z",
-      }
+const sessionRequest = {}
+
+window.addEventListener("message", (event) => {
+  if (event.data.method === "wallet_createSession") {
+    sessionRequest = event.data
+    // if incoming requests match the WalletData UUID
+    if (checkSupportedScopes(event.data.params)) {
+        // prompt user to approve session
     }
-  },
+  }
+});
+
+window.postMessage({
+  id: sessionRequest.id, // 123
+  jsonrpc: "2.0",
+  result: {
+    sessionId: walletData.uuid, // "350670db-19fa-4704-a166-e52e178b59d2"
+    sessionScopes: {
+      eip155: {
+        scopes: ["eip155:1", "eip155:10"],
+        methods: ["eth_sendTransaction", "personal_sign"],
+        notifications: ["accountsChanged", "chainChanged"],
+        accounts: [
+          "eip155:1:0x43e3ca49c7be4f429abce408da6b738f879d02a0",
+          "eip155:10:0x43e3ca49c7be4f429abce408da6b738f879d02a0"
+        ]
+      },
+    },
+    sessionProperties: {
+      expiry: "2024-06-06T13:10:48.155Z",
+    }
+  }
 });
 
 // 4. Once the connection is established then the Wallet Provider can receive
 // incoming CAIP-27 requests which will be prompted to the user to sign and
 // once signed the response is sent back to the dapp with the expected result
-const request = {}
-window.addEventListener("message", "caip282:request:350670db-19fa-4704-a166-e52e178b59d2", (event) => {
-  request = event.data
+const signingRequest = {}
+
+window.addEventListener("message", (event) => {
+  if (event.data.method === "wallet_createSession" && event.data.params.sessionId === walletData.uuid) {
+    signingRequest = event.data.params
+  }
 });
-// Wallet Provider publishes for reponses
-window.postMessage("message", {
-  event: "caip282:respond:350670db-19fa-4704-a166-e52e178b59d2",
-  data: {
-    id: request.id, // 2
-    jsonrpc: "2.0",
-    result: "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"
-  },
+
+window.postMessage({
+  id: signingRequest.id // 456
+  jsonrpc: "2.0",
+  result: "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"
 });
 ```
 
