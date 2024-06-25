@@ -14,11 +14,15 @@ created: 2022-11-28
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-The proposal aims to standardize how inpage injected providers communicate with web extensions, making the process more efficient and secure.
+This CAIP discusses the motivation, specification, and rationale for a proposal aimed at improving how web extension wallets interact with websites, particularly focusing on the Ethereum ecosystem. It outlines the current method of injecting JavaScript provider APIs into websites, its advantages, and its numerous disadvantages, such as security concerns, performance issues, and the risk of breaking websites. An alternative strategy is proposed that specifies a standard communication specification over a new transport layer which enables websites to be able to embed their own provider as a library, addressing the disadvantages of injecting providers into websites and improving web extension interoperability as a whole.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-This CAIP establishes how inpage injected providers can communicate with web extensions over `externally_connectable` in an extensible manner.
+In the current web extension wallet ecosystem, the prevalent approach involves injecting a JavaScript provider API, such as `window.ethereum`, directly into websites as a global variable. This method offers simplicity for web developers and ensures compatibility across extensions but raises significant concerns regarding security, performance, and potential disruption of website functionality due to the need for extensive permissions and the injection of additional code. An alternative approach involves websites embedding their own provider libraries, which could mitigate these issues by reducing required permissions, enhancing performance, and providing developers with greater control over provider integration. To make this approach feasible, a communication protocol must be standardized for the purpose.
+
+This proposal addresses the challenge of maintaining interoperability and extensibility between web extensions and websites by standardizing the communication protocol through the `externally_connectable` interface. This standardization aims to facilitate seamless interaction across different web extensions, ensuring a consistent and secure method of communication. This proposal outlines a specific message format for this communication and discusses the use of `externally_connectable` to allow web extensions to send and receive messages with authorized websites and extensions.
+
+Despite the lack of current support for `externally_connectable` in Firefox, the proposal underscores the importance of interoperability and standardized communication for the future of web extension wallets, advocating for a transition away from contentscript injection.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
