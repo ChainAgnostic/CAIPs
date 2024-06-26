@@ -1,6 +1,6 @@
 ---
 caip: 25
-title: JSON-RPC Provider Authorization
+title: Wallet Create Session RPC Method
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Review
@@ -22,13 +22,13 @@ This proposal has the goal to define a standard procedure for decentralized
 applications to interface with chain agnostic cryptocurrency wallets and other
 user agents which govern identities (including accounts) in multiple
 cryptographic systems. It defines a lightweight protocol for negotiating and
-persisting authorizations during a session managed by a provider construct.
+persisting authorizations during a session managed by a wallet construct.
 
 ## Motivation
 
 The motivation comes from the lack of standardization across blockchains to
 expose accounts and define the expected JSON-RPC methods to be used by an
-application through a provider connecting to a signer or other user agent.
+application through a wallet connecting to a signer or other user agent.
 
 ## Specification
 
@@ -42,7 +42,7 @@ and notifications, each tagged by this identifier.
 
 If a respondent (e.g. a wallet) needs to initiate a new session, whether due to
 user input, security policy, or session expiry reasons, it can simply generate a
-new session identifier to signal this notification to the calling provider; if a
+new session identifier to signal this notification to the calling wallet; if a
 caller needs to initiate a new session, it can do so by sending a new request
 without a `sessionIdentifier`. In such cases, a respondent (e.g. wallet) may
 choose to explicitly close all sessions upon generation of a new one from the
@@ -70,7 +70,7 @@ unwanted requests and to minimize the surface for fingerprinting of public web
 traffic (See Privacy Considerations below).
 
 Conversely, a succesful response will contain all the required properties *and
-the provider's choice of the optional properties* expressed in a single unified
+the wallet's choice of the optional properties* expressed in a single unified
 `scopeObject`. In the case of identically-keyed `scopeObject`s appearing in both
 arrays in the request where properties from both are returned as authorized, the
 two scopes MUST be merged in the response (see examples below). However,
@@ -81,8 +81,8 @@ Considerations below).
 
 ### Request
 
-The application would interface with a provider to authorize that provider with a
-given set of parameters by calling the following JSON-RPC request
+The application would interface with a wallet to create session with 
+given set of parameters by calling the following JSON-RPC request 
 
 Example:
 
@@ -90,7 +90,7 @@ Example:
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "provider_authorize",
+  "method": "wallet_createSession",
   "params": {
     "requiredScopes": {
       "eip155": {
@@ -123,7 +123,7 @@ Example:
 }
 ```
 
-The JSON-RPC method is labeled as `provider_authorize` and its `params` object
+The JSON-RPC method is labeled as `wallet_createSession` and its `params` object
 contains "requiredScopes" and/or "optionalScopes" objects populated with
 [CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
 - The `requiredScopes` array MUST contain 1 or more `scopeObjects`, if present.
@@ -149,7 +149,7 @@ conformant to [CAIP-171][]) and two session objects, both mandatory and non-empt
 
 The first is called `sessionScopes` and contains 1 or more `scopeObjects`.
 * All required `scopeObjects` and all, none, or some of the optional
-`scopeObject`s (at the discretion of the provider) MUST be included if
+`scopeObject`s (at the discretion of the wallet) MUST be included if
 successful.  
 * Unlike the request, each scope object MUST also contain an `accounts` array,
 containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
@@ -159,7 +159,7 @@ if one has been specified.
 
 A `sessionProperties` object MAY also be present, and its contents MAY
 correspond to the properties requested in the response or not (at the discretion
-of the provider).
+of the wallet).
 
 An example of a successful response follows:
 
@@ -249,13 +249,13 @@ The valid error messages codes are the following:
 * When user disapproves accepting calls with the request notifications
     * code = 5002
     * message = "User disapproved requested notifications"
-* When provider evaluates requested chains to not be supported
+* When wallet evaluates requested chains to not be supported
     * code = 5100
     * message = "Requested chains are not supported"
-* When provider evaluates requested methods to not be supported
+* When wallet evaluates requested methods to not be supported
     * code = 5101
     * message = "Requested methods are not supported"
-* When provider evaluates requested notifications to not be supported
+* When wallet evaluates requested notifications to not be supported
     * code = 5102
     * message = "Requested notifications are not supported"
 
@@ -264,10 +264,10 @@ The valid error messages codes are the following:
 Regardless of caller trust level, the following error responses can reduce
 friction and user experience problems in the case of malformed requests. 
 
-* When provider does not recognize one or more requested method(s)
+* When wallet does not recognize one or more requested method(s)
     * code = 5201
     * message = "Unknown method(s) requested"
-* When provider does not recognize one or more requested notification(s)
+* When wallet does not recognize one or more requested notification(s)
     * code = 5202
     * message = "Unknown notification(s) requested"
 * When a badly-formed request includes a `chainId` mismatched to scope
@@ -353,14 +353,12 @@ was in violation of policy).
 
 - [CAIP-2][] - Chain ID Specification
 - [CAIP-10][] - Account ID Specification
-- [CAIP-25][] - JSON-RPC Provider Request
 - [CAIP-104][] - Definition of Chain Agnostic Namespaces or CANs
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
-[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
