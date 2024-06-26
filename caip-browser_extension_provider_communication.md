@@ -104,7 +104,7 @@ The web extension can:
 * receive messages by using `port.onMessage.addListener()`
   * incoming messages should be validated according to the message format specification above
 
-The provider can:
+The webpage embedded provider can:
 * initiate a connection with the web extension by using `port = browser.runtime.connect()`
 * send messages by using `port.postMessage()`
 * receive messages by using `port.onMessage.addListener()`
