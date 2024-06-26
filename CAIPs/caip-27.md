@@ -1,6 +1,6 @@
 ---
 caip: 27
-title: JSON-RPC Provider Request
+title: Wallet Request Method RPC Method
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Draft
@@ -12,7 +12,7 @@ requires: 2, 25, 171, 217
 
 ## Simple Summary
 
-CAIP-27 defines a generic JSON-RPC method for routing method calls to a context
+CAIP-27 defines a JSON-RPC method for requesting methods to a context
 defined by a valid [scopeObject][CAIP-217] and tagged with a
 [sessionId][CAIP-171] for maintaining session continuity. 
 
@@ -57,7 +57,7 @@ The application would interface with an RPC provider to make request as follows:
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "provider_request",
+  "method": "wallet_requestMethod",
   "params": {
     "sessionId": "0xdeadbeef",
     "scope": "eip155:1",
@@ -72,7 +72,7 @@ The application would interface with an RPC provider to make request as follows:
 }
 ```
 
-The JSON-RPC method is labeled as `provider_request` and expects 
+The JSON-RPC method is labeled as `wallet_requestMethod` and expects 
 three **required parameters**:
 
 - **sessionId** - [CAIP-171][] `SessionId` referencing a known, open session
