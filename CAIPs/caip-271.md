@@ -80,28 +80,28 @@ A report presents a detailed presentation of factual information and objective a
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "type": "Security",
+  "evaluationType": "Security",
   "result": -1,
   "issues": [
     {
       "criticality": 1,
-      "type": "Key leak",
+      "issueType": "Key leak",
       "description": "`snap_getBip44Entropy` makes the parent key accessible",
       "uri": "ipfs://QmEQtreH3vm6qcASGqAUsq78MQa9Ctb56afRZg1WJ5sKLdq"
     },
     {
       "criticality": 0.5,
-      "type": "Buffer Overflow",
+      "findingType": "Buffer Overflow",
       "uri": "ipfs://QmDlreH3vm6qcASGqAUsq78MQa9Ctb56afRZg1WJ5sKCqd"
     },
     {
       "criticality": 0.25,
-      "type": "Phishing",
+      "issueType": "Phishing",
       "uri": "ipfs://QmElreH3vm6qcASGqAUsq78MQa9Ctb56afRZg1WJ5sKLpl"
     },
     {
       "criticality": 0,
-      "type": "Data leak",
+      "issueType": "Data leak",
       "description": "API can communicate data to a centralized server"
     },
   ]
@@ -118,7 +118,7 @@ Security report with no findings:
 "credentialSubject":
 {
   "id": "snap://CLwZocaUEbDErtQAsybaudZDJq65a8AwlEFgkGUpmAQ=",
-  "type": "Security",
+  "evaluationType": "Security",
   "result": 1,
 },
 "proof": {}
