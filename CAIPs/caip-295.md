@@ -41,7 +41,7 @@ Blockchain Library: A library or piece of software that assists a dapp to intera
 
 ### Messaging APIs
 
-Browser Extensions make use of events with `window.dispatchEvent` and `window.addEventListener` which will be necessary for publishing and listening messages, respectively, between the Blockchain Library used by the Decentralized Application to communicate with the Wallet Provider.
+Browser Extensions make use of events with `window.postMessage` and `window.addEventListener` which will be necessary for publishing and listening messages, respectively, between the Blockchain Library used by the Decentralized Application to communicate with the Wallet Provider.
 
 This provides the foundation for any Wallet Provider to interface with a Decentralized Application using a Blockchain Library which implements this standard.
 
@@ -51,55 +51,24 @@ Different loading times can be affected by multiple factors, which makes it non-
 
 Both Wallet Providers and blockchain libraries must listen to incoming messages that might be published after their initialization. Additionally both Wallet Providers and blockchain libraries must publish a message to both announce themselves and their intent to connect, respectively.
 
-This discovery would use the following JSON-RPC request params:
-
-```typescript
-// for "wallet_prompt" method
-interface WalletPromptRequestParams {
-  chains: string[];
-  authName: string;
-}
-
-// for "wallet_announce" method
-interface WalletAnnounceRequestParams {
-  uuid: string;
-  name: string;
-  icon: string;
-  rdns: string;
-  scopes?: AuthorizationScopes;
-}
-```
-
-Whenever a new Wallet Provider is discovered the Blockchain Library would index them in order for the Decentralized Application to display them and prompt the user for selecting their wallet of choice for this connection.
-
-The parameters `name` and `icon` are used to display to the user to be easily recognizable while the `rdns` and `uuid` are only used internally for de-duping while they must always be unique, the `rdns` will always be the same but `uuid` is ephemeral per browser session.
-
-The only optional parameter is `scps` which is defined by CAIP-217 authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts.
-
-```typescript
-// Defined by CAIP-217
-interface AuthorizationScopes {
-  [scopeString: string]: {
-    scopes?: string[];
-    methods: string[];
-    notifications: string[];
-    accounts?: string[];
-    rpcDocuments?: string[];
-    rpcEndpoints?: string[];
-  };
-}
-```
-
 Here is the expected logic from the Blockchain Library:
 
-```js
-const wallets = {};
+```typescript
+interface WalletMapEntry {
+  data: WalletAnnounceRequestParams;
+  targetOrigin: string;
+}
+
+const wallets: Record<string, WalletMapEntry> = {}
 
 // Blockchain Library starts listening on init
 window.addEventListener("message", (event) => {
   if (event.data.method === 'wallet_announce') {
     // when an announce message was received then the library can index it by uuid
-    wallets[event.data.params.uuid] = event.data.params
+    wallets[event.data.params.uuid] = {
+      params: event.data.params,
+      targetOrigin: event.targetOrigin
+    }
   }
 });
 
@@ -119,7 +88,7 @@ window.postMessage({
 
 Here is the expected logic from the Wallet Provider:
 
-```js
+```typescript
 // Wallet Provider sets data on init
 const walletData = { ... }
 
@@ -148,7 +117,7 @@ window.addEventListener("message", (event) => {
 
 #### Handshake
 
-After the wallet has been selected by the user then the Blockchain Library MUST publish a message to share its intent to establish a connection. This can be either done as a [CAIP-25][caip-25] request or [CAIP-222][caip-222] authentication.
+After the wallet has been selected by the user then the Blockchain Library MUST publish a message to share its intent to establish a connection. This can be either done as a [CAIP-25][caip-25] request.
 
 The communication will use the `uuid` shared by the initial Wallet Provider announcement payload, which the Wallet Provider will listen to for any incoming requests, and consequently, the Blockchain Library will also be used for publishing messages. The same will happen again the other way around but vice-versa, where the Wallet Provider will be the Blockchain Library that will be listening to any incoming responses, and consequently, the Wallet Provider will also use it for publishing messages.
 
@@ -156,74 +125,13 @@ The communication will use the `uuid` shared by the initial Wallet Provider anno
 
 This same channel `uuid` can then be used for a connected session using [CAIP-27][caip-27] which then would use the `sessionId` from the established connection to identify incoming payloads that need to be respond to, and also which `chainId` is being targetted.
 
-Here is the expected logic from the Blockchain Library:
-
-```js
-// Blockchain Library creates a JSON-RPC request
-const request = {
-  id: 123,
-  jsonrpc: "2.0",
-  method: "wallet_request",
-  params: {
-    // UUID from WalletData is used as SessionId
-    sessionId: walletData.uuid,
-    scope: "chain:777",
-    request: {
-      method: "chain_signMessage",
-      params: [
-        "Verifying my wallet with this message",
-        "0xa89Df33a6f26c29ea23A9Ff582E865C03132b140",
-      ],
-    },
-  },
-};
-
-// Blockchain Library listens for responses
-window.addEventListener("message", (event) => {
-  if (event.data.id === request.id) {
-    // Get JSON-RPC response
-    if (event.data.error) {
-      console.error(event.data.error.message);
-    } else {
-      console.log(event.data.result);
-    }
-  }
-});
-
-// Blockchain Library publishes for requests
-window.postMessage(request);
-```
-
-Here is the expected logic from the Wallet Provider:
-
-```js
-// Wallet Provider listens for request
-window.addEventListener("message", (event) => {
-  if (event.data.method === "wallet_request") {
-    // if incoming requests match the WalletData UUID
-    if (event.data.params.sessionId === walletData.uuid) {
-        console.log(event.data);
-    }
-  }
-});
-
-const response = {
-  id: event.data.id,
-  jsonrpc: "2.0",
-  result: { ... }
-}
-
-// Wallet Provider publishes for reponses
-window.postMessage("message", response);
-```
-
 #### UUIDs
 
 The generation of UUIDs is crucial for this messaging interface to work seamlessly for the users.
 
 A Wallet Provider MUST always generate UUIDs distinctly for each web page loaded, and they must not be re-used without a session being established between the application and the wallet with the user's consent.
 
-A UUID can be re-used as a `sessionId` if and only if the [CAIP-25][caip-25] or [CAIP-222][caip-222] procedure has been prompted to the user and the user has approved its permissions to allow the application to make future signing requests.
+A UUID can be re-used as a `sessionId` if and only if the [CAIP-25][caip-25] procedure has been prompted to the user and the user has approved its permissions to allow the application to make future signing requests.
 
 Once established, the UUID is used as `sessionId` for the [CAIP-27][caip-27] payloads, which can verify that incoming messages are being routed through the appropriate channels.
 
@@ -235,9 +143,9 @@ The choice for using `window.postMessage` is motivated by expanding the range of
 
 The use of UUID for message routing is important because while RDNS is useful for identifying the Wallet Provider, it causes issues when it comes to the session management of different webpages connected to the same Wallet Provider or even managing stale sessions, which can be out-of-sync. Since UUID generation is derived dynamically on page load, Wallet Providers can track these sessions more granularly rather than making assumptions around the webpage URL and RDNS relationship.
 
-The existing standards around provider authorization (CAIP-25) and wallet authentication (CAIP-222) are fundamental to this experience because they create clear intents for a wallet to "connect" with a webpage url after it's been discovered. This standard does not enforce either one but strongly recommends these standards as the preferred interface for connecting or authenticating a wallet.
+The existing standards around wallet session creation (CAIP-25) are fundamental to this experience because they create clear intents for a wallet to "connect" with a webpage url after it's been discovered. This standard does not enforce either one but strongly recommends these standards as the preferred interface for connecting or authenticating a wallet.
 
-Finally the use of CAIP-27 leverages the work above to properly target signing requests that are intended to be prompt to wallet users which will include a `sessionId` and `chainId` in parallel with the pre-established sessions using either CAIP-25 or CAIP-222
+Finally the use of CAIP-27 leverages the work above to properly target signing requests that are intended to be prompt to wallet users which will include a `sessionId` and `chainId` in parallel with the pre-established sessions using either CAIP-25.
 
 ## Test Cases
 
@@ -245,15 +153,23 @@ Here is a test case where we demonstrate a scenario with logic from both a Block
 
 Logic from the Blockchain Library:
 
-```js
-// 1. Blockchain Library initializes by listening to announceWallet messages and
+```typescript
+// 1. Blockchain Library initializes by listening to wallet_announce messages and
 // also by posting a prompt message
-const wallets = {};
+interface WalletMapEntry {
+  data: WalletAnnounceRequestParams;
+  targetOrigin: string;
+}
+
+const wallets: Record<string, WalletMapEntry> = {}
 
 window.addEventListener("message", (event) => {
   if (event.data.method === 'wallet_announce') {
     // when an announce message was received then the library can index it by uuid
-    wallets[event.data.params.uuid] = event.data.params
+    wallets[event.data.params.uuid] = {
+      params: event.data.params,
+      targetOrigin: event.targetOrigin
+    }
   }
 });
 
@@ -265,6 +181,8 @@ window.postMessage({
 });
 
 // 2. User presses "Connect Wallet" and the library display the discovered wallets
+
+const selected_uuid = "350670db-19fa-4704-a166-e52e178b59d2"
 
 // 3. User selects a Wallet with UUID = "350670db-19fa-4704-a166-e52e178b59d2" and
 // Blockchain Library will send a CAIP-25 request to establish a wallet connection
@@ -290,6 +208,7 @@ const sessionRequest = {
 let sessionResult = {}
 
 window.addEventListener("message", (event) => {
+  if (event.targetOrigin !== wallets[selected_uuid].targetOrigin) return;
   if (event.data.id === sessionRequest.id) {
     // Get JSON-RPC response
     if (event.data.error) {
@@ -300,7 +219,8 @@ window.addEventListener("message", (event) => {
   }
 });
 
-window.postMessage(sessionRequest);
+
+window.postMessage(sessionRequest, wallets[selected_uuid].targetOrigin);
 
 
 // 4. After the response was received by the Blockchain Library from the wallet
@@ -309,7 +229,7 @@ window.postMessage(sessionRequest);
 const signingRequest = {
   id: 456,
   jsonrpc: "2.0",
-  method: "wallet_request",
+  method: "wallet_requestMethod",
   params: {
     // UUID from WalletData is used as SessionId
     sessionId: walletData.uuid,
@@ -327,6 +247,7 @@ const signingRequest = {
 let signingResult = {}
 
 window.addEventListener("message", (event) => {
+  if (event.targetOrigin !== wallets[selected_uuid].targetOrigin) return;
   if (event.data.id === signingRequest.id) {
     // Get JSON-RPC response
     if (event.data.error) {
@@ -337,14 +258,14 @@ window.addEventListener("message", (event) => {
   }
 });
 
-window.postMessage(signingRequest);
+window.postMessage(signingRequest, wallets[selected_uuid].targetOrigin);
 ```
 
 Logic from the Wallet Provider:
 
-```js
-// 1. Wallet Provider sets their WalletData and then listens to promptWallet message
-// and also immediatelly posts a message with the WalletData as announceWallet type
+```typescript
+// 1. Wallet Provider sets their WalletData and then listens to prompt_wallet message
+// and also immediatelly posts a message with the WalletData as wallet_announce type
 const walletData = {
   uuid: generateUUID(); // eg. "350670db-19fa-4704-a166-e52e178b59d2"
   name: "Example Wallet",
@@ -373,10 +294,13 @@ window.addEventListener("message", (event) => {
 
 // 2. User presses "Connect Wallet" on the application webpage which will select UUID
 
+const selected_uuid = "350670db-19fa-4704-a166-e52e178b59d2"
+
 // 3. Wallet Provider receives a CAIP-25 request to establish a wallet connection
 // prompts the user to approve and once its approved it can respond back to app
 // Wallet Provider listens for request
-const sessionRequest = {}
+let sessionRequest = {}
+let sessionOrigin = ""
 
 window.addEventListener("message", (event) => {
   if (event.data.method === "wallet_createSession") {
@@ -384,11 +308,13 @@ window.addEventListener("message", (event) => {
     // if incoming requests match the WalletData UUID
     if (checkSupportedScopes(event.data.params)) {
         // prompt user to approve session
+        // persist the targetOrigin for sessionRequest
+        sessionOrigin = event.targetOrigin
     }
   }
 });
 
-window.postMessage({
+const sessionResponse = {
   id: sessionRequest.id, // 123
   jsonrpc: "2.0",
   result: {
@@ -408,67 +334,54 @@ window.postMessage({
       expiry: "2024-06-06T13:10:48.155Z",
     }
   }
-});
+}
+
+window.postMessage(sessionResponse, sessionOrigin);
 
 // 4. Once the connection is established then the Wallet Provider can receive
 // incoming CAIP-27 requests which will be prompted to the user to sign and
 // once signed the response is sent back to the dapp with the expected result
-const signingRequest = {}
+let signingRequest = {}
 
 window.addEventListener("message", (event) => {
+	if (event.targetOrigin !== sessionOrigin) return;
   if (event.data.method === "wallet_createSession" && event.data.params.sessionId === walletData.uuid) {
     signingRequest = event.data.params
   }
 });
 
-window.postMessage({
+const signingResponse = {
   id: signingRequest.id // 456
   jsonrpc: "2.0",
   result: "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"
-});
+}
+
+window.postMessage(signingResponse, sessionOrigin);
 ```
 
 ## Security Considerations
 
-The advantage of using `window.postMessage` over existing standards that leverage `window.dispatchEvent` is the prevention of prototype pollution, but that still does not mean that there aren't existing attacks that must be considered:
-
-### Wallet Imitation and Manipulation
-
-Application developers are expected to actively detect for misbehavior of properties or functions being modified in order to tamper with or modify other wallets. One way this can be easily achieved is to look for when the uuid property within two WalletData objects match. Applications and Libraries are expected to consider other potential methods that the WalletData objects are being tampered with and consider additional mitigation techniques to prevent this as well in order to protect the user.
-
-### Prevent SVG Javascript Execution
-
-The use of SVG images introduces a cross-site scripting risk as they can include JavaScript code. This JavaScript executes within the context of the page and can modify the page or the contents of the page. So, when considering the experience of rendering the icons, dapps need to take into consideration how they’ll approach handling these concerns in order to prevent an image from being used as an obfuscation technique to hide malicious modifications to the page or to other wallets.
+TODO
 
 ## Privacy Considerations
 
-Any form of wallet discoverability must alwasys take in consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Wallet Providers can abstain from publishing `announceWallet` messages on every page load and wait for incoming `promptWallet` messages. Yet this opens the possibility for race conditions where Wallet Providers could be initialized after the `promptWallet` message was published and therefore be undiscoverable. It is recommended that Wallet Providers offer this more "private connect" feature that users only enable optionally, rather than set by default.
+TODO
 
 ## Backwards Compatibility
 
-It's important to note that existing blockchain ecosystems already have standards that overlap with the scope of this standard and backwards-compatibility must be considered for a smooth adoption by both wallet and application developers.
-
-For the EIP155 (Ethereum) ecosystem there are already interfaces for the discoverability of browser wallets through either legacy `window.ethereum` or [EIP-6963][eip-6963] events. These existing mechanisms should be supported in parallel in order to receive incoming requests either through this new messaging interface or legacy ones.
-
-Similarly the Solana and BIP122 (Bitcoin) ecosystems have used similar patterns around `window.solana` and `window.bitcoin` respectively plus the wallet-standard events. Yet these can also be supported in parallel without conflict with this new messaging interface.
-
-The WalletData exposed in this messaging interface is also compatible with EIP-6963 events and wallet-standard events therefore Wallet Providers can re-use the same identifiers and assets already being used in these existing integrations.
+TODO
 
 ## Links
 
 - [EIP-6963][eip-6963] - Multi Injected Provider Discovery
 - [CAIP-27][caip-27] - Blockchain ID Specification
 - [CAIP-25][caip-25] - Blockchain ID Specification
-- [CAIP-217][caip-217] - Provider Authorization Scopes
-- [CAIP-222][caip-222] - Account ID Specification
-- [CAIP-275][caip-275] - Domain Wallet Authentication
+- [CAIP-282][caip-282] - Browser Wallet Discovery Interface
 
 [eip-6963]: https://eips.ethereum.org/EIPS/eip-6963
 [caip-27]: https://chainagnostic.org/CAIPs/caip-27
 [caip-25]: https://chainagnostic.org/CAIPs/caip-25
-[caip-217]: https://chainagnostic.org/CAIPs/caip-217
-[caip-222]: https://chainagnostic.org/CAIPs/caip-222
-[caip-275]: https://chainagnostic.org/CAIPs/caip-275
+[caip-282]: https://chainagnostic.org/CAIPs/caip-282
 
 ## Copyright
 
