@@ -14,15 +14,15 @@ in single stand-alone CAIPs alongside cross-chain CAIPs. Now, as the system has
 matured and expanded, it has become clear that namespaces are more complex and
 multi-dimensional than can be efficiently governed over time in the current CAIP
 single-document structure; instead, a Namespace Reference is proposed that
-splits out the application of each cross-chain CAIP to a given namespace as a
+splits out the application of each cross-namespace CAIP to a given namespace as a
 distinct document with its own ratification/supersession lifecycle. This way,
 long-term specifications for low-level primitives like Chain IDs and addresses
 can be defined once and not be superseded by the addition or modification of
 higher-level specifications for RPC interfaces or multiple asset types.
 
-In practical terms, that means each blockchain ecosystem's namespace is defined
+In practical terms, that means each bounded ecosystem's namespace is defined
 by a folder containing a distinct document for _each CAIP_ applied to that
-namespace. At a high level, the important facts about a namespace, its
+namespace. How namespaces get bounded is irreducibly subjective, but overlapping or contentious boundaries are to be avoided where possible, and overlaps or redundancies should be justified in technological and interoperability terms. At a high level, the important facts about a namespace, its
 governance, and its nomenclature can be defined/introduced in a `README.md`
 file, and each CAIP can be defined in a `caip{X}.md` file, where X is the number
 of the ratified CAIP.
@@ -42,11 +42,12 @@ and documenting dissenting opinions or rejected alternatives.
 
 ## Namespace Reference Rationale
 
-Cross-chain engineering is difficult and often requires one to know both sides
+Cross-system engineering is difficult and often requires one to know both sides
 of a cross-namespace/cross-ecosystem interaction deeply to avoid serious
-security, UX, and design problems. The primary function of defining a namespace
-reference is to map the cross-chain CAIPs against the specifics of a given
-ecosystem and namespace, ideally written for a reader with very little context in that namespace.
+security, UX, and design problems.
+The primary function of defining a namespace
+reference is to map the cross-namespace CAIPs against the specifics of a given
+ecosystem and namespace, ideally written for a reader with very little context in that ecosystem and its technical decisions to date.
 
 ## Reference Formats and Templates
 
