@@ -5,7 +5,7 @@ author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/294
 status: Draft
 type: Standard
-created: 2024-05-30
+created: 2024-06-26
 requires: 25, 27, 282
 ---
 
