@@ -227,7 +227,7 @@ Resource Trust Score:
 The standard has been designed with modularity and solution-agnosticism, to maximize flexibility and reusability:
 
 - Data elements are independent from each other, allowing for the use of only a subset of it,
-- The data framework is agnostic to any specific trust computer, enabling any trust score computation logic,
+- The data framework is agnostic to any trust value computation logic,
 - Flexible data ranges leveraging floats type facilitating the creation of tailored user experiences,
 - Data structures has been designed to be agnostic, enabling the reusability of the data across different use-cases.
 
@@ -235,7 +235,7 @@ The standard has been designed with modularity and solution-agnosticism, to maxi
 
 [DID][]s and [CID][] are decentralized identification methods that are not reliant on any centralized identity provider, making them more sustainable.
 
-1. [Decentralized identifiers][DID] using the `pkh` and `key` methods allow for the identification of account owners or trust computers in a chain-agnostic manner without the complexity of on-chain resolution.
+1. [Decentralized identifiers][DID] using the `pkh` and `key` methods allow for the identification of account owners or trust value issuer in a chain-agnostic manner without the complexity of on-chain resolution.
 2. [Content Identifiers][CID] enable anyone to deterministically generate identifiers based on the canonicalized content of a given JSON document, and store it in a compact, tamper-evident way conducive to merging, syncing, or even CRDT patterns.
 
 ### Data
