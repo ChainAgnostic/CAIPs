@@ -14,7 +14,7 @@ created: 2022-11-28
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-This CAIP discusses the motivation, specification, and rationale for a proposal aimed at improving how web extension wallets interact with websites, particularly focusing on the Ethereum ecosystem. It outlines the current method of injecting JavaScript provider APIs into websites, its advantages, and its numerous disadvantages, such as security concerns, performance issues, and the risk of breaking websites. An alternative strategy is proposed that specifies a standard communication specification over a new transport layer which enables websites to be able to embed their own provider as a library, addressing the disadvantages of injecting providers into websites and improving web extension interoperability as a whole.
+This CAIP discusses the motivation, specification, and rationale for a proposal aimed at improving how web extension wallets interact with websites. It outlines the current method of injecting JavaScript provider APIs into websites, its advantages, and its numerous disadvantages, such as security concerns, performance issues, and the risk of breaking websites. An alternative strategy is proposed that specifies a standard communication specification over a new transport layer which enables websites to be able to embed their own provider as a library, addressing the disadvantages of injecting providers into websites and improving web extension interoperability as a whole.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
