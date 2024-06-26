@@ -88,11 +88,6 @@ Web extensions should expose a standard interface over [`externally_connectable`
 }
 ```
 
-TODO: should type be more defined here? Seems weird to specify the envelop but no types it can be used with?
-Does `data` need to be a JSON-RPC message specifically?
-Should `type` be something besides `caip-x`?
-
-
 ### `externally_connectable`
 
 A web extension can use the `externally_connectable` manifest field to accept messages from websites and other extensions. This permission can be configured to limit which sites and other extensions can send messages to the web extension. How this permission is configured is out-of-scope for this proposal; this proposal only concerns sites that the web extension allows messages from.
