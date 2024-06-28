@@ -12,7 +12,7 @@ requires: 2, 25, 171, 217
 
 ## Simple Summary
 
-CAIP-27 defines a JSON-RPC method for requesting methods to a context
+CAIP-27 defines a JSON-RPC method for a wallet-connected application to request that wallet execute an individual method call in a specified context
 defined by a valid [scopeObject][CAIP-217] and tagged with a
 [sessionId][CAIP-171] for maintaining session continuity. 
 
