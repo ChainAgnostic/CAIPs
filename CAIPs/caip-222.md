@@ -342,7 +342,7 @@ CACAO versioning is included as a parameter for this request to allow backwards-
 - [did:pkh][did:pkh] - did:pkh Method Specification
 
 [caip-2]: https://chainagnostic.org/CAIPs/caip-2
-[caip-10]: https://chainagnostic.org/CAIPs/caip-2
+[caip-10]: https://chainagnostic.org/CAIPs/caip-10
 [caip-74]: https://chainagnostic.org/CAIPs/caip-74
 [caip-122]: https://chainagnostic.org/CAIPs/caip-122
 [rfc 3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
