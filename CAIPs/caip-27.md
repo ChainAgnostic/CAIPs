@@ -1,6 +1,6 @@
 ---
 caip: 27
-title: Wallet Request Method RPC Method
+title: Wallet Request Method JSON-RPC Method
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Draft
