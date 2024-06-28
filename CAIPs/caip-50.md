@@ -203,6 +203,7 @@ CAIP50 = zUJWDxUnc8pZCfUtVKcAsRgxijaVqHyuMgeKKF
 ## Links
 
 - [CAIP-2][caip-2] - Blockchain ID Specification
+- [CAIP-10][caip-10] - Account ID Specification
 - Multicodec - https://github.com/multiformats/multicodec/
 
 [caip-2]: https://chainagnostic.org/CAIPs/caip-2
