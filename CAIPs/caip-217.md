@@ -88,7 +88,14 @@ Whenever another CAIP uses the name `scopeObject` and has this CAIP in the
 `required` front-matter property, it SHALL be interpreted as reference to this
 specification.
 
-## References
+## Links
+
+- [CAIP-2][] - Blockchain ID Specification
+- [CAIP-10][] - Account ID Specification
+- [CAIP-25][]: https://chainAgnostic.org/CAIPs/CAIP-25
+- [CAIP-27][]: https://chainAgnostic.org/CAIPs/CAIP-27
+- [CAIP-211][]: https://chainAgnostic.org/CAIPs/CAIP-211
+- [Namespaces][namespaces]: https://namespaces.chainAgnostic.org/
 
 [CAIP-2]: https://chainAgnostic.org/CAIPs/CAIP-2
 [CAIP-10]: https://chainAgnostic.org/CAIPs/CAIP-10
