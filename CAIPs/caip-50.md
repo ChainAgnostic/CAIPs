@@ -207,6 +207,7 @@ CAIP50 = zUJWDxUnc8pZCfUtVKcAsRgxijaVqHyuMgeKKF
 - Multicodec - https://github.com/multiformats/multicodec/
 
 [caip-2]: https://chainagnostic.org/CAIPs/caip-2
+[caip-10]: https://chainagnostic.org/CAIPs/caip-10
 
 ## Copyright
 
