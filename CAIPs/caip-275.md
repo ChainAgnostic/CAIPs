@@ -83,7 +83,7 @@ Application will filter the authentication flows that are not supported and then
 An authentication flow may be unsupported due to the platform it is running mismatching the one it requires, e.g. "browser", "mobile", etc. Or because it requires an specific wallet but it is not installed, e.g. requires "io.metamask" but there is no browser extension wallet.
 When an authentication flow requires user action, such as scanning a QR code, or authorizing the connection from the wallet, the application must wait for the user to complete or cancel the action.
 
-### Authentication flows definition
+## Authentication flows definition
 
 The Authentication flows definition JSON MUST conform to the following [Draft 7 JSON Schema][]:
 
@@ -173,11 +173,25 @@ To resolve that configuration:
 3. Second authentication flow indicates that it has to run on `mobile`, and using [Mobile Wallet Protocol][] (indicated with the key `mwp`) application has to find another app that responds to the universal link `https://universal-link.wallet.com/`.
 4. Last authentication flow does not impose a platform to run on because it does not specify any, so it will be valid everywhere. It tries to set up a [Wallet Connect][] connection to the URI `http://www.wallet.com/auth`. When this authentication flow is triggered, the URI will be opened in a new browser window passing `address`, `domain` and `wcUri` as query params with the resolved address, the domain name and [Wallet Connect][] URI respectively. As this flow requires user action (connecting the wallet at the URI) this step will never be skipped as long as the application supports [Wallet Connect][].
 
-### Other examples
+## Standard Authentication flows
 
 To further clarify different authentication flow configurations we can consider the following cases.
 
-#### Use the wallet extension installed at the browser, without requiring a specific one
+### Use a wallet extension installed at the browser
+
+```json
+{
+  "platform": "browser",
+  "connection": "extension",
+  "URI": "io.metamask"
+}
+```
+
+When using this configuration, the application MUST check available [EIP-6963][] wallets via its signaling channel and trigger the one that matches the URI field with its rdns.
+In these cases, the application should not ignore and replace the URI field with any other wallet found in the browser, as it could lead to a security issue where the user connects a wallet that is not the one they want to authenticate with.
+Therefore, this configuration will only be valid if the browser has that wallet installed (in this case, Metamask) and be skipped when it is not.
+
+### Use the wallet extension installed at the browser, without requiring a specific one
 
 ```json
 {
@@ -189,11 +203,12 @@ To further clarify different authentication flow configurations we can consider 
 
 As this authentication flow calls for the `injected` extension, without specifying which one, it should use the default wallet provider at the browser.
 For EVM chains, this would be `window.ethereum`.
+Having `connection` set to `extension`, the `URI` field is by default `injected`, so some users might want to skip this field and save some bytes.
 
-However, this configuration is not recommended as having multiple wallets in the browser generates a race condition, and can result in false positives where there is a wallet extension, but it does not have the account linked to the domain.
-We recommend using [EIP-6963][] by specifying a wallet rnds in the URI field if possible, to avoid this issue.
+However, this configuration is not recommended as having multiple wallets in the browser generates a race condition, and can result in false positives where the wallet used does not have the account linked to the domain.
+We recommend using [EIP-6963][] by specifying a wallet rnds in the `URI` field if possible, to avoid this issue.
 
-#### Wallet connect to any wallet, letting the user decide
+### Wallet connect to any wallet, letting the user decide upon connection
 
 ```json
 {
@@ -202,14 +217,23 @@ We recommend using [EIP-6963][] by specifying a wallet rnds in the URI field if 
 ```
 
 Using this configuration, the application should provide the QR code and [Wallet Connect][] URI for the user to connect with his wallet from any place.
-Such configuration can be useful when the user has their wallet in their mobile device and also on another platform such as a web wallet or desktop application that can receive the QR code or [Wallet Connect][] URI in any way, and they want to decide which one to use at connection time.
+Such configuration can be useful when the user has their wallet in their mobile device or on another platform, such as a web wallet or desktop application that can receive the [EIP-1328] URI and present it to the end-user as a "[Wallet Connect]"-style QR code or otherwise get informed consent from the user to make the relay connection; this has the added benefit of allowing a manual choice among multiple wallets at connection time.
 
 This configuration should never be skipped as it does not impose any platform and requires the user action of connecting from the wallet making this a great last case in the `authFlows` array and behaving as the default when no other authentication flow is useful.
-The only requirement for this configuration to work is that the application supports [Wallet Connect][].
+The only requirement for this configuration to work is that the application supports [ERC-1328]-conformant relay connections such as [Wallet Connect][].
 
 ## Self-hosting authentication flows
 
 In case the user does not trust any authentication flow provider to store their info, they can easily host it themselves using a public serverless function and saving its URL in the ENS `authenticator` record.
+The requirements for the serverless functions are:
+- Being accessible from the internet.
+- Being able to return the authentication flows JSON object when requested.
+- Provide the user with a way to update the authentication flows in case they want to change them.
+- Be able to handle the user's domain name as a parameter to return the correct authentication flows when that changes it.
+
+The user can use any service that provides serverless functions, such as Vercel, AWS Lambda, Google Cloud Functions, etc.
+When this is done for personal reasons, the user should be aware that the serverless function will be public and anyone can access it.
+Therefore, it is recommended to use a service that provides, at least, rate limiting to avoid abuse.
 
 ## Direct authentication flows resolution
 
@@ -239,32 +263,34 @@ Web3 applications and login modal providers can implement the Login With Name fl
 ## Connection properties
 
 How the dApp actually requests signatures and talks to the signer will vary depending on the authenticator and the chain being used.
-One option for session management is [Wallet Connect][], where the "authenticated session" returned is actually a WalletConnect session.
+One option for session management is to create a session with the [CAIP-25][] protocol, where the "authenticated session" token returned is actually a JSON-RPC session token, such as that used by the [Wallet Connect] JSON-RPC relay network.
 Applications may also choose to directly integrate signer SDKs, providing a more streamlined signing flow.
 
 For example, here is how an application would integrate with the Login With Name login process:
 
-1. Install [Wagmi][] and [Login With Name WAGMI connector][] packages.
-2. Import the `loginWithName` connector from the package.
-3. Configure the [Wagmi][] config with the `loginWithName` connector.
-   This package provides ENS as a name resolver which can be configured to use `mainnet` or `sepolia`.
-4. Wrap the app with `WagmiProvider`, pass it the configuration with the loginWithName connector.
-5. Upon connection request, the connector will request application for user name. Application can show user an input for it, if not obtained in other way.
+1. Install connection/authentication libraries, such as [Wagmi][] and [Login With Name WAGMI connector][] packages.
+2. Import the connector method from the package (`loginWithName` in the case of `wagmi` and our sample implementation).
+3. Configure the macro library (in this case [Wagmi][]) to use the specific connector (`loginWithName`).
+   Our sample implementation package provides `ENS` as a name resolver which can be configured to use `mainnet` or `sepolia`.
+4. Configure the app to use the previously configured library to establish the connection.
+   Following the example would be wrapping the app with `WagmiProvider`, and passing it the configuration with the `loginWithName` connector.
+5. Upon connection request, the connector will request application for user name.
+   Application can try cached or automatically resolved suggestions first and offer a user confirmation of the suggestion(s), or if none can be resolved without user intervention, prompt the user for a user name directly.
 6. Connector will now resolve user name into an address and authentication flows and trying to reach the wallet specified and its accounts.
-7. After signing in with the wallet. Application can use standard [Wagmi][] hooks like `useAccount`, `useConnect` etc.
+7. After signing in with the wallet. Application can use the hooks and abstractions provided by the library, such as `useAccount`, `useConnect` etc in the case of `wagmi`.
 
 ## Name Resolver systems
 
 For the purposes of this document, we've detailed a flow based on ENS domains.
 But this standard is extensible to any name resolution system.
 For example, to use Solana domains, you could just replace the ENS name resolver component with a Solana name resolver component.
-The name resolver can also mix several sources, so resolving using several chains is only a matter of combining the specific name resolver for each chain and then combining them with the necessary logic.
+The name resolver can also mix several sources, so resolving from several chains (even non-EVM chains) is only a matter of combining the specific name resolver for each chain and then combining them with the necessary logic.
 
-Reference implementation included in [Login With Name WAGMI connector][] include two name resolvers to showcase different implementations.
+Sample implementation included in [Login With Name WAGMI connector][] include two name resolvers to showcase different implementations.
 
-- ENS, compatible with any chain that uses it and likely the one that will be the most common.
+- ENS, which has wide compatibility with many chains and integrated in many user-facing interfaces across web3.
 - Domain Wallets, an online web wallet system compatible with many chains and that already integrates a domain naming system to identify each wallet.
-- An application level mixer name resolver, that combines the two previous ones.
+- An application-level multi-resolver, that handles the logic of the two specific resolvers above.
 
 It has to be noted too, that the name resolver can be any service that resolves names and their associated `authenticator` text record to an address and authentication flows respectively.
 A name resolver can take any type of name and as long as it can resolve it, it does not have to be tied to any chain.
@@ -337,16 +363,22 @@ export class ENS implements NameResolver {
 
 # Rationale
 
+The Domain Wallet Authentication standard is designed to provide a user-friendly way to authenticate with web3 applications using easy to remember names, reducing friction for end-users, specially those that are not familiar with the complexities of blockchain addresses.
+By linking a domain name with authentication methods or providers, users can easily log in to web3 applications without having to remember their wallet provider or address.
 Specifying the `authenticator` configuration as a domain name NFT text record allows applications to easily discover and integrate with compatible login methods in a standard way.
 Having a chain-agnostic standard enables interoperability between different crypto domain providers and authentication methods.
 Providing clear wallet implementer steps and code samples makes it easy for developers to adopt this standard.
+
+The standard is designed to not compete with other authentication methods and as an opt-in discovery system that name-controllers can use and applications can trust to automate one friction point in the web3 login process.
+It is designed to be flexible, offering options to both consumers at connection time and developers at configuration time.
+And also to be extensible, allowing for new platforms, connections, and name resolvers to be added as they become available and publicly discussed and adopted by the community in followup CAIPs.
 
 # Backwards Compatibility
 
 This standard is fully backwards compatible as it proposes an additional metadata field for crypto domain NFTs.
 Existing NFTs and applications will continue to function normally.
 
-## Reference Implementation
+## Sample Implementation
 
 A [Wagmi][] connector is published at [Login With Name WAGMI connector][] public repository.
 Also, a working demo with further details on how this CAIP works is hosted at [the following link](https://login-with-name-wagmi-sdk.vercel.app/).
@@ -365,7 +397,9 @@ Also, a working demo with further details on how this CAIP works is hosted at [t
 - [Wallet Connect][] - Wallet Connect SDK and docs
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
+[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [EIP-1193]: https://eips.ethereum.org/EIPS/eip-1193
+[EIP-1328]: https://eips.ethereum.org/EIPS/eip-1328
 [EIP-4361]: https://eips.ethereum.org/EIPS/eip-4361
 [EIP-6963]: https://eips.ethereum.org/EIPS/eip-6963
 [ENSIP-5]: https://docs.ens.domains/ensip/5
