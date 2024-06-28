@@ -82,7 +82,7 @@ Considerations below).
 ### Request
 
 The application would interface with a wallet to create session with 
-given set of parameters by calling the following JSON-RPC request 
+given set of parameters by calling the following JSON-RPC request:
 
 Example:
 
