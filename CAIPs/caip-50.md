@@ -202,7 +202,10 @@ CAIP50 = zUJWDxUnc8pZCfUtVKcAsRgxijaVqHyuMgeKKF
 
 ## Links
 
+- [CAIP-2][caip-2] - Blockchain ID Specification
 - Multicodec - https://github.com/multiformats/multicodec/
+
+[caip-2]: https://chainagnostic.org/CAIPs/caip-2
 
 ## Copyright
 
