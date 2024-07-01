@@ -70,7 +70,7 @@ Example:
         "methods": ["get_balance"],
         "notifications": ["accountsChanged", "chainChanged"]
       },
-      "wallet": {
+      "eip155:0": {
         "methods": ["wallet_getPermissions", "wallet_creds_store", "wallet_creds_verify", "wallet_creds_issue", "wallet_creds_present"],
         "notifications": []
       },
@@ -154,7 +154,7 @@ An example of a successful response follows:
         "notifications": ["accountsChanged", "chainChanged"],
         "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
       },
-      "wallet": {
+      "eip155:0": {
         "methods": ["wallet_getPermissions", "wallet_creds_store", "wallet_creds_verify", "wallet_creds_issue", "wallet_creds_present"],
         "notifications": []
       },
