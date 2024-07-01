@@ -37,8 +37,8 @@ Each `scopeObject` in either array MUST be keyed uniquely within its parent, but
 (i.e., additional properties of an authorization target in `requiredScopes` may be requested in a separate `scopeObject` with the same key in the `optionalScopes` array).
 
 Each `scopeObject` in these arrays can be keyed to a specific [CAIP-2][] network identifier, or to an entire [CAIP-104][] namespace.
-`scopeObjects` keyed to an entire [CAIP-104][] namespace SHOULD contain a non-empty `chains` array to be actionable, making them functionally equivalent to a series of identical `scopeObjects`, each keyed to one of the members of `chains` expressed as a [CAIP-2][] scope.
-An empty or absent `chains` array SHOULD NOT be interpreted as a namespace-wide authorization (i.e. authorization for ANY network therein), but rather as a null authorization of 0 specied chains within that namespace.
+`scopeObjects` keyed to an entire [CAIP-104][] namespace SHOULD contain a non-empty `scopes` array to be actionable, making them functionally equivalent to a series of identical `scopeObjects`, each keyed to one of the members of `scopes` expressed as a [CAIP-2][] scope.
+An empty or absent `scopes` array SHOULD NOT be interpreted as a namespace-wide authorization (i.e. authorization for ANY network therein), but rather as a null authorization of 0 specified `chainId`s within that namespace.
 (See [CAIP-217][] for more details on the structure of the typed objects included in these arrays.)
 
 If any properties in the required scope(s) are not authorized by the respondent, a failure response expressive of one or more specific failure states will be sent (see [#### failure states](#failure-states) below), with the exception of user denying consent.
@@ -132,7 +132,7 @@ An example of a successful response follows:
     "sessionId": "0xdeadbeef",
     "sessionScopes": {
       "eip155": {
-        "chains": ["eip155:1", "eip155:137"],
+        "scopes": ["eip155:1", "eip155:137"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
         "notifications": ["accountsChanged", "chainChanged"],
         "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
@@ -184,11 +184,11 @@ Unless the dapp is known to the wallet and trusted, the generic/undefined error 
 is RECOMMENDED for any of the following cases:
 
 - the user denies consent for exposing accounts that match the requested and
-  approved chains,
+  approved networks/"chains",
 - the user denies consent for requested methods,
 - the user denies all requested or any required scope objects,
 - the wallet cannot support all requested or any required scope objects,
-- the requested chains are not supported by the wallet, or
+- the requested networks/"chains" are not supported by the wallet, or
 - the requested methods are not supported by the wallet
 
 ##### Trusted Failure Codes
@@ -207,9 +207,9 @@ The valid error messages codes are the following:
 - When user disapproves accepting calls with the request notifications
   - code = 5002
   - message = "User disapproved requested notifications"
-- When provider evaluates requested chains to not be supported
+- When provider evaluates networks requested by chainId as not supported
   - code = 5100
-  - message = "Requested chains are not supported"
+  - message = "Requested networks are not supported"
 - When provider evaluates requested methods to not be supported
   - code = 5101
   - message = "Requested methods are not supported"
