@@ -85,9 +85,12 @@ Example:
     },
     "scopedProperties": {
       "eip155:42161": {
-        "expiry": "2022-12-24T17:07:31+00:00",
-        "caip154-mandatory": "true"
+        "extension_foo": "bar"    
       }
+    },
+    "sessionProperties": {
+      "expiry": "2022-12-24T17:07:31+00:00",
+      "caip154-mandatory": "true"
     }         
   }
 }
@@ -129,6 +132,9 @@ This is intended for expressing connection-specific or non-standardized extensio
 Each object in `scopedProperties` MUST be keyed to a `scopeString`, and SHOULD correspond to a `sessionScopes` entry with the same key.
 If an object in `scopedProperties` is keyed to a `scopeString` not currently authorized for the session, it SHOULD be ignored.
 
+A `sessionProperties` object MAY also be present, with no protocol-wide shape constraints or semantics assumed.
+This is intended for expressing metadata about the CAIP-25 connection and accessible to ALL `sessionScopes` equally.
+
 An example of a successful response follows:
 
 ```jsonc
@@ -164,8 +170,12 @@ An example of a successful response follows:
     },      
     "scopedProperties": {
       "eip155:42161": {
-        "expiry": "2022-11-31T17:07:31+00:00"          
+        "rpcDocuments": "https://example.com/wallet_extension.json",
+        "extension_foo": "bar"
       }
+    },
+    "sessionProperties": {
+      "expiry": "2022-11-31T17:07:31+00:00";
     }
   }
 }
