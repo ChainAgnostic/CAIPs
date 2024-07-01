@@ -83,9 +83,11 @@ Example:
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"]
     },
-    "sessionProperties": {
-      "expiry": "2022-12-24T17:07:31+00:00",
-      "caip154-mandatory": "true"
+    "scopedProperties": {
+      "eip155:42161": {
+        "expiry": "2022-12-24T17:07:31+00:00",
+        "caip154-mandatory": "true"
+      }
     }         
   }
 }
@@ -96,12 +98,14 @@ The JSON-RPC method is labeled as `provider_authorize` and its `params` object c
 - The `requiredScopes` array MUST contain 1 or more `scopeObjects`, if present.
 - The `optionalScopes` array MUST contain 1 or more `scopeObjects`, if present.
 
-A third object is the `sessionProperties` object, which also MUST contain 1 or more properties if present.
-All properties of the `sessionProperties` objects MUST be interpreted by the respondent as proposals rather than requirements.
-In addition to making properties of the negotiated session itself explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing information about unfamiliar scopes or which accounts to expose to each).
+A third object is the `scopedProperties` object, which also MUST contain 1 or more objects if present.
+Each object should be keyed to the scope of a `sessionScopes` member to which it corresponds.
+All properties of each object in `scopedProperties` MUST be interpreted by the respondent as proposals or declarations rather than as requirements.
+In addition to making additional properties of or metadata about the corresponding `sessionScopes` member explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing connection information about unfamiliar scopes or which accounts to expose to each).
 
 Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety;
 similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
+An exception can safely be made for `scopedProperties`, but caution is recommended for such extensions.
 
 Requesting applications are expected to persist all of these returned properties in the session object identified by the `sessionId`.
 
@@ -120,7 +124,10 @@ The first is called `sessionScopes` and contains 1 or more `scopeObjects`.
 containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
 and valid in that scope. Additional constraints on the accounts authorized for a given session MUST be applied conformant to the namespace's [CAIP-10][] profile, if one has been specified.
 
-A `sessionProperties` object MAY also be present, and its contents MAY correspond to the properties requested in the response or not (at the discretion of the provider).
+A `scopedProperties` object MAY also be present, each member of which corresponds to exactly 1 `sessionScope`.
+This is intended for expressing connection-specific or non-standardized extensions to `sessionScope`.
+Each object in `scopedProperties` MUST be keyed to a `scopeString`, and SHOULD correspond to a `sessionScopes` entry with the same key.
+If an object in `scopedProperties` is keyed to a `scopeString` not currently authorized for the session, it SHOULD be ignored.
 
 An example of a successful response follows:
 
@@ -155,8 +162,10 @@ An example of a successful response follows:
         ...
       }
     },      
-    "sessionProperties": {
-      "expiry": "2022-11-31T17:07:31+00:00"          
+    "scopedProperties": {
+      "eip155:42161": {
+        "expiry": "2022-11-31T17:07:31+00:00"          
+      }
     }
   }
 }
@@ -234,12 +243,12 @@ friction and user experience problems in the case of malformed requests.
 - When a badly-formed request defines one `chainId` two ways
   - code = 5204
   - message = "ChainId defined in two different scopes"  
-- Invalid Session Properties Object
+- Invalid scopedProperties Object
   - code = 5300
-  - message = "Invalid Session Properties requested"
-- Session Properties requested outside of Session Properties Object
+  - message = "Invalid scopedProperties requested"
+- scopedProperties requested outside of scopedProperties Object
   - code = 5301
-  - message = "Session Properties can only be optional and global"
+  - message = "scopedProperties can only be outside of sessionScopes"
 
 Note: respondents SHOULD to implement support for core RPC Documents per each
 supported namespace to avoid sending error messages 5201 and 5202 in cases where
