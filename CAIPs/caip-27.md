@@ -1,27 +1,27 @@
 ---
 caip: 27
-title: JSON-RPC Provider Request
+title: Wallet Invoke Method JSON-RPC Method
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Draft
 type: Standard
 created: 2020-12-12
-updated: 2023-03-02
+updated: 2024-07-02
 requires: 2, 25, 171, 217
 ---
 
 ## Simple Summary
 
-CAIP-27 defines a generic JSON-RPC method for routing method calls to a context
-defined by a valid [scopeObject][CAIP-217] and tagged with a
-[sessionId][CAIP-171] for maintaining session continuity. 
+CAIP-27 defines a JSON-RPC method for a wallet-connected application to invoke
+a wallet invoke an JSON-RPC method  in a specified context defined by a valid 
+[scopeObject][CAIP-217] and tagged with a [sessionId][CAIP-171] for maintaining session continuity. 
 
 ## Abstract
 
 This proposal has the goal of defining a standard method for decentralized
-applications to request JSON-RPC methods from user agents (such as
+applications to invoke JSON-RPC methods from user agents (such as
 cryptocurrency wallets) directed to a given, previously-authorized target
-network (such as nodes of a specific blockchain or consensus community within a
+chain (such as nodes of a specific blockchain or consensus community within a
 protocol). It requires a valid [scopeObject][CAIP-217] and a valid
 [sessionId][CAIP-171] for interoperability and composability. These two
 properties MAY be inherited from a persistent session created by [CAIP-25][],
@@ -30,7 +30,7 @@ but could also be used as part of other session management mechanisms.
 ## Motivation
 
 The motivation comes from the ambiguity that comes from interfacing with a
-multi-network agent (e.g. a cryptocurrency wallets which supports the same
+multi-chain agent (e.g. a cryptocurrency wallets which supports the same
 method on multiple chains in a namespace, or supports methods with the same name
 on multiple namespaces). 
 
@@ -45,19 +45,19 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Definition
 
-The JSON-RPC provider is able to make one or more JSON-RPC requests accompanied
-by a [CAIP-2][] compatible `chainId` and a keyed to the [sessionId][CAIP-171] of
+The JSON-RPC provider is able to invoke a single JSON-RPC request accompanied
+by a [CAIP-2][] compatible `chainId` scoped by the [sessionId][CAIP-171] of
 a pre-existing session. 
 
 ### Request
 
-The application would interface with an RPC provider to make request as follows:
+The application would interface with an JSON-RPC provider to make request as follows:
 
 ```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "provider_request",
+  "method": "wallet_invokeMethod",
   "params": {
     "sessionId": "0xdeadbeef",
     "scope": "eip155:1",
@@ -72,15 +72,15 @@ The application would interface with an RPC provider to make request as follows:
 }
 ```
 
-The JSON-RPC method is labeled as `provider_request` and expects 
+The JSON-RPC method is labeled as `wallet_invokeMethod` and expects 
 three **required parameters**:
 
 - **sessionId** - [CAIP-171][] `SessionId` referencing a known, open session
 - **scope** - a valid `scopeObject` previously authorized to the caller and persisted in
   the session identified by `sessionId`
 - **request** - an object containing the fields:
-  - **method** - JSON-RPC method to request
-  - **params** - JSON-RPC parameters to request (may be empty but must be set)
+  - **method** - JSON-RPC method to invoke
+  - **params** - JSON-RPC parameters to invoke (may be empty but must be set)
 
 ### Validation
 
@@ -98,7 +98,7 @@ three **required parameters**:
 ### Response
 
 Upon succesful validation, the respondent will submit or route the request to
-the targeted network. If the targeted network returns a response to the
+the targeted chain. If the targeted chain returns a response to the
 respondent, the respondent MAY forward this response to the caller. Constraints
 on, metadata about, or envelopes for response-forwarding MAY be set by
 [namespace][namespaces] profiles of this CAIP.
