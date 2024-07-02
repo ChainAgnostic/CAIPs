@@ -43,7 +43,7 @@ Blockchain Library: A library or piece of software that assists a dapp to intera
 
 #### Discovery
 
-Both Wallet Providers and blockchain libraries must listen to incoming messages that might be published after their initialization. Additionally both Wallet Providers and blockchain libraries must publish a message to both announce themselves and their intent to connect, respectively.
+Both Wallet Providers and blockchain libraries MUST listen to incoming messages that might be published after their initialization. Additionally both Wallet Providers and blockchain libraries MUST publish a message to both announce themselves and their intent to connect, respectively.
 
 This discovery would use the following JSON-RPC request params:
 
