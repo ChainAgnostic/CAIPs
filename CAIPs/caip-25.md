@@ -130,10 +130,12 @@ and valid in that scope. Additional constraints on the accounts authorized for a
 A `scopedProperties` object MAY also be present, each member of which corresponds to exactly 1 `sessionScope`.
 This is intended for expressing connection-specific or non-standardized extensions to `sessionScope`.
 Each object in `scopedProperties` MUST be keyed to a `scopeString`, and SHOULD correspond to a `sessionScopes` entry with the same key.
+There are no type, depth, or shape constraints on the contents of each property in `scopedProperties`.
 If an object in `scopedProperties` is keyed to a `scopeString` not currently authorized for the session, it SHOULD be ignored.
 
 A `sessionProperties` object MAY also be present, with no protocol-wide shape constraints or semantics assumed.
 This is intended for expressing metadata about the CAIP-25 connection and accessible to ALL `sessionScopes` equally.
+There are no type, depth, or shape constraints on the contents of `sessionProperties`.
 
 An example of a successful response follows:
 
@@ -171,11 +173,16 @@ An example of a successful response follows:
     "scopedProperties": {
       "eip155:42161": {
         "rpcDocuments": "https://example.com/wallet_extension.json",
-        "extension_foo": "bar"
+        "configObject": {
+          "foo": "bar"
+        }
       }
     },
     "sessionProperties": {
-      "expiry": "2022-11-31T17:07:31+00:00";
+      "expiry": "2022-11-31T17:07:31+00:00",
+      "configObject": {
+          "foo": "bar"
+      }
     }
   }
 }
