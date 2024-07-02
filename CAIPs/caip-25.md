@@ -6,15 +6,14 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Review
 type: Standard
 created: 2020-10-14
-updated: 2022-10-26
+updated: 2024-07-02
 requires: 2, 10, 171, 217
 ---
 
 ## Simple Summary
 
-CAIP-25 defines an authorization procedure for a chain agnostic provider to
-interface with a wallet as part of their initialization and/or "handshake"
-protocol.
+CAIP-25 defines an authorization procedure for a chain agnostic JSON-RPC 
+provider to interface with a wallet as part of their "handshake" protocol.
 
 ## Abstract
 
