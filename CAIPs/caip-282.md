@@ -124,7 +124,7 @@ Here are some illustrative examples for both JSON-RPC request params:
 }
 
 
-// Example for wallet_prompt
+// Example for wallet_announce
 {
   id: 2,
   jsonrpc: "2.0"
