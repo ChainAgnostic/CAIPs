@@ -152,7 +152,7 @@ The use of SVG images introduces a cross-site scripting risk as they can include
 
 ## Privacy Considerations
 
-Any form of wallet discoverability must alwasys take in consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Wallet Providers can abstain from publishing "Announce" messages on every page load and wait for incoming "Prompt" messages. Yet this opens the possibility for race conditions where Wallet Providers could be initialized after the "Prompt" message was published and therefore be undiscoverable. It is recommended that Wallet Providers offer this more "private connect" feature that users only enable optionally, rather than set by default.
+Any form of wallet discoverability must always take into consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Wallet Providers can abstain from publishing "Announce" messages on every page load and wait for incoming "Prompt" messages. Yet this opens the possibility for race conditions where Wallet Providers could be initialized after the "Prompt" message was published and therefore be undiscoverable. It is recommended that Wallet Providers offer this more "private connect" feature that users only enable optionally, rather than set by default.
 
 ## Backwards Compatibility
 
