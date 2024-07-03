@@ -1,7 +1,7 @@
 ---
 caip: 300
 title: Wallet Connect JSON-RPC Method
-author: Lukas Rosario (@lukasrosario), Conner Swenberg (@ilikesymmetry), Pedro Gomes (@pedrouid), Luka Isailovic (@lukaisailovic)
+author: Lukas Rosario (@lukasrosario), Conner Swenberg (@ilikesymmetry), Pedro Gomes (@pedrouid), Luka Isailovic (@lukaisailovic), Jake Moxey (@jxom)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/300
 status: Draft
 type: Standard
