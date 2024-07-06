@@ -63,7 +63,7 @@ The syntax of a `scopeObject` is as follows:
 
 Where:
 
-- {`scopeString`} (conditional) = EITHER a namespace identifier string registered in the CASA [namespaces][] registry to authorize multiple chains with identical properties OR a single, valid [CAIP-2][] identifier, i.e., a specific `chain_id` within a namespace.
+- {`scopeString`} (conditional) = EITHER a namespace identifier string registered in the CASA [namespaces][] registry to authorize multiple chains with identical properties OR a single, valid [CAIP-2][] identifier, i.e., a specific `chain_id` within a namespace OR a [CAIP-X][] `wallet_scope`.
 - `scopes` (conditional) = An array of 0 or more [CAIP-2][] `chainId`s. For each
   entry in `scopes`, all the other properties of the `scopeObject` apply, but in
   some cases, such as when members of `accounts` are specific to 1 or more
