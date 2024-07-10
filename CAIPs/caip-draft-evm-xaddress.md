@@ -12,7 +12,8 @@ updated: 2024-07-10
 ---
 
 ## Simple Summary
-A standard for an extended address format for EVM chain that includes chainId with consideration of future extensions.
+A standard for an extended address format for EVM chain that includes chainId with consideration of future extensions, using 4bytes prior the 20bytes of normal address.
+
 
 ## Abstract
 Currently EVM address are single chain, and is 20bytes. We envision native support to make contract call between EVM chains with different chainIds.
