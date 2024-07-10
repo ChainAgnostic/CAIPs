@@ -16,8 +16,10 @@ A standard for an extended address format for EVM chain that includes chainId wi
 
 ## Abstract
 Currently EVM address are single chain, and is 20bytes. We envision native support to make contract call between EVM chains with different chainIds.
-This proposal presents one possible solutions: 1) limiting chainId number space hence the length of its possible value; 
-2) pack it into the 32bytes/u256 native word length for maximum compatibility; and #) reserve additional bytes for future extension
+This proposal presents one possible solutions: 
+1. limiting chainId number space hence the length of its possible value; 
+2. pack it into the 32bytes/u256 native word length for maximum compatibility; and
+3. reserve additional bytes for future extension
 
 ## Motivation
 We envision one day EVM contract can make contract calls to other EVM chains (which have different chainIds).
