@@ -1,6 +1,6 @@
 ---
 caip: 285
-title: JSON-RPC Provider Lifecycle Methods for Session Management
+title: JSON-RPC Provider Lifecycle Methods for Session Management with CAIP-25 Sessions
 author: [Alex Donesky] (@adonesky1)
 discussions-to: TBD
 status: Draft
@@ -196,7 +196,8 @@ Revokes authorizations from an existing session.
 
 **Explanation:**
 
-- The `wallet_revokeSession` method removes the specified methods, notifications, and accounts from the current session's authorizations. If the scope no longer has any methods, notifications, or accounts after revocation, it is removed from the session. If no scopes remain in the session, the session is considered closed. If no accounts remain in a scope, and only write methods the entire scope is removed.
+-- The `wallet_revokeSession` method removes the specified methods, notifications, and accounts from the current session's permissions. If a given `scopeObject` no longer has any methods, notifications, or accounts after executing this revocation, it is removed from the `sessionScopes` array. If no `scopeObject`s remain in the session after applying the above logic, the entire session is considered closed. If no accounts remain in a `scopeObject`, and no methods or only methods that would require an account to be called such as write methods, then the entire scope MUST be removed from the `sessionScopes` array of both wallet and application.
+
 
 #### `wallet_getSession`
 
@@ -265,7 +266,7 @@ Retrieves the current authorizations of an existing session.
 
 #### `wallet_sessionChanged`
 
-This event is published by the wallet to notify the caller/dapp of updates to the session authorization scopes. The event payload indicates how the scopes have changed, showing additions and removals in the authorizations. If a connection between the wallet and the caller/dapp is severed and the possiblity of missed events arises, the caller/dapp should immediately call `wallet_getSession` to retrieve the current session scopes.
+This event is published by the wallet to notify the caller/dapp of updates to the session authorization scopes. The event payload contains the new `sessionScopes objects`. If a connection between the wallet and the caller/dapp is severed and the possiblity of missed events arises, the caller/dapp should immediately call `wallet_getSession` to retrieve the current session scopes.
 
 **Event Payload:**
 
@@ -284,8 +285,8 @@ This event is published by the wallet to notify the caller/dapp of updates to th
     },
     "eip155:137": {
       "methods": ["eth_sendTransaction"],
-      "notifications": ["chainChanged"],
-      "accounts": ["eip155:137:0xdef456"]
+      "notifications": [],
+      "accounts": ["eip155:1:0xabc123", "eip155:137:0xdef456"]
     }
   }
 }
@@ -313,7 +314,7 @@ This event is published by the wallet to notify the caller/dapp of updates to th
 }
 ```
 
-This event indicates how the scopes have changed by comparing the updated scopes with the initial session scopes. In the example, the method `eth_sendTransaction` was added to `eip155:1`, and the notification `chainChanged` was removed from `eip155:137`.
+This event indicates how the scopes have changed by comparing the updated scopes with the initial session scopes. In the example, the method `eth_sendTransaction` was added to `eip155:1`, and the account `eip155:1:0xabc123` was removed from `eip155:137`.
 
 ### Optional SessionIds
 
@@ -325,7 +326,7 @@ The introduction of these lifecycle methods must ensure that only authorized par
 
 ## Privacy Considerations
 
-Managing authorizations within an existing session reduces the need to create multiple session identifiers, which can help minimize the exposure of session-related metadata. However, care must be taken to handle these methods in a way that does not inadvertently leak sensitive information.
+Managing authorizations within an existing session reduces the need to create multiple session identifiers, which can help minimize the exposure of session-related metadata.
 
 ## Changelog
 
