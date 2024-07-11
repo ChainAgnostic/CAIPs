@@ -23,28 +23,23 @@ The motivation behind this proposal is to enhance the flexibility of CAIP-25 by 
 
 ### Use Case Scenarios
 
-1. **Dapp Initiated Adding Authorizations To an Existing Session:**
-
-   - **Current Method:** Call `provider_authorize` again with an existing session identifier and new scopes/methods to add. This is actually somewhat ambiguous in CAIP-25 where it’s unclear if incremental authorizations adds should include the full object or just scopes to add: "This object gets updated, extended, closed, etc. by successive calls and notifications, each tagged by this identifier."
-   - **Proposed Method:** Use `wallet_updateSession` to add new authorizations to the existing session. Alternatively, this could be achieved with more specific language indicating that a subsequent `provider_authorize` call with new scopes/authorizations could simply add to an existing session. If we pursue this latter approach one flow that will need clarity is what happens if a subsequent `provider_authorize` request includes `requiredScopes` which the respondent does not authorize. In this case I would expect that this does not revoke the existing session but rather only the new request is rejected.
-
-2. **Wallet Initiated Adding Authorizations To an Existing Session:**
+1. **Wallet Initiated Adding Authorizations To an Existing Session:**
 
    - **Current Method:** CAIP-25 does not make it very clear how a respondent (wallet), can modify the authorizations of an existing session. The following excerpt is the closest we get: "The properties and authorization scopes that make up the session are expected to be persisted and tracked over time by both parties in a discrete data store, identified by an entropic identifier assigned in the initial response. This object gets updated, extended, closed, etc. by successive calls and notifications, each tagged by this identifier."
    - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `wallet_sessionChanged` with the new full sessionScope.
 
-3. **Wallet Initiated Authorizations Revocation:**
+2. **Wallet Initiated Authorizations Revocation:**
 
    - **Current Method:** "If a respondent (e.g. a wallet) needs to initiate a new session, whether due to user input, security policy, or session expiry reasons, it can simply generate a new session identifier to signal this notification to the calling provider."
    - Given this language it is unclear if a wallet can revoke authorizations without creating a new session. It is also therefore unclear if a wallet can revoke some subset of authorizations without creating a new session.
    - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `wallet_sessionChanged` with the new full sessionScope.
 
-4. **Dapp Initiated Authorizations Revocation:**
+3. **Dapp Initiated Authorizations Revocation:**
 
    - **Current Method:** "if a caller [dapp] needs to initiate a new session, it can do so by sending a new request without a sessionIdentifier."
    - **Proposed Method:** Use `wallet_revokeSession` to revoke specific authorizations or the entire existing session. A revokation of methods/notifications/accounts is achieved by sending the sessionScope with the methods/notifications/accounts to revoke. A revokation of a full scope is achieved by sending an empty object for that scope. A full revokation of the session is achieved by sending an empty object for the scopes param.
 
-5. **Retrieving Current Session Authorizations:**
+4. **Retrieving Current Session Authorizations:**
 
    - **Current Method:** Wallet and app both persist configuration across updates.
    - **Proposed Method:** Use `wallet_getSession` to retrieve the current authorizations of the session.
@@ -52,78 +47,6 @@ The motivation behind this proposal is to enhance the flexibility of CAIP-25 by 
 ## Specification
 
 ### New Methods
-
-#### `wallet_updateSession`
-
-Adds new authorizations to an existing session.
-
-**Parameters:**
-
-- `sessionId` (string, optional): The session identifier.
-- `scopes` (object, required): An object containing the new scopes to be added, formatted according to CAIP-217.
-
-**Initial Session Scopes:**
-
-```json
-{
-  "eip155:1": {
-    "methods": ["eth_signTransaction"],
-    "notifications": ["accountsChanged"],
-    "accounts": ["eip155:1:0xabc123"]
-  },
-  "eip155:137": {
-    "methods": ["eth_sendTransaction"],
-    "notifications": ["chainChanged"],
-    "accounts": ["eip155:137:0xdef456"]
-  }
-}
-```
-
-**Example Request:**
-
-```json
-{
-  "id": 1,
-  "jsonrpc": "2.0",
-  "method": "wallet_updateSession",
-  "params": {
-    "scopes": {
-      "eip155:1": {
-        "methods": ["eth_sendTransaction"],
-        "notifications": ["chainChanged"]
-      }
-    }
-  }
-}
-```
-
-**Example Response:**
-
-```json
-{
-  "id": 1,
-  "jsonrpc": "2.0",
-  "result": {
-    "success": true,
-    "updatedScopes": {
-      "eip155:1": {
-        "methods": ["eth_signTransaction", "eth_sendTransaction"],
-        "notifications": ["accountsChanged", "chainChanged"],
-        "accounts": ["eip155:1:0xabc123"]
-      },
-      "eip155:137": {
-        "methods": ["eth_sendTransaction"],
-        "notifications": ["chainChanged"],
-        "accounts": ["eip155:137:0xdef456"]
-      }
-    }
-  }
-}
-```
-
-**Explanation:**
-
-- The `wallet_updateSession` method adds the specified scopes to the current session's authorizations. If the scope already exists, the new methods and notifications are merged with the existing ones.
 
 #### `wallet_revokeSession`
 
