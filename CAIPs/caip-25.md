@@ -32,21 +32,26 @@ application through a wallet connecting to a signer or other user agent.
 ## Specification
 
 The session is proposed by a caller and the response by the respondent is used
-as the baseline for an ongoing session that both parties will persist. The
-properties and authorization scopes that make up the session are expected to be
-persisted and tracked over time by both parties in a discrete data store,
-identified by an entropic [identifier][CAIP-171] assigned in the initial
-response. This object gets updated, extended, closed, etc. by successive calls
-and notifications, each tagged by this identifier. 
+as the baseline for an ongoing session that both parties will persist. 
+- When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session are expected to be persisted and tracked over time by both parties in a discrete data store. 
+- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session (and associate the session with a secure/unspoofable identifier associated with the communication channel between wallet and caller?). In this case, the wallet MUST implement a method `wallet_getSession` to enable the caller to query for the current status of the session at any time.
 
-If a respondent (e.g. a wallet) needs to initiate a new session, whether due to
+After a session is established between wallet and caller, subsequent `wallet_createSession` calls are used to update the properties and authorization scopes of the session. 
+- When a `sessionId` is returned in the initial response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` (on the route of the request) in which case that session is modified, or a new `sessionId` in which case a new session is created and the previous session dangles in parallel (until its expiration if applicable) though maintaining concurrent sessions is discouraged (see Security Considerations).
+- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous session.
+
+<!-- If a respondent (e.g. a wallet) needs to initiate a new session, whether due to
 user input, security policy, or session expiry reasons, it can simply generate a
 new session identifier to signal this notification to the calling wallet; if a
 caller needs to initiate a new session, it can do so by sending a new request
 without a `sessionIdentifier`. In such cases, a respondent (e.g. wallet) may
 choose to explicitly close all sessions upon generation of a new one from the
 same origin or identity, or leave it to time-out; maintaining concurrent
-sessions is discouraged (see Security Considerations).
+sessions is discouraged (see Security Considerations). -->
+
+When a caller wishes revoke an unexpired session, it can do so by calling `wallet_revokeSession`. 
+- When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session, and may do so with any number of unexpired sessions.
+- When the wallet does not provide a `sessionId` in its initial response, a call to `wallet_revokeSession` revokes the single active session between caller and wallet.
 
 Initial and ongoing authorization requests are grouped into two top-level arrays
 of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
@@ -68,7 +73,7 @@ response, depending on implementation) should be sent to prevent incentivizing
 unwanted requests and to minimize the surface for fingerprinting of public web
 traffic (See Privacy Considerations below).
 
-Conversely, a succesful response will contain all the required properties *and
+Conversely, a successful response will contain all the required properties *and
 the wallet's choice of the optional properties* expressed in a single unified
 `scopeObject`. In the case of identically-keyed `scopeObject`s appearing in both
 arrays in the request where properties from both are returned as authorized, the
@@ -135,7 +140,9 @@ In addition to making properties of the negotiated session itself explicit, they
 Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety; 
 similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
 
-Requesting applications are expected to persist all of these returned properties in the session object identified by the `sessionId`. 
+Requesting applications are expected to persist all of these returned properties in the session object identified by the `sessionId`, if present in the success response. 
+
+In the case that the wallet does not send a `sessionId` in its success response
 
 ### Response
 
@@ -143,10 +150,12 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The successful result contains one mandatory string (keyed as `sessionId` with a value 
-conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty. 
+The successful result MAY contain a string (keyed as `sessionId` with a value 
+conformant to [CAIP-171][]) and a `sessionProperties` object, the contents of which MAY
+correspond to the properties requested in the response or not (at the discretion
+of the wallet).
 
-The first is called `sessionScopes` and contains 1 or more `scopeObjects`.
+The successful result MUST contain an object called `sessionScopes`, and MUST itself contain 1 or more `scopeObjects`.
 * All required `scopeObjects` and all, none, or some of the optional
 `scopeObject`s (at the discretion of the wallet) MUST be included if
 successful.  
@@ -155,10 +164,6 @@ containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
 and valid in that scope. Additional constraints on the accounts authorized for a
 given session MUST be applied conformant to the namespace's [CAIP-10][] profile,
 if one has been specified.
-
-A `sessionProperties` object MAY also be present, and its contents MAY
-correspond to the properties requested in the response or not (at the discretion
-of the wallet).
 
 An example of a successful response follows:
 
