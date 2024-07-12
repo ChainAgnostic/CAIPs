@@ -31,22 +31,6 @@ Retrieves the current authorizations of an existing session.
 
 - `sessionId` (string, optional): The session identifier.
 
-**Initial Session Scopes:**
-
-```json
-{
-  "eip155:1": {
-    "methods": ["eth_signTransaction"],
-    "notifications": ["accountsChanged"],
-    "accounts": ["eip155:1:0xabc123"]
-  },
-  "eip155:137": {
-    "methods": ["eth_sendTransaction"],
-    "notifications": ["chainChanged"],
-    "accounts": ["eip155:137:0xdef456"]
-  }
-}
-```
 
 **Example Request:**
 

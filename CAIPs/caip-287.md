@@ -94,10 +94,6 @@ This event indicates how the scopes have changed by comparing the updated scopes
 
 The introduction of this event must ensure that only authorized parties can publish updates to the session authorization scopes. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
 
-## Privacy Considerations
-
-Managing authorizations within an existing session reduces the need to create multiple session identifiers, which can help minimize the exposure of session-related metadata.
-
 ## Links
 
 - [CAIP-25](https://chainagnostic.org/CAIPs/caip-25)
