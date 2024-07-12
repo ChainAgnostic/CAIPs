@@ -37,19 +37,10 @@ as the baseline for an ongoing session that both parties will persist.
 - When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session (and associate the session with a secure/unspoofable identifier associated with the communication channel between wallet and caller?). In this case, the wallet MUST implement a method [`wallet_getSession`][CAIP-286] to enable the caller to query for the current status of the session at any time.
 
 After a session is established between wallet and caller, subsequent `wallet_createSession` calls are used to update the properties and authorization scopes of the session. 
-- When a `sessionId` is returned in the initial response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` (on the route of the request) in which case that session is modified, or a new `sessionId` in which case a new session is created and the previous session dangles in parallel (until its expiration if applicable) though maintaining concurrent sessions is discouraged (see Security Considerations).
+- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` (on the route of the request) in which case that session is modified, or the caller must generate a new `sessionId` and pass it with the request, in which case a new session is created and the previous session dangles in parallel (until its expiration if applicable) though maintaining concurrent sessions is discouraged (see Security Considerations).
 - When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous session.
 
-<!-- If a respondent (e.g. a wallet) needs to initiate a new session, whether due to
-user input, security policy, or session expiry reasons, it can simply generate a
-new session identifier to signal this notification to the calling wallet; if a
-caller needs to initiate a new session, it can do so by sending a new request
-without a `sessionIdentifier`. In such cases, a respondent (e.g. wallet) may
-choose to explicitly close all sessions upon generation of a new one from the
-same origin or identity, or leave it to time-out; maintaining concurrent
-sessions is discouraged (see Security Considerations). -->
-
-When a caller wishes revoke an unexpired session, it can do so by calling [`wallet_revokeSession`][CAIP-285]. 
+When a caller wishes revoke an active session, it can do so by calling [`wallet_revokeSession`][CAIP-285]. 
 - When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session, and may do so with any number of unexpired sessions.
 - When the wallet does not provide a `sessionId` in its initial response, a call to `wallet_revokeSession` revokes the single active session between caller and wallet.
 
@@ -360,6 +351,8 @@ was in violation of policy).
 - [CAIP-104][] - Definition of Chain Agnostic Namespaces or CANs
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
+- [CAIP-285][] - `wallet_revokeSession` Specification
+- [CAIP-286][] - `wallet_getSession` Specification
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10

@@ -97,7 +97,7 @@ three **required parameters**:
 
 ### Response
 
-Upon succesful validation, the respondent will submit or route the request to
+Upon successful validation, the respondent will submit or route the request to
 the targeted chain. If the targeted chain returns a response to the
 respondent, the respondent MAY forward this response to the caller. Constraints
 on, metadata about, or envelopes for response-forwarding MAY be set by

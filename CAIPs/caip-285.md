@@ -11,46 +11,38 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-285 introduces the `wallet_revokeSession` method for revoking an entire existing CAIP-25 session. This method provides an alternative to session management via `sessionId`s, allowing `sessionId`s to be optional for CAIP-25.
+CAIP-285 introduces the `wallet_revokeSession` method for revoking an active [CAIP-25][] session.
 
 ## Abstract
 
-This proposal aims to extend the CAIP-25 standard by defining a new JSON-RPC method for revoking authorizations within a session. This method allows dapps and wallets to dynamically revoke authorizations, providing more granular control and better user experience.
+This proposal aims to enhance session management for  [CAIP-25][] sessions by defining a new JSON-RPC method for revoking sessions. This method provides an explicit protocol for revoking sessions with or without `sessionId`s.
 
 ## Motivation
 
-The motivation behind this proposal is to enhance the flexibility of CAIP-25 by enabling the revocation of session authorizations without sessionIds, which don't map well to extension-based wallet's dapp connections and could add constraints and burdens to existing flows. The proposed method provides an intuitive way to revoke authorizations within an existing session, simplifying the management of session lifecycles.
+The motivation behind this proposal is to enhance the flexibility of [CAIP-25][] by enabling the revocation of session authorizations without `sessionId`s, which don't map well to extension-based wallet's dapp connections and could add constraints and burdens to existing flows. The proposed method provides an intuitive way to revoke authorizations within an existing session, simplifying the management of session lifecycles.
 
 ## Specification
 
-### `wallet_revokeSession`
+### Language
 
-Revokes authorizations for an active session.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in
+uppercase in this document are to be interpreted as described in [RFC
+2119][]
+
+
+### Definition
+
+The `wallet_revokeSession` method revokes the entire active session. If a `sessionId` is provided, it revokes that specific session; otherwise, it revokes the single active session between the wallet and the caller
 
 **Parameters:**
 
 - `sessionId` (string, optional): The session identifier.
 
-**Initial Session Scopes:**
+### Request
+The caller would interface with a wallet via the same provider by which it generated the session to revoke a session by calling the following JSON-RPC request:
 
-```json
-{
-  "eip155:1": {
-    "methods": ["eth_signTransaction", "eth_sendTransaction"],
-    "notifications": ["accountsChanged", "chainChanged"],
-    "accounts": ["eip155:1:0xabc123", "eip155:1:0xdef456"]
-  },
-  "eip155:137": {
-    "methods": ["eth_sendTransaction"],
-    "notifications": ["chainChanged"],
-    "accounts": ["eip155:137:0xdef456"]
-  }
-}
-```
-
-**Example Request:**
-
-```json
+```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
@@ -58,10 +50,17 @@ Revokes authorizations for an active session.
   "params": {}
 }
 ```
+### Validation
+TODO
 
-**Example Response:**
+### Response
 
-```json
+The wallet can respond to this method with either a success result or an error message.
+
+### Success
+
+An example of a successful response follows:
+```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
@@ -71,9 +70,9 @@ Revokes authorizations for an active session.
 }
 ```
 
-**Explanation:**
+The `wallet_revokeSession` method revokes the entire active session. If a `sessionId` is provided, it revokes that specific session; otherwise, it revokes the single active session between the wallet and the caller.
 
-- The `wallet_revokeSession` method revokes the entire active session. If a `sessionId` is provided, it revokes that specific session; otherwise, it revokes the single active session between the wallet and the caller.
+### Failure
 
 ## Security Considerations
 
@@ -85,5 +84,13 @@ Revoking authorizations within an existing session reduces the need to create mu
 
 ## Links
 
-- [CAIP-25](https://chainagnostic.org/CAIPs/caip-25)
-- [CAIP-217](https://chainagnostic.org/CAIPs/caip-217)
+- [CAIP-25] - JSON-RPC Handshake Protocol Specification. i.e `wallet_createSession`
+- [CAIP-217]- Authorization Scopes, i.e. syntax for `scopeObject`s
+
+- CAIP-25: https://chainagnostic.org/CAIPs/caip-25
+- CAIP-217: https://chainagnostic.org/CAIPs/caip-217
+
+## Copyright
+
+Copyright and related rights waived via
+[CC0](https://creativecommons.org/publicdomain/zero/1.0/).

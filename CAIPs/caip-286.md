@@ -11,7 +11,7 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-286 introduces the `wallet_getSession` method for retrieving authorizations within an existing CAIP-25 session. This method provides an alternative to session management via `sessionId`s, allowing `sessionId`s to be optional for CAIP-25.
+CAIP-286 introduces the `wallet_getSession` method for retrieving authorizations from an existing CAIP-25 session. This method provides an alternative to session management via `sessionId`s, allowing `sessionId`s to be optional for CAIP-25.
 
 ## Abstract
 
