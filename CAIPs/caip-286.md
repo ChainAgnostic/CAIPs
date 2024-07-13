@@ -5,17 +5,17 @@ author: [Alex Donesky] (@adonesky1)
 discussions-to: TBD
 status: Draft
 type: Standard
-created: 2024-06-07
+created: 2024-07-13
 requires: 25, 217
 ---
 
 ## Simple Summary
 
-CAIP-286 introduces the `wallet_getSession` method for retrieving authorizations from an existing CAIP-25 session. This method provides an alternative to session management via `sessionId`s, allowing `sessionId`s to be optional for CAIP-25.
+CAIP-286 introduces the `wallet_getSession` method for retrieving authorizations from an active [CAIP-25][] initiated session.
 
 ## Abstract
 
-This proposal aims to extend the CAIP-25 standard by defining a new JSON-RPC method for retrieving authorizations within a session. This method allows dapps and wallets to dynamically retrieve authorizations, providing more granular control and better user experience.
+This proposal aims to extend the [CAIP-25][] standard by defining a new JSON-RPC method for retrieving authorizations within a session. This method allows callers to dynamically retrieve authorizations and properties without necessarily having to persist and track it throughout the session's life.
 
 ## Motivation
 
@@ -61,6 +61,7 @@ Retrieves the current authorizations of an existing session.
         "notifications": ["chainChanged"],
         "accounts": ["eip155:137:0xdef456"]
       }
+      
     }
   }
 }

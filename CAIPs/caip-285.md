@@ -15,11 +15,11 @@ CAIP-285 introduces the `wallet_revokeSession` method for revoking an active [CA
 
 ## Abstract
 
-This proposal aims to enhance session management for  [CAIP-25][] sessions by defining a new JSON-RPC method for revoking sessions. This method provides an explicit protocol for revoking sessions with or without `sessionId`s.
+This proposal aims to enhance session management for [CAIP-25][] initiated sessions by defining a new JSON-RPC method for revoking sessions. This method provides an explicit protocol for revoking sessions with or without `sessionId`s.
 
 ## Motivation
 
-The motivation behind this proposal is to enhance the flexibility of [CAIP-25][] by enabling the revocation of session authorizations without `sessionId`s, which don't map well to extension-based wallet's dapp connections and could add constraints and burdens to existing flows. The proposed method provides an intuitive way to revoke authorizations within an existing session, simplifying the management of session lifecycles.
+The motivation behind this proposal is to enhance the flexibility of [CAIP-25][] initated sessions by enabling the revocation of session authorizations without `sessionId`s, which don't map well to extension-based wallet's dapp connections and could add unnecessary constraints and burdens to existing flows. The proposed method provides an intuitive way to revoke authorizations of an active session, simplifying the management of session lifecycles.
 
 ## Specification
 
@@ -71,63 +71,51 @@ An example of a successful response follows:
 }
 ```
 
-### Failure
+### Failure States
 
 The response MUST NOT be a JSON-RPC success result in any of the following failure states.
 
-#### Error Codes
+#### Generic Failure Code
 
-1. **SessionId Not Recognized**
+Unless the dapp is known to the wallet and trusted, the generic/undefined error response,
 
-   ```jsonc
-   {
-     "id": 1,
-     "jsonrpc": "2.0",
-     "error": {
-       "code": 5500,
-       "message": "SessionId not recognized"
-     }
-   }
-   ```
+```jsonc
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "Unknown error"
+  }
+}
+```
 
-2. **SessionId Provided but No Active Sessions**
+is RECOMMENDED for any of the following cases:
 
-   ```jsonc
-   {
-     "id": 1,
-     "jsonrpc": "2.0",
-     "error": {
-       "code": 5501,
-       "message": "No active sessions for the provided SessionId"
-     }
-   }
-   ```
+- a sessionId is passed but not recognized,
+- no sessionId is passed and only active session(s) have sessionIds,
+- there are no active sessions,
 
-3. **No SessionId Provided and Only Active Sessions Have SessionIds**
+#### Trusted Failure Codes
 
-   ```jsonc
-   {
-     "id": 1,
-     "jsonrpc": "2.0",
-     "error": {
-       "code": 0,
-       "message": "Unknown error"
-     }
-   }
-   ```
+More informative error messages MAY be sent in trusted-counterparty circumstances, although extending this trust too widely may contribute to widespread fingerprinting and analytics which corrode herd privacy (see Privacy Considerations below). The core error messages over trusted connections are as follows:
 
-4. **No SessionId Provided and No Active Sessions**
+The valid error message codes are the following:
 
-   ```jsonc
-   {
-     "id": 1,
-     "jsonrpc": "2.0",
-     "error": {
-       "code": 5503,
-       "message": "No active sessions"
-     }
-   }
-   ```
+- When a sessionId is passed but not recognized:
+
+  - code = 5500
+  - message = "SessionId not recognized"
+
+- When there are no active sessions:
+
+  - code = 5501
+  - message = "No active sessions"
+
+- When no sessionId is passed and only active session(s) have sessionIds:
+
+  - code = 5502
+  - message = "All active sessions have sessionIds"
 
 ## Security Considerations
 
