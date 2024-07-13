@@ -19,22 +19,28 @@ This proposal aims to extend the [CAIP-25][] standard by defining a new JSON-RPC
 
 ## Motivation
 
-The motivation behind this proposal is to enhance the flexibility of CAIP-25 by enabling the retrieval of session authorizations without sessionIds, which don't map well to extension-based wallet's dapp connections and could add constraints and burdens to existing flows. The proposed method provides an intuitive way to retrieve authorizations within an existing session, simplifying the management of session lifecycles.
+The motivation behind this proposal is to enhance the flexibility of [CAIP-25][] by enabling the retrieval of session authorizations without `sessionId`s, which don't map well to extension-based wallet's dapp connections and could add constraints and burdens to existing flows. The proposed method provides an intuitive way to retrieve authorizations for an active session, allowing callers to access session data without persisting and tracking it.
 
 ## Specification
 
-### `wallet_getSession`
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in
+uppercase in this document are to be interpreted as described in [RFC
+2119][]
 
-Retrieves the current authorizations of an existing session.
+### Definition
+
+The `wallet_getSession` method returns an active session. If a `sessionId` is provided, it returns the authorizations for that specific session; otherwise, it returns the authorizations for the single active session between the wallet and the caller.`
 
 **Parameters:**
 
 - `sessionId` (string, optional): The session identifier.
 
+### Request
 
-**Example Request:**
+The caller would interface with a wallet via the same provider by which it called `wallet_createSession` to retrieve a session by calling the following JSON-RPC request:
 
-```json
+```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
@@ -43,9 +49,11 @@ Retrieves the current authorizations of an existing session.
 }
 ```
 
-**Example Response:**
+### Response
 
-```json
+An example of a successful response follows:
+
+```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
@@ -60,16 +68,15 @@ Retrieves the current authorizations of an existing session.
         "methods": ["eth_sendTransaction"],
         "notifications": ["chainChanged"],
         "accounts": ["eip155:137:0xdef456"]
+      },
+      "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ": {
+        "methods": ["getBalance", "getAccountInfo", "sendTransaction", "getBlock"],
+        "notifications": [],
+        "accounts": ["solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ:4Nd1mS8AUwK3kU3gdiAM6QCvqhA7Do8rKtMXsGyqrJxy"]
       }
-      
-    }
   }
 }
 ```
-
-**Explanation:**
-
-- The `wallet_getSession` method returns the current authorizations for the session. It lists all scopes along with their methods, notifications, and accounts.
 
 ## Security Considerations
 

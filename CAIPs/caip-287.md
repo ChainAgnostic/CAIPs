@@ -11,11 +11,11 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-288 introduces the `wallet_sessionChanged` event for notifying the caller/dapp of updates to the session authorization scopes within an existing CAIP-25 session.
+CAIP-288 introduces the `wallet_sessionChanged` event for notifying callers party to an active [CAIP-25][] session of updates to session authorizations.
 
 ## Abstract
 
-This proposal aims to extend the CAIP-25 standard by defining a new JSON-RPC event for notifying the caller/dapp of updates to the session authorization scopes. This event allows wallets to dynamically inform dapps of changes to authorizations, providing more granular control and better user experience.
+This proposal aims to extend the [CAIP-25][] standard by defining a new JSON-RPC event for notifying the caller/dapp of updates to session authorizations. This event allows wallets to dynamically inform dapps of changes to authorizations, providing more granular control and better user experience.
 
 ## Motivation
 
