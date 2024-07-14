@@ -23,13 +23,6 @@ The motivation behind this proposal is to enhance the flexibility of [CAIP-25][]
 
 ## Specification
 
-### Language
-
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in
-uppercase in this document are to be interpreted as described in [RFC
-2119][]
-
 ### Definition
 
 The `wallet_revokeSession` method revokes the entire active session. If a `sessionId` is provided, it revokes that specific session; otherwise, it revokes the single active session between the wallet and the caller
@@ -77,7 +70,7 @@ The response MUST NOT be a JSON-RPC success result in any of the following failu
 
 #### Generic Failure Code
 
-Unless the dapp is known to the wallet and trusted, the generic/undefined error response,
+Unless the dapp is known to the wallet and trusted, the generic/undefined error response:
 
 ```jsonc
 {

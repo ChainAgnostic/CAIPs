@@ -19,14 +19,9 @@ This proposal aims to extend the [CAIP-25][] standard by defining a new JSON-RPC
 
 ## Motivation
 
-The motivation behind this proposal is to enhance the flexibility of [CAIP-25][] by enabling the retrieval of session authorizations without `sessionId`s, which don't map well to extension-based wallet's dapp connections and could add constraints and burdens to existing flows. The proposed method provides an intuitive way to retrieve authorizations for an active session, allowing callers to access session data without persisting and tracking it.
+The motivation behind this proposal is to enhance the flexibility of [CAIP-25][] by enabling the retrieval of session authorizations at any time. The proposed method provides an intuitive way to retrieve authorizations for an active session, allowing callers to access session data without having to persist and track it over the full life of the method.
 
 ## Specification
-
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in
-uppercase in this document are to be interpreted as described in [RFC
-2119][]
 
 ### Definition
 
