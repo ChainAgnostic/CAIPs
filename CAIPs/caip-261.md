@@ -61,8 +61,8 @@ This hash, along with metadata about the hash function, is then encoded in the [
 
 #### Data Model
 
-All subsequent data structures are represented in two versions: one in a raw format and another conforming with the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/).
-Verifiable credentials can be used off-chain for better portability, whereas the raw format can be used in a chosen decentralized data store (e.g., Verax, EAS, Ceramic Network) as a new schema to issue assertions. 
+Subsequent data structures are represented in one or two versions: one conforming with the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) and another in a raw format.
+Verifiable credentials can be used off-chain or on-chain for better portability, whereas the raw format can be imported into decentralized data stores or attestation services (e.g., Verax, EAS, Ceramic Network) as a new schema to issue assertions, without the need for additional layers of verifiability and interoperability.
 However, this standard does not prescribe any specific document type, though it may recommend internationally recognized standards or trusted attestation services.
 
 ![diagram2](https://github.com/dayksx/CAIPs/assets/77788154/479df06f-3dd5-4c88-b396-4cfae01ff8d6)
@@ -77,8 +77,6 @@ This standard proposes the following conceptualization for the trust concept:
 - `reason` (optional): This defines the motivation of the trust. It MAY be based on some tagging system or other dictionary shared across producers and consumers to guarantee interoperability;
 
 **Assertion of trust to a peer:**
-
-*Verifiable Credential Format*
 ```json
 "@context": ["https://www.w3.org/2018/credentials/v1"],
 "type": ["VerifiableCredential", "PeerTrustCredential"],
@@ -201,6 +199,12 @@ A validity limitation can be introduced with the fields `validFrom` and `validUn
 "validFrom": "2024-01-01T19:23:24Z",
 "validUntil": "2025-01-01T19:23:24Z",
 ```
+*Raw  Format*
+```json
+"validFrom": "2024-01-01T19:23:24Z",
+"validUntil": "2025-01-01T19:23:24Z",
+```
+This would be added at the top level of the schema.
 
 ### Trust Management
 
