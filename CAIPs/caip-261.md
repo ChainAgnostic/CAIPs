@@ -12,23 +12,23 @@ updated: 2024-03-20
 
 ## Simple Summary
 
-This specification introduces a data framework to represent trust assertions among peers, facilitating the development of a global web of trust.
+This specification introduces a data framework to explicitly represent trust assertions among peers, facilitating the development of a scalable global web of trust.
 
 ## Abstract
 
-A web of trust establishes peer-to-peer trust graphs through trust and/or distrust assertions among peers, offering the possibility to calculate valuable insights such as reputation scores by using graph theory.
+Web of trust form peer-to-peer trust graphs through issuance of trust and/or distrust assertions among peers, offering the possibility to calculate valuable insights such as reputation scores by using graph theory.
 
 This proposal outlines a comprehensive data framework designed to facilitate the representation, management, verification and consumption of explicit trust assertions for peers within a decentralized environment.
 
-The proposed data framework is designed to be flexible, extensible, and scalable, ensuring compatibility across any ecosystem and facilitating a wide range of reputation-based use-cases.
+The proposed data framework is designed to be flexible, extensible, and scalable, ensuring compatibility across any ecosystem and facilitating a wide range of trust-based use-cases.
 
-By establishing a common language for peer trust assertions, this specification enables diverse ecosystems to interoperate with a shared understanding of trust, benefiting from each other and creating synergies that strengthen insights calculated from a web of trust.
+By establishing a common language for peer trust assertions, this specification enables diverse ecosystems to interoperate with a shared understanding of trust, benefiting from each other and creating synergies that strengthen insights generated from webs of trust.
 
 ## Specification
 
 This specification outlines methods for representing peer trust assertions, managing their lifecycle, and verifying their authenticity.
-It provides as well a method for representing insights calculated from a web of trust.
-The application of graph theory to utilize these assertions is beyond the scope of this proposal, but some examples are provided.
+It provides as well guidelines for representing insights calculated from a web of trust.
+The application of graph theory to utilize these webs of trust is beyond the scope of this proposal, but some examples are provided.
 
 ### Trust Representation
 
@@ -42,12 +42,12 @@ In the following diagram, we depict the process where an issuer of a long-lived 
 
 Trust assertions are made about, and by, peers identifiable through stable identifiers linked to public keys used to verify signatures made by their subjects, assumed to be effectively bound to their owners.
 
-Identification of peers SHOULD make use of a [Decentralized Identifiers][DID] ("DIDs") to facilitate interoperability, preferably from DID methods that link directly or simply to the relevant cryptographic keys.
+Identification of peers SHOULD make use of [Decentralized Identifiers (DIDs)][DID] with key pair-based methods, or any native on-chain public account representation to facilitate interoperability.
 
 - **did:pkh (Public Key Hash):** This method is designed to be chain-agnostic, enabling the creation of DIDs based on public key hashes from a variety of blockchains. Its universality promotes interoperability and simplifies identity management across diverse ecosystems. This approach is particularly useful for applications that aim to operate across multiple cryptographically-secured networks (like blockchains) without being tied to any specific one.
 - **did:key:** This method allows for the generation of DIDs directly from cryptographic public keys, supporting various key types such as ECDSA, EdDSA, Schnorr Signatures, and RSA. It is straightforward and self-contained, with no need for interaction with blockchain networks. This makes it fast and cost-effective for scenarios that do not require decentralized verification.
 - **did:web:** Though not directly tied to key pairs in the same way as others, did:web utilizes domain names to create DIDs, enabling organizations to leverage their existing domain infrastructure for verifiability purposes. This method bridges traditional web infrastructure with the decentralized identity ecosystem, enhancing trust and verifiability through well-known web standards.
-- **Blockchain-specific DIDs:** These methods are tightly integrated with specific blockchain platforms, such as Bitcoin (did:btcr), Ethereum (did:ethr), and Solana (did:sol).
+- **On-chain public account representation:** This method uses the native representation of public accounts that correspond to public key derivation, such as the public address in Ethereum (e.g., 0x...), the public address in Bitcoin, etc.
 
 ##### Assertions Identification
 
