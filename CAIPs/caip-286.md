@@ -53,7 +53,7 @@ An example of a successful response follows:
   "id": 1,
   "jsonrpc": "2.0",
   "result": {
-    "scopes": {
+    "sessionScopes": {
       "eip155:1": {
         "methods": ["eth_signTransaction"],
         "notifications": ["accountsChanged"],

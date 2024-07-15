@@ -58,9 +58,7 @@ An example of a successful response follows:
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "result": {
-    "success": true
-  }
+  "result": true
 }
 ```
 
