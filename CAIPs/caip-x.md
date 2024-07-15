@@ -217,6 +217,87 @@ This event indicates how the scopes have changed by comparing the updated scopes
 
 The `sessionId` parameter in the new lifecycle methods is optional. When not provided, the methods will operate on the current active session. This approach allows for more flexible session management without the overhead of tracking session identifiers.
 
+## Lifecycle diagrams
+
+### Visualizing the lifecycle of a session without a `sessionId`
+
+```mermaid
+sequenceDiagram
+  rect rgb(255, 255, 255)
+  actor Caller
+  participant Wallet
+  participant WalletDataStore as Data Store (Wallet)
+  rect rgb(255, 245, 245)
+  note right of Caller: Session Creation
+  Caller->>Wallet: wallet_createSession
+  Wallet->>WalletDataStore: Persist session data
+  Wallet-->>Caller: {"sessionScopes": {...}}
+  end
+  rect rgb(245, 255, 245)
+  note right of Caller: Update Session
+  Caller->>Wallet: wallet_createSession (update auth)
+  Wallet->>WalletDataStore: Update session data
+  Wallet-->>Caller: {"sessionScopes": {updatedScopes...}}
+  end
+  rect rgb(245, 245, 255)
+  note right of Caller: Connection Interrupted w/ Wallet Side Session Modification
+  Caller-->Wallet: Connection Interrupted
+  Wallet->>WalletDataStore: User initiated session change
+  Wallet->>Caller: wallet_sessionChanged
+  Caller-->Wallet: Connection Re-established
+  end
+  rect rgb(255, 245, 255)
+  note right of Caller: Get Session
+  Caller->>Wallet: wallet_getSession
+  Wallet-->>Caller: {"sessionScopes": {...}}
+  end
+  rect rgb(255, 245, 215)
+  note right of Caller: Revoke Session
+  Caller->>Wallet: wallet_revokeSession
+  Wallet->>WalletDataStore: Update session data
+  Wallet-->>Caller: {"result": "session revoked"}
+  end
+  end
+```
+
+### Visualizing the lifecycle of a session **with** a `sessionId`
+
+```mermaid
+sequenceDiagram
+  rect rgb(255, 255, 255)
+  participant CallerDataStore as Data Store (Caller)
+  actor Caller
+  participant Wallet
+  participant WalletDataStore as Data Store (Wallet)
+  rect rgb(255, 245, 245)
+  note right of Caller: Session Creation
+  Caller->>Wallet: wallet_createSession
+  Wallet->>WalletDataStore: Persist session data
+  Wallet-->>Caller: {"sessionId": "0xdeadbeef", "sessionScopes": {...}}
+  Caller->>CallerDataStore: Persist session data
+  end
+  rect rgb(245, 255, 245)
+  note right of Caller: Update Session
+  Caller->>Wallet: wallet_createSession (sessionId: 0xdeadbeef, {updatedScopes...})
+  Wallet->>WalletDataStore: Update session data
+  Wallet-->>Caller: {"sessionId": "0xdeadbeef", "sessionScopes": {(updated)sessionScopes...}}
+  end
+  rect rgb(245, 245, 255)
+  note right of Caller: User Initiated Session Change
+  Wallet->>WalletDataStore: User initiated session change
+  Wallet->>Caller: wallet_sessionChanged (sessionId: 0xdeadbeef)
+  Caller->>CallerDataStore: Update session data
+  end
+  rect rgb(255, 245, 255)
+  note right of Caller: Revoke Session
+  Caller->>Wallet: wallet_revokeSession (sessionId: 0xdeadbeef)
+  Wallet->>WalletDataStore: Update session data
+  Wallet-->>Caller: {"result": "true"} (session is revoked)
+  Caller->>CallerDataStore: Update session data
+  end
+  end
+```
+
 ## Security Considerations
 
 The introduction of these lifecycle methods must ensure that only authorized parties can modify the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
