@@ -75,8 +75,8 @@ response, depending on implementation) should be sent to prevent incentivizing
 unwanted requests and to minimize the surface for fingerprinting of public web
 traffic (See Privacy Considerations below).
 
-Conversely, a successful response will contain all the required properties _and
-the wallet's choice of the optional properties_ expressed in a single unified
+Conversely, a successful response will contain all the required properties *and
+the wallet's choice of the optional properties* expressed in a single unified
 `scopeObject`. In the case of identically-keyed `scopeObject`s appearing in both
 arrays in the request where properties from both are returned as authorized, the
 two scopes MUST be merged in the response (see examples below). However,
@@ -132,7 +132,6 @@ Example:
 The JSON-RPC method is labeled as `wallet_createSession` and its `params` object
 contains "requiredScopes" and/or "optionalScopes" objects populated with
 [CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
-
 - The `requiredScopes` array MUST contain 1 or more `scopeObjects`, if present.
 - The `optionalScopes` array MUST contain 1 or more `scopeObjects`, if present.
 
@@ -142,10 +141,6 @@ In addition to making properties of the negotiated session itself explicit, they
 
 Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety;
 similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
-
-Requesting applications are expected to persist all of these returned properties in the session object identified by the `sessionId`, if present in the success response.
-
-In the case that the wallet does not send a `sessionId` in its success response
 
 ### Response
 
@@ -161,7 +156,7 @@ of the wallet).
 The successful result MUST contain an object called `sessionScopes`, and MUST itself contain 1 or more `scopeObjects`.
 
 - All required `scopeObjects` and all, none, or some of the optional
-  `scopeObject`s (at the discretion of the wallet) MUST be included if
+  `scopeObjects` (at the discretion of the wallet) MUST be included if
   successful.
 - Unlike the request, each scope object MUST also contain an `accounts` array,
   containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
@@ -250,48 +245,48 @@ messages over trusted connections are as follows:
 
 The valid error messages codes are the following:
 
-- Unknown error OR no scopes were authorized
-  - code = 5000
-  - message = "Unknown error with request"
-- When user disapproves accepting calls with the request methods
-  - code = 5001
-  - message = "User disapproved requested methods"
-- When user disapproves accepting calls with the request notifications
-  - code = 5002
-  - message = "User disapproved requested notifications"
-- When wallet evaluates requested chains to not be supported
-  - code = 5100
-  - message = "Requested chains are not supported"
-- When wallet evaluates requested methods to not be supported
-  - code = 5101
-  - message = "Requested methods are not supported"
-- When wallet evaluates requested notifications to not be supported
-  - code = 5102
-  - message = "Requested notifications are not supported"
+* Unknown error OR no scopes were authorized
+  * code = 5000
+  * message = "Unknown error with request"
+* When user disapproves accepting calls with the request methods
+  * code = 5001
+  * message = "User disapproved requested methods"
+* When user disapproves accepting calls with the request notifications
+  * code = 5002
+  * message = "User disapproved requested notifications"
+* When wallet evaluates requested chains to not be supported
+  * code = 5100
+  * message = "Requested chains are not supported"
+* When wallet evaluates requested methods to not be supported
+  * code = 5101
+  * message = "Requested methods are not supported"
+* When wallet evaluates requested notifications to not be supported
+  * code = 5102
+  * message = "Requested notifications are not supported"
 
 ##### Trust-Agnostic Malformed Request Failure Codes
 
 Regardless of caller trust level, the following error responses can reduce
 friction and user experience problems in the case of malformed requests.
 
-- When wallet does not recognize one or more requested method(s)
-  - code = 5201
-  - message = "Unknown method(s) requested"
-- When wallet does not recognize one or more requested notification(s)
-  - code = 5202
-  - message = "Unknown notification(s) requested"
-- When a badly-formed request includes a `chainId` mismatched to scope
-  - code = 5203
-  - message = "Scope/chain mismatch"
-- When a badly-formed request defines one `chainId` two ways
-  - code = 5204
-  - message = "ChainId defined in two different scopes"
-- Invalid Session Properties Object
-  - code = 5300
-  - message = "Invalid Session Properties requested"
-- Session Properties requested outside of Session Properties Object
-  - code = 5301
-  - message = "Session Properties can only be optional and global"
+* When wallet does not recognize one or more requested method(s)
+  * code = 5201
+  * message = "Unknown method(s) requested"
+* When wallet does not recognize one or more requested notification(s)
+  * code = 5202
+  * message = "Unknown notification(s) requested"
+* When a badly-formed request includes a `chainId` mismatched to scope
+  * code = 5203
+  * message = "Scope/chain mismatch"
+* When a badly-formed request defines one `chainId` two ways
+  * code = 5204
+  * message = "ChainId defined in two different scopes"
+* Invalid Session Properties Object
+  * code = 5300
+  * message = "Invalid Session Properties requested"
+* Session Properties requested outside of Session Properties Object
+  * code = 5301
+  * message = "Session Properties can only be optional and global"
 
 Note: respondents SHOULD to implement support for core RPC Documents per each
 supported namespace to avoid sending error messages 5201 and 5202 in cases where
@@ -325,7 +320,7 @@ respondents are recommended to ignore calls
 3. which are rejected for unknown reasons.
 
 "Ignoring" these calls means responding to all three in a way that is
-_indistinguishable_ to a malicious caller or observer which might deduce
+*indistinguishable* to a malicious caller or observer which might deduce
 information from differences in those responses (including the time taken to
 provide them). Effectively, this means allowing requests in all three cases to
 time out even if the end-user experience might be better served by
