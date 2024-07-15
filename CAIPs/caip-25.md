@@ -1,12 +1,12 @@
 ---
 caip: 25
-title: JSON-RPC Provider Authorization
+title: Wallet Create Session JSON-RPC Method
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Review
 type: Standard
 created: 2020-10-14
-updated: 2022-10-26
+updated: 2024-07-02
 requires: 2, 10, 171, 217
 ---
 
@@ -58,7 +58,7 @@ Example:
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "provider_authorize",
+  "method": "wallet_createSession",
   "params": {
     "requiredScopes": {
       "eip155": {
@@ -243,10 +243,10 @@ The valid error messages codes are the following:
   - code = 5102
   - message = "Requested notifications are not supported"
 
+
 ##### Trust-Agnostic Malformed Request Failure Codes
 
-Regardless of caller trust level, the following error responses can reduce
-friction and user experience problems in the case of malformed requests.
+Regardless of caller trust level, the following error responses can reduce friction and user experience problems in the case of malformed requests.
 
 - When provider does not recognize one or more requested method(s)
   - code = 5201
@@ -266,6 +266,7 @@ friction and user experience problems in the case of malformed requests.
 - scopedProperties requested outside of scopedProperties Object
   - code = 5301
   - message = "scopedProperties can only be outside of sessionScopes"
+
 
 Note: respondents SHOULD to implement support for core RPC Documents per each
 supported namespace to avoid sending error messages 5201 and 5202 in cases where
@@ -339,14 +340,12 @@ was in violation of policy).
 
 - [CAIP-2][] - Chain ID Specification
 - [CAIP-10][] - Account ID Specification
-- [CAIP-25][] - JSON-RPC Provider Request
 - [CAIP-104][] - Definition of Chain Agnostic Namespaces or CANs
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
-[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
