@@ -167,7 +167,8 @@ An example of a successful response follows:
       "eip155:42161": {
         "methods": ["personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
-        "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
+        "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"],
+        "rpcDocuments": "https://example.com/wallet_extension.json"
       },
       "eip155:0": {
         "methods": ["wallet_getPermissions", "wallet_creds_store", "wallet_creds_verify", "wallet_creds_issue", "wallet_creds_present"],
@@ -179,15 +180,14 @@ An example of a successful response follows:
     },      
     "scopedProperties": {
       "eip155:42161": {
-        "rpcDocuments": "https://example.com/wallet_extension.json",
-        "configObject": {
+        "walletExtensionConfig": {
           "foo": "bar"
         }
       }
     },
     "sessionProperties": {
       "expiry": "2022-11-31T17:07:31+00:00",
-      "configObject": {
+      "globalConfig": {
           "foo": "bar"
       }
     }
