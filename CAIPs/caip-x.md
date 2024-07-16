@@ -1,5 +1,5 @@
 ---
-caip: X
+caip: 288
 title: Best Practices for using CAIP 2 - Blockchain ID Specification
 author: Bumblefudge (@bumblefudge)
 discussions-to: https://github.com/ChainAgnostic/namespaces/pull/107, https://github.com/ChainAgnostic/CASA/issues/107, https://github.com/ChainAgnostic/CAIPs/issues/22, https://github.com/ChainAgnostic/namespaces/issues/55
@@ -33,8 +33,8 @@ Concretely, this means that a given network addressable by a specific [CAIP-2] i
 
 ### Special Case for non-network identifer
 
-Implementer feedback from the Ethereum community led to PR [namespaces#107] describing an emerging pattern whereby a static identifier could be used to refer not to a specific entry in the `eip155`-defined namespace of networks, but to the wallet software itself as an actor outside of them, such as when a website communicates with a user-agent controlling an EOA over RPC methods.
-This may be generalizable to other namespaces over time, or may be superseded by complementary or competing solutions. It is unclear if all namespaces have an equivalent or other non-network identifer needs.
+Implementer feedback from the Ethereum community led to PR [namespaces#107] describing an emerging pattern whereby a static identifier could be used to refer not to a specific entry in the `eip155`-defined namespace of networks, but to the wallet software itself as an actor outside of them, such as when a website communicates over direct RPC methods with a user-agent controlling an account (an "externally-owned account" or EOA in Ethereum parlance).
+This may be generalizable to other namespaces over time, or may be superseded by complementary or competing solutions such as a [distinct `wallet` namespace][namespaces#55]. It is unclear if all namespaces have an equivalent or other non-network identifer needs.
 
 ## References
 
