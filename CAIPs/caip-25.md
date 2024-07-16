@@ -340,10 +340,10 @@ was in violation of policy).
 
 ## Changelog
 
+- 2024-07-16: redefined requiredScopes to be functionally equivalent to optionalScopes, but semantically different; previously, authorizing less than 100% of reqScopes required rejecting the connection
 - 2023-03-29: refactored out scopeObject syntax as separate CAIP-217, simplified
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement)
-- 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
-  consolidated variants across issues and forks post-Amsterdam Gathering
+- 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax; consolidated variants across issues and forks post-Amsterdam Gathering
 
 ## Links
 
