@@ -36,13 +36,13 @@ uppercase in this document are to be interpreted as described in [RFC
 
 The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session that both parties will persist.
 - When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session are expected to be persisted and tracked over the life of the session by both parties in a discrete data store.
-- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session. In this case, the wallet MUST implement a method [`wallet_getSession`][CAIP-286] to enable the caller to query for the current status of the session at any time.
+- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session. In this case, the wallet MUST implement a method [`wallet_getSession`][CAIP-307] to enable the caller to query for the current status of the session at any time.
 
 After a session is established between wallet and caller, subsequent `wallet_createSession` calls are used to update the properties and authorization scopes of the session.
 - When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` (on the root of the request) in which case that session is modified, or the caller must generate a new `sessionId` and pass it with the request, in which case a new session is created and the previous session dangles in parallel (until its expiration if applicable) though maintaining concurrent sessions is discouraged (see Security Considerations).
 - When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous singular session between caller and wallet.
 
-When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-287] notification.
+When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-308] notification.
 
 When a caller wishes revoke an active session, it can do so by calling [`wallet_revokeSession`][CAIP-285].
 - When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session, and may do so with any number of unexpired sessions.
@@ -360,8 +360,8 @@ was in violation of policy).
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 - [CAIP-285][] - `wallet_revokeSession` Specification
-- [CAIP-286][] - `wallet_getSession` Specification
-- [CAIP-287][] - `wallet_sessionChanged` Specification
+- [CAIP-307][] - `wallet_getSession` Specification
+- [CAIP-308][] - `wallet_sessionChanged` Specification
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
@@ -369,8 +369,8 @@ was in violation of policy).
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [CAIP-285]: https://chainagnostic.org/CAIPs/caip-285
-[CAIP-286]: https://chainagnostic.org/CAIPs/caip-286
-[CAIP-287]: https://chainagnostic.org/CAIPs/caip-287
+[CAIP-307]: https://chainagnostic.org/CAIPs/caip-307
+[CAIP-308]: https://chainagnostic.org/CAIPs/caip-308
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
 

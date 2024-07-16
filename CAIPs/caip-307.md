@@ -1,5 +1,5 @@
 ---
-caip: 286
+caip: 307
 title: JSON-RPC Method for Retrieving Session Authorizations
 author: [Alex Donesky] (@adonesky1)
 discussions-to: TBD
@@ -11,7 +11,7 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-286 introduces the `wallet_getSession` method for retrieving authorizations from an active [CAIP-25][] initiated session.
+CAIP-307 introduces the `wallet_getSession` method for retrieving authorizations from an active [CAIP-25][] initiated session.
 
 ## Abstract
 

@@ -11,7 +11,7 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-285 introduces the `wallet_revokeSession` method for revoking an active [CAIP-25][] session.
+CAIP-285 introduces the `wallet_revokeSession` method for fully revoking the authorizations and properties of an active [CAIP-25][] session.
 
 ## Abstract
 
