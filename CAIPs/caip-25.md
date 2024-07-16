@@ -123,6 +123,8 @@ Each object should be keyed to the scope of a `sessionScopes` member to which it
 All properties of each object in `scopedProperties` MUST be interpreted by the respondent as proposals or declarations rather than as requirements.
 In addition to making additional properties of or metadata about the corresponding `sessionScopes` member explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing connection information about unfamiliar scopes or which accounts to expose to each).
 
+When there is an active session between the wallet and the caller for which the wallet assigned a `sessionId` in it's initial response, a `sessionId` parameter, it's value  the same entropic identifier returned by the wallet, should be added to the `wallet_createSession` request to update the associated session.
+
 Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety;
 similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
 An exception can safely be made for `scopedProperties`, but caution is recommended for such extensions.
