@@ -34,14 +34,13 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Definition
 
-The session is proposed by a caller and the response by the respondent is used
-as the baseline for an ongoing session that both parties will persist.
+The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session that both parties will persist.
 - When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session are expected to be persisted and tracked over the life of the session by both parties in a discrete data store.
-- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session (and associate the session with a secure/unspoofable identifier associated with the communication channel between wallet and caller?). In this case, the wallet MUST implement a method [`wallet_getSession`][CAIP-286] to enable the caller to query for the current status of the session at any time.
+- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session. In this case, the wallet MUST implement a method [`wallet_getSession`][CAIP-286] to enable the caller to query for the current status of the session at any time.
 
 After a session is established between wallet and caller, subsequent `wallet_createSession` calls are used to update the properties and authorization scopes of the session.
-- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` (on the route of the request) in which case that session is modified, or the caller must generate a new `sessionId` and pass it with the request, in which case a new session is created and the previous session dangles in parallel (until its expiration if applicable) though maintaining concurrent sessions is discouraged (see Security Considerations).
-- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous session.
+- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` (on the root of the request) in which case that session is modified, or the caller must generate a new `sessionId` and pass it with the request, in which case a new session is created and the previous session dangles in parallel (until its expiration if applicable) though maintaining concurrent sessions is discouraged (see Security Considerations).
+- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous singular session between caller and wallet.
 
 When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-287] notification.
 
@@ -134,8 +133,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The successful result MAY contain a string (keyed as `sessionId` with a value
-conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`.
+The successful result MAY contain a string (keyed as `sessionId` with a value conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`.
 
 The successful result MUST contain an object called `sessionScopes` which contains 1 or more `scopeObjects`.
 - All required `scopeObjects` and all, none, or some of the optional `scopeObject`s (at the discretion of the provider) MUST be included if successful.
