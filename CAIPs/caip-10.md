@@ -71,7 +71,7 @@ The goals of the general account ID format is:
 
 ## Canonicalization
 
-Note that some namespaces like the EVM offer canonicalization schemes that use capitalization (e.g. [EIP-55][]), an option suffix (e.g. [HIP-15][]), or some other transformation.
+Note that some namespaces like the `eip155` (i.e. ethereum) namespaces offer canonicalization schemes that use capitalization (e.g. [EIP-55][]), an option suffix (e.g. [HIP-15][]), or some other transformation.
 At the present time, this specification does NOT require canonicalization, and implementers are advised to consider deduplication or canonicalization in their consumption of CAIP-addresses.
 Furthermore, it is always recommended that implementers read carefully any guidance in the relevant CAIP-10 profiles in CASA [namespaces][] for additional information per namespace about security and canonicalization conventions.
 
