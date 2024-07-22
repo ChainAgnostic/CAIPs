@@ -1,18 +1,18 @@
 ---
-title: JSON-RPC Provider Lifecycle Methods for Session Management with CAIP-25 Sessions BPC
+title: JSON-RPC Provider Session Lifecycle Management with CAIP-25 Sessions BCP
 author: [Alex Donesky] (@adonesky1)
 discussions-to: TBD
 status: Draft
 type: Standard
 created: 2024-06-07
-requires: 25, 217
+requires: 25, 217, 285, 307, 308
 ---
 
 ## Simple Summary
 
-This backwards-compatible extension of the CAIP-25 standard defines new JSON-RPC methods for managing the lifecycle of authorizations within a session.
+This backwards-compatible extension of the [CAIP-25][] standard defines new JSON-RPC methods for managing the lifecycle of authorizations within a session.
 These methods allow dapps and wallets to dynamically adjust authorizations, providing more granular control and better user experience.
-Additionally, it allows for session management without mandatory sessionIds, offering more flexibility in handling sessions in single-session contexts.
+Additionally, it allows for session management without mandatory [sessionIds][CAIP-171], offering more flexibility in handling sessions in single-session contexts.
 
 ## Abstract
 
@@ -22,38 +22,15 @@ This proposal aims to extend the CAIP-25 standard by defining new JSON-RPC metho
 
 The motivation behind this proposal is to enhance the flexibility of CAIP-25 by enabling management of session authorizations without sessionIds which don't map well to extension based wallet's dapp connections and could therefore add constraints and burdens to existing flows. The proposed methods provide an intuitive way to add, revoke, and retrieve authorizations within an existing session, simplifying the management of session lifecycles.
 
-### Use Case Scenarios
-
-1. **Wallet Initiated Adding Authorizations To an Existing Session:**
-
-   - **Current Method:** CAIP-25 does not make it very clear how a respondent (wallet), can modify the authorizations of an existing session. The following excerpt is the closest we get: "The properties and authorization scopes that make up the session are expected to be persisted and tracked over time by both parties in a discrete data store, identified by an entropic identifier assigned in the initial response. This object gets updated, extended, closed, etc. by successive calls and notifications, each tagged by this identifier."
-   - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `wallet_sessionChanged` with the new full sessionScope.
-
-2. **Wallet Initiated Authorizations Revocation:**
-
-   - **Current Method:** "If a respondent (e.g. a wallet) needs to initiate a new session, whether due to user input, security policy, or session expiry reasons, it can simply generate a new session identifier to signal this notification to the calling provider."
-   - Given this language it is unclear if a wallet can revoke authorizations without creating a new session. It is also therefore unclear if a wallet can revoke some subset of authorizations without creating a new session.
-   - **Proposed Method:** Wallet publishes and caller/dapp listens for an event `wallet_sessionChanged` with the new full sessionScope.
-
-3. **Dapp Initiated Authorizations Revocation:**
-
-   - **Current Method:** "if a caller [dapp] needs to initiate a new session, it can do so by sending a new request without a sessionIdentifier."
-   - **Proposed Method:** Use `wallet_revokeSession` to revoke an entire existing session. When a `sessionId` is passed as a parameter the request revokes that particular session, otherwise it revokes the single active session between wallet and caller.
-
-4. **Retrieving Current Session Authorizations:**
-
-   - **Current Method:** Wallet and app both persist configuration across updates.
-   - **Proposed Method:** Use `wallet_getSession` to retrieve the current authorizations of the session.
-
-## Equivalence Chart
+## Lifecycle Equivalence Chart
 
 ||feature|CAIP-25 now w/sessionId|CAIP-285 w/o sessionId|
 |---|---|---|---|
 |1|dapp initialize (replaces session if already exist)|call `wallet_createSession` w/no sessionId |call `wallet_createSession` w/no sessionId|
-|2|wallet re-initialize|return `wallet_createSession` w/new sessionId **next time called**|n/a (not needed because `wallet_sessionChanges` notif can be sent, and wallet_getSession can be used to confirm everything is good)|
-|3|dapp get current session|n/a (should persist)|`wallet_getSession`  w/o sessionId|
+|2|wallet re-initialize|return `wallet_createSession` w/new sessionId **next time called**|n/a (not needed because [`wallet_sessionChanged`][CAIP-308] notification can be sent, and wallet_getSession can be used to confirm everything is good)|
+|3|dapp get current session|n/a (should persist)|[`wallet_getSession`][CAIP-307]  w/o sessionId|
 |4|dapp confirm current session|call `wallet_createSession` w/sessionId and same properties OR `wallet_getSession` w/sessionId|`wallet_getSession` w/o sessionId|
-|5|dapp revoke|call `wallet_createSession` w/no sessionId and no scopes OR `wallet_revokeSession` w/sessionId |`wallet_revoke`  w/o sessionId|
+|5|dapp revoke|call `wallet_createSession` w/no sessionId and no scopes OR [`wallet_revokeSession`][CAIP-285] w/sessionId |`wallet_revokeSession`  w/o sessionId|
 |6|wallet revoke|return `wallet_createSession` w/new sessionId and no scopes **next time called** or `wallet_sessionChanged` w/ sessionId |`wallet_sessionChanged`  w/no scopes|
 |7|dapp update session|call `wallet_createSession` w/existing sessionId and new scopes|call `wallet_createSession` w/no sessionId|
 |8|wallet update session|return `wallet_createSession` w/new sessionId and no scopes **next time called** OR `wallet_sessionChanged` w/existing sessionId|`wallet_sessionChanged` w/o sessionId|
@@ -138,23 +115,31 @@ sequenceDiagram
   end
   end
 ```
-
-## Security Considerations
-
-The introduction of these lifecycle methods must ensure that only authorized parties can modify the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
-
 ## Privacy Considerations
 
-Managing authorizations within an existing session reduces the need to create multiple session identifiers, which can help minimize the exposure of session-related metadata.
+MThe introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
 
+To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
 ## Changelog
 
 - 2024-06-07: Initial draft of CAIP-285.
 
 ## Links
 
-- [CAIP-25](https://chainagnostic.org/CAIPs/caip-25)
-- [CAIP-217](https://chainagnostic.org/CAIPs/caip-217)
+
+- [CAIP-25][] - Session handshake - `wallet_createSession` - specification
+- [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
+- [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
+- [CAIP-285][] - `wallet_revokeSession` Specification
+- [CAIP-307][] - `wallet_getSession` Specification
+- [CAIP-308][] - `wallet_sessionChanged` Specification
+
+[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
+[CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
+[CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
+[CAIP-285]: https://chainagnostic.org/CAIPs/caip-285
+[CAIP-307]: https://chainagnostic.org/CAIPs/caip-307
+[CAIP-308]: https://chainagnostic.org/CAIPs/caip-308
 
 ## Copyright
 
