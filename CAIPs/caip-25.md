@@ -34,20 +34,20 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Definition
 
-The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session that both parties will persist.
-- When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session are expected to be persisted and tracked over the life of the session by both parties in a discrete data store.
-- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session. In this case, the wallet MUST implement a method [`wallet_getSession`][CAIP-307] to enable the caller to query for the current status of the session at any time.
+The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session between the two parties.
+- When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session should be persisted and tracked over the life of the session by both parties in a discrete data store.
+- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session. The caller is not expected to persist session data. In this case, the wallet MUST implement a method [`wallet_getSession`][CAIP-307] to enable the caller to query for the current status of the session at any time.
 
 After a session is established between wallet and caller, subsequent `wallet_createSession` calls are used to update the properties and authorization scopes of the session.
-- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` (on the root of the request) in which case that session is modified, or the caller must generate a new `sessionId` and pass it with the request, in which case a new session is created and the previous session dangles in parallel (until its expiration if applicable) though maintaining concurrent sessions is discouraged (see Security Considerations).
+- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls MUST either contain the previously used `sessionId` - on the root of the request - in which case that session will be modified, or the caller must generate a new `sessionId` and pass it with the request, in which case a new session is created and the previous session dangles in parallel (until its expiration, if applicable), though maintaining concurrent sessions is discouraged (see Security Considerations).
 - When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous singular session between caller and wallet.
 
 When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-308] notification.
 
-If a connection is initially established without a `sessionId` and the wallet later implements `sessionId` support, the wallet can revoke the single session and notify the caller via `wallet_sessionChanged`. When the caller seeks to resestablish the session via `wallet_createSession`, the wallet should return a `sessionId` in the response.
+If a connection is initially established without a `sessionId` and the wallet later implements `sessionId` support, the wallet can revoke the single session and notify the caller via `wallet_sessionChanged`. When the caller seeks to re-establish the session via `wallet_createSession`, the wallet should return a `sessionId` in the response.
 
 When a caller wishes revoke an active session, it can do so by calling [`wallet_revokeSession`][CAIP-285].
-- When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session, and may do so with any number of unexpired sessions.
+- When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session.
 - When the wallet does not provide a `sessionId` in its initial response, a call to `wallet_revokeSession` revokes the single active session between caller and wallet.
 
 Initial and ongoing authorization requests are grouped into two top-level arrays of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
@@ -127,7 +127,6 @@ In addition to making additional properties of or metadata about the correspondi
 
 When there is an active session between the wallet and the caller for which the wallet assigned a `sessionId` in it's initial response, that same `sessionId` should be added to the `wallet_createSession` request to update the associated session.
 
-
 Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety;
 similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
 An exception can safely be made for `scopedProperties`, but caution is recommended for such extensions.
@@ -138,7 +137,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The successful result MAY contain a string (keyed as `sessionId` with a value conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`. If the wallet does not return a `sessionId` in the response, the connection will only consist of one session at a time.
+The successful result MAY contain a string (keyed as `sessionId` with a value conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`. If the wallet does not return a `sessionId` in the response, the connection will only consist of one session at a time, the contents of which are always retrievable for the caller via [`wallet_getSession`][CAIP-307].
 
 The successful result MUST contain an object called `sessionScopes` which contains 1 or more `scopeObjects`.
 - All required `scopeObjects` and all, none, or some of the optional `scopeObject`s (at the discretion of the provider) MUST be included if successful.
