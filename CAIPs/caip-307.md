@@ -28,7 +28,7 @@ The motivation behind this proposal is to enhance the flexibility of [CAIP-25][]
 The `wallet_getSession` method returns an active session.
 If a `sessionId` is provided, it returns the authorizations for that specific session;
 If no `sessionId` parameter is provided - and there is a single active session with no `sessionId` assigned - it returns the session authorizations and properties for that session;
-otherwise, an appropriate error message:
+otherwise, an appropriate error message;
 
 **Parameters:**
 
@@ -109,8 +109,11 @@ To achieve this, it is recommended to establish a connection over domain-bound o
 
 ## Links
 
-- [CAIP-25](https://chainagnostic.org/CAIPs/caip-25)
-- [CAIP-217](https://chainagnostic.org/CAIPs/caip-217)
+- [CAIP-25] - JSON-RPC Handshake Protocol Specification. i.e `wallet_createSession`
+- [CAIP-217]- Authorization Scopes, i.e. syntax for `scopeObject`s
+
+[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
+[CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 
 ## Copyright
 

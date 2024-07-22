@@ -62,8 +62,11 @@ To achieve this, it is recommended to establish a connection over domain-bound o
 
 ## Links
 
-- [CAIP-25](https://chainagnostic.org/CAIPs/caip-25)
-- [CAIP-217](https://chainagnostic.org/CAIPs/caip-217)
+- [CAIP-25] - JSON-RPC Handshake Protocol Specification. i.e `wallet_createSession`
+- [CAIP-217]- Authorization Scopes, i.e. syntax for `scopeObject`s
+
+[CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
+[CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 
 ## Copyright
 
