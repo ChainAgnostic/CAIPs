@@ -12,11 +12,11 @@ updated: 2024-03-20
 
 ## Simple Summary
 
-This specification introduces a data framework to explicitly represent trust assertions among peers, facilitating the development of a scalable global web of trust.
+This specification introduces a data framework to explicitly represent trust assertions among peers, facilitating the development of a scalable and interoperable web of trust.
 
 ## Abstract
 
-Web of trust form peer-to-peer trust graphs through issuance of trust and/or distrust assertions among peers, offering the possibility to calculate valuable insights such as reputation scores by using graph theory.
+Webs of trust form peer-to-peer trust graphs through issuance of trust and/or distrust assertions among peers, offering the possibility to calculate valuable insights such as reputation scores by using graph theory.
 
 This proposal outlines a comprehensive data framework designed to facilitate the representation, management, verification and consumption of explicit trust assertions for peers within a decentralized environment.
 
@@ -40,30 +40,30 @@ In the following diagram, we depict the process where an issuer of a long-lived 
 
 ##### Peers Identification
 
-Trust assertions are made about, and by, peers identifiable through stable identifiers linked to public keys used to verify signatures made by their subjects, assumed to be effectively bound to their owners.
+Trust assertions are made about, and by, peers identifiable with identifiers derived from public keys or directly using a public key. This enables peers to sign assertions and be verified.
 
-Identification of peers SHOULD make use of [Decentralized Identifiers (DIDs)][DID] with key pair-based methods, or any chain-specific public account representation (e.g., address type for EVM-based chains) to facilitate interoperability.
-
-- **did:pkh (Public Key Hash):** This method is designed to be chain-agnostic, enabling the creation of DIDs based on public key hashes from a variety of blockchains. Its universality promotes interoperability and simplifies identity management across diverse ecosystems. This approach is particularly useful for applications that aim to operate across multiple cryptographically-secured networks (like blockchains) without being tied to any specific one.
-- **did:key:** This method allows for the generation of DIDs directly from cryptographic public keys, supporting various key types such as ECDSA, EdDSA, Schnorr Signatures, and RSA. It is straightforward and self-contained, with no need for interaction with blockchain networks. This makes it fast and cost-effective for scenarios that do not require decentralized verification.
-- **did:web:** Though not directly tied to key pairs in the same way as others, did:web utilizes domain names to create DIDs, enabling organizations to leverage their existing domain infrastructure for verifiability purposes. This method bridges traditional web infrastructure with the decentralized identity ecosystem, enhancing trust and verifiability through well-known web standards.
-- **On-chain public account representation:** This method uses the native on-chain representation of public accounts that correspond to public key derivation, such as the public address in Ethereum (e.g., 0x...), etc.
+Identification of peers SHOULD make use of key pair-based mechanism to facilitate interoperability and verifiability.
+- **[Decentralized Identifiers (DIDs)][DID]** with key pair-based methods for off-chain assertions.
+  - **did:pkh (Public Key Hash):** This method is designed to be chain-agnostic, enabling the creation of DIDs based on public key hashes from a variety of blockchains. Its universality promotes interoperability and simplifies identity management across diverse ecosystems. This approach is particularly useful for applications that aim to operate across multiple cryptographically-secured networks (like blockchains) without being tied to any specific one.
+  - **did:key:** This method allows for the generation of DIDs directly from cryptographic public keys, supporting various key types such as ECDSA, EdDSA, Schnorr Signatures, and RSA. It is straightforward and self-contained, with no need for interaction with blockchain networks. This makes it fast and cost-effective for scenarios that do not require decentralized verification.
+- **On-chain Public Accounts** using the chain-specific address type for smart contract-based assertions (e.g., `address` type in EVM-based chains) 
 
 ##### Assertions Identification
 
 Assertions themselves need to be identifiable for referencing or updating purposes. 
-They SHOULD be identified by a [Content Identifier (CID)][CID], which is self-describing and facilitates their unique identification and retrieval, or with a unique identifier generated and assigned by a decentralized assertion storage, i.e. on-chain attestation services (e.g., Verax, EAS). 
-If a CID is used, the CID SHOULD be expressed as a Uniform Resource Identifier (URI) to offer a contextual identifier, such as IPFS (ipfs://).
-
-The identifier used for a assertion is not necessarily embedded as a property within the document itself; in the case of deterministic [Content Identifiers][CID], it derives from the content of the document and can be calculated (or recalculated, as a checksum of its contents) by anyone.
-A [Content Identifier][CID] (CID) is generated by hashing the content with a cryptographic hash function.
-This hash, along with metadata about the hash function, is then encoded in the [multihash][] format.
+They SHOULD be identified by a immutable identifier.
+- **[Content Identifiers (CID)][CID]**, which is self-describing and facilitates their unique identification and retrieval. If a CID is used, the CID SHOULD be envelopped as a Uniform Resource Identifier (URI) to offer a contextual identifier, such as IPFS (ipfs://).
+  - This is not necessarily embedded as a property within the document itself; it derives from the content of the document and can be calculated (or recalculated, as a checksum of its contents) by anyone.
+  - This is generated by hashing the content with a cryptographic hash function; This hash, along with metadata about the hash function, is then encoded in the [multihash][] format.
+- **On-chain custom identifiers** generated and assigned by a smart contract based assertion storage, i.e. on-chain attestations identifiers (e.g., Verax, EAS). 
 
 #### Data Model
 
-Subsequent data structures are represented in one or two versions: one conforming with the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) and another in a raw format.
-Verifiable credentials can be used off-chain or on-chain for better portability, whereas the raw format can be imported into decentralized data stores or attestation services (e.g., Verax, EAS, Ceramic Network) as a new schema to issue assertions, without the need for additional layers of verifiability and interoperability.
-However, this standard does not prescribe any specific document type, though it may recommend internationally recognized standards or trusted attestation services.
+Subsequent data structures are represented in accordance with the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) and, in some cases, in raw format relevant for on-chain assertions. 
+
+Verifiable credentials can be used both off-chain and on-chain for better portability, while raw formats can be utilized in decentralized data storages (e.g., Ceramic Network) or on-chain assertion storages (e.g., Verax, EAS) as a new schema to issue assertions without the need for additional layers of verifiability and interoperability.
+
+However, this standard does not prescribe any specific document type, though it recommends using internationally recognized standards or trusted attestation services."
 
 ![diagram2](https://github.com/dayksx/CAIPs/assets/77788154/479df06f-3dd5-4c88-b396-4cfae01ff8d6)
 
@@ -199,12 +199,9 @@ A validity limitation can be introduced with the fields `validFrom` and `validUn
 "validFrom": "2024-01-01T19:23:24Z",
 "validUntil": "2025-01-01T19:23:24Z",
 ```
-*Raw  Format*
-```json
-"validFrom": "2024-01-01T19:23:24Z",
-"validUntil": "2025-01-01T19:23:24Z",
-```
-This would be added at the top level of the schema.
+
+##### On-chain assertions vaidity period
+Most on-chain assertion storages manage expiration times natively without requiring changes to the overall schema.
 
 ### Trust Management
 
@@ -214,20 +211,17 @@ Subsequently, as trust between peers evolves over time, this proposal outlines a
 #### Trust Persistance
 
 Trust Assertions issued by peers compose into a verifiable trust graph that can be consumed for trustless reputation-based use cases.
-To fulfill its purpose, these assertions SHOULD be persisted using mechanisms that provide these properties relative to the requirements of a given use-case:
-
-- Security
-- Data integrity
-- Data ownership
-- Interoperabiltiy
-- Scalability
-- Censorship resistance
-- Sustainability
+To fulfill its purpose, these assertions SHOULD be persisted using mechanisms that provide these properties relative to the given use-case requirements such as Security, Data integrity, Data ownership, Interoperabiltiy, Composability, Scalability, Censorship resistance, Sustainability...
 
 #### Trust Update
 
 When an issuer needs to update a trust assertion, they simply generate a new assertion containing the revised information.
-This new assertion, when issued, MUST supersede any previous assertions of the same type, issued by the same entity, and pertaining to the same subject, for the purposes of trust calculation, even if superseded records are persisted for some other purpose.
+This new assertion, when issued, MUST supersede any previous assertions of the same type, issued by the same entity, and pertaining to the same subject.
+
+The new assertion COULD refer to the overwritten assertion by adding its identifier in the top level of the data structure
+```json
+    ""previousVersion":": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
+```
 
 #### Trust Revocation
 
@@ -248,6 +242,8 @@ By doing so, the system and its participants can easily identify the revocation 
     "statusPurpose": "revocation",
 },
 ```
+##### On-chain assertions revocation
+Most on-chain assertion storages manage revocation natively without requiring changes to the overall schema.
 
 #### Trust Graph Expansion
 
@@ -285,6 +281,8 @@ Note that composing [EIP712][] with [W3C Verifiable Credentials][VC] requires th
       "type": "EthereumEip712Signature2021"
   }
 ```
+##### On-chain assertions verification
+On-chain the verification is automaticaly done by the trusted protocol, but can be verified according to the protocol specificities.
 
 #### Format Verification
 
@@ -299,6 +297,8 @@ Such a property provides verifiers with the necessary information to assess whet
     "type": "JsonSchema"
   },
 ```
+
+For resiliency the schema COULD be stored redundantly in a decentralized protocol such as IPFS.
 
 #### Validity Verification
 
@@ -318,7 +318,7 @@ The consumption of the trust graph typically involves recursive calculations acr
 This process can utilize various existing or newly developed algorithms tailored to the unique requirements of the use-case.
 This specification remains unopiniated regarding this processing.
 
-However, we do offer some guidelines to ensure integrity and transparency in the processing of the trust graph:
+However, this specification offers some guidelines to ensure integrity and transparency in the processing of the trust graph information:
 - Calculations made using the established trust graph SHOULD be fully provable, necessitating the disclosure of all consumed data and the computation algorithm used. This level of transparency guarantees that trust-based calculations are both replicable and verifiable, allowing any interested party to understand or question the outcomes,
 - Trust assertions COULD be disregarded or given less weight according to clear rules (for example, a minimum of activity per asserter, the ownership of an asset, or if assertions contain offtopic or unparseable information)
 
@@ -327,8 +327,8 @@ However, we do offer some guidelines to ensure integrity and transparency in the
 In addition to detailing the structure of incoming assertions, this specification also outlines the generation of outgoing assertions, which correspond to the issuance of peer trust scores calculated leveraging the trust graph.
 
 - `trustScoreScope`: This defines the used trust perimeter(s) to calculate the trust score;
-- `value`: Calculated score;
-- `result`: Interpretation calculated by the trust computer; It MUST remain within the following range: [-1,1]. This could be translated as follows: 'Highly distrusted' (-1), 'Distrusted' (-0.5), 'Neutral' (0), 'Trusted' (0.5), 'Higly Trusted' (1);
+- `trustValue`: Calculated score;
+- `trustResult`: Interpretation calculated by the trust computer; It MUST remain within the following range: [-1,1]. This could be translated as follows: 'Highly distrusted' (-1), 'Distrusted' (-0.5), 'Neutral' (0), 'Trusted' (0.5), 'Higly Trusted' (1);
 - `trustScoreType`: Algorithm used to process the trust score;
 
 This structure can be enriched according to the category or context of the trust score.
@@ -345,13 +345,22 @@ This structure can be enriched according to the category or context of the trust
   "id": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
   "trustScore": {
     "trustScoreScope": ["SoftwareDevelopment"],
-    "value": 0.19191918793049725,
-    "result": 0.7,
-    "creationAt": "2024-02-27T10:28:00.000Z"
+    "trustValue": 0.19191918793049725,
+    "trustResult": 0.7,
+    "creationAt": "2024-02-27T10:28:00.000Z",
+    "trustScoreType": "EigenTrust"
   },
-  "trustScoreType": "EigenTrust"
+  
 },
 "proof": {}
+```
+*Raw Format*
+```json
+"trustScoreScope": ["SoftwareDevelopment"],
+"trustValue": 0.19191918793049725,
+"trustResult": 0.7,
+"creationAt": "2024-02-27T10:28:00.000Z",
+"trustScoreType": "EigenTrust"
 ```
 
 *The above example represents an assertion issued by the issuer `did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0`.
