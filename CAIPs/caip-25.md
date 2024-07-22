@@ -41,11 +41,13 @@ Each `scopeObject` in these arrays can be keyed to a specific [CAIP-2][] network
 An empty or absent `scopes` array SHOULD NOT be interpreted as a namespace-wide authorization (i.e. authorization for ANY network therein), but rather as a null authorization of 0 specified `chainId`s within that namespace.
 (See [CAIP-217][] for more details on the structure of the typed objects included in these arrays.)
 
-If any properties in the required scope(s) are not authorized by the respondent, a failure response expressive of one or more specific failure states will be sent (see [#### failure states](#failure-states) below), with the exception of user denying consent.
-For privacy reasons, an `undefined` response (or no response, depending on implementation) should be sent to prevent incentivizing unwanted requests and to minimize the surface for fingerprinting of public web traffic (See Privacy Considerations below).
+The distinction between `requiredScopes` and `optionalScopes` is ultimately semantic, since a wallet may still choose to establish a connection authorizing a subset of requested networks or requested capabilities from each; the primary function of the distinction is to offer callers a mechanism for signaling which scopes they consider primary and which they consider secondary to their request, in order to better inform the authorization logic of the respondent.
 
-Conversely, a succesful response will contain all the required properties *and the provider's choice of the optional properties* expressed in a single unified array of `scopeObject`s called `sessionScopes`.
-In the case of identically-keyed `scopeObject`s appearing in both arrays in the request (`requestedScopes` and `optionalScopes`), the identically-scoped objects MUST be merged in the response such that no redundant keys appear in `sessionScopes`, (see examples below).
+If a connection is being rejected, whether on the basis of end-user input or on the basis of evaluating `requiredScopes` against available capabilities, the respondent SHOULD choose its response based on trust:
+e.g., one or more specific failure states MAY be sent (see [#### failure states](#failure-states) below) for trusted counterparties, but an `undefined` response (or no response, depending on implementation) MAY also be sent to prevent incentivizing unwanted requests and to minimize the surface for fingerprinting of public web traffic (See Privacy Considerations below).
+
+After parsing and authorizing separately all the networks and capabilities within each, a respondent establishes a connection by returning a success response that organizes all authorized features of each authorized scope in a single unified array of `scopeObject`s called `sessionScopes`.
+In the case of identically-keyed `scopeObject`s appearing in both arrays in the request (`requestedScopes` and `optionalScopes`), the identically-scoped objects MUST be merged in the response, since `sessionScopes` MUST NOT contain redundant keys (see examples below).
 However, respondents MUST NOT restructure scopes (e.g., by folding properties from a [CAIP-2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed, namespace-wide scope object) as this may introduce ambiguities (See Security Considerations below).
 
 ### Request
@@ -104,13 +106,18 @@ The JSON-RPC method is labeled as `provider_authorize` and its `params` object c
 A third object is the `scopedProperties` object, which also MUST contain 1 or more objects if present.
 Each object should be keyed to the scope of a `sessionScopes` member to which it corresponds.
 All properties of each object in `scopedProperties` MUST be interpreted by the respondent as proposals or declarations rather than as requirements.
-In addition to making additional properties of or metadata about the corresponding `sessionScopes` member explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing connection information about unfamiliar scopes or which accounts to expose to each).
+In addition to making additional properties of or metadata about the corresponding `sessionScopes` member explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing connection information about unfamiliar scopes, or which accounts to expose to each).
 
-Respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety;
+A fourth object, `sessionProperties`, is optional and its shape undefined.
+It is intended for metadata or additional information not bound to any specific authorization scope, but made "global" to the connection.
+
+The respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety;
 similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
-An exception can safely be made for `scopedProperties`, but caution is recommended for such extensions.
+The same absolute security posture is not expected for the metadata objects `scopedProperties` and `sessionProperties`, but caution is still recommended for such extensions:
+callers and respondents alike SHOULD allow for their counterparties dropping or ignoring unfamiliar members from either.
 
-Requesting applications are expected to persist all of these returned properties in the session object identified by the `sessionId`.
+Requesting applications and respondents alike are expected to manage state for the connection, including `scopedProperties` and `sessionProperties`;
+if multiple concurrent connections are allowed, callers are expected to maintain them segregated and identified by the unique `sessionId` returned initially.
 
 ### Response
 
@@ -160,7 +167,8 @@ An example of a successful response follows:
       "eip155:42161": {
         "methods": ["personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
-        "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"]
+        "accounts":["eip155:42161:0x0910e12C68d02B561a34569E1367c9AAb42bd810"],
+        "rpcDocuments": "https://example.com/wallet_extension.json"
       },
       "eip155:0": {
         "methods": ["wallet_getPermissions", "wallet_creds_store", "wallet_creds_verify", "wallet_creds_issue", "wallet_creds_present"],
@@ -172,15 +180,14 @@ An example of a successful response follows:
     },      
     "scopedProperties": {
       "eip155:42161": {
-        "rpcDocuments": "https://example.com/wallet_extension.json",
-        "configObject": {
+        "walletExtensionConfig": {
           "foo": "bar"
         }
       }
     },
     "sessionProperties": {
       "expiry": "2022-11-31T17:07:31+00:00",
-      "configObject": {
+      "globalConfig": {
           "foo": "bar"
       }
     }
@@ -266,7 +273,9 @@ Regardless of caller trust level, the following error responses can reduce frict
 - scopedProperties requested outside of scopedProperties Object
   - code = 5301
   - message = "scopedProperties can only be outside of sessionScopes"
-
+- Invalid sessionProperties Object
+  - code = 5302
+  - message = "Invalid sessionProperties requested"
 
 Note: respondents SHOULD to implement support for core RPC Documents per each
 supported namespace to avoid sending error messages 5201 and 5202 in cases where
@@ -331,10 +340,10 @@ was in violation of policy).
 
 ## Changelog
 
+- 2024-07-16: redefined requiredScopes to be functionally equivalent to optionalScopes, but semantically different; previously, authorizing less than 100% of reqScopes required rejecting the connection
 - 2023-03-29: refactored out scopeObject syntax as separate CAIP-217, simplified
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement)
-- 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax;
-  consolidated variants across issues and forks post-Amsterdam Gathering
+- 2022-10-26: Addressed Berlin Gathering semantics issues and params syntax; consolidated variants across issues and forks post-Amsterdam Gathering
 
 ## Links
 
