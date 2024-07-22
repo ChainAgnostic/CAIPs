@@ -56,7 +56,9 @@ This event is published by the wallet to notify the callers of updates to a shar
 
 ## Security Considerations
 
-The introduction of this event must ensure that only authorized parties can publish updates to the session authorization scopes. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
+The introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
+
+To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
 
 ## Links
 

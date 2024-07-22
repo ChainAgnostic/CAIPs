@@ -25,7 +25,10 @@ The motivation behind this proposal is to enhance the flexibility of [CAIP-25][]
 
 ### Definition
 
-The `wallet_getSession` method returns an active session. If a `sessionId` is provided, it returns the authorizations for that specific session; otherwise, it returns the authorizations for the single active session between the wallet and the caller.`
+The `wallet_getSession` method returns an active session.
+If a `sessionId` is provided, it returns the authorizations for that specific session;
+If no `sessionId` parameter is provided - and there is a single active session with no `sessionId` assigned - it returns the session authorizations and properties for that session;
+otherwise, an appropriate error message:
 
 **Parameters:**
 
@@ -73,9 +76,36 @@ An example of a successful response follows:
 }
 ```
 
+### Failure States
+
+The response MUST NOT be a JSON-RPC success result in any of the following failure states.
+
+#### Generic Failure Code
+
+Unless the dapp is known to the wallet and trusted, the generic/undefined error response:
+
+```jsonc
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "Unknown error"
+  }
+}
+```
+
+is RECOMMENDED for any of the following cases:
+
+- a `sessionId` is passed but not recognized,
+- no `sessionId` is passed and only active session(s) have `sessionId`s, or
+- there are no active sessions
+
 ## Security Considerations
 
 The introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
+
+To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
 
 ## Links
 

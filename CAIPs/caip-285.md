@@ -25,7 +25,10 @@ The motivation behind this proposal is to enhance the flexibility of [CAIP-25][]
 
 ### Definition
 
-The `wallet_revokeSession` method revokes the entire active session. If a `sessionId` is provided, it revokes that specific session; otherwise, it revokes the single active session between the wallet and the caller
+The `wallet_revokeSession` method revokes the entire active session.
+If a `sessionId` parameter is provided, it revokes that specific session only;
+if no `sessionId` parameter is provided and there is an active session without a `sessionId` this session gets revoked and a success result is returned;
+otherwise, an appropriate error message is sent.
 
 **Parameters:**
 
@@ -33,7 +36,7 @@ The `wallet_revokeSession` method revokes the entire active session. If a `sessi
 
 ### Request
 
-The caller would interface with a wallet via the same provider by which it called `wallet_createSession` to revoke a session by calling the following JSON-RPC request:
+The caller would interface with a wallet via the same channel by which it called `wallet_createSession` to revoke a session by calling the following JSON-RPC request:
 
 ```jsonc
 {
@@ -84,8 +87,8 @@ Unless the dapp is known to the wallet and trusted, the generic/undefined error 
 is RECOMMENDED for any of the following cases:
 
 - a sessionId is passed but not recognized,
-- no sessionId is passed and only active session(s) have sessionIds,
-- there are no active sessions,
+- no sessionId is passed and only active session(s) have sessionIds, or
+- there are no active sessions
 
 #### Trusted Failure Codes
 
@@ -110,7 +113,9 @@ The valid error message codes are the following:
 
 ## Security Considerations
 
-The introduction of this lifecycle method must ensure that only authorized parties can revoke the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
+The introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
+
+To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
 
 ## Links
 

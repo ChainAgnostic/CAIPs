@@ -1,6 +1,5 @@
 ---
-caip: x
-title: JSON-RPC Provider Lifecycle Methods for Session Management with CAIP-25 Sessions
+title: JSON-RPC Provider Lifecycle Methods for Session Management with CAIP-25 Sessions BPC
 author: [Alex Donesky] (@adonesky1)
 discussions-to: TBD
 status: Draft
@@ -11,7 +10,9 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-285 introduces new "lifecycle" methods and a new event for managing authorizations within an existing CAIP-25 session, allowing for addition, revocation, and retrieval of authorizations. These methods provide an alternative to session management via `sessionId`s, allowing `sessionId`s to be optional for CAIP-25.
+This backwards-compatible extension of the CAIP-25 standard defines new JSON-RPC methods for managing the lifecycle of authorizations within a session.
+These methods allow dapps and wallets to dynamically adjust authorizations, providing more granular control and better user experience.
+Additionally, it allows for session management without mandatory sessionIds, offering more flexibility in handling sessions in single-session contexts.
 
 ## Abstract
 
@@ -43,6 +44,19 @@ The motivation behind this proposal is to enhance the flexibility of CAIP-25 by 
 
    - **Current Method:** Wallet and app both persist configuration across updates.
    - **Proposed Method:** Use `wallet_getSession` to retrieve the current authorizations of the session.
+
+## Equivalence Chart
+
+||feature|CAIP-25 now w/sessionId|CAIP-285 w/o sessionId|
+|---|---|---|---|
+|1|dapp initialize (replaces session if already exist)|call `wallet_createSession` w/no sessionId |call `wallet_createSession` w/no sessionId|
+|2|wallet re-initialize|return `wallet_createSession` w/new sessionId **next time called**|n/a (not needed because `wallet_sessionChanges` notif can be sent, and wallet_getSession can be used to confirm everything is good)|
+|3|dapp get current session|n/a (should persist)|`wallet_getSession`  w/o sessionId|
+|4|dapp confirm current session|call `wallet_createSession` w/sessionId and same properties OR `wallet_getSession` w/sessionId|`wallet_getSession` w/o sessionId|
+|5|dapp revoke|call `wallet_createSession` w/no sessionId and no scopes OR `wallet_revokeSession` w/sessionId |`wallet_revoke`  w/o sessionId|
+|6|wallet revoke|return `wallet_createSession` w/new sessionId and no scopes **next time called** or `wallet_sessionChanged` w/ sessionId |`wallet_sessionChanged`  w/no scopes|
+|7|dapp update session|call `wallet_createSession` w/existing sessionId and new scopes|call `wallet_createSession` w/no sessionId|
+|8|wallet update session|return `wallet_createSession` w/new sessionId and no scopes **next time called** OR `wallet_sessionChanged` w/existing sessionId|`wallet_sessionChanged` w/o sessionId|
 
 ## Specification
 
