@@ -24,16 +24,16 @@ The motivation behind this proposal is to enhance the flexibility of CAIP-25 by 
 
 ## Lifecycle Equivalence Chart
 
-||feature|CAIP-25 now w/sessionId|CAIP-285 w/o sessionId|
+||feature|CAIP-25 now w/ sessionId|CAIP-285 w/o sessionId|
 |---|---|---|---|
-|1|dapp initialize (replaces session if already exist)|call `wallet_createSession` w/no sessionId |call `wallet_createSession` w/no sessionId|
-|2|wallet re-initialize|return `wallet_createSession` w/new sessionId **next time called**|n/a (not needed because [`wallet_sessionChanged`][CAIP-308] notification can be sent, and wallet_getSession can be used to confirm everything is good)|
-|3|dapp get current session|n/a (should persist)|[`wallet_getSession`][CAIP-307]  w/o sessionId|
-|4|dapp confirm current session|call `wallet_createSession` w/sessionId and same properties OR `wallet_getSession` w/sessionId|`wallet_getSession` w/o sessionId|
-|5|dapp revoke|call `wallet_createSession` w/no sessionId and no scopes OR [`wallet_revokeSession`][CAIP-285] w/sessionId |`wallet_revokeSession`  w/o sessionId|
-|6|wallet revoke|return `wallet_createSession` w/new sessionId and no scopes **next time called** or `wallet_sessionChanged` w/ sessionId |`wallet_sessionChanged`  w/no scopes|
-|7|dapp update session|call `wallet_createSession` w/existing sessionId and new scopes|call `wallet_createSession` w/no sessionId|
-|8|wallet update session|return `wallet_createSession` w/new sessionId and no scopes **next time called** OR `wallet_sessionChanged` w/existing sessionId|`wallet_sessionChanged` w/o sessionId|
+|1|dapp initialize (replaces session if already exist)|call [`wallet_createSession`][CAIP-25] w/o sessionId |call `wallet_createSession` w/o sessionId|
+|2|wallet re-initialize|return `wallet_createSession` w/ new sessionId **next time called**|n/a (not needed because [`wallet_sessionChanged`][CAIP-308] notification can be sent, and [`wallet_getSession`][CAIP-307] can be used to confirm everything is good)|
+|3|dapp get current session|n/a (should persist)|`wallet_getSession` w/o sessionId|
+|4|dapp confirm current session|call `wallet_createSession` w/ sessionId and same properties OR `wallet_getSession` w/ sessionId|`wallet_getSession` w/o sessionId|
+|5|dapp revoke|call `wallet_createSession` w/o sessionId and no scopes OR [`wallet_revokeSession`][CAIP-285] w/ sessionId |`wallet_revokeSession`  w/o sessionId|
+|6|wallet revoke|return `wallet_createSession` w/ new sessionId and no scopes **next time called** or `wallet_sessionChanged` w/ sessionId |`wallet_sessionChanged`  w/o scopes|
+|7|dapp update session|call `wallet_createSession` w/existing sessionId and new scopes|call `wallet_createSession` w/o sessionId|
+|8|wallet update session|return `wallet_createSession` w/ new sessionId and no scopes **next time called** OR `wallet_sessionChanged` w/existing sessionId|`wallet_sessionChanged` w/o sessionId|
 
 ## Lifecycle diagrams
 
@@ -61,7 +61,7 @@ sequenceDiagram
   note right of Caller: Connection Interrupted w/ Wallet Side Session Modification
   Caller-->Wallet: Connection Interrupted
   Wallet->>WalletDataStore: User initiated session change
-  Wallet->>Caller: wallet_sessionChanged
+  Wallet-->Caller: wallet_sessionChanged (attempt fails)
   Caller-->Wallet: Connection Re-established
   end
   rect rgb(255, 245, 255)
@@ -73,7 +73,7 @@ sequenceDiagram
   note right of Caller: Revoke Session
   Caller->>Wallet: wallet_revokeSession
   Wallet->>WalletDataStore: Update session data
-  Wallet-->>Caller: {"result": "session revoked"}
+  Wallet-->>Caller: {"result": "true"}
   end
   end
 ```
@@ -99,6 +99,7 @@ sequenceDiagram
   Caller->>Wallet: wallet_createSession (sessionId: 0xdeadbeef, {updatedScopes...})
   Wallet->>WalletDataStore: Update session data
   Wallet-->>Caller: {"sessionId": "0xdeadbeef", "sessionScopes": {(updated)sessionScopes...}}
+  Caller->>CallerDataStore: Persist session data
   end
   rect rgb(245, 245, 255)
   note right of Caller: User Initiated Session Change
@@ -117,7 +118,7 @@ sequenceDiagram
 ```
 ## Privacy Considerations
 
-MThe introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
+The introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
 
 To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
 ## Changelog
