@@ -145,7 +145,7 @@ The same absolute security posture is not expected for the metadata objects `sco
 callers and respondents alike SHOULD allow for their counterparties dropping or ignoring unfamiliar members from either.
 
 When a `sessionId` is returned with the initial success response, requesting applications and respondents alike are expected to manage state for the connection, including `scopedProperties` and `sessionProperties`;
-if multiple concurrent connections are allowed, callers are expected to maintain them segregated and identified by the unique `sessionId` returned initially.
+if multiple concurrent connections are allowed, callers are expected to track, persist and identify them separately by the unique `sessionId` returned initially.
 
 ### Response
 
