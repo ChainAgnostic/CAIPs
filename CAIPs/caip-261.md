@@ -237,7 +237,7 @@ The new assertion COULD refer to the overwritten assertion by adding its identif
 #### Trust Revocation
 
 When an issuer decides to revoke a previously issued trust assertion without replacing it, they should generate a new assertion that includes a `credentialStatus` object whose `id` key contains the identifier for the revoked assertion, and whose `statusPurpose` key set to the literal `revocation`.
-This new assertion should explicitly reference the assertion being revoked.
+This new assertion should explicitly reference the assertion being revoked using the `credentialStatus.id` mechanism ONLY, and not the `previousVersion` used for update assertions.
 By doing so, the system and its participants can easily identify the revocation status of any assertion, ensuring the trust graph remains accurate and up-to-date with the current trust relationships.
 
 **Revocation of trust assertion:**
