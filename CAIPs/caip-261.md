@@ -227,7 +227,11 @@ This new assertion, when issued, MUST supersede any previous assertions of the s
 The new assertion COULD refer to the overwritten assertion by adding its identifier as value for the `previousVersion` key at the top level of the assertion's data structure:
 
 ```json
-    ""previousVersion":": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
+{
+    ...
+    "previousVersion": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
+    ...
+}
 ```
 
 #### Trust Revocation
