@@ -205,7 +205,8 @@ A validity limitation can be introduced with the fields `validFrom` and `validUn
 }
 ```
 
-##### On-chain assertions vaidity period
+##### On-chain assertion validity period
+
 Most on-chain assertion storages manage expiration times natively without requiring changes to the overall schema.
 
 ### Trust Management
