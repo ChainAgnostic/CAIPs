@@ -331,7 +331,8 @@ After the verification process, the consumer can utilize the trust graph for gen
 
 #### Processing
 
-The consumption of the trust graph typically involves recursive calculations across the graph, following specific rules, to derive peers insights such as reputation scores.
+The consumption of the trust graph typically involves recursive calculations across the graph, following specific rules, to derive peer insights such as reputation scores.
+
 This process can utilize various existing or newly developed algorithms tailored to the unique requirements of the use-case.
 This specification remains unopiniated regarding this processing.
 
