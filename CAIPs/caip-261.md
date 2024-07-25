@@ -212,7 +212,7 @@ Many on-chain assertion storage systems manage expiration times natively, and in
 ### Trust Management
 
 Initially, issued trust assertions should be properly persisted to ensure their availability according to the use-case.
-Subsequently, as trust between peers evolves over time, this proposal outlines a method for managing the entire lifecycle of these assertions, encompassing their creation, update, and eventual revocation.
+Subsequently, as trust between peers evolves over time, this proposal outlines a method for managing the entire lifecycle of these assertions, encompassing their creation, update, and optional revocation.
 
 #### Trust Persistance
 
