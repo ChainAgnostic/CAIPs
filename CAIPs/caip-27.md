@@ -13,8 +13,8 @@ requires: 2, 25, 171, 217
 ## Simple Summary
 
 CAIP-27 defines a JSON-RPC method for a wallet-connected application to invoke
-a wallet invoke an JSON-RPC method  in a specified context defined by a valid 
-[scopeObject][CAIP-217] and tagged with a [sessionId][CAIP-171] for maintaining session continuity. 
+a wallet invoke an JSON-RPC method in a specified context defined by a valid
+[scopeObject][CAIP-217] and tagged with a [sessionId][CAIP-171] for maintaining session continuity.
 
 ## Abstract
 
@@ -32,7 +32,7 @@ but could also be used as part of other session management mechanisms.
 The motivation comes from the ambiguity that comes from interfacing with a
 multi-chain agent (e.g. a cryptocurrency wallets which supports the same
 method on multiple chains in a namespace, or supports methods with the same name
-on multiple namespaces). 
+on multiple namespaces).
 
 ## Specification
 
@@ -47,7 +47,7 @@ uppercase in this document are to be interpreted as described in [RFC
 
 The JSON-RPC provider is able to invoke a single JSON-RPC request accompanied
 by a [CAIP-2][] compatible `chainId` scoped by the [sessionId][CAIP-171] of
-a pre-existing session. 
+a pre-existing session.
 
 ### Request
 
@@ -62,17 +62,23 @@ The application would interface with an JSON-RPC provider to make request as fol
     "sessionId": "0xdeadbeef",
     "scope": "eip155:1",
     "request": {
-      "method": "personal_sign",
+      "method": "eth_sendTransaction",
       "params": [
-        "0x68656c6c6f20776f726c642c207369676e2074657374206d65737361676521",
-        "0xa89Df33a6f26c29ea23A9Ff582E865C03132b140"
+        {
+          "to": "0x4B0897b0513FdBeEc7C469D9aF4fA6C0752aBea7",
+          "from": "0xDeaDbeefdEAdbeefdEadbEEFdeadbeefDEADbEEF",
+          "gas": "0x76c0",
+          "value": "0x8ac7230489e80000",
+          "data": "0x",
+          "gasPrice": "0x4a817c800"
+        }
       ]
     }
   }
 }
 ```
 
-The JSON-RPC method is labeled as `wallet_invokeMethod` and expects 
+The JSON-RPC method is labeled as `wallet_invokeMethod` and expects
 three **required parameters**:
 
 - **sessionId** - [CAIP-171][] `SessionId` referencing a known, open session
@@ -86,7 +92,7 @@ three **required parameters**:
 
 1. A respondent MUST check the `scope` against the identified session object
    before executing or responding to such a request, and invalidate a request
-   for a scope not already authorized and persisted. 
+   for a scope not already authorized and persisted.
 2. The respondent SHOULD check that `request.method` is authorized in the
    session object for that specific scope.
 3. The respondent MAY check that the `params` are valid for that method, if its
