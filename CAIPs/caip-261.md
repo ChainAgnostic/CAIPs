@@ -293,7 +293,8 @@ Note that composing [EIP712][] with [W3C Verifiable Credentials][VC] requires th
       "type": "EthereumEip712Signature2021"
   }
 ```
-##### On-chain assertions verification
+##### On-chain assertion verification
+
 On-chain the verification is automaticaly done by the trusted protocol, but can be verified according to the protocol specificities.
 
 #### Format Verification
