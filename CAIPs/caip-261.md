@@ -388,7 +388,7 @@ This structure can be enriched according to the category or context of the trust
 ```
 
 *The above example represents an assertion issued by the issuer `did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0`.
-It claims a certain level of trust to the subject `did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044` in the area of software development calculated with the EigenTrust algorithm.*
+It claims a certain level of trustworthiness for the subject `did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044` in the area of software development calculated with the EigenTrust algorithm.*
 
 ## Rationale
 
