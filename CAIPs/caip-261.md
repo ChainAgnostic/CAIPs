@@ -295,7 +295,7 @@ Note that composing [EIP712][] with [W3C Verifiable Credentials][VC] requires th
 ```
 ##### On-chain assertion verification
 
-On-chain the verification is automaticaly done by the trusted protocol, but can be verified according to the protocol specificities.
+When computed "on-chain" (i.e. in a node runtime), the verification logic is automaticaly handled by core transaction logic, but can also be verified independently by mirroring this logic elsewhere or after the fact from on-chain records.
 
 #### Format Verification
 
