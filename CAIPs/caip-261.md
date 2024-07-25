@@ -61,7 +61,7 @@ They SHOULD be identified by a immutable identifier.
 
 Subsequent data structures are represented in accordance with the [Verifiable Credential Data Model](https://www.w3.org/TR/vc-data-model/) and, in some cases, in raw format relevant for on-chain assertions. 
 
-Verifiable credentials can be used both off-chain and on-chain for better portability, while raw formats can be utilized in decentralized data storages (e.g., Ceramic Network) or on-chain assertion storages (e.g., Verax, EAS) as a new schema to issue assertions without the need for additional layers of verifiability and interoperability.
+Verifiable credentials can be used both off-chain and on-chain for better portability, while raw formats can be utilized in decentralized data storage systems (e.g., Ceramic Network) or on-chain assertion systems (e.g., Verax, EAS) as a registered schema to issue assertions without the need for additional layers of verifiability and interoperability.
 
 However, this standard does not prescribe any specific document type, though it recommends using internationally recognized standards or trusted attestation services."
 
