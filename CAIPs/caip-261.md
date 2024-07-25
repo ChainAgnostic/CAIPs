@@ -300,7 +300,8 @@ When computed "on-chain" (i.e. in a node runtime), the verification logic is aut
 #### Format Verification
 
 Assertions MUST adhere to the predefined schema to be deemed valid.
-For example, in the context of a [W3C Verifiable Credential][VC], the document MUST include a 'credentialSchema' as a top-level property, with a value that dereferences to a schema known to the verifier and to which the document conforms.
+For example, in the context of a [W3C Verifiable Credential][VC], the document MUST include an array of 'credentialSchema' objects as a top-level property, one or more of which contains a value that dereferences to a schema known to the verifier, and to which the document conforms.
+
 Such a property provides verifiers with the necessary information to assess whether the data presented conforms to the established schema(s).
 
 ```json
