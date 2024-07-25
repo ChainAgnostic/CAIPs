@@ -111,7 +111,9 @@ This standard proposes the following conceptualization for the trust concept:
 },
 "proof": {}
 ```
-*Raw  Format*
+
+**Raw Format**
+
 ```json
   [
     {
