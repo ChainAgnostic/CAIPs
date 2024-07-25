@@ -337,6 +337,7 @@ This process can utilize various existing or newly developed algorithms tailored
 This specification remains unopiniated regarding this processing.
 
 However, this specification offers some guidelines to ensure integrity and transparency in the processing of the trust graph information:
+
 - Calculations made using the established trust graph SHOULD be fully provable, necessitating the disclosure of all consumed data and the computation algorithm used. This level of transparency guarantees that trust-based calculations are both replicable and verifiable, allowing any interested party to understand or question the outcomes,
 - Trust assertions COULD be disregarded or given less weight according to clear rules (for example, a minimum of activity per asserter, the ownership of an asset, or if assertions contain offtopic or unparseable information)
 
