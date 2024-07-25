@@ -224,7 +224,8 @@ To fulfill its purpose, these assertions SHOULD be persisted using mechanisms th
 When an issuer needs to update a trust assertion, they simply generate a new assertion containing the revised information.
 This new assertion, when issued, MUST supersede any previous assertions of the same type, issued by the same entity, and pertaining to the same subject.
 
-The new assertion COULD refer to the overwritten assertion by adding its identifier in the top level of the data structure
+The new assertion COULD refer to the overwritten assertion by adding its identifier as value for the `previousVersion` key at the top level of the assertion's data structure:
+
 ```json
     ""previousVersion":": "ipfs://QmcwYEnWysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gt",
 ```
