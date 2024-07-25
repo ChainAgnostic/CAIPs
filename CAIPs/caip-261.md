@@ -77,6 +77,7 @@ This standard proposes the following conceptualization for the trust concept:
 - `reason` (optional): This defines the motivation of the trust. It MAY be based on some tagging system or other dictionary shared across producers and consumers to guarantee interoperability;
 
 **Assertion of trust to a peer:**
+
 ```json
 "@context": ["https://www.w3.org/2018/credentials/v1"],
 "type": ["VerifiableCredential", "PeerTrustCredential"],
