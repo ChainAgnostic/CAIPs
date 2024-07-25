@@ -63,7 +63,7 @@ Subsequent data structures are represented in accordance with the [Verifiable Cr
 
 Verifiable credentials can be used both off-chain and on-chain for better portability, while raw formats can be utilized in decentralized data storage systems (e.g., Ceramic Network) or on-chain assertion systems (e.g., Verax, EAS) as a registered schema to issue assertions without the need for additional layers of verifiability and interoperability.
 
-However, this standard does not prescribe any specific document type, though it recommends using internationally recognized standards or trusted attestation services."
+However, this standard does not prescribe any specific document type, though it recommends using internationally recognized standards or trusted attestation services.
 
 ![diagram2](https://github.com/dayksx/CAIPs/assets/77788154/479df06f-3dd5-4c88-b396-4cfae01ff8d6)
 
