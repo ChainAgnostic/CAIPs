@@ -253,6 +253,7 @@ By doing so, the system and its participants can easily identify the revocation 
     "statusPurpose": "revocation",
 },
 ```
+
 ##### On-chain assertions revocation
 Most on-chain assertion storages manage revocation natively without requiring changes to the overall schema.
 
