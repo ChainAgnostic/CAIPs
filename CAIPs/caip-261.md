@@ -195,12 +195,14 @@ Trust, being inherently dynamic, can be managed within the document by specifyin
 A validity limitation can be introduced with the fields `validFrom` and `validUntil`.
 
 ```json
-"@context": ["https://www.w3.org/2018/credentials/v1"],
-"type": ["VerifiableCredential", "PeerTrustCredential"],
-"issuanceDate": "2024-02-15T07:05:56.273Z",
-"issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
-"validFrom": "2024-01-01T19:23:24Z",
-"validUntil": "2025-01-01T19:23:24Z",
+{
+    "@context": ["https://www.w3.org/2018/credentials/v1"],
+    "type": ["VerifiableCredential", "PeerTrustCredential"],
+    "issuanceDate": "2024-02-15T07:05:56.273Z",
+    "issuer": "did:pkh:eip155:1:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
+    "validFrom": "2024-01-01T19:23:24Z",
+    "validUntil": "2025-01-01T19:23:24Z"
+}
 ```
 
 ##### On-chain assertions vaidity period
