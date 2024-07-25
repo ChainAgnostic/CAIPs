@@ -255,7 +255,7 @@ By doing so, the system and its participants can easily identify the revocation 
 ```
 
 ##### On-chain assertions revocation
-Most on-chain assertion storages manage revocation natively without requiring changes to the overall schema.
+Many on-chain assertion storage systems manage revocation natively (i.e. as deletions of the original assertion) and thus explicit revocation may be redundant unless forward-compatibility or interoperability with other corpuses are targeted.
 
 #### Trust Graph Expansion
 
