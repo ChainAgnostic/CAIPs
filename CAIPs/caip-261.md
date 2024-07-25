@@ -421,7 +421,9 @@ Distrust assertions allow for the capture of suspicious behaviors or subjective 
 The verification process is crucial to ensure the use of valid and up-to-date assertions, thus maintaining the trust system's reliability and accuracy.
 This step ensures the integrity and reliability of the assertions, which is essential for supporting trust and interoperability within the ecosystem.
 
-## Test Cases
+## Possible Use Cases
+
+*This section is non-normative and not an exhaustive list.*
 
 ### Social Network
 
