@@ -261,7 +261,7 @@ Many on-chain assertion storage systems manage revocation natively (i.e. as dele
 
 ##### Implicit Trust Assertions
 
-While the Peer Trust Assertion model outlined previously focuses on explicit trust signals, the trust graph can be further enriched with additional implicit on-chain and/or off-chain trust signals related to its peers. These can include Proof of Humanity, Proof of Membership, Proof of Contributions, Proof of Attendance, Social Graphs, among others.
+While the Peer Trust Assertion model outlined previously focuses on explicit trust signals, the trust graph can be further enriched with additional implicit on-chain and/or off-chain trust signals related to its peers. These can include proof of humanity, proof of membership, proof of contribution, proof of attendance, or other forms of open-data query, including social-graph checks.
 This specification does not define the handling of implicit trust; it leaves the integration of relevant data to the discretion of the final consumer, depending on the requirements of the specific use-case.
 
 ##### Additional Explicit Trust Assertions
