@@ -305,11 +305,14 @@ For example, in the context of a [W3C Verifiable Credential][VC], the document M
 Such a property provides verifiers with the necessary information to assess whether the data presented conforms to the established schema(s).
 
 ```json
-"@context": ["https://www.w3.org/2018/credentials/v1"],
-  "credentialSchema": [{
-    "id": "ipfs://QmcwYEnLysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gl",
-    "type": "JsonSchema"
-  },
+{
+    "@context": ["https://www.w3.org/2018/credentials/v1"],
+    "credentialSchema": [{
+        "id": "ipfs://QmcwYEnLysTyepjjtJw19oTDwuiopbCDbEcCuprCBiL7gl",
+        "type": "JsonSchema"
+    }],
+    ...
+}
 ```
 
 For resiliency the schema COULD be stored redundantly in a decentralized protocol such as IPFS.
