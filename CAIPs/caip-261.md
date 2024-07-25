@@ -355,23 +355,26 @@ This structure can be enriched according to the category or context of the trust
 ##### Peer Trust Score
 
 ```json
-"@context": ["https://www.w3.org/2018/credentials/v1"],
-"type": ["VerifiableCredential", "PeerTrustScorCredential"],
-"issuanceDate": "2023-11-24T12:24:42Z",
-"issuer": "did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0",
-"credentialSubject":
 {
-  "id": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
-  "trustScore": {
-    "trustScoreScope": ["SoftwareDevelopment"],
-    "trustValue": 0.19191918793049725,
-    "trustResult": 0.7,
-    "creationAt": "2024-02-27T10:28:00.000Z",
-    "trustScoreType": "EigenTrust"
+  "@context": ["https://www.w3.org/2018/credentials/v1"],
+  "type": ["VerifiableCredential", "PeerTrustScorCredential"],
+  "issuanceDate": "2023-11-24T12:24:42Z",
+  "issuer": "did:pkh:eip155:1:0x23d86aa31d4198a78baa98e49bb2da52cd15c6f0",
+  "credentialSubject":
+  {
+    "id": "did:pkh:eth:0x44dc4E3309B80eF7aBf41C7D0a68F0337a88F044",
+    "trustScore": {
+      "trustScoreScope": ["SoftwareDevelopment"],
+      "trustValue": 0.19191918793049725,
+      "trustResult": 0.7,
+      "creationAt": "2024-02-27T10:28:00.000Z",
+      "trustScoreType": "EigenTrust"
+    }
   },
-  
-},
-"proof": {}
+  proof: {
+    ...
+  }
+}
 ```
 
 **Raw Format**
