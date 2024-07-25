@@ -217,7 +217,7 @@ Subsequently, as trust between peers evolves over time, this proposal outlines a
 #### Trust Persistance
 
 Trust Assertions issued by peers compose into a verifiable trust graph that can be consumed for trustless reputation-based use cases.
-To fulfill its purpose, these assertions SHOULD be persisted using mechanisms that provide these properties relative to the given use-case requirements such as Security, Data integrity, Data ownership, Interoperabiltiy, Composability, Scalability, Censorship resistance, Sustainability...
+To fulfill its purpose, these assertions SHOULD be persisted using mechanisms that provide these properties without compromising the given use-case's other technical requirements, such as security, data integrity, data ownership, defined interoperability, composability, scalability, censorship-resistance, sustainability, etc.
 
 #### Trust Update
 
