@@ -72,7 +72,7 @@ However, this standard does not prescribe any specific document type, though it 
 Modeling trust and distrust towards an individual or entity can be a complex task due to the subjective and multifaceted nature of trust.
 This standard proposes the following conceptualization for the trust concept:
 
-- `scope`: This defines the applicable trust perimeter. It SHOULD be a noun. Any implementation or profile of this specification COULD enumerate or provide reference lists of valid "scope" values to facilitate interoperability across different systems.
+- `scope`: This defines the applicable trust perimeter. It SHOULD be a noun. Any implementation or profile of this specification SHOULD enumerate or provide reference lists of valid "scope" values to facilitate interoperability across different systems.
 - `level`: This defines the extent of trust. It MUST remain within the following range: [-1,1]. This could be translated as follows: 'Very low' (-1), 'Low' (-0.5), 'Neutral' (0), 'High' (0.5), 'Very High' (1);
 - `reason` (optional): This defines the motivation of the trust. It MAY be based on some tagging system or other dictionary shared across producers and consumers to guarantee interoperability;
 
