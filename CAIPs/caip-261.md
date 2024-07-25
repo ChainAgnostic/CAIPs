@@ -373,7 +373,9 @@ This structure can be enriched according to the category or context of the trust
 },
 "proof": {}
 ```
-*Raw Format*
+
+**Raw Format**
+
 ```json
 "trustScoreScope": ["SoftwareDevelopment"],
 "trustValue": 0.19191918793049725,
