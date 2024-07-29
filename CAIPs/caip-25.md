@@ -7,7 +7,7 @@ status: Review
 type: Standard
 created: 2020-10-14
 updated: 2024-07-02
-requires: 2, 10, 171, 217
+requires: 2, 10, 171, 217, 285, 308, 312
 ---
 
 ## Simple Summary
@@ -41,7 +41,7 @@ The session is proposed by a caller and the response by the respondent is used a
 - When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session.
 The caller is not expected to persist session data or even a `sessionId`.
 Note that wallets NOT returning `sessionId`s MUST implement additional methods and notifications to handle the full lifecycle of the session:
-    * [`wallet_getSession`][CAIP-307] to enable the caller to query for the current status of the session at any time.
+    * [`wallet_getSession`][CAIP-312] to enable the caller to query for the current status of the session at any time.
     * [`wallet_revokeSession`][CAIP-285] to explicitly end the session
     * [`wallet_sessionChanged`][CAIP-308] to notify caller of updated session authorizations.
 
@@ -159,7 +159,7 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The successful result MAY contain a string (keyed as `sessionId` with a value conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`. If the wallet does not return a `sessionId` in the response, the connection will only consist of one session at a time, the contents of which are always retrievable for the caller via [`wallet_getSession`][CAIP-307].
+The successful result MAY contain a string (keyed as `sessionId` with a value conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`. If the wallet does not return a `sessionId` in the response, the connection will only consist of one session at a time, the contents of which are always retrievable for the caller via [`wallet_getSession`][CAIP-312].
 
 The successful result MUST contain an object called `sessionScopes` which contains 1 or more `scopeObjects`.
 - All required `scopeObjects` and all, none, or some of the optional `scopeObject`s (at the discretion of the provider) MUST be included if successful.
@@ -373,6 +373,7 @@ was in violation of policy).
 
 ## Changelog
 
+-- 2024-07-29: added lifecycle management methods and notification for single session connections, see [CAIP-316][] for equivalence chart and diagrams
 - 2024-07-16: redefined requiredScopes to be functionally equivalent to optionalScopes, but semantically different; previously, authorizing less than 100% of reqScopes required rejecting the connection
 - 2023-03-29: refactored out scopeObject syntax as separate CAIP-217, simplified
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement)
@@ -386,8 +387,9 @@ was in violation of policy).
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 - [CAIP-285][] - `wallet_revokeSession` Specification
-- [CAIP-307][] - `wallet_getSession` Specification
+- [CAIP-312][] - `wallet_getSession` Specification
 - [CAIP-308][] - `wallet_sessionChanged` Specification
+- [CAIP-316][] -  Session Lifecycle Management equivalence chart and diagrams
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
@@ -395,8 +397,9 @@ was in violation of policy).
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [CAIP-285]: https://chainagnostic.org/CAIPs/caip-285
-[CAIP-307]: https://chainagnostic.org/CAIPs/caip-307
+[CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
 [CAIP-308]: https://chainagnostic.org/CAIPs/caip-308
+[CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
 

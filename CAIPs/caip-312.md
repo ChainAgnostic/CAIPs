@@ -11,7 +11,7 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-307 introduces the `wallet_getSession` method for retrieving authorizations from an active [CAIP-25][] initiated session.
+CAIP-312 introduces the `wallet_getSession` method for retrieving authorizations from an active [CAIP-25][] initiated session.
 
 ## Abstract
 
