@@ -1,5 +1,5 @@
 ---
-caip: 308
+caip: 311
 title: JSON-RPC Event for Session Authorization Updates
 author: [Alex Donesky] (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/285/files
@@ -11,7 +11,7 @@ requires: 25, 217
 
 ## Simple Summary
 
-CAIP-308 introduces the `wallet_sessionChanged` event for notifying callers party to an active [CAIP-25][] session of updates to session authorizations made by users directly in the wallet.
+CAIP-311 introduces the `wallet_sessionChanged` event for notifying callers party to an active [CAIP-25][] session of updates to session authorizations made by users directly in the wallet.
 
 ## Abstract
 

@@ -29,7 +29,7 @@ The equivalence across different transports can be counter-intuitive, so the fol
 ||feature|CAIP-25 now w/ sessionId|CAIP-285 w/o sessionId|
 |---|---|---|---|
 |1|dapp initialize (replaces session if already exist)|call [`wallet_createSession`][CAIP-25] w/o sessionId |call `wallet_createSession` w/o sessionId|
-|2|wallet re-initialize|return `wallet_createSession` w/ new sessionId **next time called**|n/a (not needed because [`wallet_sessionChanged`][CAIP-308] notification can be sent, and [`wallet_getSession`][CAIP-312] can be used to confirm everything is good)|
+|2|wallet re-initialize|return `wallet_createSession` w/ new sessionId **next time called**|n/a (not needed because [`wallet_sessionChanged`][CAIP-311] notification can be sent, and [`wallet_getSession`][CAIP-312] can be used to confirm everything is good)|
 |3|dapp get current session|n/a (should persist)|`wallet_getSession` w/o sessionId|
 |4|dapp confirm current session|call `wallet_createSession` w/ sessionId and same properties OR `wallet_getSession` w/ sessionId|`wallet_getSession` w/o sessionId|
 |5|dapp revoke|call `wallet_createSession` w/o sessionId and no scopes OR [`wallet_revokeSession`][CAIP-285] w/ sessionId |`wallet_revokeSession`  w/o sessionId|
@@ -142,14 +142,14 @@ To achieve this, it is recommended to establish a connection over domain-bound o
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 - [CAIP-285][] - `wallet_revokeSession` Specification
 - [CAIP-312][] - `wallet_getSession` Specification
-- [CAIP-308][] - `wallet_sessionChanged` Specification
+- [CAIP-311][] - `wallet_sessionChanged` Specification
 
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [CAIP-285]: https://chainagnostic.org/CAIPs/caip-285
-[CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
-[CAIP-308]: https://chainagnostic.org/CAIPs/caip-308
+[CAIP-312]: https://chainagnostic.org/CAIPs/caip-312
+[CAIP-311]: https://chainagnostic.org/CAIPs/caip-311
 
 ## Copyright
 

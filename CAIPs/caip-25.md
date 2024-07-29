@@ -7,7 +7,7 @@ status: Review
 type: Standard
 created: 2020-10-14
 updated: 2024-07-02
-requires: 2, 10, 171, 217, 285, 308, 312
+requires: 2, 10, 171, 217, 285, 311, 312
 ---
 
 ## Simple Summary
@@ -43,7 +43,7 @@ The caller is not expected to persist session data or even a `sessionId`.
 Note that wallets NOT returning `sessionId`s MUST implement additional methods and notifications to handle the full lifecycle of the session:
     * [`wallet_getSession`][CAIP-312] to enable the caller to query for the current status of the session at any time.
     * [`wallet_revokeSession`][CAIP-285] to explicitly end the session
-    * [`wallet_sessionChanged`][CAIP-308] to notify caller of updated session authorizations.
+    * [`wallet_sessionChanged`][CAIP-311] to notify caller of updated session authorizations.
 
 After a session is established between wallet and caller, subsequent `wallet_createSession` calls can be used to update the properties and authorization scopes of the session.
 - When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls either: 
@@ -51,7 +51,7 @@ After a session is established between wallet and caller, subsequent `wallet_cre
   - do not include a `sessionId`, in which case a new session is created - the respondent generates a new `sessionId` and sends it with the success response - and the previous session dangles in parallel (until its expiration, if applicable), though maintaining concurrent sessions is discouraged (see Security Considerations).
 - When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous singular session between caller and wallet.
 
-When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-308] notification.
+When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-311] notification.
 
 If a connection is initially established without a `sessionId` and the wallet later implements `sessionId` support, the wallet can revoke the single session and notify the caller via `wallet_sessionChanged`. When the caller seeks to re-establish the session via `wallet_createSession`, the wallet should return a `sessionId` in the response.
 
@@ -388,7 +388,7 @@ was in violation of policy).
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
 - [CAIP-285][] - `wallet_revokeSession` Specification
 - [CAIP-312][] - `wallet_getSession` Specification
-- [CAIP-308][] - `wallet_sessionChanged` Specification
+- [CAIP-311][] - `wallet_sessionChanged` Specification
 - [CAIP-316][] -  Session Lifecycle Management equivalence chart and diagrams
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
@@ -398,7 +398,7 @@ was in violation of policy).
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [CAIP-285]: https://chainagnostic.org/CAIPs/caip-285
 [CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
-[CAIP-308]: https://chainagnostic.org/CAIPs/caip-308
+[CAIP-311]: https://chainagnostic.org/CAIPs/CAIP-311
 [CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
