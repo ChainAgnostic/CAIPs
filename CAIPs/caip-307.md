@@ -1,8 +1,8 @@
 ---
-caip: 307
+caip: 312
 title: JSON-RPC Method for Retrieving Session Authorizations
 author: [Alex Donesky] (@adonesky1)
-discussions-to: TBD
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/285/files
 status: Draft
 type: Standard
 created: 2024-07-13
@@ -105,7 +105,7 @@ is RECOMMENDED for any of the following cases:
 
 The introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
 
-To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
+To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable, additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
 
 ## Links
 

@@ -34,6 +34,8 @@ uppercase in this document are to be interpreted as described in [RFC
 
 ### Definition
 
+#### Session Lifecycle
+
 The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session between the two parties.
 - When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session should be persisted and tracked over the life of the session by both parties in a discrete data store.
 - When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session.
@@ -56,6 +58,10 @@ If a connection is initially established without a `sessionId` and the wallet la
 When a caller wishes revoke an active session, it can do so by calling [`wallet_revokeSession`][CAIP-285].
 - When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session.
 - When the wallet does not provide a `sessionId` in its initial response, a call to `wallet_revokeSession` revokes the single active session between caller and wallet.
+
+For more detail on the lifecycle and management of sessions with and without `sessionId`s, see the informational [CAIP-316][].
+
+#### Session Data and Metadata
 
 Initial and ongoing authorization requests are grouped into two top-level arrays of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
 respectively.
@@ -134,8 +140,6 @@ Each object should be keyed to the scope of a `sessionScopes` member to which it
 All properties of each object in `scopedProperties` MUST be interpreted by the respondent as proposals or declarations rather than as requirements.
 In addition to making additional properties of or metadata about the corresponding `sessionScopes` member explicit, they can also annotate, support, or extend the negotiation of scope proposals (e.g., providing connection information about unfamiliar scopes, or which accounts to expose to each).
 
-When there is an active session between the wallet and the caller for which the wallet assigned a `sessionId` in it's initial response, that same `sessionId` should be added to the `wallet_createSession` request to update the associated session.
-
 A fourth object, `sessionProperties`, is optional and its shape undefined.
 It is intended for metadata or additional information not bound to any specific authorization scope, but made "global" to the connection.
 
@@ -144,7 +148,9 @@ similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays re
 The same absolute security posture is not expected for the metadata objects `scopedProperties` and `sessionProperties`, but caution is still recommended for such extensions:
 callers and respondents alike SHOULD allow for their counterparties dropping or ignoring unfamiliar members from either.
 
-When a `sessionId` is returned with the initial success response, requesting applications and respondents alike are expected to manage state for the connection, including `scopedProperties` and `sessionProperties`;
+When a `sessionId` is returned with the initial success response, requesting applications and respondents alike are expected to manage state for the connection, including `scopedProperties` and `sessionProperties`, and that same `sessionId` should be added to the `wallet_createSession` request to update the associated session.
+When no `sessionId` is included in an initial success response, a caller does not need to maintain `sessionId` state and can assume the extension methods defined in [CAIP-311][] and [CAIP-312][] are available for refreshing and updating the session directly.
+See [CAIP-316][] for more on lifecycle management.
 if multiple concurrent connections are allowed, callers are expected to track, persist and identify them separately by the unique `sessionId` returned initially.
 
 ### Response

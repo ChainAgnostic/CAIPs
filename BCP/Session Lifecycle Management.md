@@ -1,26 +1,28 @@
 ---
+caip: 316
 title: JSON-RPC Provider Session Lifecycle Management with CAIP-25 Sessions BCP
 author: [Alex Donesky] (@adonesky1)
-discussions-to: TBD
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/285/files
 status: Draft
-type: Standard
+type: Informational
 created: 2024-06-07
-requires: 25, 217, 285, 307, 308
+requires: 25, 217, 285, 311, 312
 ---
 
 ## Simple Summary
 
-This backwards-compatible extension of the [CAIP-25][] standard defines new JSON-RPC methods for managing the lifecycle of authorizations within a session.
+This overview compares new and old forms of [CAIP-25][] connection flow to ensure safe and well-informed implementation of either or both.
+[CAIP-311][] and [CAIP-312][] extended [CAIP-25][] by defining new JSON-RPC methods for managing the lifecycle of authorizations within a session.
 These methods allow dapps and wallets to dynamically adjust authorizations, providing more granular control and better user experience.
 Additionally, it allows for session management without mandatory [sessionIds][CAIP-171], offering more flexibility in handling sessions in single-session contexts.
 
 ## Abstract
 
-This proposal aims to extend the CAIP-25 standard by defining new JSON-RPC methods for managing the lifecycle of authorizations within a session. These methods allow dapps and wallets to dynamically adjust authorizations, providing more granular control and better user experience. Additionally, it allows for session management without mandatory sessionIds, offering more flexibility in handling sessions.
+By loosening the earlier requirement that both caller and wallet maintain a session identifier to track the session across potentially shared or insecure transports, single-session transport options can take advantage of direct RPC calls to do more explicit session-management.
 
 ## Motivation
 
-The motivation behind this proposal is to enhance the flexibility of CAIP-25 by enabling management of session authorizations without sessionIds which don't map well to extension based wallet's dapp connections and could therefore add constraints and burdens to existing flows. The proposed methods provide an intuitive way to add, revoke, and retrieve authorizations within an existing session, simplifying the management of session lifecycles.
+The equivalence across different transports can be counter-intuitive, so the following diagrams and examples are provided for apples-to-apples comparisons.
 
 ## Lifecycle Equivalence Chart
 
@@ -109,6 +111,13 @@ sequenceDiagram
   end
   rect rgb(255, 245, 255)
   note right of Caller: Revoke Session
+  Caller->>Wallet: wallet_createSession (sessionId: 0xnewbeef, no scopes)
+  Wallet->>WalletDataStore: Create new, empty session 0xnewbeef ; clear all older sessions w/same dapp
+  Wallet-->>Caller: {"result": "true"} (session is revoked)
+  Caller->>CallerDataStore: Clear session data
+  end
+  rect rgb(255, 245, 255)
+  note right of Caller: Revoke Session (alternate)
   Caller->>Wallet: wallet_revokeSession (sessionId: 0xdeadbeef)
   Wallet->>WalletDataStore: Update session data
   Wallet-->>Caller: {"result": "true"} (session is revoked)
@@ -120,7 +129,7 @@ sequenceDiagram
 
 The introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
 
-To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
+To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable, additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
 ## Changelog
 
 - 2024-06-07: Initial draft of CAIP-285.
