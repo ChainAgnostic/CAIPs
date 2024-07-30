@@ -15,7 +15,7 @@ CAIP-312 introduces the `wallet_getSession` method for retrieving authorizations
 
 ## Abstract
 
-This proposal aims to extend the [CAIP-25][] standard by defining a new JSON-RPC method for retrieving authorizations within a session. This method allows callers to dynamically retrieve authorizations and properties without necessarily having to persist and track it throughout the session's life.
+This proposal aims to extend the [CAIP-25][] standard by defining a new JSON-RPC method for retrieving authorizations within a session. This method allows callers to dynamically retrieve authorizations and properties.
 
 ## Motivation
 
