@@ -7,7 +7,7 @@ status: Review
 type: Standard
 created: 2020-10-14
 updated: 2024-07-02
-requires: 2, 10, 171, 217
+requires: 2, 10, 171, 217, 285, 311, 312
 ---
 
 ## Simple Summary
@@ -25,11 +25,43 @@ The motivation comes from the lack of standardization across blockchains to expo
 
 ## Specification
 
-The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session that both parties will persist.
-The properties and authorization scopes that make up the session are expected to be persisted and tracked over time by both parties in a discrete data store, identified by an entropic [identifier][CAIP-171] assigned in the initial response.
-This object gets updated, extended, closed, etc. by successive calls and notifications, each tagged by this identifier.
+### Language
 
-If a respondent (e.g. a wallet) needs to initiate a new session, whether due to user input, security policy, or session expiry reasons, it can simply generate a new session identifier to signal this notification to the calling provider; if a caller needs to initiate a new session, it can do so by sending a new request without a `sessionIdentifier`. In such cases, a respondent (e.g. wallet) may choose to explicitly close all sessions upon generation of a new one from the same origin or identity, or leave it to time-out; maintaining concurrent sessions is discouraged (see Security Considerations).
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in
+uppercase in this document are to be interpreted as described in [RFC
+2119][]
+
+### Definition
+
+#### Session Lifecycle
+
+The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session between the two parties.
+- When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session should be persisted and tracked over the life of the session by both parties in a discrete data store.
+- When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session.
+The caller is not expected to persist session data or even a `sessionId`.
+Note that wallets NOT returning `sessionId`s MUST implement additional methods and notifications to handle the full lifecycle of the session:
+    * [`wallet_getSession`][CAIP-312] to enable the caller to query for the current status of the session at any time.
+    * [`wallet_revokeSession`][CAIP-285] to explicitly end the session
+    * [`wallet_sessionChanged`][CAIP-311] to notify caller of updated session authorizations.
+
+After a session is established between wallet and caller, subsequent `wallet_createSession` calls can be used to update the properties and authorization scopes of the session.
+- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls either: 
+  - include a previously used `sessionId` on the root of the request meaning this request is intended to modify that session, or
+  - do not include a `sessionId`, in which case a new session is created - the respondent generates a new `sessionId` and sends it with the success response - and the previous session dangles in parallel (until its expiration, if applicable), though maintaining concurrent sessions is discouraged (see Security Considerations).
+- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous singular session between caller and wallet.
+
+When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-311] notification.
+
+If a connection is initially established without a `sessionId` and the wallet later implements `sessionId` support, the wallet can revoke the single session and notify the caller via `wallet_sessionChanged`. When the caller seeks to re-establish the session via `wallet_createSession`, the wallet should return a `sessionId` in the response.
+
+When a caller wishes revoke an active session, it can do so by calling [`wallet_revokeSession`][CAIP-285].
+- When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session.
+- When the wallet does not provide a `sessionId` in its initial response, a call to `wallet_revokeSession` revokes the single active session between caller and wallet.
+
+For more detail on the lifecycle and management of sessions with and without `sessionId`s, see the informational [CAIP-316][].
+
+#### Session Data and Metadata
 
 Initial and ongoing authorization requests are grouped into two top-level arrays of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
 respectively.
@@ -93,7 +125,7 @@ Example:
     "sessionProperties": {
       "expiry": "2022-12-24T17:07:31+00:00",
       "caip154-mandatory": "true"
-    }         
+    }
   }
 }
 ```
@@ -116,8 +148,10 @@ similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays re
 The same absolute security posture is not expected for the metadata objects `scopedProperties` and `sessionProperties`, but caution is still recommended for such extensions:
 callers and respondents alike SHOULD allow for their counterparties dropping or ignoring unfamiliar members from either.
 
-Requesting applications and respondents alike are expected to manage state for the connection, including `scopedProperties` and `sessionProperties`;
-if multiple concurrent connections are allowed, callers are expected to maintain them segregated and identified by the unique `sessionId` returned initially.
+When a `sessionId` is returned with the initial success response, requesting applications and respondents alike are expected to manage state for the connection, including `scopedProperties` and `sessionProperties`, and that same `sessionId` should be added to the `wallet_createSession` request to update the associated session.
+When no `sessionId` is included in an initial success response, a caller does not need to maintain `sessionId` state and can assume the extension methods defined in [CAIP-311][] and [CAIP-312][] are available for refreshing and updating the session directly.
+See [CAIP-316][] for more on lifecycle management.
+if multiple concurrent connections are allowed, callers are expected to track, persist and identify them separately by the unique `sessionId` returned initially.
 
 ### Response
 
@@ -125,10 +159,9 @@ The wallet can respond to this method with either a success result or an error m
 
 #### Success
 
-The successful result contains one mandatory string (keyed as `sessionId` with a value conformant to [CAIP-171][]) and two session objects, both mandatory and non-empty.
+The successful result MAY contain a string (keyed as `sessionId` with a value conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`. If the wallet does not return a `sessionId` in the response, the connection will only consist of one session at a time, the contents of which are always retrievable for the caller via [`wallet_getSession`][CAIP-312].
 
-The first is called `sessionScopes` and contains 1 or more `scopeObjects`.
-
+The successful result MUST contain an object called `sessionScopes` which contains 1 or more `scopeObjects`.
 - All required `scopeObjects` and all, none, or some of the optional `scopeObject`s (at the discretion of the provider) MUST be included if successful.
 - Unlike the request, each scope object MUST also contain an `accounts` array,
 containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
@@ -285,7 +318,7 @@ or feature-completeness information to a malicious or fingerprinting caller.
 ## Security Considerations
 
 The crucial security function of a shared session negotiated and maintained by a
-series of CAIP-25 calls is to reduce ambiguity in authorization.  This requires
+series of CAIP-25 calls is to reduce ambiguity in authorization. This requires
 a potentially counterintuitive structuring of the building-blocks of a
 Chain-Agnostic session into scopes at the "namespace-wide" ([CAIP-104][]) or at
 the "chain-specific" ([CAIP-2][]) level; for this reason, requests and responses
@@ -340,6 +373,7 @@ was in violation of policy).
 
 ## Changelog
 
+-- 2024-07-29: added lifecycle management methods and notification for single session connections, see [CAIP-316][] for equivalence chart and diagrams
 - 2024-07-16: redefined requiredScopes to be functionally equivalent to optionalScopes, but semantically different; previously, authorizing less than 100% of reqScopes required rejecting the connection
 - 2023-03-29: refactored out scopeObject syntax as separate CAIP-217, simplified
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement)
@@ -352,12 +386,20 @@ was in violation of policy).
 - [CAIP-104][] - Definition of Chain Agnostic Namespaces or CANs
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
 - [CAIP-217][] - Authorization Scopes, i.e. syntax for `scopeObject`s
+- [CAIP-285][] - `wallet_revokeSession` Specification
+- [CAIP-312][] - `wallet_getSession` Specification
+- [CAIP-311][] - `wallet_sessionChanged` Specification
+- [CAIP-316][] -  Session Lifecycle Management equivalence chart and diagrams
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
 [CAIP-104]: https://chainagnostic.org/CAIPs/caip-104
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
+[CAIP-285]: https://chainagnostic.org/CAIPs/caip-285
+[CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
+[CAIP-311]: https://chainagnostic.org/CAIPs/CAIP-311
+[CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
 
