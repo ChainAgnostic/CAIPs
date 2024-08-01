@@ -1,5 +1,5 @@
 ---
-caip: X
+caip: 319
 title: Wallet Notification JSON-RPC Method
 author: Alex Donesky (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/X
@@ -11,8 +11,8 @@ requires: 2, 25, 171, 217
 
 ## Simple Summary
 
-CAIP-X defines a JSON-RPC method for a wallet to send notifications to a caller
-in a specified context defined by a valid [scopeObject][CAIP-217] and,
+CAIP-319 defines a JSON-RPC method for a wallet to send notifications to a
+caller in a specified context defined by a valid [scopeObject][CAIP-217] and,
 optionally, tagged with a [sessionId][CAIP-171] for maintaining session
 continuity.
 
@@ -87,8 +87,8 @@ Additionally, it MAY include an **optional parameter**:
 
 1. The application MUST check the scope against the identified session object
    before processing the notification.
-2. The application SHOULD verify that the notification.method is one it expects to
-   receive for that specific scope.
+2. The application SHOULD verify that the notification.method is one it expects
+   to receive for that specific scope.
 3. The application MAY apply other logic or validation to the notification data.
 4. The application MAY choose to ignore notifications it doesn't recognize or
    considers invalid.
