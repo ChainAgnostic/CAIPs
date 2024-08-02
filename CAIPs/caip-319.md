@@ -33,7 +33,7 @@ other session management mechanisms.
 The motivation for this proposal comes from the need for standardized,
 chain-specific notifications from wallets to applications in a concurrent
 multi-chain connection where methods and notifications with the same name may
-exist across chains or namespaces. 
+exist across chains or namespaces.
 
 ## Specification
 
@@ -94,11 +94,14 @@ Additionally, it MAY include an **optional parameter**:
    considers invalid.
 
 ### Response
+~~~~
 As this is a notification, no response is expected from the application. The
 wallet or user agent SHOULD NOT wait for a response before continuing its
 operations.
 
 ## Links
+
+[CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
