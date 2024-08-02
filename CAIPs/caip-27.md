@@ -13,7 +13,7 @@ requires: 2, 25, 171, 217
 ## Simple Summary
 
 CAIP-27 defines a JSON-RPC method for a wallet-connected application to invoke a
-wallet invoke an JSON-RPC method in a specified context defined by a valid
+JSON-RPC method in a specified context defined by a valid
 [scopeObject][CAIP-217] and, optionally, tagged with a [sessionId][CAIP-171] for
 maintaining session continuity when applicable.
 
@@ -21,7 +21,7 @@ maintaining session continuity when applicable.
 
 This proposal has the goal of defining a standard method for decentralized
 applications to invoke JSON-RPC methods from user agents (such as cryptocurrency
-wallets) directed to a given, previously-authorized target chain (such as nodes
+wallets) directed to a given, previously-authorized target context (such as nodes
 of a specific blockchain or consensus community within a protocol). It requires
 a valid [scopeObject][CAIP-217]. It MAY be tagged with a [sessionId][CAIP-171]
 for interoperability and composability if the [CAIP-25][] request which authorized the session included a [sessionId][CAIP-171] (see [CAIP-316][] for
