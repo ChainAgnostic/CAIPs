@@ -24,8 +24,7 @@ applications to invoke JSON-RPC methods from user agents (such as cryptocurrency
 wallets) directed to a given, previously-authorized target chain (such as nodes
 of a specific blockchain or consensus community within a protocol). It requires
 a valid [scopeObject][CAIP-217]. It MAY be tagged with a [sessionId][CAIP-171]
-for interoperability and composability if the [CAIP-25][] session which
-authorizes the request is keyed by a [sessionId][CAIP-171] (see [CAIP-316][] for
+for interoperability and composability if the [CAIP-25][] request which authorized the session included a [sessionId][CAIP-171] (see [CAIP-316][] for
 more details). These two properties MAY be inherited from a persistent session
 created by [CAIP-25][], but could also be used as part of other session
 management mechanisms.
