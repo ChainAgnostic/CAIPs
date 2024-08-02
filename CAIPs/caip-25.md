@@ -63,23 +63,23 @@ For more detail on the lifecycle and management of sessions with and without `se
 
 #### Session Data and Metadata
 
-Initial and ongoing authorization requests are grouped into two top-level arrays of [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
+Initial and ongoing authorization requests are grouped into two top-level objects containing keyed [scopeObjects][CAIP-217], named `requiredScopes` and `optionalScopes`
 respectively.
-Each `scopeObject` in either array MUST be keyed uniquely within its parent, but these keys CAN appear in both
+Each `scopeObject` in either parent object MUST be keyed uniquely within its parent, but these keys CAN appear in both
 (i.e., additional properties of an authorization target in `requiredScopes` may be requested in a separate `scopeObject` with the same key in the `optionalScopes` array).
 
-Each `scopeObject` in these arrays can be keyed to a specific [CAIP-2][] network identifier, or to an entire [CAIP-104][] namespace.
+Each `scopeObject` in these parent `...Scopes` objects can be keyed to a specific [CAIP-2][] network identifier, or to an entire [CAIP-104][] namespace.
 `scopeObjects` keyed to an entire [CAIP-104][] namespace SHOULD contain a non-empty `scopes` array to be actionable, making them functionally equivalent to a series of identical `scopeObjects`, each keyed to one of the members of `scopes` expressed as a [CAIP-2][] scope.
 An empty or absent `scopes` array SHOULD NOT be interpreted as a namespace-wide authorization (i.e. authorization for ANY network therein), but rather as a null authorization of 0 specified `chainId`s within that namespace.
-(See [CAIP-217][] for more details on the structure of the typed objects included in these arrays.)
+(See [CAIP-217][] for more details on the structure of the typed objects included in these `...Scopes` objects.)
 
 The distinction between `requiredScopes` and `optionalScopes` is ultimately semantic, since a wallet may still choose to establish a connection authorizing a subset of requested networks or requested capabilities from each; the primary function of the distinction is to offer callers a mechanism for signaling which scopes they consider primary and which they consider secondary to their request, in order to better inform the authorization logic of the respondent.
 
 If a connection is being rejected, whether on the basis of end-user input or on the basis of evaluating `requiredScopes` against available capabilities, the respondent SHOULD choose its response based on trust:
 e.g., one or more specific failure states MAY be sent (see [#### failure states](#failure-states) below) for trusted counterparties, but an `undefined` response (or no response, depending on implementation) MAY also be sent to prevent incentivizing unwanted requests and to minimize the surface for fingerprinting of public web traffic (See Privacy Considerations below).
 
-After parsing and authorizing separately all the networks and capabilities within each, a respondent establishes a connection by returning a success response that organizes all authorized features of each authorized scope in a single unified array of `scopeObject`s called `sessionScopes`.
-In the case of identically-keyed `scopeObject`s appearing in both arrays in the request (`requestedScopes` and `optionalScopes`), the identically-scoped objects MUST be merged in the response, since `sessionScopes` MUST NOT contain redundant keys (see examples below).
+After parsing and authorizing separately all the networks and capabilities within each, a respondent establishes a connection by returning a success response that organizes all authorized features of each authorized scope in a single unified object of `scopeObject`s called `sessionScopes`.
+In the case of identically-keyed `scopeObject`s appearing in both top-level objects in the request (`requestedScopes` and `optionalScopes`), the identically-scoped objects MUST be merged in the response, since `sessionScopes` MUST NOT contain redundant keys (see examples below).
 However, respondents MUST NOT restructure scopes (e.g., by folding properties from a [CAIP-2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed, namespace-wide scope object) as this may introduce ambiguities (See Security Considerations below).
 
 ### Request
@@ -132,8 +132,8 @@ Example:
 
 The JSON-RPC method is labeled as `provider_authorize` and its `params` object contains "requiredScopes" and/or "optionalScopes" objects populated with [CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
 
-- The `requiredScopes` array MUST contain 1 or more `scopeObjects`, if present.
-- The `optionalScopes` array MUST contain 1 or more `scopeObjects`, if present.
+- The `requiredScopes` object MUST contain 1 or more `scopeObjects`, if present.
+- The `optionalScopes` object MUST contain 1 or more `scopeObjects`, if present.
 
 A third object is the `scopedProperties` object, which also MUST contain 1 or more objects if present.
 Each object should be keyed to the scope of a `sessionScopes` member to which it corresponds.
@@ -144,7 +144,7 @@ A fourth object, `sessionProperties`, is optional and its shape undefined.
 It is intended for metadata or additional information not bound to any specific authorization scope, but made "global" to the connection.
 
 The respondent SHOULD ignore and drop from its response any properties not defined in this document or in another CAIP document extending this protocol which the respondent has implemented in its entirety;
-similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` arrays returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
+similarly, the `requiredScopes`, `optionalScopes`, and `sessionScopes` objects returned by the respondent SHOULD contain only valid [CAIP-217][] objects, and properties not defined in [CAIP-217][] SHOULD also be dropped from each of those objects.
 The same absolute security posture is not expected for the metadata objects `scopedProperties` and `sessionProperties`, but caution is still recommended for such extensions:
 callers and respondents alike SHOULD allow for their counterparties dropping or ignoring unfamiliar members from either.
 
@@ -322,7 +322,7 @@ series of CAIP-25 calls is to reduce ambiguity in authorization. This requires
 a potentially counterintuitive structuring of the building-blocks of a
 Chain-Agnostic session into scopes at the "namespace-wide" ([CAIP-104][]) or at
 the "chain-specific" ([CAIP-2][]) level; for this reason, requests and responses
-are structures as arrays of objects keyed to these scopes, formatted either as a
+are structures as objects full of objects keyed to these scopes, formatted either as a
 [CAIP-104][] scheme OR as a full [CAIP-2][]. While internal systems are free to
 translate this object into other structures, preserving it in the CAIP-25
 interface is crucial to the unambiguous communication between caller and
