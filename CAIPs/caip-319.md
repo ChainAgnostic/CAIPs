@@ -12,7 +12,7 @@ requires: 2, 25, 171, 217
 ## Simple Summary
 
 CAIP-319 defines a JSON-RPC method for a wallet to send notifications to a
-caller in a specified context defined by a valid [scopeObject][CAIP-217] and,
+caller in a context authorized by or in a valid [scopeObject][CAIP-217] and,
 optionally, tagged with a [sessionId][CAIP-171] for maintaining session
 continuity.
 
@@ -73,10 +73,9 @@ follows:
 The JSON-RPC method is labeled as `wallet_notify` and expects two required
 parameters:
 
-- **scope** - a valid `scopeObject` previously authorized to the caller and
-  persisted in the session identified by `sessionId`
+- **scope** - a valid [CAIP-2][] chainId previously authorized to the caller within a [CAIP-25][] session
 - **request** - an object containing the fields:
-  - **method** - JSON-RPC notification method name
+  - **method** - JSON-RPC notification method name previously authorized to the caller within a [CAIP-25][] session
   - **params** - JSON-RPC notification parameters
 
 Additionally, it MAY include an **optional parameter**:
@@ -100,7 +99,6 @@ wallet or user agent SHOULD NOT wait for a response before continuing its
 operations.
 
 ## Links
-
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
