@@ -134,90 +134,6 @@ Claim Format registry][] if they are expecting reasonable interoperability in
 the near term, and to carefully construct their [presentation_definition
 object][] accordingly.
 
-### Store
-
-Stores the given VC in the CP.
-
-#### Method:
-
-`wallet_creds_store`
-
-##### Params:
-
-- `vc` - A Verifiable Credential.
-
-##### Returns:
-
-- `error` - OPTIONAL. If `vc` was malformed or does not comply with the
-  Verifiable Credentials Profile defined in this specification. Note that some
-  wallets will call `wallet_creds_verify` locally or remotely and pass back an
-  error message received thereby, depending on security context.
-    + 400 - invalid parameters
-    + 500 - processing or internal error
-    + 501 - invalid cryptographic primitives (see `wallet_creds_metadata`)
-
-### Verify
-
-Verifies the proof section of a single verifiable credential after dereferencing
-its `issuer` property for key material. Note that in an application<>wallet
-connection, the application calls the wallet for the wallet to either perform
-verification locally or remotely; in either case, the application will await
-asynchronously for a success or error code, regardless of how the wallet
-verifies the passed credential. Wallets that cannot return appropriate error
-codes back MUST NOT authorize apps to call this method as undefined behavior may
-occur.
-
-#### Method:
-
-`wallet_creds_verify`
-
-##### Params:
-
-- `vc` - A Verifiable Credential.
-
-##### Returns:
-
-- `error` - OPTIONAL. If `vc` was malformed or does not comply with the
-  Verifiable Credentials Profile defined in this specification.
-
-### Issue
-
-Called **by the wallet** to the application, providing the parameters needed for
-a credential issuance and expecting back a verifiable credential OR an error.
-The parameters are formated as a [credential_application object][] as specified
-in the [Credential Manifest][] specification.
-
-#### Method:
-
-`wallet_creds_issue`
-
-##### Params:
-
-- `credential_application` - REQUIRED. This can vary from the full contents of
-  the payload of the to-be-issued credential to a mere consent event per
-  use-case, but in either case MUST be formated as a valid
-  [credential_application object][] as specified in the [Credential Manifest][]
-  specification.
-- `preferred_proofs` - OPTIONAL. An **ordered** array (from most to least
-  preferred) of preferred proof formats and types for the VC to be issued. Each
-  array item is an object with two properties, `format` and `type`. `format`
-  indicates the preferred proof type, which is either `jwt` for (External
-  Proofs) or `ldp` for (Embedded Proofs). The `type` refers to proof type of the
-  VC (see [Verifiable Credentials Proofs](#Verifiable-Credentials-Proofs) for a
-  list of valid combinations). If the wallet does not support any of the
-  preferred proofs, the wallet can select a format and type from the list
-  defined in [Verifiable Credentials Proofs](#Verifiable-Credentials-Proofs) as
-  a fallback.
-
-##### Returns:
-
-- `vc` - OPTIONAL. Present if the call was successful. A Verifiable Credential
-  that was issued to the CP by the application.
-- `error` - OPTIONAL. If `payload` was malformed, or does not comply with the
-  Verifiable Credentials Profile defined in this specification.
-    + 400 - invalid `credential_application` or payload construction
-    + 500 - processing or internal error
-
 ### Present
 
 The application calls the wallet to request verifiable claims from the CP. For
@@ -308,6 +224,103 @@ Optionally, holder binding can also be requested.
   }
 }
 ```
+
+
+### Store
+
+Stores the given VC in the CP.
+
+#### Method:
+
+`wallet_creds_store`
+
+##### Params:
+
+- `vc` - A Verifiable Credential.
+
+##### Returns:
+
+- `error` - OPTIONAL. If `vc` was malformed or does not comply with the
+  Verifiable Credentials Profile defined in this specification. Note that some
+  wallets will call `wallet_creds_verify` locally or remotely and pass back an
+  error message received thereby, depending on security context.
+    + 400 - invalid parameters
+    + 500 - processing or internal error
+    + 501 - invalid cryptographic primitives (see `wallet_creds_metadata`)
+
+### Verify
+
+Verifies the proof section of a single verifiable credential after dereferencing
+its `issuer` property for key material. Note that in an application<>wallet
+connection, the application calls the wallet for the wallet to either perform
+verification locally or remotely; in either case, the application will await
+asynchronously for a success or error code, regardless of how the wallet
+verifies the passed credential. Wallets that cannot return appropriate error
+codes back MUST NOT authorize apps to call this method as undefined behavior may
+occur.
+
+#### Method:
+
+`wallet_creds_verify`
+
+##### Params:
+
+- `vc` - A Verifiable Credential.
+
+##### Returns:
+
+- `error` - OPTIONAL. If `vc` was malformed or does not comply with the
+  Verifiable Credentials Profile defined in this specification.
+
+### Issue
+
+Called **by the wallet** to the application, providing the parameters needed for
+a credential issuance and expecting back a verifiable credential OR an error.
+The parameters are formated as a [credential_application object][] as specified
+in the [Credential Manifest][] specification.
+
+Note that the optional `preferred_proofs` parameter is redundant if the
+`credential_application` contains `format` properties subsetted from the formats
+listed in the original `credential_manifest` object (delivered previously with
+the issuer metadata method below). In this case, the `preferred_proofs` object
+should be dropped and the `formats` in the application object should be
+considered authoritative.  The second parameter is a fallback in cases where a
+`credential_manifest` was not available or malformed, or for legacy
+compatibility with non-conforming apps (e.g. apps exposing only OIDC
+capabilities, not credential manifest capabilities).
+
+#### Method:
+
+`wallet_creds_issue`
+
+##### Params:
+
+- `credential_application` - REQUIRED. This can vary from the full contents of
+  the payload of the to-be-issued credential to a mere consent event per
+  use-case, but in either case MUST be formated as a valid
+  [credential_application object][] as specified in the [Credential Manifest][]
+  specification.
+- `preferred_proofs` - OPTIONAL.  An **ordered** array (from most to least
+  preferred) of preferred proof formats and types for the VC to be issued. Each
+  array item is an object with two properties, `format` and `type`. `format`
+  indicates the preferred proof type, which is either `jwt` for (External
+  Proofs) or `ldp` for (Embedded Proofs). The `type` refers to proof type of the
+  VC (see [Verifiable Credentials Proofs](#Verifiable-Credentials-Proofs) for a
+  list of valid combinations). If the wallet does not support any of the
+  preferred proofs, the wallet can select a format and type from the list
+  defined in [Verifiable Credentials Proofs](#Verifiable-Credentials-Proofs) as
+  a fallback.
+
+##### Returns:
+
+- `vc` - OPTIONAL. Present if the call was successful. A Verifiable Credential
+  that was issued to the CP by the application.
+- `error` - OPTIONAL. If `payload` was malformed, or does not comply with the
+  Verifiable Credentials Profile defined in this specification.
+    + 400 - invalid `credential_application` or payload construction
+    + 500 - processing or internal error
+
+
 ### Wallet Metadata
 
 Called by the application to fetch a configuration object describing signing and
@@ -366,6 +379,47 @@ NOTE: `alg` value `none` SHOULD NOT be accepted.
   }
 }
 ```
+
+### Issuer Metadata
+
+Called by the application to **send** a configuration object describing the
+specific credentials an issuer can issue to a wallet, including required user
+inputs or triggers if applicable and including default values or values already
+known to the application (i.e. "preview" of issuable credential).  This method
+is an optional way for CAIP-169 supporting applications to enable wallets to
+interact with variable or complex issuance processes. 
+
+The formatting and values of the metadata object are taken verbatim from the
+`credential_manifest` object defined in the DIF [Credential Manifest][]
+specification. Note that as per the [Credential Manifest][] specification, some
+issuers will require a `credential_application` object to be passed in the
+issuance method based on the contents of a `credential_manifest` object sent by
+this optional method; thus, a wallet signaling support for this method in a
+CAIP-25 response implies the capacity to form a complex `credential_application`
+object from a `credential_manifest` object.
+
+#### Method:
+
+`wallet_creds_manifest`
+
+##### Params:
+
+- `credential_manifest` object, defined in the DIF [Credential Manifest][]
+  specification
+
+##### Returns:
+
+- `error` - OPTIONAL. 
+    + 400 - invalid request
+    + 500 - error parsing manifest object
+    + 501 - unrecognized or unsupported manifest version
+
+#### Example
+
+See [Credential Manifest
+section](https://verite.id/verite/appendix/messages#credential-manifest) of
+Verite.id developer documentation for an example of `credential_manifest` object
+design.
 
 ## Rationale
 
@@ -504,7 +558,7 @@ Prior Art and Reference Implementations
 [VC spec]: https://www.w3.org/TR/vc-data-model/
 [Data Integrity spec]: https://www.w3.org/TR/vc-data-integrity/
 [DIF Claim Format registry]: https://identity.foundation/claim-format-registry/#registry
-[OID4VP]: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-8.1
+[OIDC4VP]: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#section-8.1
 [IANA JOSE Registry]: https://www.iana.org/assignments/jose/jose.xhtml#web-signature-encryption-algorithms
 [JWS-test-suite]: https://identity.foundation/JWS-Test-Suite/
 [Veramo]: https://veramo.io/
