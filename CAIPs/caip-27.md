@@ -7,22 +7,23 @@ status: Draft
 type: Standard
 created: 2020-12-12
 updated: 2024-08-12
-requires: 2, 25, 171, 217
+requires: 2, 25, 171, 217, 316
 ---
 
 ## Simple Summary
 
-CAIP-27 defines a JSON-RPC method for a wallet-connected application to invoke an JSON-RPC method, targeted for a specified target that is defined by a valid [scopeObject][CAIP-217], and tagged with a [sessionId][CAIP-171] for maintaining session continuity if applicable.
+CAIP-27 defines a JSON-RPC method for a decentralized application to invoke a targeted JSON-RPC method, marked for a specified target previously authorized by a valid [scopeObject][CAIP-217], and tagged with a [sessionId][CAIP-171] for maintaining session continuity if applicable.
 
 ## Abstract
 
-This proposal has the goal of defining a standard method for decentralized applications to invoke JSON-RPC methods from user agents (such as cryptocurrency wallets) directed to a given, previously-authorized target chain (such as nodes of a specific blockchain or consensus community within a protocol). 
-It requires a valid [scopeObject][CAIP-217] and a valid [sessionId][CAIP-171] for interoperability and composability.
+This proposal has the goal of defining a standard method for decentralized applications to invoke JSON-RPC methods from decentralized applications directed to a given, previously-authorized target network.
+These "target networks" can include nodes of a specific blockchain (accessed via the user agent), the consensus community within a cryptographic protocol, or a user agent's network-specific state.
+The JSON-RPC method is nested inside a JSON-RPC "envelope", which takes as required argument a [CAIP-2] identifier designating the target network, with an optional second argument for the [sessionId][CAIP-171] of that session if applicable (see [CAIP-316]).
 These two properties MAY be inherited from a persistent session created by [CAIP-25][], but could also be used as part of other session management mechanisms.
 
 ## Motivation
 
-The motivation comes from the ambiguity that comes from interfacing with a multi-chain agent (e.g. a cryptocurrency wallets which supports the same method on multiple chains in a namespace, or supports methods with the same name on multiple namespaces).
+This routing envelope avoids ambiguity when applications interface with a multi-chain agent (e.g. a cryptocurrency wallets which supports the same method on multiple chains in a given RPC namespace, or supports methods with the same name on multiple [namespaces]).
 
 ## Specification
 
@@ -32,7 +33,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ### Definition
 
-The JSON-RPC provider is able to invoke a single JSON-RPC request accompanied by a [CAIP-2][] compatible `chainId` scoped by the [sessionId][CAIP-171] of a pre-existing session.
+The JSON-RPC provider is able to invoke a single JSON-RPC request accompanied by a [CAIP-2][] compatible `chainId` authorized by a pre-existing session.
+If that pre-existing session was initiated by a [CAIP-25] response containing a [sessionId][CAIP-171], this `sessionId` value should also be returned at the top level of the `wallet_invokeMethod` envelope (see [CAIP-316] for more context on managing sessions with and without `sessionId` keys).
 
 ### Request
 
@@ -63,26 +65,26 @@ The application would interface with an JSON-RPC provider to make request as fol
 }
 ```
 
-The JSON-RPC method is labeled as `wallet_invokeMethod` and expects three **required parameters**:
+The JSON-RPC method is labeled as `wallet_invokeMethod` and expects three parameters, **two of them required**:
 
-- **sessionId** - [CAIP-171][] `SessionId` referencing a known, open session
-- **scope** - a valid `scopeObject` previously authorized to the caller and persisted in the session identified by `sessionId`
-- **request** - an object containing the fields:
-  - **method** - JSON-RPC method to invoke
-  - **params** - JSON-RPC parameters to invoke (may be empty but must be set)
+- **sessionId** (conditional) - [CAIP-171][] `SessionId` disambiguates an open session in a multi-session actor; it is required in some sessions, such as [CAIP-25][] sessions created by a response containing one, and SHOULD be omitted in other sessions, such as [CAIP-25] sessions created by a response not containing one (see [CAIP-316]).
+- **scope** (required) - a valid [CAIP-2][] network identifier, previously authorized by or within a `scopeObject` in the active session
+- **request** (required) - an object containing the fields:
+  - **method** (required) - the JSON-RPC method to invoke (previously authorized for the targeted network)
+  - **params** (required) - JSON-RPC parameters to invoke (may be empty but must be set)
 
 ### Validation
 
-1. A respondent MUST check the `scope` against the identified session object before executing or responding to such a request, and invalidate a request for a scope not already authorized and persisted.
-2. The respondent SHOULD check that `request.method` is authorized in the session object for that specific scope.
-3. The respondent MAY check that the `params` are valid for that method, if its syntax is known to it.
+1. A respondent SHOULD check the `scope` against active session's `scopeObject`s before executing or responding to such a request, and SHOULD invalidate a request for a scope not previously authorized.
+2. The respondent SHOULD check that `request.method` is authorized for the specified scope, and SHOULD invalidate a request for a scope not previously authorized.
+3. The respondent MAY check that the `request.params` are valid for `request.method`, if its syntax is known to it.
 4. The respondent MAY apply other logic or validation.
 5. The respondent MAY chose to drop invalid requests or return an error message, but it MUST NOT route or submit them.
 
 ### Response
 
-Upon successful validation, the respondent will submit or route the request to the targeted chain.
-If the targeted chain returns a response to the respondent, the respondent MAY forward this response to the caller.
+Upon successful validation, the respondent will submit or route the request to the targeted network.
+If the targeted network returns a response to the respondent, the respondent MAY forward this response to the caller.
 Constraints on, metadata about, or envelopes for response-forwarding MAY be set by [namespace][namespaces] profiles of this CAIP.
 
 Similarly, error messages depend on the design of a given namespace, and MAY be defined by a [namespace][namespaces] profile of this CAIP.
