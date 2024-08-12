@@ -6,15 +6,13 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Draft
 type: Standard
 created: 2020-12-12
-updated: 2024-07-02
+updated: 2024-08-12
 requires: 2, 25, 171, 217
 ---
 
 ## Simple Summary
 
-CAIP-27 defines a JSON-RPC method for a wallet-connected application to invoke
-a wallet invoke an JSON-RPC method in a specified context defined by a valid
-[scopeObject][CAIP-217] and tagged with a [sessionId][CAIP-171] for maintaining session continuity.
+CAIP-27 defines a JSON-RPC method for a wallet-connected application to invoke an JSON-RPC method, targeted for a specified target that is defined by a valid [scopeObject][CAIP-217], and tagged with a [sessionId][CAIP-171] for maintaining session continuity if applicable.
 
 ## Abstract
 
