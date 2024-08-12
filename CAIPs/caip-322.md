@@ -1,5 +1,5 @@
 ---
-caip: 316
+caip: 322
 title: URI Scheme for CAIP identifiers
 author: [Pedro Gomes] (@pedrouid), [ligi](ligi@ligi.de), [bumblefudge](@bumblefudge)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/67
