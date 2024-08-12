@@ -14,13 +14,13 @@ requires: 2, 25, 171, 217
 CAIP-319 defines a JSON-RPC method for a wallet to send notifications to a
 caller in a context authorized by or in a valid [scopeObject][CAIP-217] and,
 optionally, tagged with a [sessionId][CAIP-171] for maintaining session
-continuity.
+continuity if applicable.
 
 ## Abstract
 
 This proposal aims to define a standard method for wallets to send notifications
 to callers regarding events or state changes related to a specific,
-previously-authorized target chain (such as nodes of a specific blockchain or
+previously-authorized target network (such as nodes of a specific blockchain or
 consensus community within a protocol). It requires a valid
 [scopeObject][CAIP-217]. It MAY be tagged with a [sessionId][CAIP-171] if the
 [CAIP-25][] session in which it is authorized is keyed by a sessionId (see
@@ -32,7 +32,7 @@ other session management mechanisms.
 
 The motivation for this proposal comes from the need for standardized,
 chain-specific notifications from wallets to applications in a concurrent
-multi-chain connection where methods and notifications with the same name may
+multi-chain connection where methods and notifications with the same namespace may
 exist across chains or namespaces.
 
 ## Specification
@@ -93,8 +93,8 @@ Additionally, it MAY include an **optional parameter**:
    considers invalid.
 
 ### Response
-~~~~
-As this is a notification, no response is expected from the application. The
+As this syntax simply provides a wrapper to a standard [JSON-RPC notification][]
+and functions as one itself, no response is expected from the application. The
 wallet or user agent SHOULD NOT wait for a response before continuing its
 operations.
 
@@ -104,6 +104,7 @@ operations.
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
 [CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
+[JSON-RPC notification]: https://www.jsonrpc.org/specification#notification
 
 ## Copyright
 
