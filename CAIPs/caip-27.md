@@ -85,9 +85,58 @@ The JSON-RPC method is labeled as `wallet_invokeMethod` and expects three parame
 
 Upon successful validation, the respondent will submit or route the request to the targeted network.
 If the targeted network returns a response to the respondent, the respondent MAY forward this response to the caller.
+
+```jsonc
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "sessionId": "0xdeadbeef",
+    "scope": "eip155:1",
+    "result": {
+      "method": "eth_sendTransaction",
+      "result": "0x4e306b5a5a37532e1734503f7d2427a86f2c992fbe471f5be403b9f734e667c8"
+    }
+  }
+}
+```
+
 Constraints on, metadata about, or envelopes for response-forwarding MAY be set by [namespace][namespaces] profiles of this CAIP.
 
-Similarly, error messages depend on the design of a given namespace, and MAY be defined by a [namespace][namespaces] profile of this CAIP.
+#### Error Handling
+
+Note that errors pertaining to the connection or session should replace the top-level `"result"` object:
+
+```jsonc
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "wallet_invokeMethod",
+  "error": {
+    "code": "-32700",
+    "message": "Parse Error"
+  }
+}
+```
+
+Conversely, errors specific to the method passed or its RPC namespace should be expressed INSIDE the result of a response envelope, with targeting information preserved:
+
+```jsonc
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "wallet_invokeMethod",
+  "result": {
+    "sessionId": "0xdeadbeef",
+    "scope": "eip155:1",
+    "error": {
+      "code": "4100",
+      "message": "The requested account and/or method has not been authorized by the user."
+    }
+  }
+}
+
+The latter category of error depend on the design of the passed method defined within the given RPC namespace, and MAY be defined by a [namespace][namespaces] profile of this CAIP if not in the underlying documentation for that RPC community.
 
 ## Backwards Compatibility
 
@@ -96,10 +145,18 @@ No known implementations in production took advantage of this affordance, as to 
 
 ## Links
 
+- [CAIP-2]: Network identifiers
+- [CAIP-25]: Authorized session definition
+- [CAIP-171]: Session identifiers for Authorized Sessions
+- [CAIP-217]: Scope Definitions for Authorized Sessions
+- [CAIP-316]: Managing Authorized Sessions With and Without Identifiers
+- [Namespaces]: CASA RPC Namespaces
+
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
 [CAIP-171]: https://chainagnostic.org/CAIPs/caip-171
 [CAIP-217]: https://chainagnostic.org/CAIPs/caip-217
+[CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
 [namespaces]: https://namespaces.chainagnostic.org/
 [RFC 2119]: https://www.ietf.org/rfc/rfc2119.txt
 
