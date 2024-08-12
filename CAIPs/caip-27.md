@@ -89,6 +89,11 @@ Constraints on, metadata about, or envelopes for response-forwarding MAY be set 
 
 Similarly, error messages depend on the design of a given namespace, and MAY be defined by a [namespace][namespaces] profile of this CAIP.
 
+## Backwards Compatibility
+
+Early drafts of this specification did not constrain `scope` to [CAIP-2] identifiers, but rather to any [valid scopeStrings][CAIP-217] previously-authorized, including namespace-wide ones.
+No known implementations in production took advantage of this affordance, as to date no RPC [namespaces] have been defined that could receive such requests regardless of [CAIP-2] network identifiers.
+
 ## Links
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
