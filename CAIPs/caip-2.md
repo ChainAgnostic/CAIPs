@@ -102,7 +102,6 @@ chainstd:8c3444cf8970a9e41a706fab93e7a6c4
 
 - [EIP155](https://eips.ethereum.org/EIPS/eip-155)
 - [BIP122](https://github.com/bitcoin/bips/blob/master/bip-0122.mediawiki)
-- [EIP2256](https://eips.ethereum.org/EIPS/eip-2256)
 - [LIP9](https://github.com/LiskHQ/lips/blob/master/proposals/lip-0009.md)
 - [Cosmos chain ID best practice](https://github.com/cosmos/cosmos-sdk/issues/5363)
 
