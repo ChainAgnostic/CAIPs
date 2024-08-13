@@ -11,7 +11,7 @@ updated: 2021-08-25
 
 ## Simple Summary
 
-CAIP-2 defines a way to identify a blockchain (e.g. Ethereum Mainnet, Görli, Bitcoin, Cosmos Hub) in a human-readable, developer-friendly and transaction-friendly way.
+CAIP-2 defines a way to identify a blockchain (e.g. Ethereum Mainnet, Goerli, Bitcoin, Cosmos Hub) in a human-readable, developer-friendly and transaction-friendly way.
 
 ## Abstract
 
