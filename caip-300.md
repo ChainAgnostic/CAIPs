@@ -125,7 +125,7 @@ An RPC method was choosen for batching because it enabled a smoother upgrade pat
 
 Therefore batching inside a single RPC request makes it easier to re-use the existing developer tooling and will enable both dapps and wallet to progressively support this new "connection" standard for wallets.
 
-The rationale for making this as generic as possible is to enable profiles to be defined for different ecosystems such as Bitcoin, Ethereum, Solana, Cosmos, Polkadot, etc. The alternative would be to create specific fields for "session", "authentication", "capabilities", "permissions", etc. But this would introduce a bias from one chain to another and not favor chain-agnosticisim.
+The rationale for making this as generic as possible is to enable profiles to be defined for different ecosystems such as Bitcoin, Ethereum, Solana, Cosmos, Polkadot, etc. The alternative would be to create specific fields for "session", "authentication", "capabilities", "permissions", etc. But this would introduce a bias from one chain to another and harm chain-agnosticism.
 
 Finally it was intentional that batch requests do not have `id` in the schema because all requests are intended to be resolved together in the same round-trip and they must be ordered as requested.
 
