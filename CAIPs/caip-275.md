@@ -75,7 +75,7 @@ const authenticationFlowsURL = authenticatorRecord.replace("{}", userDomain);
 // authenticationFlowsURL will be 'https://www.authprovider.com/auth/chrisc.eth'
 ```
 
-## Authentication flows retrieval
+## Authentication Flows Retrieval
 
 Having the authentication flows URL, the application can perform an HTTP GET request to it and obtain their configuration.
 Application will filter the authentication flows that are not supported and then try to execute in order, passing on the ones that cannot be fulfilled until it finds one that can complete successfully or needs action from the user.
@@ -83,7 +83,7 @@ Application will filter the authentication flows that are not supported and then
 An authentication flow may be unsupported due to the platform it is running mismatching the one it requires, e.g. "browser", "mobile", etc. Or because it requires an specific wallet but it is not installed, e.g. requires "io.metamask" but there is no browser extension wallet.
 When an authentication flow requires user action, such as scanning a QR code, or authorizing the connection from the wallet, the application must wait for the user to complete or cancel the action.
 
-## Authentication flows definition
+## Authentication Flows Definition
 
 The Authentication flows definition JSON MUST conform to the following [Draft 7 JSON Schema][]:
 
@@ -94,11 +94,11 @@ The Authentication flows definition JSON MUST conform to the following [Draft 7 
   "properties": {
     "address": {
       "type": "string",
-      "description": "The wallet address requested by the user. This can be from any chain. And can be an externally owned account or a smart wallet"
+      "description": "The wallet address requested by the user. This can be from any chain and can be an externally owned account or smart wallet"
     },
     "chain": {
       "type": "string",
-      "description": "The blockchain id as specified in CAIP-2. This is only required when the wallet is a smart account in a specific chain. If not provided, it is assumed the wallet is an EOA that is not on any chain."
+      "description": "The blockchain id as specified in CAIP-2. This is only required when the wallet is a smart account on a specific chain. If not provided, it is assumed the wallet is an EOA that is not on any chain."
     },
     "authFlows": {
       "type": "array",
@@ -138,7 +138,7 @@ Possible values for each field are:
   - `wc`, to trigger a connection with the wallet using [Wallet Connect][]
   - `mwp`, to discover and communicate with the wallet usign [Mobile Wallet Protocol][]
 
-Those values are not exhaustive. Meaning they can be extended as new options arise or become popular.
+Those values are not exhaustive, which means they can be extended as new options arise or become popular.
 For example, a new platform such as `wearable` or a new communication protocol could be defined.
 This last case will likely happen when smart account wallets or embedded wallets gain enough traction to reach consensus on a standard and become interoperable.
 
@@ -173,7 +173,7 @@ To resolve that configuration:
 3. Second authentication flow indicates that it has to run on `mobile`, and using [Mobile Wallet Protocol][] (indicated with the key `mwp`) application has to find another app that responds to the universal link `https://universal-link.wallet.com/`.
 4. Last authentication flow does not impose a platform to run on because it does not specify any, so it will be valid everywhere. It tries to set up a [Wallet Connect][] connection to the URI `http://www.wallet.com/auth`. When this authentication flow is triggered, the URI will be opened in a new browser window passing `address`, `domain` and `wcUri` as query params with the resolved address, the domain name and [Wallet Connect][] URI respectively. As this flow requires user action (connecting the wallet at the URI) this step will never be skipped as long as the application supports [Wallet Connect][].
 
-## Standard Authentication flows
+## Standard Authentication Flows
 
 To further clarify different authentication flow configurations we can consider the following cases.
 
@@ -222,7 +222,7 @@ Such configuration can be useful when the user has their wallet in their mobile 
 This configuration should never be skipped as it does not impose any platform and requires the user action of connecting from the wallet making this a great last case in the `authFlows` array and behaving as the default when no other authentication flow is useful.
 The only requirement for this configuration to work is that the application supports [ERC-1328]-conformant relay connections such as [Wallet Connect][].
 
-## Self-hosting authentication flows
+## Self-hosting Authentication Flows
 
 In case the user does not trust any authentication flow provider to store their info, they can easily host it themselves using a public serverless function and saving its URL in the ENS `authenticator` record.
 The requirements for the serverless functions are:
@@ -235,7 +235,7 @@ The user can use any service that provides serverless functions, such as Vercel,
 When this is done for personal reasons, the user should be aware that the serverless function will be public and anyone can access it.
 Therefore, it is recommended to use a service that provides, at least, rate limiting to avoid abuse.
 
-## Direct authentication flows resolution
+## Direct Authentication Flows Resolution
 
 There are a few cases where the `authenticator` record can be set to the authentication flows directly.
 
@@ -260,7 +260,7 @@ Web3 applications and login modal providers can implement the Login With Name fl
 7. After wallet approves connection, application can match the domain name, the user's wallet address, and an authenticated session to the ones requested previously to validate user is not connecting with another wallet.
 8. When everything succeeds, connection should be established between application and the wallet found and triggered under the name provided by the user.
 
-## Connection properties
+## Connection Properties
 
 How the dApp actually requests signatures and talks to the signer will vary depending on the authenticator and the chain being used.
 One option for session management is to create a session with the [CAIP-25][] protocol, where the "authenticated session" token returned is actually a JSON-RPC session token, such as that used by the [Wallet Connect] JSON-RPC relay network.
@@ -279,7 +279,7 @@ For example, here is how an application would integrate with the Login With Name
 6. Connector will now resolve user name into an address and authentication flows and trying to reach the wallet specified and its accounts.
 7. After signing in with the wallet. Application can use the hooks and abstractions provided by the library, such as `useAccount`, `useConnect` etc in the case of `wagmi`.
 
-## Name Resolver systems
+## Name Resolver Systems
 
 For the purposes of this document, we've detailed a flow based on ENS domains.
 But this standard is extensible to any name resolution system.
@@ -304,7 +304,7 @@ For example, name resolvers could take names from:
 And define the order or resolution themselves, totally transparent to the application that uses them.
 If the application wants to impose their own logic for resolution over theirs, then it can combine several name resolvers as they all have to adhere to the same interface as shown in the demo.
 
-### Function to Resolve a Domain Name to an authenticator URL or JSON
+### Function to resolve a Domain Name to an authenticator URL or JSON
 
 > Function: resolveAuthenticator
 > Description: Resolves a given domain name to a URL or a JSON object that can be used for authentication or further information retrieval.
@@ -363,7 +363,7 @@ export class ENS implements NameResolver {
 
 # Rationale
 
-The Domain Wallet Authentication standard is designed to provide a user-friendly way to authenticate with web3 applications using easy to remember names, reducing friction for end-users, specially those that are not familiar with the complexities of blockchain addresses.
+The Domain Wallet Authentication standard is designed to provide a user-friendly way to authenticate with web3 applications using easy-to-remember names, reducing friction for end-users - especially those that are not familiar with the complexities of blockchain addresses.
 By linking a domain name with authentication methods or providers, users can easily log in to web3 applications without having to remember their wallet provider or address.
 Specifying the `authenticator` configuration as a domain name NFT text record allows applications to easily discover and integrate with compatible login methods in a standard way.
 Having a chain-agnostic standard enables interoperability between different crypto domain providers and authentication methods.
@@ -371,7 +371,7 @@ Providing clear wallet implementer steps and code samples makes it easy for deve
 
 The standard is designed to not compete with other authentication methods and as an opt-in discovery system that name-controllers can use and applications can trust to automate one friction point in the web3 login process.
 It is designed to be flexible, offering options to both consumers at connection time and developers at configuration time.
-And also to be extensible, allowing for new platforms, connections, and name resolvers to be added as they become available and publicly discussed and adopted by the community in followup CAIPs.
+Additionally, it is designed to be extensible, allowing for new platforms, connections, and name resolvers to be added as they become available and publicly discussed and adopted by the community in followup CAIPs.
 
 # Backwards Compatibility
 
