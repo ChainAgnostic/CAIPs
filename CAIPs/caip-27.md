@@ -111,7 +111,6 @@ Note that errors pertaining to the connection or session should replace the top-
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "wallet_invokeMethod",
   "error": {
     "code": "-32700",
     "message": "Parse Error"
@@ -125,7 +124,6 @@ Conversely, errors specific to the method passed or its RPC namespace should be 
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "method": "wallet_invokeMethod",
   "result": {
     "sessionId": "0xdeadbeef",
     "scope": "eip155:1",
@@ -135,6 +133,7 @@ Conversely, errors specific to the method passed or its RPC namespace should be 
     }
   }
 }
+```
 
 The latter category of error depend on the design of the passed method defined within the given RPC namespace, and MAY be defined by a [namespace][namespaces] profile of this CAIP if not in the underlying documentation for that RPC community.
 
