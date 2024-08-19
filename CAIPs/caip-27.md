@@ -112,7 +112,7 @@ Note that errors pertaining to the connection or session should replace the top-
   "id": 1,
   "jsonrpc": "2.0",
   "error": {
-    "code": "-32700",
+    "code": -32700,
     "message": "Parse Error"
   }
 }
@@ -128,7 +128,7 @@ Conversely, errors specific to the method passed or its RPC namespace should be 
     "sessionId": "0xdeadbeef",
     "scope": "eip155:1",
     "error": {
-      "code": "4100",
+      "code": 4100,
       "message": "The requested account and/or method has not been authorized by the user."
     }
   }
