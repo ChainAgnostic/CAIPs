@@ -74,7 +74,7 @@ The JSON-RPC method is labeled as `wallet_notify` and expects two required
 parameters:
 
 - **scope** - a valid [CAIP-2][] chainId previously authorized to the caller within a [CAIP-25][] session
-- **request** - an object containing the fields:
+- **notification** - an object containing the fields:
   - **method** - JSON-RPC notification method name previously authorized to the caller within a [CAIP-25][] session
   - **params** - JSON-RPC notification parameters
 
