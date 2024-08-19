@@ -127,6 +127,83 @@ window.addEventListener("caip294:wallet_prompt", (event) => {
 });
 ```
 
+### Wallet Data
+
+The `walletData` object MUST include the following properties:
+
+- `uuid`: A unique identifier for the wallet instance.
+- `name`: The name of the wallet.
+- `icon`: An icon representing the wallet.
+- `rdns`: The reverse domain name of the wallet provider.
+
+Additionally, the `walletData` object MAY include the following optional properties:
+
+- `extensionId`: The canonical extension ID of the wallet provider for the active browser.
+- `scopes`: An object defining the authorization scopes supported by the wallet, as specified in CAIP-217.
+
+```typescript
+interface WalletData {
+  // Required properties
+  uuid: string;
+  name: string;
+  icon: string;
+  rdns: string;
+
+  // Optional properties
+  extensionId?: string;
+  scopes?: Caip217AuthorizationScopes;
+}
+```
+
+Example of a `walletData` object with optional properties:
+
+```typescript
+const walletData = {
+  uuid: "350670db-19fa-4704-a166-e52e178b59d2",
+  name: "Example Wallet",
+  icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
+  rdns: "com.example.wallet",
+  extensionId: "abcdefghijklmnopqrstuvwxyz",
+  scopes: {
+    "eip155:1": {
+      methods: ["eth_signTransaction", "eth_sendTransaction"],
+      notifications: ["accountsChanged", "chainChanged"]
+    }
+  }
+}
+```
+
+This `walletData` type is is a superset of `WalletAnnounceRequestParams` type described in the [CAIP-282][caip-282] standard, adding the optional `extensionId` property as it is only relevant for browser extension based wallets.
+
+### ExtensionId
+
+When the `extensionId` is included in the `walletData` object, it indicates that the wallet supports communication via the browser's `externally_connectable` API. In this case:
+
+1. The dapp MUST use the `extensionId` to establish a connection with the wallet using the `externally_connectable` browser API.
+2. All subsequent communication with the wallet (the "session") SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
+3. The dapp MUST NOT use the injected provider for communication when `extensionId` is present.
+
+Example of establishing a connection and sending a message:
+
+```javascript
+const port = chrome.runtime.connect(walletData.extensionId);
+
+port.onMessage.addListener((message) => {
+  // Handle incoming messages
+});
+
+port.postMessage({
+  id: 1,
+  jsonrpc: "2.0",
+  method: "wallet_createSession",
+  params: {
+    // ... session parameters ...
+  }
+});
+```
+
+If the `extensionId` is not present in the `walletData` object, the dapp SHOULD assume that communication will occur through the traditional injected provider method.
+
 #### Handshake
 
 After the wallet has been selected by the user then the Blockchain Library MUST publish a message to share its intent to establish a connection. This can be either done as a [CAIP-25][caip-25] request.
