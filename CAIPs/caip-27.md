@@ -105,7 +105,7 @@ Constraints on, metadata about, or envelopes for response-forwarding MAY be set 
 
 #### Error Handling
 
-Note that errors pertaining to the connection or session should replace the top-level `"result"` object:
+Note that errors pertaining to the connection or session should replace the top-level `"result"` object, but cannot be matched to requests sent without a unique `id`:
 
 ```jsonc
 {
