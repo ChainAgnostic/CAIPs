@@ -144,12 +144,12 @@ No known implementations in production took advantage of this affordance, as to 
 
 ## Links
 
-- [CAIP-2]: Network identifiers
-- [CAIP-25]: Authorized session definition
-- [CAIP-171]: Session identifiers for Authorized Sessions
-- [CAIP-217]: Scope Definitions for Authorized Sessions
-- [CAIP-316]: Managing Authorized Sessions With and Without Identifiers
-- [Namespaces]: CASA RPC Namespaces
+- [CAIP-2: Network identifiers][CAIP-2]
+- [CAIP-25: Authorized session definition][CAIP-25]
+- [CAIP-171: Session identifiers for Authorized Sessions][CAIP-171]
+- [CAIP-217: Scope Definitions for Authorized Sessions][CAIP-217]
+- [CAIP-316: Managing Authorized Sessions With and Without Identifiers][CAIP-316]
+- [Namespaces: CASA RPC Namespaces][Namespaces]
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-25]: https://chainagnostic.org/CAIPs/caip-25
