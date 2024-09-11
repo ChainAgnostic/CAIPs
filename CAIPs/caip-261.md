@@ -40,7 +40,8 @@ In the following diagram, we depict the process where an issuer of a long-lived 
 
 ##### Peers Identification
 
-Trust assertions are made about, and by, peers identifiable with identifiers derived from public keys or directly using a public key. This enables peers to sign assertions and be verified.
+Trust assertions are made about, and by, peers identifiable with identifiers derived from public keys or directly using a public key. This enables peers to sign and verify assertions.
+
 
 Identification of peers SHOULD make use of key pair-based mechanism to facilitate interoperability and verifiability.
 - **[Decentralized Identifiers (DIDs)][DID]** with key pair-based methods for off-chain assertions.
