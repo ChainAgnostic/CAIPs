@@ -1,7 +1,7 @@
 ---
 # Every document starts with a front matter in YAML enclosed by triple dashes.
 # See https://jekyllrb.com/docs/front-matter/ to learn more about this concept.
-caip: CAIP-261
+caip: 261
 title: Web of Trust Primitives
 author: Dayan | dayan.fc | dayan.lens | dayanx.eth | (@dayksx) <dayksx@protonmail.com>
 status: Draft
