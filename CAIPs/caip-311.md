@@ -1,7 +1,7 @@
 ---
 caip: 311
 title: JSON-RPC Event for Session Authorization Updates
-author: [Alex Donesky] (@adonesky1)
+author: Alex Donesky (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/285/files
 status: Draft
 type: Standard
