@@ -22,7 +22,7 @@ extending [CAIP-2][] chain id specification. This is useful for both
 decentralized applications and wallets to communicate user accounts (EOA in EVM
 terminology) or smart contracts/abstraction for multiple chains using string
 identifiers specific to each chain. Currently, wallets are usually designed for
-each chain and multi-chain wallets use proprietray data structures to
+each chain and multi-chain wallets use proprietary data structures to
 differentiate accounts. This proposal aims to standardize these identifiers for
 accounts to allow interoperability.
 
@@ -66,7 +66,7 @@ the blockchain that is referred to by the `chain_id`.
 The goals of the general account ID format is:
 
 - Uniqueness between chains regardless if they are mainnet or testnet
-- Readibility using the prefix of a chainId to quickly identify before parsing the address
+- Readability using the prefix of a chainId to quickly identify before parsing the address
 - Restricted to constrained set of characters and length for parsing
 
 ## Canonicalization
