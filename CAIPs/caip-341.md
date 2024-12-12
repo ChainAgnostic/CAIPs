@@ -1,8 +1,8 @@
 ---
-caip: X
+caip: 341
 title: Extension ID Target Type Specification
 author: [Joao Tavares] (@ffmcgee725)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/X
+discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/341
 status: Draft
 type: Standard
 created: 2024-12-12
@@ -11,7 +11,7 @@ requires: 294
 
 ## Simple Summary
 
-CAIP-X defines the `extensionId` type as a valid target type for establishing connections with browser extension wallets.
+CAIP-341 defines the `extensionId` type as a valid target type for establishing connections with browser extension wallets.
 
 ## Abstract
 
@@ -48,7 +48,7 @@ interface WalletData {
   rdns: string;
   // Optional properties
   target?: {
-    type: <caip-id-for-extension-id>,
+    type: "caip341",
     value: <extension_id>
   }
   scopes?: Caip217AuthorizationScopes;
@@ -66,7 +66,7 @@ const walletData = {
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
   rdns: "com.example.wallet",
   target: {
-    type: "caip-x",
+    type: "caip341",
     value: "abcdefghijklmnopqrstuvwxyz"
   },
   scopes: {
