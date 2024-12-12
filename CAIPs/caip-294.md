@@ -138,7 +138,7 @@ The `walletData` object MUST include the following properties:
 
 Additionally, the `walletData` object MAY include the following optional properties:
 
-- `target`: An object containing `type: caip341` and `value: <extensionId>` used to connect to wallets using `externally_connectable` . For reference on this specification, see [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md).
+- `target`: An object containing `type: "caip341"` and `value: <extension_id>` used to connect to wallets using `externally_connectable`. Important to note here that other CAIPs can extend this, and [CAIP-341][caip-341] is an example of a valid target type for this use case.
 - `scopes`: An object defining the authorization scopes supported by the wallet, as specified in CAIP-217.
 
 ```typescript
