@@ -11,15 +11,15 @@ requires: 294
 
 ## Simple Summary
 
-CAIP-341 defines the `extensionId` type as a valid target type for establishing connections with browser extension wallets.
+CAIP-341 defines the `extensionId` type as a valid target type for establishing connections with browser extension wallets via the [CAIP-294] `wallet_announce` wallet discovery event.
 
 ## Abstract
 
-This proposal introduces a new target type `extensionId` for the `target` field in the `walletData` interface. This target type is used to specify the extension ID of a browser extension wallet, allowing Decentralized Applications (dapps) to establish connections with the wallet using the `externally_connectable` API.
+This proposal introduces a new target type `extensionId` for the `target` field of the `walletData` interface dispatched in [CAIP-294]'s `wallet_announce` event. This target type is used to specify the extension ID of a browser extension wallet, allowing callers to establish connections with the wallet using the [`externally_connectable`][externally_connectable API documentation] API.
 
 ## Motivation
 
-Currently, Decentralized Applications need to support different messaging standards for each namespace, such as Ethereum's [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963), Solana Wallet Protocol, etc. This fragmentation increases complexity and reduces interoperability. By defining a standardized target type for browser extension wallets, we aim to simplify the connection process and enhance interoperability across different blockchain ecosystems.
+CAIP-294 proposes a solution to fragmentation across blockchain ecosystems wallet discovery mechanisms (e.g  Ethereum's [EIP-6963], Solana's [Wallet Standard]). By defining a standardized target type for browser extension wallets that use the `externally_connectable` browser API, we aim to extend CAIP-294's unified solution to cross ecosystem wallet discoverability, enhancing interoperability across these different blockchain ecosystems.
 
 ## Specification
 
@@ -111,9 +111,15 @@ This CAIP is fully compatible with existing standards and does not introduce any
 
 ## Links
 
-- [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) - Multi Injected Provider Discovery
-- [CAIP-294](https://chainagnostic.org/CAIPs/caip-294) - Browser Wallet Messaging for Extensions
-- [externally_connectable API documentation](https://developer.chrome.com/docs/extensions/reference/manifest/externally-connectable)
+- [EIP-6963][eip-6963] - Ethereum's Multi Injected Provider Discovery
+- [CAIP-294][caip-294] - Browser Wallet Messaging for Extensions
+- [externally_connectable API documentation][externally_connectable API documentation] - Chrome's `externally_connectable` browser API documentation
+- [Wallet Standard][wallet standard] - Solana's Wallet Standard for discoverability
+
+[eip-6963]: https://eips.ethereum.org/EIPS/eip-6963
+[caip-294]: https://chainagnostic.org/CAIPs/caip-294
+[externally_connectable API documentation]: https://developer.chrome.com/docs/extensions/reference/manifest/externally-connectable
+[wallet standard]: https://github.com/anza-xyz/wallet-standard
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE).
