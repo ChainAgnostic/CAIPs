@@ -11,11 +11,11 @@ requires: 294
 
 ## Simple Summary
 
-CAIP-341 defines the `extensionId` type as a valid target type for establishing connections with browser extension wallets via the [CAIP-294] `wallet_announce` wallet discovery event.
+CAIP-341 defines the Extension ID type as a valid target type for establishing connections with browser extension wallets via the [CAIP-294] `wallet_announce` wallet discovery event.
 
 ## Abstract
 
-This proposal introduces a new target type `extensionId` for the `target` field of the `walletData` interface dispatched in [CAIP-294]'s `wallet_announce` event. This target type is used to specify the extension ID of a browser extension wallet, allowing callers to establish connections with the wallet using the [`externally_connectable`][externally_connectable API documentation] API.
+This proposal introduces a new target type Extension ID for the `target` field of the `WalletData` interface dispatched in [CAIP-294]'s `wallet_announce` event. This target type is used to specify the extension ID of a browser extension wallet, allowing callers to establish connections with the wallet using the [`externally_connectable`][externally_connectable API documentation] API.
 
 ## Motivation
 
@@ -35,9 +35,9 @@ Blockchain Library: A library or piece of software that assists a dapp to intera
 
 ### Target Type
 
-The `target` field in the `walletData` interface is used to specify the connection method for the wallet. This CAIP introduces the `extensionId` type as a valid target type.
+The `target` field in the `WalletData` interface is used to specify the connection method for the wallet. This CAIP introduces the Extension ID type as a valid target type.
 
-This field MAY be included in the `walletData`, and if included, SHOULD be an object containing `extensionId` type used to connect to wallets using `externally_connectable`.
+This field MAY be included in the `WalletData`, and if included, SHOULD be an object containing Extension ID type used to connect to wallets using `externally_connectable`.
 
 ```typescript
 interface WalletData {
@@ -57,7 +57,7 @@ interface WalletData {
 
 ### Usage
 
-The `extensionId` target type is used to specify the extension ID of a browser extension wallet. This allows the dapp to establish a connection with the wallet using the `externally_connectable` API. The `externally_connectable` API documentation can be found [here](https://developer.chrome.com/docs/extensions/reference/manifest/externally-connectable).
+The Extension ID target type is used to specify the extension ID of a browser extension wallet. This allows the dapp to establish a connection with the wallet using the `externally_connectable` API. The `externally_connectable` API documentation can be found [here](https://developer.chrome.com/docs/extensions/reference/manifest/externally-connectable).
 
 ```ts
 const walletData = {
@@ -80,7 +80,7 @@ const walletData = {
 
 ### Establishing Connection
 
-When the target type is `extensionId`, the dapp MUST use the `extensionId` to establish a connection with the wallet using the `externally_connectable` browser API. All subsequent communication with the wallet SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
+When the target type is Extension ID, the dapp MUST use the Extension ID to establish a connection with the wallet using the `externally_connectable` browser API. All subsequent communication with the wallet SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
 
 Example of establishing a connection and sending a message:
 
@@ -103,11 +103,11 @@ port.postMessage({
 
 ## Rationale
 
-By defining the `extensionId` target type, we provide a standardized way for dapps to connect with browser extension wallets. This reduces complexity and enhances interoperability across different blockchain ecosystems. The use of the `externally_connectable` API ensures secure and efficient communication between the dapp and the wallet.
+By defining the Extension ID target type, we provide a standardized way for dapps to connect with browser extension wallets. This reduces complexity and enhances interoperability across different blockchain ecosystems. The use of the `externally_connectable` API ensures secure and efficient communication between the dapp and the wallet.
 
 ## Backwards Compatibility
 
-This CAIP is fully compatible with existing standards and does not introduce any breaking changes. It extends the `walletData` interface to include the `target` field, which is optional and does not affect existing implementations.
+This CAIP is fully compatible with existing standards and does not introduce any breaking changes. It extends the `WalletData` interface to include the `target` field, which is optional and does not affect existing implementations.
 
 ## Links
 
