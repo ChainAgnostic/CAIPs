@@ -60,6 +60,10 @@ interface WalletAnnounceRequestParams {
   name: string;
   icon: string;
   rdns: string;
+  target?: {
+    type: "caip341",
+    value: <extension-id>
+  }
   scopes?: AuthorizationScopes;
 }
 ```
@@ -68,7 +72,7 @@ Whenever a new Wallet Provider is discovered the Blockchain Library would index 
 
 The parameters `name` and `icon` are used to display to the user to be easily recognizable while the `rdns` and `uuid` are only used internally for de-duping while they must always be unique, the `rdns` will always be the same but `uuid` is ephemeral per browser session.
 
-The only optional parameter is `scopes` which is defined by CAIP-217 authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts.
+The optional parameters are `scopes`, which is defined by [CAIP-217] authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts, and `target`, which is defined by [CAIP-341] which defines the `extensionId` type as a valid target type for establishing connections with browser extension wallets via the [CAIP-294] `wallet_announce` wallet discovery event.
 
 ```typescript
 // Defined by CAIP-217

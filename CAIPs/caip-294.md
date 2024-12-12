@@ -138,7 +138,7 @@ The `walletData` object MUST include the following properties:
 
 Additionally, the `walletData` object MAY include the following optional properties:
 
-- `target`: The object containing `extensionId` type used to connect to wallets using `externally_connectable` . For reference on this specification, see [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md).
+- `target`: An object containing `type: caip341` and `value: <extensionId>` used to connect to wallets using `externally_connectable` . For reference on this specification, see [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md).
 - `scopes`: An object defining the authorization scopes supported by the wallet, as specified in CAIP-217.
 
 ```typescript
@@ -182,9 +182,9 @@ This `walletData` type is is a superset of `WalletAnnounceRequestParams` type de
 
 ### Target
 
-When the `target` with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is included in the `walletData` object, it indicates that the wallet supports communication via the browser's `externally_connectable` API. In this case:
+When a `target` property with the [`type: 'caip341'`][caip-341]  is included in the `walletData` object, it indicates that the wallet expects communication via the browser's [`externally_connectable` API][externally_connectable]. In this case:
 
-1. The dapp MUST use the `target.value` (represents `extensionId`) to establish a connection with the wallet using the `externally_connectable` browser API.
+1. The dapp MUST use the `target.value` (an [`extensionId`][externally_connectable]) to establish a connection with the wallet using the `externally_connectable` browser API.
 2. All subsequent communication with the wallet (the "session") SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
 3. The dapp MUST NOT use the injected provider for communication when `target` with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is present.
 
@@ -503,12 +503,14 @@ TODO
 - [CAIP-25][caip-25] - Blockchain ID Specification
 - [CAIP-282][caip-282] - Browser Wallet Discovery Interface
 - [CAIP-341][caip-341] - Extension ID Target Type Specification
+- [externally_connectable][externally_connectable] - Chrome's `externally_connectable` browser API documentation
 
 [eip-6963]: https://eips.ethereum.org/EIPS/eip-6963
 [caip-27]: https://chainagnostic.org/CAIPs/caip-27
 [caip-25]: https://chainagnostic.org/CAIPs/caip-25
 [caip-282]: https://chainagnostic.org/CAIPs/caip-282
 [caip-341]: https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md
+[externally_connectable]: https://developer.chrome.com/docs/extensions/reference/manifest/externally-connectable
 
 ## Copyright
 

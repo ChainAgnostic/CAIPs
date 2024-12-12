@@ -47,6 +47,10 @@ This provides the foundation for any Wallet Provider to interface with a Decentr
 
 Different loading times can be affected by multiple factors, which makes it non-deterministic to publish and listen to messages from different sources within the browser.
 
+#### Target Origin
+
+TODO Make Proposal For Target Origin As Valid Target Type For Wallet Data.
+
 #### Discovery
 
 Both Wallet Providers and blockchain libraries must listen to incoming messages that might be published after their initialization. Additionally both Wallet Providers and blockchain libraries must publish a message to both announce themselves and their intent to connect, respectively.
@@ -56,7 +60,10 @@ Here is the expected logic from the Blockchain Library:
 ```typescript
 interface WalletMapEntry {
   data: WalletAnnounceRequestParams;
-  targetOrigin: string;
+  target: {
+    type: <caip-id-for-target-origin>;
+    value: <target-origin>
+  }
 }
 
 const wallets: Record<string, WalletMapEntry> = {}
@@ -67,7 +74,7 @@ window.addEventListener("message", (event) => {
     // when an announce message was received then the library can index it by uuid
     wallets[event.data.params.uuid] = {
       params: event.data.params,
-      targetOrigin: event.targetOrigin
+      targetOrigin: event.target.value
     }
   }
 });
@@ -158,7 +165,10 @@ Logic from the Blockchain Library:
 // also by posting a prompt message
 interface WalletMapEntry {
   data: WalletAnnounceRequestParams;
-  targetOrigin: string;
+  target: {
+    type: <caip-id-for-target-origin>;
+    value: <target-origin>
+  }
 }
 
 const wallets: Record<string, WalletMapEntry> = {}
@@ -168,7 +178,7 @@ window.addEventListener("message", (event) => {
     // when an announce message was received then the library can index it by uuid
     wallets[event.data.params.uuid] = {
       params: event.data.params,
-      targetOrigin: event.targetOrigin
+      targetOrigin: event.target.value
     }
   }
 });
@@ -208,7 +218,7 @@ const sessionRequest = {
 let sessionResult = {}
 
 window.addEventListener("message", (event) => {
-  if (event.targetOrigin !== wallets[selected_uuid].targetOrigin) return;
+  if (event.target.value !== wallets[selected_uuid].targetOrigin) return;
   if (event.data.id === sessionRequest.id) {
     // Get JSON-RPC response
     if (event.data.error) {
@@ -247,7 +257,7 @@ const signingRequest = {
 let signingResult = {}
 
 window.addEventListener("message", (event) => {
-  if (event.targetOrigin !== wallets[selected_uuid].targetOrigin) return;
+  if (event.target.value !== wallets[selected_uuid].targetOrigin) return;
   if (event.data.id === signingRequest.id) {
     // Get JSON-RPC response
     if (event.data.error) {
@@ -309,7 +319,7 @@ window.addEventListener("message", (event) => {
     if (checkSupportedScopes(event.data.params)) {
         // prompt user to approve session
         // persist the targetOrigin for sessionRequest
-        sessionOrigin = event.targetOrigin
+        sessionOrigin = event.target.value
     }
   }
 });
@@ -344,7 +354,7 @@ window.postMessage(sessionResponse, sessionOrigin);
 let signingRequest = {}
 
 window.addEventListener("message", (event) => {
-	if (event.targetOrigin !== sessionOrigin) return;
+	if (event.target.value !== sessionOrigin) return;
   if (event.data.method === "wallet_createSession" && event.data.params.sessionId === walletData.uuid) {
     signingRequest = event.data.params
   }
