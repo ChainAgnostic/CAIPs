@@ -138,7 +138,7 @@ The `walletData` object MUST include the following properties:
 
 Additionally, the `walletData` object MAY include the following optional properties:
 
-- `extensionId`: The canonical extension ID of the wallet provider for the active browser.
+- `target`: The object containing `extensionId` type used to connect to wallets using `externally_connectable` . For reference on this specification, see [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md).
 - `scopes`: An object defining the authorization scopes supported by the wallet, as specified in CAIP-217.
 
 ```typescript
@@ -148,9 +148,11 @@ interface WalletData {
   name: string;
   icon: string;
   rdns: string;
-
   // Optional properties
-  extensionId?: string;
+  target?: {
+    type: "caip341",
+    value: <extension_id>
+  }
   scopes?: Caip217AuthorizationScopes;
 }
 ```
@@ -163,7 +165,10 @@ const walletData = {
   name: "Example Wallet",
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
   rdns: "com.example.wallet",
-  extensionId: "abcdefghijklmnopqrstuvwxyz",
+  target: {
+    type: "caip341",
+    value: "abcdefghijklmnopqrstuvwxyz"
+  }
   scopes: {
     "eip155:1": {
       methods: ["eth_signTransaction", "eth_sendTransaction"],
@@ -173,20 +178,20 @@ const walletData = {
 }
 ```
 
-This `walletData` type is is a superset of `WalletAnnounceRequestParams` type described in the [CAIP-282][caip-282] standard, adding the optional `extensionId` property as it is only relevant for browser extension based wallets.
+This `walletData` type is is a superset of `WalletAnnounceRequestParams` type described in the [CAIP-282][caip-282] standard, adding the optional `target` property with the `extensionId` as it is only relevant for browser extension based wallets.
 
-### ExtensionId
+### Target
 
-When the `extensionId` is included in the `walletData` object, it indicates that the wallet supports communication via the browser's `externally_connectable` API. In this case:
+When the `target` with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is included in the `walletData` object, it indicates that the wallet supports communication via the browser's `externally_connectable` API. In this case:
 
-1. The dapp MUST use the `extensionId` to establish a connection with the wallet using the `externally_connectable` browser API.
+1. The dapp MUST use the `target.value` (represents `extensionId`) to establish a connection with the wallet using the `externally_connectable` browser API.
 2. All subsequent communication with the wallet (the "session") SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
-3. The dapp MUST NOT use the injected provider for communication when `extensionId` is present.
+3. The dapp MUST NOT use the injected provider for communication when `target` with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is present.
 
 Example of establishing a connection and sending a message:
 
 ```javascript
-const port = chrome.runtime.connect(walletData.extensionId);
+const port = chrome.runtime.connect(walletData.target.value);
 
 port.onMessage.addListener((message) => {
   // Handle incoming messages
@@ -202,7 +207,7 @@ port.postMessage({
 });
 ```
 
-If the `extensionId` is not present in the `walletData` object, the dapp SHOULD assume that communication will occur through the traditional injected provider method.
+If the `target` with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is not present in the `walletData` object, the dapp SHOULD assume that communication will occur through the traditional injected provider method.
 
 #### Handshake
 
@@ -497,11 +502,13 @@ TODO
 - [CAIP-27][caip-27] - Blockchain ID Specification
 - [CAIP-25][caip-25] - Blockchain ID Specification
 - [CAIP-282][caip-282] - Browser Wallet Discovery Interface
+- [CAIP-341][caip-341] - Extension ID Target Type Specification
 
 [eip-6963]: https://eips.ethereum.org/EIPS/eip-6963
 [caip-27]: https://chainagnostic.org/CAIPs/caip-27
 [caip-25]: https://chainagnostic.org/CAIPs/caip-25
 [caip-282]: https://chainagnostic.org/CAIPs/caip-282
+[caip-341]: https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md
 
 ## Copyright
 
