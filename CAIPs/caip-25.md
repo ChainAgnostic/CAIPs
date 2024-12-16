@@ -336,7 +336,7 @@ respondent about what exact authorization is granted.
 In the examples given above, there is no overlap between the two `eip155` chains authorized identically in compact form (1, 137) and the three additional chains identified in free-standing scopes (10, 42161, 0).
 
 In cases where a given chain appears in both, it can be ambiguous what the intended behavior was.
-Depending on the security poster of the respondent, the ambiguity MAY be rejected using error code 5204, or the respondent MAY err on the side of [Postel's Law permissiveness][postel], returning a disambiguated response with all authorizations for a given chain moved into a single scope to confirm the intention.
+Depending on the security posture of the respondent, the ambiguity MAY be rejected using error code 5204, or the respondent MAY err on the side of [Postel's Law permissiveness][postel], returning a disambiguated response with all authorizations for a given chain moved into a single scope to confirm the intention.
 
 For example, the request
 
