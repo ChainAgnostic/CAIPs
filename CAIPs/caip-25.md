@@ -331,7 +331,7 @@ translate this object into other structures, preserving it in the CAIP-25
 interface is crucial to the unambiguous communication between caller and
 respondent about what exact authorization is granted.
 
-### Ambiguity Bbetween Different Types of Scopes
+### Ambiguity Between Different Types of Scopes
 
 In the examples given above, there is no overlap between the two `eip155` chains authorized identically in compact form (1, 137) and the three additional chains identified in free-standing scopes (10, 42161, 0).
 
