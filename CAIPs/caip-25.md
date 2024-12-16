@@ -377,7 +377,7 @@ Can be returned as
 ```
 
 Note that the reference "10" has been moved out of the compact multi-reference scope, and that the union of all methods and notifications authorized to chainId reference `10` in both requested scopes has been granted to it in the latter.
-Also note that the `accounts` array of both scope objects has been updated, as the `eip155:10` account is no longer valid in the compact scope after the removal of `10` from the `references` array; likewise, the union of the compact scope's array and the empty array of the requested `eip155:10` scope, minus the invalid terms, leaves an array with only one member, an `eip155:10` array.
+Also note that the `accounts` array of both scope objects has been updated, as the `eip155:10` account is no longer valid in the compact scope after the removal of `10` from the `references` array; likewise, the union of the compact scope's array and the empty array of the requested `eip155:10` scope, minus the invalid terms, leaves an array with only one member, an `eip155:10` account.
 
 
 ## Privacy Considerations
