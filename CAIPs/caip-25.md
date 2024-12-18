@@ -130,7 +130,7 @@ Example:
 }
 ```
 
-The JSON-RPC method is labeled as `provider_authorize` and its `params` object contains "requiredScopes" and/or "optionalScopes" objects populated with [CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
+The JSON-RPC method is labeled as `wallet_createSession` and its `params` object contains "requiredScopes" and/or "optionalScopes" objects populated with [CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
 
 - The `requiredScopes` object MUST contain 1 or more `scopeObjects`, if present.
 - The `optionalScopes` object MUST contain 1 or more `scopeObjects`, if present.
