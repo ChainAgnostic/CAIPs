@@ -4,7 +4,7 @@
 caip: 320
 title: Wallet Switch Chain JSON-RPC Method
 author: Anh Tu Nguyen (@tuna1207), Chaitanya Potti (@chaitanyapotti), Tai Nguyen (@tanguyenvn)
-discussions-to: <URL(s); if multiple, list separated by , without " or []>
+discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/343
 status: Draft
 type: Standard
 created: 2025-01-06
