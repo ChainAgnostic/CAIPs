@@ -43,19 +43,12 @@ The application would interface with a wallet to make request as follows:
   "jsonrpc": "2.0",
   "method": "wallet_connect",
   "params": {
-      "requests?": {
-        "method": string,
-        "params": unknown
-      }[],
+    "<method_name>" : { ...params }
   }
 }
 ```
 
-The JSON-RPC method is labelled as `wallet_connect` and expects the following parameters:
-
-- requests - is an OPTIONAL array of rpc requests that would be batched togehter when requesting the user for approval
-  - method - the RPC method being requested
-  - params - will include params specific to the RPC method
+The JSON-RPC method is labelled as `wallet_connect` and expects a list of RPC parameters indexed by the RPC method name.
 
 The methods that are allowed to be batched together in the `wallet_connect` request is going to be going to dependant on each ecosystem that must be defined under the [Namespaces][namespaces] repo to define a CAIP-300 profile
 
@@ -71,11 +64,13 @@ If approved, the wallet will return a list of signed, valid CACAOs for each acco
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "result": { "result": unknown } || { error: { message: string, code: number } }[]
+  "result": {
+    "<method_name>": { "result": unknown } || { error: { message: string, code: number } }
+  }
 }
 ```
 
-The JSON-RPC response will include an array of requests which are going to be ordered in the same order as provided in the request.
+The JSON-RPC response will include a list of RPC results or errors indexed by the corresponding RPC method name
 
 #### Failure
 
@@ -111,11 +106,9 @@ Which then will result in a single item in the array that will match the respons
 {
   "id": 1,
   "jsonrpc": "2.0",
-  "result": [
-    {
-      "result": ["0xa...", "0xb..."] // fallback to ERC-1102 request
-    }
-  ]
+  "result": {
+      "eth_requestAccounts": ["0xa...", "0xb..."] // fallback to ERC-1102 request
+   }
 }
 ```
 
@@ -139,25 +132,10 @@ Let's take for example the Ethereum ecosystem which currently has popularized th
   "jsonrpc": "2.0",
   "method": "wallet_connect",
   "params": {
-    "requests?": [
-      {
-          "method": "wallet_authenticate",  // CAIP-222 request
-          "params": {...}
-      },
-      {
-          "method": "wallet_createSession", // CAIP-25 request
-          "params": {...}
-      },
-      {
-          "method": "wallet_getCapabilities", // ERC-5792 request
-          "params": {...}
-      },
-      {
-          "method": "wallet_grantPermissions", // ERC-7715 request
-          "params": {...}
-      },
-
-    ]
+    "wallet_authenticate": {...}, // CAIP-222 request
+    "wallet_createSession": {...}, // CAIP-25 request
+    "wallet_getCapabilities": {...}, // ERC-5792 request
+    "wallet_grantPermissions": {...}, // ERC-7715 request
   }
 }
 ```
@@ -168,21 +146,12 @@ This would then resolve with an array of responses that are going to be ordered 
 {
   "id": 123,
   "jsonrpc": "2.0",
-  "result": [
-    {
-        "result": {...} // CAIP-222 response
-    },
-    {
-        "result": {...} // CAIP-25 response
-    },
-    {
-        "result": {...} // ERC-5792 response
-    },
-    {
-        "result": {...} // ERC-7715 response
-    },
-
-  ]
+  "result": {
+    "wallet_authenticate": { result: {...} } // CAIP-222 response
+    "wallet_createSession": { result: {...} } // CAIP-25 response
+    "wallet_getCapabilities": { result: {...} } // ERC-5792 response
+    "wallet_grantPermissions": { result: {...} } // ERC-7715 response
+  }
 }
 ```
 
