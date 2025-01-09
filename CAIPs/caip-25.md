@@ -195,7 +195,7 @@ An example of a successful response follows:
       "eip155:10": {
         "methods": ["get_balance"],
         "notifications": ["accountsChanged", "chainChanged"],
-        "accounts:" []
+        "accounts": []
       },
       "eip155:42161": {
         "methods": ["personal_sign"],
