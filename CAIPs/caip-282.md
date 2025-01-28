@@ -60,10 +60,7 @@ interface WalletAnnounceRequestParams {
   name: string;
   icon: string;
   rdns: string;
-  target?: {
-    type: "caip341",
-    value: <extension-id>
-  }
+  target?: { type: string, value: any }[],
   scopes?: AuthorizationScopes;
 }
 ```
