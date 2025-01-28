@@ -1,7 +1,7 @@
 ---
 caip: 341
 title: Extension ID Target Type Specification
-author: [Joao Tavares] (@ffmcgee725)
+author: Joao Tavares (@ffmcgee725)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/341
 status: Draft
 type: Standard
@@ -37,7 +37,7 @@ Blockchain Library: A library or piece of software that assists a dapp to intera
 
 The `target` field in the `WalletData` interface is used to specify the connection method for the wallet. This CAIP introduces the Extension ID type as a valid target type.
 
-This field MAY be included in the `WalletData`, and if included, SHOULD be an object containing Extension ID type used to connect to wallets using `externally_connectable`.
+This field MAY be included in the `WalletData`, and if included, SHOULD be an array of objects, containing Extension ID type used to connect to wallets using `externally_connectable`. An array was opted for easier interoperability and flexibility for multiple CAIP target definitions.
 
 ```typescript
 interface WalletData {
@@ -47,10 +47,12 @@ interface WalletData {
   icon: string;
   rdns: string;
   // Optional properties
-  target?: {
-    type: "caip341",
-    value: <extension_id>
-  }
+  target?: [
+    {
+      type: "caip341",
+      value: <extension_id>
+    },
+  ],
   scopes?: Caip217AuthorizationScopes;
 }
 ```
@@ -65,10 +67,22 @@ const walletData = {
   name: "Example Wallet",
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
   rdns: "com.example.wallet",
-  target: {
-    type: "caip341",
-    value: "abcdefghijklmnopqrstuvwxyz"
-  },
+  target: [
+    {
+      type: "caip341",
+      value: "abcdefghijklmnopqrstuvwxyz"
+    },
+    {
+      type: "caip315",
+      value: true
+    },
+    {
+      type: "caip316",
+      value: {
+        somethingElse: "hello"
+      }
+    }
+  ],
   scopes: {
     "eip155:1": {
       methods: ["eth_signTransaction", "eth_sendTransaction"],
