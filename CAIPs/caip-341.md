@@ -47,12 +47,7 @@ interface WalletData {
   icon: string;
   rdns: string;
   // Optional properties
-  target?: [
-    {
-      type: "caip341",
-      value: <extension_id>
-    },
-  ],
+  target?: { type: "caip341", value: any }[],
   scopes?: Caip217AuthorizationScopes;
 }
 ```
