@@ -345,7 +345,7 @@ For example, the request
     "requiredScopes": {
       "eip155": {
         "references": ["1", "10", "137"],
-        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign"]
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
         "accounts": ["eip155:10:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
       },
