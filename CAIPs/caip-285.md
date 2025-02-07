@@ -1,7 +1,7 @@
 ---
 caip: 285
 title: JSON-RPC Method for Revoking Session Authorizations
-author: [Alex Donesky] (@adonesky1)
+author: Alex Donesky (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/285/files
 status: Draft
 type: Standard

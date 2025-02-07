@@ -69,8 +69,8 @@ Each `scopeObject` in either parent object MUST be keyed uniquely within its par
 (i.e., additional properties of an authorization target in `requiredScopes` may be requested in a separate `scopeObject` with the same key in the `optionalScopes` array).
 
 Each `scopeObject` in these parent `...Scopes` objects can be keyed to a specific [CAIP-2][] network identifier, or to an entire [CAIP-104][] namespace.
-`scopeObjects` keyed to an entire [CAIP-104][] namespace SHOULD contain a non-empty `scopes` array to be actionable, making them functionally equivalent to a series of identical `scopeObjects`, each keyed to one of the members of `scopes` expressed as a [CAIP-2][] scope.
-An empty or absent `scopes` array SHOULD NOT be interpreted as a namespace-wide authorization (i.e. authorization for ANY network therein), but rather as a null authorization of 0 specified `chainId`s within that namespace.
+`scopeObjects` keyed to an entire [CAIP-104][] namespace SHOULD contain a non-empty `references` array to be actionable, making them functionally equivalent to a series of identical `scopeObjects`, each keyed to one of the members of `references` expressed as a [CAIP-2][] scope.
+An empty or absent `references` array SHOULD NOT be interpreted as a namespace-wide authorization (i.e. authorization for ANY network therein), but rather as a null authorization of 0 specified `references`s within that namespace.
 (See [CAIP-217][] for more details on the structure of the typed objects included in these `...Scopes` objects.)
 
 The distinction between `requiredScopes` and `optionalScopes` is ultimately semantic, since a wallet may still choose to establish a connection authorizing a subset of requested networks or requested capabilities from each; the primary function of the distinction is to offer callers a mechanism for signaling which scopes they consider primary and which they consider secondary to their request, in order to better inform the authorization logic of the respondent.
@@ -99,7 +99,7 @@ Example:
   "params": {
     "requiredScopes": {
       "eip155": {
-        "scopes": ["eip155:1", "eip155:137"],
+        "references": ["1", "137"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "eth_sign", "get_balance", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"]
       },
@@ -133,7 +133,7 @@ Example:
 }
 ```
 
-The JSON-RPC method is labeled as `provider_authorize` and its `params` object contains "requiredScopes" and/or "optionalScopes" objects populated with [CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
+The JSON-RPC method is labeled as `wallet_createSession` and its `params` object contains "requiredScopes" and/or "optionalScopes" objects populated with [CAIP-217][] "scope objects" keyed to [CAIP-217][] scope strings.
 
 - The `requiredScopes` object MUST contain 1 or more `scopeObjects`, if present.
 - The `optionalScopes` object MUST contain 1 or more `scopeObjects`, if present.
@@ -190,7 +190,7 @@ An example of a successful response follows:
     "sessionId": "0xdeadbeef",
     "sessionScopes": {
       "eip155": {
-        "scopes": ["eip155:1", "eip155:137"],
+        "references": ["1", "137"],
         "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
         "notifications": ["accountsChanged", "chainChanged"],
         "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
@@ -198,7 +198,7 @@ An example of a successful response follows:
       "eip155:10": {
         "methods": ["get_balance"],
         "notifications": ["accountsChanged", "chainChanged"],
-        "accounts:" []
+        "accounts": []
       },
       "eip155:42161": {
         "methods": ["personal_sign"],
