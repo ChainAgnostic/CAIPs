@@ -1,8 +1,8 @@
 ---
-caip: CAIP-320 <320 will be changed to the PR number if accepted>
+caip: CAIP-345
 title: Wallet Service URL property
 author: Chris Smith (@chris13524)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/320
+discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/345
 status: Draft
 type: Standard
 created: 2025-02-17
