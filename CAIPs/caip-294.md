@@ -150,7 +150,10 @@ interface WalletData {
   rdns: string;
 
   // Optional properties
-  extensionId?: string;
+  target?: {
+    origin?: string;
+    extensionId?: string;
+  }
   scopes?: Caip217AuthorizationScopes;
 }
 ```
