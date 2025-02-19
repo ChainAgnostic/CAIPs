@@ -146,7 +146,7 @@ Regarding security considerations it's important to consider that the WalletData
 
 Application developers are expected to actively detect for misbehavior of properties or functions being modified in order to tamper with or modify other wallets. One way this can be easily achieved is to look for when the uuid property within two WalletData objects match. Applications and Libraries are expected to consider other potential methods that the WalletData objects are being tampered with and consider additional mitigation techniques to prevent this as well in order to protect the user.
 
-### Prevent SVG Javascript Execution
+### Prevent SVG JavaScript Execution
 
 The use of SVG images introduces a cross-site scripting risk as they can include JavaScript code. This JavaScript executes within the context of the page and can modify the page or the contents of the page. So, when considering the experience of rendering the icons, dapps need to take into consideration how they’ll approach handling these concerns in order to prevent an image from being used as an obfuscation technique to hide malicious modifications to the page or to other wallets.
 
