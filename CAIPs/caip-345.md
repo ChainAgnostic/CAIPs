@@ -21,7 +21,7 @@ A short (~200 word) description of the technical issue being addressed.
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
 In protocols such as WalletConnect it is bad UX to redirect the user to a wallet to handle requests that are non-actionable to them. Examples of this include:
-- `wallet_getCapabilities` - is this real? point to EIP
+- `wallet_getCapabilities` - Defined in [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities)
 - `wallet_getCallsStatus` - point to EIP
 - `wallet_getAssets` - point to EIP
 
