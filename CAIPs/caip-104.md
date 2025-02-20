@@ -76,43 +76,34 @@ Jekyll](https://jekyllrb.com/docs/front-matter/).
 Please Note:
 
 - The headers must appear in the following order.
-- Headers marked with "\*" are optional and are described below.
+- Headers marked with "?" are optional and are described below.
   - All other headers are required.
 - Lists/arrays in RFC822 must be encoded in the form `key: ["str1", "str2"]`,
   NOT `key: Str1, Str2`, even though single strings can be encoded in the form
   `key: Str1`
 - Similarly, headers requiring dates must use the format of ISO 8601 (yyyy-mm-dd).
 
-` namespace-identifier:` <{unique lowercase alphanumeric string}[-caip{X}],
+### Quick Guide to Header Fields:
+
+* `namespace-identifier`: <{unique lowercase alphanumeric string}[-caip{X}],
 where the optional suffix replaces X with the number of the applied CAIP unless
 the reference is a base namespace reference>
+* `title`: {string1}[ - {string2}]
+* `author`: a string or array of strings, each consisting of the author's public
+name and github username or email
+* `resolution`?: a string or array of strings, each consisting of an archival url
+* `discussions-to`?: a string or array of string, each consisting of a url
+* `status`: { `Draft` / `Last Call` / `Accepted` / `Active` / `Abandoned` / `Rejected` / `Superseded` }
+* `review-period-end`?: date review period ends
+* `type`: { `Standards Track` / `Informational` / `Meta` }
+* `category`?: { `Core` / `Networking` / `Interface` / `ERC` } if `type` == `Standards Track`
+* `created`: date created on
+* `updated`?: comma separated list of dates
+* `requires`?: CAIP number(s), i.e. `CAIP-104`
+* `replaces`?: { CAIP number(s) / namespace-specific document reference(s), i.e. `EIP-155` }
+* `superseded-by`?: { namespace reference(s) / URL of non-namespace standard }
 
-` title:` <{string1}[ - {string2}]>
-
-` author:` <a string or array of strings, each consisting of the author's public
-name and github username or email>
-
-` * resolution:` \<a string or array of strings, each consisting of an archival url>
-
-` * discussions-to:` \<a string or array of string, each consisting of a url\>
-
-` status:` <Draft | Last Call | Accepted | Active | Abandoned | Rejected | Superseded>
-
-`* review-period-end:` <date review period ends>
-
-` type:` <Standards Track (Core, Networking, Interface, ERC) | Informational | Meta>
-
-` * category:` <Core | Networking | Interface | ERC>
-
-` created:` <date created on>
-
-` * updated:` <comma separated list of dates>
-
-` * requires:` <CAIP number(s), i.e. `CAIP-XX` >
-
-` * replaces:` <CAIP number(s) | namespace reference(s), i.e. `eip155` >
-
-` * superseded-by:` <namespace reference(s) | URL of non-namespace standard>
+### Header Definitions
 
 #### `title` header
 
@@ -143,13 +134,13 @@ if the email address or GitHub username is included, and
 
 if the email address is not given.
 
-#### `resolution` header
+#### `resolution` header (optional)
 
 If ratification of this document was recorded at a permanent URL (e.g. the
 recorded minutes of a CASA meeting or mailing list), that URL can be placed here
 for additional context.
 
-#### `discussions-to` header
+#### `discussions-to` header (optional)
 
 While an CAIP is a draft, a `discussions-to` header will indicate the mailing
 list or URL where the CAIP is being discussed.
@@ -164,18 +155,18 @@ Informational.
 The `created` header records the date that the CAIP was assigned a number. Both
 headers should be in yyyy-mm-dd format, e.g. 2001-08-14.
 
-#### `updated` header
+#### `updated` header (optional)
 
 The `updated` header records the date(s) when the CAIP was updated with
 "substantial" changes. This header is only valid for CAIPs of Draft and Active
 status.
 
-#### `requires` header
+#### `requires` header (optional)
 
 Namespace-CAIPs may have a `requires` header, indicating the CAIP number(s) that
 this reference depends on.
 
-#### `superseded-by` and `replaces` headers
+#### `superseded-by` and `replaces` headers (optional)
 
 Namespace-CAIPs may also have a `superseded-by` header indicating that an CAIP
 has been rendered obsolete by a later document; the value is the `title` that
