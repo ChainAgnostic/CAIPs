@@ -23,7 +23,7 @@ A short (~200 word) description of the technical issue being addressed.
 In protocols such as WalletConnect it is bad UX to redirect the user to a wallet to handle requests that are non-actionable to them. Examples of this include:
 - `wallet_getCapabilities` - Defined in [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities)
 - `wallet_getCallsStatus` - Defined in [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcallsstatus-rpc-specification)
-- `wallet_getAssets` - point to EIP
+- `wallet_getAssets` - Defined in [EIP-7811](https://eip.tools/eip/7811)
 
 By defining a way for wallets to send requests to an external URL, the requests can be satisfied without needing the wallet app to be open.
 
