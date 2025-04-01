@@ -47,7 +47,7 @@ interface WalletData {
   icon: string;
   rdns: string;
   // Optional properties
-  target?: { type: "caip341", value: any }[],
+  target?: { type: string, value: any }[],
   scopes?: Caip217AuthorizationScopes;
 }
 ```
