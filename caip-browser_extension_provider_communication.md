@@ -80,7 +80,7 @@ Web extensions should expose a standard interface over [`externally_connectable`
       "const": "caip-x"
     },
     "data": {
-      "description": "A JSON-RPC message",
+      "description": "A CAIP-25/27/285/312/319 JSON-RPC message",
       "type": "object"
     }
   },
