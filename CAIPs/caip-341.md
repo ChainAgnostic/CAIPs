@@ -1,7 +1,7 @@
 ---
 caip: 341
 title: Extension ID Target Type Specification
-author: Joao Tavares (@ffmcgee725)
+author: Alex Donesky (@adonesky1), Jiexi Luan (@jiexi), Joao Tavares (@ffmcgee725)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/341
 status: Draft
 type: Standard
