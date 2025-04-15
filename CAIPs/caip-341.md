@@ -94,7 +94,7 @@ When the target type is Extension ID, the dapp MUST use the Extension ID to esta
 Example of establishing a connection and sending a message:
 
 ```ts
-const extensionId = walletData.target.find((entry) => entry.type === 'caip294').value;
+const extensionId = walletData.target.find((entry) => entry.type === 'caip341').value;
 const port = chrome.runtime.connect(extensionId);
 
 port.onMessage.addListener((message) => {
