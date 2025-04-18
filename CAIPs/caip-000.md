@@ -26,7 +26,70 @@ Standards like CAIP-2 and CAIP-10 are simple text representations of addresses &
 - Succinctness: Text formats have an inherent overhead over binary ones when measured for information efficiency in a machine context.
 
 ## Specification
-<!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
+The purpose of every supporting profile is be to be able to deterministically and unambiguously convert between:
+- Customary address text formats of the ecosystem (which may also be described in its [CAIP-10] profile) and the Interoperable Address text representation defined in [ERC-7930]
+- Customary chain reference text formats of the ecosystem (which may also be described in [CAIP-2])and the text representation defined in [ERC-7930]
+- [ERC-7930] text representation -> [ERC-7930] binary representation and back of the ecosystem's chain references
+- [ERC-7930] text representation -> [ERC-7930] binary representation and back of the ecosystem's addresses *for all address formats of said ecosystem*
+
+And must also define the binary id of the namespace itself, akin to [ERC-7930]'s `ChainType`
+
+For this, every namespace MUST define the following sections in their definition of their CAIP-000 profile:
+
+```
+ChainType binary key: 0xXXXX
+CAIP-2 namespace: <!-- namespace as defined by CAIP-2 the binary key above maps to -->
+
+## Chain reference
+
+### Text representation
+<!-- a description of the format of chain namespace + reference intended for the text representation of ERC-7930 Interoperable Addresses -->
+<!-- MUST include how to represent the ChainType without a reference, since that is supported by [ERC-7930] -->
+
+##### Text representation -> CAIP-2 conversion
+<!-- instructions for how to convert from the above to a CAIP-2 string -->
+
+##### CAIP-2 - text representation conversion
+<!-- instructions for how to convert from a CAIP-2 string to the Interoperable Address format -->
+
+#### Binary representation
+<!-- description of how will chain references be laid out in binary Interoperable Addresses' `ChainReference` field -->
+
+#### Text -> binary conversion
+<!-- instructions for converting from the text representation to the binary one -->
+
+#### Binary -> text conversion
+<!-- instructions for converting from the text representation to the binary one -->
+
+#### Examples
+
+## Addresses
+
+### Text representation
+<!-- a description of the format of addresses intended for the text representation of ERC-7930 Interoperable Addresses -->
+
+##### Text representation -> customary text address formats conversion
+<!-- instructions for how to convert from the above to the address formats normally used in the ecosystem -->
+<!-- MUST cover all address types used in the ecosystem -->
+
+##### customary text addresses -> text representation conversion
+<!-- instructions for how to convert from text address normally used in the ecosystem to the Interoperable Address format -->
+<!-- MUST cover all address types used in the ecosystem -->
+
+#### Binary representation
+<!-- description of how will addresses be laid out in binary Interoperable Addresses' `Address` field -->
+
+#### Text -> binary conversion
+<!-- instructions for converting from the text representation to the binary one -->
+
+#### Binary -> text conversion
+<!-- instructions for converting from the text representation to the binary one -->
+
+#### Examples
+
+### Extra considerations
+<!-- Anything that is particular to this namespace and of interest to users, such as not being able to satisfy canonicity requirements -->
+```
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
