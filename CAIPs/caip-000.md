@@ -92,24 +92,28 @@ CAIP-2 namespace: <!-- namespace as defined by CAIP-2 the binary key above maps 
 ```
 
 ## Rationale
-<!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
+The main alternative to this standard would've been to define all formats & conversions in [ERC-7930], turning it into a Living ERC, which was not ideal since:
+- Living standards are not a usual thing in the Ethereum ecosystem: the only other Living ERC is [EIP-1]
+- It would be desireable to finalize the definition of the format itself while allowing the specification of every chain's serialization to be defined as needed.
+- It would have placed all the editorial (and presumably most of the specification) work on the [ERC-7930] authors, while the CASA paradigm allows better distribution of work by leaving the definition of the profile for every chain namespace to the parties of its ecosystem interested in using Interoperable Addresses.
 
 ## Test Cases
-<!--Please add diverse test cases here if applicable. Any normative definition of an interface requires test cases to be implementable. -->
+Not applicable since this does not define a normative interface, instead being a meta-specification of normative interfaces.
 
 ## Security Considerations
-<!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
+It is possible that a CAIP-000 profile for a given chain namespace is not able to guarantee requirements of canonicity which are a desired property of Interoperable Addresses due to characteristics of the chain namespace, and systems relying on that canonicity may exhibit unexpected behavior as a result. When this is the case, it should be noted in the `Extra Considerations` section.
 
 ## Backwards Compatibility
-<!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
+This standard actively seeks to be exhaustive in its backwards compatibility with CAIP-2 and CAIP-10.
 
 ## References
-<!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations. See CONTRIBUTING.md#style-guide . -->
 
-- [CAIP-2] defines the CAIP document structure
+- [CAIP-2] defines CAIP namespaces
+- [CAIP-10] defines a text format for blockchain accounts/target addresses
 - [ERC-7930] defined the binary Interoperable Address format and an optional text representation, comparable to CAIP-10.
 
 [CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
+[CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
 <!-- TODO: point to the EIP website when the PR is merged -->
 [ERC-7930]: https://ethereum-magicians.org/t/erc-7930-interoperable-addresses/23365
 
