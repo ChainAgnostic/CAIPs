@@ -1,5 +1,5 @@
 ---
-caip: 000
+caip: 350
 title: Binary serialization of blockchain IDs and addresses
 author: Defi Wonderland (@defi-wonderland), Teddy (0xteddybear)
 discussions-to: https://ethereum-magicians.org/t/erc-7930-interoperable-addresses/23365
