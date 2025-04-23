@@ -1,7 +1,7 @@
 ---
 caip: 350
 title: Binary serialization of blockchain IDs and addresses
-author: Defi Wonderland (@defi-wonderland), Teddy (0xteddybear)
+author: Defi Wonderland (@defi-wonderland), Teddy (@0xteddybear), Joxes (@Joxess), Racu (@0xRacoon), Skeletor Spaceman (@0xskeletor-spaceman), TiTi (@0xtiti), Gori (@0xGorilla), Ardy (@0xArdy), Onizuka (@onizuka-wl)
 discussions-to: https://ethereum-magicians.org/t/erc-7930-interoperable-addresses/23365
 status: Draft
 type: Standard
@@ -13,7 +13,6 @@ requires: 2
 A CAIP profile for every chain namespace to describe how to serialize their addresses and chain references into the Interoperable Address format described in [ERC-7930].
 
 ## Abstract
-<!--A short (~200 word) description of the technical issue being addressed.-->
 Every chain defines their own address types & also a way to identify networks within that chain's ecosystem.
 [ERC-7930] is an address format for (address, chain) pairs supporting any chain, and also including metadata on the chain & addresses' type so no information needs to be communicated out of band.
 This CAIP namespace aims to be a living & mutable repository of serialization methods for all chains to uniformly conform to Interoperable Addresses.
@@ -21,9 +20,9 @@ This CAIP namespace aims to be a living & mutable repository of serialization me
 ## Motivation
 Standards like CAIP-2 and CAIP-10 are simple text representations of addresses & chain namespaces/references, but they do not address:
 - Binary representation of addresses and/or chain namespace+reference: Relevant & desired for on-chain usage.
-- Canonicity: CAIP-10, being a text format which leaves serialization to actual on-chain addresses undefined, makes no guarantees on a blockchain account (_target address_ in ERC-7930 parlance) having only one CAIP-10 representation, which makes them less useful as dictionary keys.
+- Canonicity: CAIP-10, being a generic text format, leaves the canonization and serialization of ASCII address to on-chain addresses to each namespace's profile; unless a given namespace's profile specifies such logic, the standard itself makes no universal guarantees on a blockchain account (_target address_ in ERC-7930 parlance) having only one CAIP-10 representation, which makes them less useful as dictionary keys.
 - Completeness: both formats have limits on the length of their identifiers, which are reasonable for human-readability but often identifiers have to drop meaningful information to conform to those length requirements. While that information might be easy to look up in the context of wallet software, doing so within a smart contract would not be possible.
-- Succinctness: Text formats have an inherent overhead over binary ones when measured for information efficiency in a machine context.
+- Succinctness: Text formats necessarily have to incur encoding overhead compared to binary ones, causing relative informational inefficiency.
 
 ## Specification
 The purpose of every supporting profile is be to be able to deterministically and unambiguously convert between:
@@ -34,7 +33,7 @@ The purpose of every supporting profile is be to be able to deterministically an
 
 And must also define the binary id of the namespace itself, akin to [ERC-7930]'s `ChainType`
 
-For this, every namespace MUST define the following sections in their definition of their CAIP-000 profile:
+For this, every namespace MUST define the following sections in their definition of their CAIP-350 profile:
 
 ```
 ChainType binary key: 0xXXXX
@@ -101,7 +100,7 @@ The main alternative to this standard would've been to define all formats & conv
 Not applicable since this does not define a normative interface, instead being a meta-specification of normative interfaces.
 
 ## Security Considerations
-It is possible that a CAIP-000 profile for a given chain namespace is not able to guarantee requirements of canonicity which are a desired property of Interoperable Addresses due to characteristics of the chain namespace, and systems relying on that canonicity may exhibit unexpected behavior as a result. When this is the case, it should be noted in the `Extra Considerations` section.
+It is possible that a CAIP-350 profile for a given chain namespace is not able to guarantee requirements of canonicity which are a desired property of Interoperable Addresses due to characteristics of the chain namespace, and systems relying on that canonicity may exhibit unexpected behavior as a result. When this is the case, it should be noted in the `Extra Considerations` section.
 
 ## Backwards Compatibility
 This standard actively seeks to be exhaustive in its backwards compatibility with CAIP-2 and CAIP-10.
