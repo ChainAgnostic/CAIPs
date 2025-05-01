@@ -27,9 +27,9 @@ Standards like CAIP-2 and CAIP-10 are simple text representations of addresses &
 ## Specification
 The purpose of every supporting profile is be to be able to deterministically and unambiguously convert between:
 - Customary address text formats of the ecosystem (which may also be described in its [CAIP-10] profile) and the Interoperable Address text representation defined in [ERC-7930]
-- Customary chain reference text formats of the ecosystem (which may also be described in [CAIP-2])and the text representation defined in [ERC-7930]
-- [ERC-7930] text representation -> [ERC-7930] binary representation and back of the ecosystem's chain references
-- [ERC-7930] text representation -> [ERC-7930] binary representation and back of the ecosystem's addresses *for all address formats of said ecosystem*
+- Customary chain reference text formats of the ecosystem (which may also be described in [CAIP-2]) and the text representation defined in [ERC-7930]
+- [ERC-7930]'s Interoperable Address -> [ERC-7930]'s Interoperable Name and back of the ecosystem's chain references
+- [ERC-7930]'s Interoperable Address -> [ERC-7930]'s Interoperable Name and back of the ecosystem's addresses *for all address formats of said ecosystem*
 
 And must also define the binary id of the namespace itself, akin to [ERC-7930]'s `ChainType`
 
