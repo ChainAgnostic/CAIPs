@@ -15,7 +15,7 @@ A CAIP profile for every chain namespace to describe how to serialize their addr
 ## Abstract
 Every chain defines their own address types & also a way to identify networks within that chain's ecosystem.
 [ERC-7930] is an address format for (address, chain) pairs supporting any chain, and also including metadata on the chain & addresses' type so no information needs to be communicated out of band.
-This CAIP namespace aims to be a living & mutable repository of serialization methods for all chains to uniformly conform to Interoperable Addresses.
+This CAIP profile aims to be a living & mutable repository of serialization methods for all chains to uniformly conform to Interoperable Addresses.
 
 ## Motivation
 Standards like CAIP-2 and CAIP-10 are simple text representations of addresses & chain namespaces/references, but they do not address:
