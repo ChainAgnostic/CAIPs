@@ -11,11 +11,11 @@ updated: 2022-07-12
 
 ## Simple Summary
 
-Represent a chain-agnostic Object Capability (OCAP), created using [CAIP-122](), as an [IPLD](https://ipld.io) object.
+Represent a chain-agnostic Object Capability (OCAP), created using [CAIP-122], as an [IPLD](https://ipld.io) object.
 
 ## Abstract
 
-In this document we define a way to record the result of [CAIP-122]() signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP). This creates not just an event receipt of an authentication, but also a composable and replay-able authorization receipt for verifiable authorizations, when the message signed contains the appropriate fields. The first CACAO profile was tailored to the ethereum dapps supporting [EIP-4361][] but roughly equivalent profiles for other wallet/dapp ecosystems are being added over time.
+In this document we define a way to record the result of [CAIP-122] signing operation as an [IPLD](https://ipld.io)-based object capability (OCAP). This creates not just an event receipt of an authentication, but also a composable and replay-able authorization receipt for verifiable authorizations, when the message signed contains the appropriate fields. The first CACAO profile was tailored to the ethereum dapps supporting [EIP-4361][] but roughly equivalent profiles for other wallet/dapp ecosystems are being added over time.
 
 ## Motivation
 
@@ -34,7 +34,7 @@ It should contain meta-information, payload and signatures. For reference let's 
 We use [IPLD schema language](https://ipld.io/docs/schemas/) to describe the format.
 Reminder, unless a field is marked `optional`, it is mandatory.
 
-```
+```ts
 type CACAO struct {
   h Header // container meta-information
   p Payload // payload
@@ -44,17 +44,17 @@ type CACAO struct {
 
 Header uniquely identifies the payload format:
 
-```
+```ts
 type Header struct {
   t String // specifies format of the payload
 }
 ```
 
-The header type will be `caip122` in reference to the [CAIP-122]() specification for the SIWx data model. In an [older version of the specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. As such, newer implementations MUST be able to deal with both header types appropriately.
+The header type will be `caip122` in reference to the [CAIP-122] specification for the SIWx data model. In an [older version of the specification](https://github.com/ChainAgnostic/CAIPs/blob/91aaaff73038c2629ff11b88c2209f61521d8ece/CAIPs/caip-74.md), the header type was restricted to `eip4361` as it was designed to work only with Sign-in with Ethereum. As such, newer implementations MUST be able to deal with both header types appropriately.
 
 The payload structure must be presented as follows:
 
-```
+```ts
 type Payload struct {
   domain String // =domain
   iss String // = DID pkh
@@ -71,11 +71,11 @@ type Payload struct {
 ```
 
 It is important to note, that issuer here is [did:pkh](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md), which includes both blockchain address and blockchain network information.
-Also, as per [CAIP-122]() specificaction,`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
+Also, as per [CAIP-122] specificaction,`iat`, `nbf`, and `exp` are encoded as [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) `date-time`, which could include milliseconds precision.
 
-The signature in essence is just bytes, but we have to give a hint on how the signature verification should work. The signature verification type is referenced from methods that are listed as possible within the [CAIP-122]() namespace.
+The signature in essence is just bytes, but we have to give a hint on how the signature verification should work. The signature verification type is referenced from methods that are listed as possible within the [CAIP-122] namespace.
 
-```
+```ts
 type Signature struct {
   t String
   m optional SignatureMeta
@@ -90,9 +90,9 @@ This construction allows a dApp to uniformly request a SIWx signature regardless
 
 ### Signature Verification
 
-Signature signing and verification should follow the workflow as specified in the [CAIP-122]() namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows, resulting in a message conformant with EIP-4361:
+Signature signing and verification should follow the workflow as specified in the [CAIP-122] namespaces. For example, for `eip155` chains, we reconstruct the SIWx payload as follows, resulting in a message conformant with EIP-4361:
 
-```
+```markdown
 {.p.domain} wants you to sign in with your Ethereum account:
 {.p.iss[address]}
 
@@ -143,7 +143,7 @@ Below you could find a CACAO, along with its serialized presentation in CAR file
 
 CACAO:
 
-```
+```json
 {
   "h": {
     "t": "eip4361"
@@ -173,7 +173,7 @@ CACAO:
 
 CACAO Serialized: base64url-encoded CARv1 file with the IPFS block of the CACAO above:
 
-```
+```jwk
 uOqJlcm9vdHOB2CpYJQABcRIgEbxa4r0lKwE4Oj8ZUbYCpULmPfgw2g_r12IcKX1CxNlndmVyc2lvbgHdBAFxEiARvFrivSUrATg6PxlRtgKlQuY9-DDaD-vXYhwpfULE2aNhaKFhdGdlaXA0MzYxYXCrY2F1ZHgbaHR0cDovL2xvY2FsaG9zdDozMDAwL2xvZ2luY2V4cHgdMjAyMi0wMy0xMFQxODowOToyMS40ODErMDM6MDBjaWF0eB0yMDIyLTAzLTEwVDE3OjA5OjIxLjQ4MSswMzowMGNpc3N4O2RpZDpwa2g6ZWlwMTU1OjE6MHhCQWM2NzVDMzEwNzIxNzE3Q2Q0QTM3RjZjYmVBMUYwODFiMUMyYTA3Y25iZngdMjAyMi0wMy0xMFQxNzowOToyMS40ODErMDM6MDBlbm9uY2VmMzI4OTE3ZmRvbWFpbm5sb2NhbGhvc3Q6MzAwMGd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOiYXNYQVzLE0rT2HTLtAoys5lUnNMslT3F3IfcZGJKPj3AaE19SDMEPdfp9KaJSFP43FVfl7x-PH3T_MZkCeuYK_86RGcbYXRmZWlwMTkx
 ```
 
@@ -185,12 +185,19 @@ Present version of CAIP-74 updates and clarifies the previous versions:
 
 ## Links
 
-- [CAIP-122 "Sign-in with X"](https://github.com/ChainAgnostic/CAIPs/pull/122)
-- [EIP-4361 "Sign-in with Ethereum"](https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md)
-- [did:pkh Method Specification](https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md)
-- [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6)
-- [EIP-191: Signed Data Standard](https://eips.ethereum.org/EIPS/eip-191)
-- [EIP-1271: Standard Signature Validation Method for Contracts](https://eips.ethereum.org/EIPS/eip-1271)
+- [CAIP-122]: Sign-in with X
+- [EIP-4361]: Sign-in with Ethereum
+- [did:pkh] Method Specification
+- [RFC-3339]: Date and Time on the Internet: Timestamps
+- [EIP-191]: Signed Data Standard
+- [EIP-1271]: Standard Signature Validation Method for Contracts
+
+[CAIP-122]: https://github.com/ChainAgnostic/CAIPs/pull/122
+[EIP-191]: https://eips.ethereum.org/EIPS/eip-191
+[EIP-1271]: https://eips.ethereum.org/EIPS/eip-1271
+[EIP-4361]: https://github.com/ethereum/EIPs/blob/5e9b0fe0728e160f56dd1e4cbf7dc0a0b1772f82/EIPS/eip-4361.md
+[RFC-3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[did:pkh]: https://github.com/w3c-ccg/did-pkh/blob/main/did-pkh-method-draft.md
 
 ## Copyright
 
