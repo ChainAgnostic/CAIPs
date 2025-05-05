@@ -39,7 +39,7 @@ This may be generalizable to other namespaces over time, or may be superseded by
 ## References
 
 [namespaces#55]: https://github.com/ChainAgnostic/namespaces/issues/55
-[namespaces#107]: https://github.com/ChainAgnostic/namespaces/pulls/107
+[namespaces#107]: https://github.com/ChainAgnostic/namespaces/pull/107
 [CAIPs#22]: https://github.com/ChainAgnostic/CAIPs/issues/22
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
