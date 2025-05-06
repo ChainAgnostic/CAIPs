@@ -15,80 +15,25 @@ A CAIP profile for every chain namespace to describe how to serialize their addr
 ## Abstract
 Every chain defines their own address types & also a way to identify networks within that chain's ecosystem.
 [ERC-7930] is an address format for (address, chain) pairs supporting any chain, and also including metadata on the chain & addresses' type so no information needs to be communicated out of band.
-This CAIP profile aims to be a living & mutable repository of serialization methods for all chains to uniformly conform to Interoperable Addresses.
+This CAIP aims to append a living & mutable repository of chain-specific address serialization methods to the CASA system in the form of its namespace-specific profiles, enabling all current and future chains to uniformly conform to Interoperable Addresses.
 
 ## Motivation
 Standards like CAIP-2 and CAIP-10 are simple text representations of addresses & chain namespaces/references, but they do not address:
 - Binary representation of addresses and/or chain namespace+reference: Relevant & desired for on-chain usage.
-- Canonicity: CAIP-10, being a generic text format, leaves the canonization and serialization of ASCII address to on-chain addresses to each namespace's profile; unless a given namespace's profile specifies such logic, the standard itself makes no universal guarantees on a blockchain account (_target address_ in ERC-7930 parlance) having only one CAIP-10 representation, which makes them less useful as dictionary keys.
+- Canonicity: CAIP-10, being a generic text format, leaves the canonization and serialization of text address to on-chain addresses to each namespace's profile; unless a given namespace's profile specifies such logic, the standard itself makes no universal guarantees on a blockchain account (_target address_ in ERC-7930 parlance) having only one CAIP-10 representation; for namespaces where such canonicity is neither inherent or specified by the CASA profile, duplicate entries can be created (e.g. when used as dictionary keys).
 - Completeness: both formats have limits on the length of their identifiers, which are reasonable for human-readability but often identifiers have to drop meaningful information to conform to those length requirements. While that information might be easy to look up in the context of wallet software, doing so within a smart contract would not be possible.
 - Succinctness: Text formats necessarily have to incur encoding overhead compared to binary ones, causing relative informational inefficiency.
 
 ## Specification
-The purpose of every supporting profile is be to be able to deterministically and unambiguously convert between:
-- Customary address text formats of the ecosystem (which may also be described in its [CAIP-10] profile) and the Interoperable Address text representation defined in [ERC-7930]
+The purpose of each namespace's profile is to specify deterministic and unambiguous conversions between the following format-pairs:
+- Customary address text formats of the ecosystem (which may also be described in its [CAIP-10] profile) and the Interoperable Names text representation defined in [ERC-7930]
 - Customary chain reference text formats of the ecosystem (which may also be described in [CAIP-2]) and the text representation defined in [ERC-7930]
-- [ERC-7930]'s Interoperable Address -> [ERC-7930]'s Interoperable Name and back of the ecosystem's chain references
-- [ERC-7930]'s Interoperable Address -> [ERC-7930]'s Interoperable Name and back of the ecosystem's addresses *for all address formats of said ecosystem*
+- [ERC-7930]'s Interoperable Address and [ERC-7930]'s Interoperable Name of the ecosystem's chain references
+- [ERC-7930]'s Interoperable Address and [ERC-7930]'s Interoperable Name of the ecosystem's addresses *for all address formats of said ecosystem*
 
 And must also define the binary id of the namespace itself, akin to [ERC-7930]'s `ChainType`
 
-For this, every namespace MUST define the following sections in their definition of their CAIP-350 profile:
-
-```
-ChainType binary key: 0xXXXX
-CAIP-2 namespace: <!-- namespace as defined by CAIP-2 the binary key above maps to -->
-
-## Chain reference
-
-### Text representation
-<!-- a description of the format of chain namespace + reference intended for the text representation of ERC-7930 Interoperable Addresses -->
-<!-- MUST include how to represent the ChainType without a reference, since that is supported by [ERC-7930] -->
-
-##### Text representation -> CAIP-2 conversion
-<!-- instructions for how to convert from the above to a CAIP-2 string -->
-
-##### CAIP-2 - text representation conversion
-<!-- instructions for how to convert from a CAIP-2 string to the Interoperable Address format -->
-
-#### Binary representation
-<!-- description of how will chain references be laid out in binary Interoperable Addresses' `ChainReference` field -->
-
-#### Text -> binary conversion
-<!-- instructions for converting from the text representation to the binary one -->
-
-#### Binary -> text conversion
-<!-- instructions for converting from the text representation to the binary one -->
-
-#### Examples
-
-## Addresses
-
-### Text representation
-<!-- a description of the format of addresses intended for the text representation of ERC-7930 Interoperable Addresses -->
-
-##### Text representation -> customary text address formats conversion
-<!-- instructions for how to convert from the above to the address formats normally used in the ecosystem -->
-<!-- MUST cover all address types used in the ecosystem -->
-
-##### customary text addresses -> text representation conversion
-<!-- instructions for how to convert from text address normally used in the ecosystem to the Interoperable Address format -->
-<!-- MUST cover all address types used in the ecosystem -->
-
-#### Binary representation
-<!-- description of how will addresses be laid out in binary Interoperable Addresses' `Address` field -->
-
-#### Text -> binary conversion
-<!-- instructions for converting from the text representation to the binary one -->
-
-#### Binary -> text conversion
-<!-- instructions for converting from the text representation to the binary one -->
-
-#### Examples
-
-### Extra considerations
-<!-- Anything that is particular to this namespace and of interest to users, such as not being able to satisfy canonicity requirements -->
-```
+For this, every namespace MUST define specify all of the above in a CAIP-350 profile to maximize interoperability and review. A [template for these profiles](https://github.com/ChainAgnostic/namespaces/blob/main/_template/caip350.md) is defined in the Namespaces registry.
 
 ## Rationale
 The main alternative to this standard would've been to define all formats & conversions in [ERC-7930], turning it into a Living ERC, which was not ideal since:
