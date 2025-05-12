@@ -60,7 +60,7 @@ Here is the expected logic from the Blockchain Library:
 ```typescript
 interface WalletMapEntry {
   data: WalletAnnounceRequestParams;
-  target: {
+  targets: {
     type: <caip-id-for-target-origin>;
     value: <target-origin>
   }[]
@@ -165,7 +165,7 @@ Logic from the Blockchain Library:
 // also by posting a prompt message
 interface WalletMapEntry {
   data: WalletAnnounceRequestParams;
-  target: {
+  targets: {
     type: <caip-id-for-target-origin>;
     value: <target-origin>
   }[]
@@ -178,7 +178,7 @@ window.addEventListener("message", (event) => {
     // when an announce message was received then the library can index it by uuid
     wallets[event.data.params.uuid] = {
       params: event.data.params,
-      targetOrigin: event.target.find(({ type }) => type === "caip295")?.value
+      targetOrigin: event.targets.find(({ type }) => type === "caip295")?.value
     }
   }
 });
@@ -218,7 +218,7 @@ const sessionRequest = {
 let sessionResult = {}
 
 window.addEventListener("message", (event) => {
-  if (event.target.find(({ type }) => type === "caip295")?.value !== wallets[selected_uuid].targetOrigin) return;
+  if (event.targets.find(({ type }) => type === "caip295")?.value !== wallets[selected_uuid].targetOrigin) return;
   if (event.data.id === sessionRequest.id) {
     // Get JSON-RPC response
     if (event.data.error) {
@@ -257,7 +257,7 @@ const signingRequest = {
 let signingResult = {}
 
 window.addEventListener("message", (event) => {
-  if (event.target.find(({ type }) => type === "caip295")?.value !== wallets[selected_uuid].targetOrigin) return;
+  if (event.targets.find(({ type }) => type === "caip295")?.value !== wallets[selected_uuid].targetOrigin) return;
   if (event.data.id === signingRequest.id) {
     // Get JSON-RPC response
     if (event.data.error) {
@@ -319,7 +319,7 @@ window.addEventListener("message", (event) => {
     if (checkSupportedScopes(event.data.params)) {
         // prompt user to approve session
         // persist the targetOrigin for sessionRequest
-        sessionOrigin = event.target.find(({ type }) => type === "caip295")?.value
+        sessionOrigin = event.targets.find(({ type }) => type === "caip295")?.value
     }
   }
 });
@@ -354,7 +354,7 @@ window.postMessage(sessionResponse, sessionOrigin);
 let signingRequest = {}
 
 window.addEventListener("message", (event) => {
-	if (event.target.find(({ type }) => type === "caip295")?.value !== sessionOrigin) return;
+	if (event.targets.find(({ type }) => type === "caip295")?.value !== sessionOrigin) return;
   if (event.data.method === "wallet_createSession" && event.data.params.sessionId === walletData.uuid) {
     signingRequest = event.data.params
   }

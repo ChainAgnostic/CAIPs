@@ -149,7 +149,7 @@ interface WalletData {
   icon: string;
   rdns: string;
   // Optional properties
-  target?: { type: string, value: any }[],
+  targets?: { type: string, value: any }[],
   scopes?: Caip217AuthorizationScopes;
 }
 ```
@@ -162,7 +162,7 @@ const walletData = {
   name: "Example Wallet",
   icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
   rdns: "com.example.wallet",
-  target: [
+  targets: [
     {
       type: "caip341",
       value: "abcdefghijklmnopqrstuvwxyz"
@@ -189,18 +189,18 @@ const walletData = {
 
 This `walletData` type is a superset of `WalletAnnounceRequestParams` type described in the [CAIP-282][caip-282] standard, adding the optional `target` property with the object defining `extensionId`, as it is only relevant for browser extension based wallets.
 
-### Target
+### Targets
 
-When a `target` property with the array containing an object with [`type: 'caip341'`][caip-341]  is included in the `walletData` object, it indicates that the wallet expects communication via the browser's [`externally_connectable` API][externally_connectable]. In this case:
+When a `targets` property with the array containing an object with [`type: 'caip341'`][caip-341]  is included in the `walletData` object, it indicates that the wallet expects communication via the browser's [`externally_connectable` API][externally_connectable]. In this case:
 
-1. The dapp MUST use the `target.find(({ type }) => type === "caip314").value` (an [`extensionId`][externally_connectable]) to establish a connection with the wallet using the `externally_connectable` browser API.
+1. The dapp MUST use the `targets.find(({ type }) => type === "caip314").value` (an [`extensionId`][externally_connectable]) to establish a connection with the wallet using the `externally_connectable` browser API.
 2. All subsequent communication with the wallet (the "session") SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
-3. The dapp MUST NOT use the injected provider for communication when `target` with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is present.
+3. The dapp MUST NOT use the injected provider for communication when `targets` with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is present.
 
 Example of establishing a connection and sending a message:
 
 ```javascript
-const port = chrome.runtime.connect(walletData.target.value);
+const port = chrome.runtime.connect(walletData.targets.value);
 
 port.onMessage.addListener((message) => {
   // Handle incoming messages
@@ -216,7 +216,7 @@ port.postMessage({
 });
 ```
 
-If the `target` object with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is not present in the `walletData` object, the dapp SHOULD assume that communication will occur through the traditional injected provider method.
+If the `targets` object with [CAIP-341](https://github.com/ChainAgnostic/CAIPs/blob/656551f800843b92243fb08ca6c24e805ad149a3/CAIPs/caip-341.md) type is not present in the `walletData` object, the dapp SHOULD assume that communication will occur through the traditional injected provider method.
 
 #### Handshake
 
