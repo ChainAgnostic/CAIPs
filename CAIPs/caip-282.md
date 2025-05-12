@@ -60,7 +60,7 @@ interface WalletAnnounceRequestParams {
   name: string;
   icon: string;
   rdns: string;
-  target?: { type: string, value: any }[],
+  targets?: { type: string, value: any }[],
   scopes?: AuthorizationScopes;
 }
 ```
