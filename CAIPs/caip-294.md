@@ -187,7 +187,7 @@ const walletData = {
 }
 ```
 
-This `walletData` type is a superset of `WalletAnnounceRequestParams` type described in the [CAIP-282][caip-282] standard, adding the optional `target` property with the object defining `extensionId`, as it is only relevant for browser extension based wallets.
+This `walletData` type is a superset of `WalletAnnounceRequestParams` type described in the [CAIP-282][caip-282] standard, adding the optional `targets` property with the object defining `extensionId`, as it is only relevant for browser extension based wallets.
 
 ### Targets
 
