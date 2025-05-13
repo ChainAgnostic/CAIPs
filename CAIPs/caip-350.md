@@ -37,7 +37,7 @@ For this, every namespace MUST define specify all of the above in a CAIP-350 pro
 
 ## Rationale
 The main alternative to this standard would've been to define all formats & conversions in [ERC-7930], turning it into a Living ERC, which was not ideal since:
-- Living standards are not a usual thing in the Ethereum ecosystem: the only other Living ERC is [EIP-1]
+- Living standards are not a usual thing in the Ethereum ecosystem: the only other Living ERC is EIP-1
 - It would be desireable to finalize the definition of the format itself while allowing the specification of every chain's serialization to be defined as needed.
 - It would have placed all the editorial (and presumably most of the specification) work on the [ERC-7930] authors, while the CASA paradigm allows better distribution of work by leaving the definition of the profile for every chain namespace to the parties of its ecosystem interested in using Interoperable Addresses.
 
