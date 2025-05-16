@@ -25,7 +25,7 @@ Users are already installing a wallet application on their devices, and given it
 
 This results not only in a degraded user experience but also increases the barrier to entry for new Wallet Providers as users are incentivized to use more popular Wallet Providers that are more widely supported in more applications.
 
-This situation is further aggravated by differences between blockchain networks such as Ethereum, Cosmos, Solana, Tezos, etc. While some solutions attempt to solve this, such as WalletConnect, [EIP-6963][eip-6963], Solana Wallet Protocol, etc., they do not cover all wallets and are not chain-angostic.
+This situation is further aggravated by low-level differences between blockchain networks such as Ethereum, Cosmos, Solana, Tezos, etc. While some solutions attempt to abstract over these differences, such as WalletConnect, [EIP-6963][eip-6963], Solana Wallet Protocol, etc., they do not cover as wide an array of wallet interfaces and do not optimize for chain-agnosticism.
 
 In this proposal, we present a solution focused on optimizing interoperability for multiple Wallet Providers, fostering fairer competition by reducing the barriers to entry for new Wallet Providers, and enhancing user experience across all blockchain networks.
 
