@@ -1,5 +1,5 @@
 ---
-caip: CAIP-X <X will be changed to the PR number if accepted>
+caip: CAIP-358
 title: Universal Payment Request Method
 author: Luka Isailovic (@lukaisailovic), Derek Rein (@arein)
 discussions-to: []
