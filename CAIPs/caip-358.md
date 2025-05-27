@@ -19,7 +19,7 @@ A standard for enabling one-interaction cryptocurrency payment experiences acros
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
 This CAIP standardizes a wallet <> dapp JSON-RPC method `wallet_pay` for more efficient communication about the purchase intent from the dapp to the wallet.
-The method allows merchants to specify product details and payment requirements enabling wallets to handle payment execution with minimal user interaction.
+The method allows merchants to specify payment requirements enabling wallets to handle payment execution with minimal user interaction.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
@@ -40,14 +40,6 @@ The method transmits all the possible payment requests so the wallet can pick th
 ```typescript
 type Hex = `0x${string}`;
 
-type ProductMetadata = {
-  name: string;
-  description?: string;
-  imageUrl?: string;
-  price?: string; 
-}
-
-
 type PaymentOption = {
   asset: string; 
   amount: Hex;
@@ -58,8 +50,7 @@ type PaymentOption = {
 type PayRequest = {
   orderId: string;
   acceptedPayments: PaymentOption[]; 
-  products?: ProductMetadata[]; 
-  expiry?: number;
+  expiry: number;
 }
 
 ```
@@ -67,6 +58,7 @@ type PayRequest = {
 The application **MUST** include:
 - An `orderId` that uniquely identifies this payment request. `orderId` **MUST NOT** be longer than 128 characters.
 - At least one entry in the `acceptedPayments` array
+- `expiry` timestamp for the payment request
 
 
 The `orderId` field **MUST** be a string that uniquely identifies the payment request. Implementations **SHOULD** ensure this ID is unique across their system to prevent collisions.
@@ -79,13 +71,7 @@ For `PaymentOption` options:
 - The `amount` field **MUST** be a hex-encoded string representing the amount of the asset to be transferred.
 - The [CAIP-2][] chainId component in the [CAIP-19][] `asset` field **MUST** match the [CAIP-2][] chainId component of the [CAIP-10][] `recipient` account ID.
 
-The application **MAY** include:
-- `products` array containing information about the products being purchased
-- `expiry` timestamp for the payment request
-
-If the `products` array is provided, each entry **MUST** include at least a `name`. The `description`, `imageUrl`, and `price` fields are **OPTIONAL** but **RECOMMENDED** for providing a better user experience.
-
-If the `expiry` field is provided, it **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. Wallets **SHOULD** check this timestamp before processing the payment.
+The `expiry` field **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. Wallets **SHOULD** check this timestamp before processing the payment.
 
 
 Request example:
@@ -102,14 +88,6 @@ Request example:
         "recipient": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp:9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
         "asset": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp/slip44:501",
         "amount": "0x6F05B59D3B20000"
-      }
-    ],
-    "products": [
-      {
-        "name": "Donut",
-        "description": "Donut with extra chocolate sprinkles on top",
-        "imageUrl": "https://example.com/images/donut.png",
-        "price": "$100.00"
       }
     ],
     "expiry": 1709593200 
@@ -149,6 +127,16 @@ Example response:
     "amount": "0x5F5E100"
 }
 ```
+
+#### Idempotency
+The `wallet_pay` method **MUST** be idempotent for the same `orderId`. This ensures robustness in case of connection failures or timeout scenarios.
+
+Requirements:
+- If a payment with the same `orderId` has already been completed successfully, the wallet **MUST** return the original `PayResult` without executing a new payment
+- If a payment with the same `orderId` is currently pending, the wallet **SHOULD** return the result of the original payment attempt
+- If a payment with the same `orderId` has failed previously, the wallet **MAY** attempt the payment again or return the previous error
+- Wallets **SHOULD** maintain payment status for completed transactions for at least 24 hours after completion
+- If connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
 
 #### Error Handling
 If the payment process fails, the wallet **MUST** return an appropriate error message:
