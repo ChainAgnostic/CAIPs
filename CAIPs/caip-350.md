@@ -1,6 +1,6 @@
 ---
 caip: 350
-title: Binary serialization of blockchain IDs and addresses
+title: Binary Serialization of Blockchain IDs and Addresses
 author: Defi Wonderland (@defi-wonderland), Teddy (@0xteddybear), Joxes (@Joxess), Racu (@0xRacoon), Skeletor Spaceman (@0xskeletor-spaceman), TiTi (@0xtiti), Gori (@0xGorilla), Ardy (@0xArdy), Onizuka (@onizuka-wl)
 discussions-to: https://ethereum-magicians.org/t/erc-7930-interoperable-addresses/23365
 status: Draft
@@ -15,16 +15,16 @@ This standard, when profiled down for each namespace, describes a unified and ge
 
 ## Abstract
 
-Every namespace defines their own address types & also a way to identify networks within that namespace's ecosystem.
+Every namespace defines their own address types and also a way to identify networks within that namespace's ecosystem.
 [ERC-7930] is an address format for (address, chain) pairs supporting any chain, and also including metadata on the chain & addresses' type in a self-describing way, reducing the need to communicate metadata or context out-of-band.
 This CAIP aims to append a living & mutable repository of chain-specific address serialization methods to the CASA system in the form of its namespace-specific profiles, enabling all current and future chains to uniformly conform to Interoperable Addresses.
 
 ## Motivation
 
-Standards like CAIP-2 and CAIP-10 are simple text representations of addresses & chain namespaces/references, but they do not address:
+Standards like CAIP-2 and CAIP-10 are simple text representations of addresses & chain namespaces and references, but they do not address:
 - Binary representation of addresses and/or chain namespace+reference: Relevant & desired for on-chain usage.
 - Canonicity: CAIP-10, being a generic text format, leaves the canonization and serialization of text address to on-chain addresses to each namespace's profile. Unless a given namespace's profile specifies such logic, the standard itself makes no universal guarantees on a blockchain account (_target address_ in ERC-7930 parlance) having only one CAIP-10 representation. For namespaces where such canonicity is neither inherent nor specified by the CASA profile, duplicate entries can be created (e.g. when used as dictionary keys).
-- Completeness: both formats have limits on the length of their identifiers, which are reasonable for human-readability but often identifiers have to drop meaningful information to conform to those length requirements. While that information might be easy to look up in the context of wallet software, doing so within a smart contract would not be possible.
+- Completeness: Both formats have limits on the length of their identifiers, which are reasonable for human-readability, but often identifiers have to drop meaningful information to conform to those length requirements. While that information might be easy to look up in the context of wallet software, doing so within a smart contract would not be possible.
 - Succinctness: Text formats necessarily have to incur encoding overhead compared to binary ones, causing relative informational inefficiency.
 
 ## Specification
