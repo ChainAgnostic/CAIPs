@@ -179,7 +179,7 @@ Example error response:
 
 ## Rationale
 
-This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to EIP-681, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
+This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to EIP-681/Solana Pay, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
 
 Existing cryptocurrency payment flows typically require users to:
 - Select a token type
@@ -209,6 +209,8 @@ TODO
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
 TODO
+
+`wallet_pay` does not try to address various cases of merchant fraud that end-users are exposed to today. Specifically it does not try to tackle merchant fraud insurance in case the sold good is not delivered. It also does not attempt to provide dispute functionality. These present ideas for future work.
 ## Privacy Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
 TODO
@@ -219,9 +221,11 @@ All CAIPs that introduce backwards incompatibilities must include a section desc
 ## References 
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations. See CONTRIBUTING.md#style-guide . -->
 
-- [CAIP-1][CAIP-1] defines the CAIP document structure
+- [CAIP-1] defines the CAIP document structure
+- [EIP-681] is ethereum-specific prior art that also includes gas information in the URI 
 
 [CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
+[EIP-681]: https://eips.ethereum.org/EIPS/eip-681
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE).
