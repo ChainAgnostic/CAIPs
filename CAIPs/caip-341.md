@@ -15,7 +15,8 @@ CAIP-341 defines the Extension ID type as a valid target type for establishing c
 
 ## Abstract
 
-This proposal introduces a new target type Extension ID for the `target` field of the `WalletData` interface dispatched in [CAIP-294]'s `wallet_announce` event. This target type is used to specify the extension ID of a browser extension wallet, allowing callers to establish connections with the wallet using the [`externally_connectable`][externally_connectable API documentation] API.
+This proposal introduces a new target type, Extension ID, for the `target` field of the `WalletData` interface dispatched in [CAIP-294]'s `wallet_announce` event.
+This target type is used to specify the extension ID of a browser extension wallet, allowing callers to establish connections with the wallet using the [`externally_connectable`][externally_connectable API documentation] API.
 
 ## Motivation
 
