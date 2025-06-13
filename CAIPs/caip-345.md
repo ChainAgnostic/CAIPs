@@ -12,58 +12,104 @@ requires: 25
 
 ## Simple Summary
 <!--"If you can't explain it simply, you don't understand it well enough." Provide a simplified and layman-accessible explanation of the CAIP.-->
-This CAIP defines a mechanism for CAIP-25 wallets to advertize support for a "wallet service" which can handle requests for specific wallet RPC methods instead of apps sending these requests directly to the wallet app.
+Handling of wallet JSON-RPC requests by wallet-provided HTTP endpoint.
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-A short (~200 word) description of the technical issue being addressed.
+This proposal defines the wallet service property, `caip345`, for use in CAIP-25. Wallets set this to indicate that certain methods, instead of being handled by the CAIP-25 session, will instead be sent to a JSON-RPC HTTP endpoint. Compatible apps that support this will be able to call these RPC methods, without interactivity with the actual wallet application or user.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
-In protocols such as WalletConnect it is bad UX to redirect the user to a wallet to handle requests that are non-actionable to them. Examples of this include:
-- `wallet_getCapabilities` - Defined in [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities)
-- `wallet_getCallsStatus` - Defined in [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcallsstatus-rpc-specification)
-- `wallet_getAssets` - Defined in [EIP-7811](https://eip.tools/eip/7811)
+It is sub-optimal UX to redirect the user to their wallet in order to handle RPC requests that are non-actionable to them. This is especially relevant for protocols such as WalletConnect which are used in especially distributed environments such as mobile wallets or custodial solutions. In these contexts, actioning a wallet RPC request can involve significant effort.
 
-By defining a way for wallets to send requests to an external URL, the requests can be satisfied without needing the wallet app to be open.
+Examples of non-actionable wallet requests include:
+- [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities) `wallet_getCapabilities`
+- [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcallsstatus-rpc-specification) `wallet_getCallsStatus`
+- [ERC-7836](https://github.com/ethereum/ERCs/pull/758) `wallet_prepareCalls` and `wallet_sendPreparedCalls`
+- [ERC-7811](https://eips.ethereum.org/EIPS/eip-7811) `wallet_getAssets`
+
+By defining a way for wallets to send requests to an out-of-band endpoint, the requests can be satisfied without needing the wallet app to be open.
 
 ## Specification
-<!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
 
-Apps SHOULD use the wallet service when available for a method, instead of calling the wallet directly.
+### Wallet Service
 
-Wallets SHOULD implement fallback handling for all wallet service methods.
+A "wallet service" is a JSON-RPC-compatible HTTP endpoint that can be used to satisfy certain wallet RPC methods. This service may be developed, hosted, and maintained by the same organization developing the wallet app, or by a third-party. It is up to the wallet to determine what server should be responsible for handling wallet RPCs.
 
-Wallets MUST NOT include the same method multiple times or with different (conflicting) wallet service URLs. Apps SHOULD NOT attempt to recover from multiple or conflicting wallet service URLs, but MAY use the first URL available for the method as a convenience for implementation.
+The wallet service can be specified as a URL, and a list of methods for which to use the URL. `methods` SHOULD NOT be empty. The endpoint MUST be JSON-RPC compatible and support `POST` requests.
 
 ```ts
 type WalletService = {
-    url: string,
     methods: string[],
-}[];
+    url: string,
+};
+```
 
-type Properties = {
-    walletService: WalletService,
+Wallets MAY provide query params as part of the URL. These params could be useful for many things such as providing an authentication token, connection ID, identifying the chain being used, or providing other necessary details to fulfil the request.
+
+The endpoint SHOULD enable CORS (Cross-Origin-Resource-Sharing) to allow arbitrary app domains to access the endpoint.
+
+The wallet service MAY respond with a `Cache-Control` header, indicating the cacheability of the response. Apps SHOULD set the JSON-RPC `id` field to `0`, increasing the chance of a cache-hit.
+
+Wallets MUST NOT set multiple wallet service entries for the same method. Apps SHOULD NOT attempt to recover from multiple or conflicting wallet service URLs, but MAY use the first URL available for the method as a convenience for implementation.
+
+Apps SHOULD use the wallet service when available for a method, instead of calling the wallet directly.
+
+Here is an example implementation:
+
+```javascript
+const jsonRpc = { ... };
+
+const handler = walletService.find(s => s.methods.includes(jsonRpc.method));
+if (handler) {
+    jsonRpc.id = 0; // optional
+    return fetch(handler.url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(jsonRpc)
+    });
+} else {
+    // fallback to sending directly to wallet
+}
+```
+
+### Usage in CAIP-25
+
+The `caip345` property can be used in both `sessionProperties` and `scopedProperties`, depending on what scopes the methods are supported on.
+
+```ts
+// scoped or session properties
+type Caip25Properties = {
+    caip345: WalletService[],
     [key: string]: any, // other properties
 };
 ```
 
-An easy way for apps to find the wallet service URL for a given method would be:
+If a method is listed in the `caip345` property, then the same method MUST be listed as of the CAIP-25 session for the same scopes. Wallets MUST implement fallback handling for all wallet service methods, in-case the app does not implement this CAIP.
 
-```javascript
-walletService.find(s => s.methods.includes(method)).url
-```
-
-The `walletService` key can be used in both `sessionProperties` and `scopedProperties`, depending on what namespaces the method(s) in question are supported on.
-
-Below is an example support for `wallet_getAssets` which is only supported on `eip155` namespaces:
+Below is an example support for `wallet_getAssets` which is only supported on `eip155` scope:
 
 ```json
 "scopedProperties": {
     "eip155": {
-        "walletService": [{
-            "url": "<wallet service URL>",
-            "methods": ["wallet_getAssets"]
+        "caip345": [{
+            "methods": ["wallet_getAssets"],
+            "url": "https://wallet-service.example.com/rpc"
+        }],
+    }
+}
+```
+
+Below is an example for ERC-7836, which is also only valid in the `eip155` scope:
+
+```json
+"scopedProperties": {
+    "eip155": {
+        "caip345": [{
+            "methods": ["wallet_prepareCalls", "wallet_sendPreparedCalls"],
+            "url": "https://wallet-service.example.com/rpc"
         }],
     }
 }
@@ -72,14 +118,40 @@ Below is an example support for `wallet_getAssets` which is only supported on `e
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
 
-Allowing multiple URLs to be provided for different methods (useful for different endpoints, params or auth tokens). While at the same time, not duplicating the Wallet Service URL.
+### Support for multiple wallet service URLs
 
-There was consideration for being able to specify different wallet service URLs for different accounts. However this would not make sense in the context of CAIP-25 because there is no mechanism to scope the methods themselves to particular accounts. If we provided a mechanism to scope the methods to accounts in this CAIP, the app may still try to send the method requests for non-listed accounts directly to the wallet.
+Supporting an array of wallet services increases flexibility. Allowing different URLs (servers or parameters) to be used for different methods or use cases.
 
-There was consideraiton for defining the standard to have a unique wallet service URL for every single method. However this would cause excessive bandwidth consumption if the same URL were to be used for multiple methods.
+There must still be 1 canonical wallet service URL for a given method (if available at all).
+
+### Different wallet service depending on account
+
+There was consideration for being able to specify different wallet service URLs for different accounts. However, this would not make sense in the context of CAIP-25 because there is no mechanism to scope the methods themselves to particular accounts. If we provided a mechanism to scope the methods to accounts in this CAIP, the app may still try to send the method requests for non-listed accounts directly to the wallet.
+
+### Map methods to wallet services, instead of methods in array
+
+There was consideraiton for defining the standard to have a unique wallet service URL for every single method. However, this would cause excessive bandwidth consumption if the same URL were to be used for multiple methods which we think is the more likely case.
+
+### Not supporting custom headers
+
+Specifying custom headers to use in the wallet service request is not supported. This is because in browsers, custom headers will create pre-flight `OPTIONS` requests, increasing bandwidth and server load.
 
 ## Test Cases
 <!--Please add diverse test cases here if applicable. Any normative definition of an interface requires test cases to be implementable. -->
+Valid wallet service:
+```json
+{
+    "methods": ["wallet_prepareCalls", "wallet_sendPreparedCalls"],
+    "url": "https://wallet-service.example.com/rpc"
+}
+```
+
+Invalid wallet service:
+```json
+{
+    "url": "https://wallet-service.example.com/rpc"
+}
+```
 
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
