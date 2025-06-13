@@ -93,7 +93,8 @@ const walletData = {
 
 ### Establishing Connection
 
-When the target type is Extension ID, the dapp MUST use the Extension ID to establish a connection with the wallet using the `externally_connectable` browser API. All subsequent communication with the wallet SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
+When the target type is `caip341` (i.e., Extension ID), the dapp MUST use the Extension ID to establish a connection with the wallet using the `externally_connectable` browser API, using the passed value to uniquely identify the extension.
+All subsequent communication with the wallet SHOULD be conducted over the `externally_connectable` API using `runtime.connect()` and `runtime.sendMessage()`.
 
 Example of establishing a connection and sending a message:
 
