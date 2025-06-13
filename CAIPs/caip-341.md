@@ -69,7 +69,7 @@ const walletData = {
   target: [
     {
       type: "caip341",
-      value: "abcdefghijklmnopqrstuvwxyz"
+      value: "abcdefghijklmnopqrstuvwxyzabcdef"
     },
     {
       type: "caip315",
