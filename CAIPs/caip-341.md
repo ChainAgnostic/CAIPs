@@ -38,7 +38,10 @@ Blockchain Library: A library or piece of software that assists a dapp to intera
 
 The `target` field in the `WalletData` interface is used to specify the connection method for the wallet. This CAIP introduces the Extension ID type as a valid target type.
 
-This field MAY be included in the `WalletData`, and if included, SHOULD be an array of objects, containing Extension ID type used to connect to wallets using `externally_connectable`. An array was opted for easier interoperability and flexibility for multiple CAIP target definitions.
+This field MAY be included in the `WalletData` object defined in [CAIP294].
+If included, the property `target` SHOULD be an array of objects, containing Extension ID type used to connect to wallets using `externally_connectable`.
+An array was chosen for easier interoperability and flexibility for multiple CAIP target definitions.
+This specification defines entries in that array typed as `caip341`.
 
 ```typescript
 interface WalletData {
