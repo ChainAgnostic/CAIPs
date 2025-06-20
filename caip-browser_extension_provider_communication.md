@@ -18,11 +18,11 @@ This CAIP discusses the motivation, specification, and rationale for a proposal 
 
 ## Abstract
 <!--A short (~200 word) description of the technical issue being addressed.-->
-In the current web extension wallet ecosystem, the prevalent approach involves injecting a JavaScript provider API, such as `window.ethereum`, directly into websites as a global variable. This method offers simplicity for web developers and ensures compatibility across extensions but raises significant concerns regarding security, performance, and potential disruption of website functionality due to the need for extensive permissions and the injection of additional code. An alternative approach involves websites embedding their own provider libraries, which could mitigate these issues by reducing required permissions, enhancing performance, and providing developers with greater control over provider integration. To make this approach feasible, a communication protocol must be standardized for the purpose.
+In the current web extension wallet ecosystem, most wallets communicate with websites by injecting a JavaScript provider API (`window.ethereum`) directly into webpages as a global variable. This method offers simplicity for web developers and ensures compatibility across extensions but raises significant concerns regarding security, performance, and potential disruption of website functionality due to the need for extensive permissions for the injection of additional code that have the potential to cause webpage breakage. An alternative approach involves websites embedding their own provider libraries, which could mitigate these issues by reducing required permissions, enhancing performance, and providing developers with greater control over provider integration.
 
-This proposal addresses the challenge of maintaining interoperability and extensibility between web extensions and websites by standardizing the communication protocol through the `externally_connectable` interface. This standardization aims to facilitate seamless interaction across different web extensions, ensuring a consistent and secure method of communication. This proposal outlines a specific message format for this communication and discusses the use of `externally_connectable` to allow web extensions to send and receive messages with authorized websites and extensions.
+This proposal addresses the challenge of maintaining interoperability between web extensions and websites by standardizing an extensible communication protocol through the `externally_connectable` interface. Using the `externally_connectable` interface is less intrusive and more performant than the current pattern of injecting an inpage provider as a global variable.
 
-Despite the lack of current support for `externally_connectable` in Firefox, the proposal underscores the importance of interoperability and standardized communication for the future of web extension wallets, advocating for a transition away from contentscript injection.
+This proposal is not yet applicable to Firefox due to lack of support for `externally_connectable`, but they are considering implementing it.
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
@@ -36,7 +36,7 @@ However, the injected API strategy has many disadvantages:
 * It depends upon the web extension having read and write access to every website the user visits, which is a scary permission that web extension authors might otherwise be able to avoid asking for.
 * It slows down every website by injecting additional code to be parsed and executed. It even slows down the initial page load in most cases, because many web extensions inject the provider synchronously to maintain compatibility with websites that expect it to be available immediately.
 * In some cases, injecting code into a webpage may break its original intended behaviors.
-* It provides no way for web extension authors to safely make breaking changes to their provider API without having to also inject extra code for the purposes of maintaining backwards compability for dApps that may still rely on those legacy APIs.
+* It provides no way for web extension authors to safely make breaking changes to their provider API without having to also inject extra code for the purposes of maintaining backwards compability for websites that may still rely on those legacy APIs.
 
 An alternative strategy would be for a website to embed its own provider. A provider could be offered as a library, to be embedded by the website author. This strategy can address all disadvantages of the injected provider approach:
 * If this strategy became widespread enough, it would allow some web extensions to stop asking for write access to all pages.
@@ -105,20 +105,24 @@ The webpage embedded provider can:
 * receive messages by using `port.onMessage.addListener()`
 
 ### Caveats
-Currently Firefox does not support `externally_connectable` yet, but they are [considering implementing it](https://bugzilla.mozilla.org/show_bug.cgi?id=1319168). Meanwhile, extension wallets on Firefox will need to continue injecting an inpage provider for the dApp.
+Currently Firefox does not support `externally_connectable` yet, but they are [considering implementing it](https://bugzilla.mozilla.org/show_bug.cgi?id=1319168). Meanwhile, extension wallets on Firefox will need to continue injecting an inpage provider for the website.
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-While web extensions could realize the benefits of `externally_connectable` without using it with a standardized interface, this would mean that every web extension would have to ship a provider library that worked specifically for their interface and that Dapps would need to import them. It wouldn't be feasible for Dapps to import every single web extension's specific provider implementation, making this approach less viable.
+The current reliance of extension wallets on contentscript is highly unideal as it is overly permissive in regards to what the wallet is ultimately trying to achieve which is to provide an entrypoint for a website to the wallet. This paradigm exists because of website reliance on inpage injected providers.
 
-Web extension inter-operability is the key to enabling generalized provider implementations. Generalized provider implementations allows for convenient adoption by Dapps, leading to more wide spread adoption of the standard as a result.
+A better pattern would be for dapps to be able to connect directly to the wallet without the wallet needing to inject and run code on the webpage at all. This can be achieved by using the the `externally_connectable` transport layer, which allows website to communicate with wallets without requiring code injection. This reduces permissions required by extensions and improves website performance. Additionally, this simplifies the complicated situtation website maintainers may find themselves in when it comes to building and designing around code being forceably injected into their pages. Not to mention the headache around debugging, monitoring, and triaging bug reports that may not have originated from their application logic but is being caught by monitoring tools.
+
+Unfortunately, using `externally_connectable` by itself will not be sufficient as dapps will still need to know how to actually communicate with the wallet, but if each wallet has a differently shaped API then this approach cannot scale. Because of that, this CAIP also proposes an extensible message format to use in conjunction with `externally_connectable`. Using a standardized message format allows websites and wallets to be inter-operable in the same way they are today with EIP-1193. It is backwards compatible as it allows the website and extension to disambiguate the newly proposed messages from any existing messages that may already be sent on this interface. Finally, it is forwards compatible it also enables extensibility for different formats in the future.
+
+Web extension inter-operability is the key to enabling generalized provider implementations. Generalized provider implementations allows for convenient adoption by websites, leading to more wide spread adoption of the standard as a result.
 
 ## Test Cases
 <!--Please add test cases here if applicable.-->
 
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
-`externally_connectable` has seen a decade of usage via extensions on Chrome. It has a strictly better security when compared to postMessage over contentscript.
+Using `externally_connectable`
 
 ## Privacy Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
@@ -128,7 +132,9 @@ It should be noted however that this API is still fingerprintable based on the r
 
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
-This CAIP does not require discontinuing usage of contentscript. It is RECOMMENDED that wallets start implementing this alternative connection strategy and encouraging it's usage so that the ecosystem can eventually remove contentscript injection entirely. As an optional transitionary step, wallets can migrate their injected provider to start making connections over `externally_connectable` with no user-facing impact (not sure if true since this has caveats).
+This CAIP does not require discontinuing the usage of contentscript which currently powers most injected provider implementations. `externally_connectable` can be used alongside contentscript.
+
+The message format used by this CAIP allows extensions that already use `externally_connectable` to serve requests to continue doing so. This is because the new message format introduced by this CAIP is easily identifiable and can be easily ignored/filtered by any pre-existing handlers. Additionally, the message format is also flexible enough to be compatible with future APIs that may also share the same `externally_connectable` entrypoint.
 
 ## Links
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations.-->
