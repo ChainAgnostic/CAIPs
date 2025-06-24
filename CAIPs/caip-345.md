@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/345
 status: Draft
 type: Standard
 created: 2025-02-17
-updated: 2025-02-17
+updated: 2025-06-24
 requires: 25
 ---
 
@@ -20,7 +20,7 @@ This proposal defines the wallet service property, `caip345`, for use in CAIP-25
 
 ## Motivation
 <!--The motivation is critical for CAIP. It should clearly explain why the state of the art is inadequate to address the problem that the CAIP solves. CAIP submissions without sufficient motivation may be rejected outright.-->
-It is sub-optimal UX to redirect the user to their wallet in order to handle RPC requests that are non-actionable to them. This is especially relevant for protocols such as WalletConnect which are used in especially distributed environments such as mobile wallets or custodial solutions. In these contexts, actioning a wallet RPC request can involve significant effort.
+It is sub-optimal UX to redirect the user to their wallet in order to handle RPC requests that are non-actionable to them. This is especially relevant for protocols such as WalletConnect which is used in more distributed environments such as mobile wallets or custodial solutions. In these contexts, actioning a wallet RPC request can involve significant effort.
 
 Examples of non-actionable wallet requests include:
 - [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities) `wallet_getCapabilities`
@@ -87,9 +87,9 @@ type Caip25Properties = {
 };
 ```
 
-If a method is listed in the `caip345` property, then the same method MUST be listed as of the CAIP-25 session for the same scopes. Wallets MUST implement fallback handling for all wallet service methods, in-case the app does not implement this CAIP.
+If a method is included in the `caip345` property, then the same method MUST be included in the CAIP-25 session for the same scopes. Wallets MUST implement fallback handling for all wallet service methods, in case the app does not implement this CAIP.
 
-Below is an example support for `wallet_getAssets` which is only supported on `eip155` scope:
+Below is an unverifed, non-normative, example for `wallet_getAssets` which is only supported in the `eip155` scope:
 
 ```json
 "scopedProperties": {
@@ -102,7 +102,7 @@ Below is an example support for `wallet_getAssets` which is only supported on `e
 }
 ```
 
-Below is an example for ERC-7836, which is also only valid in the `eip155` scope:
+Below is an unverifed, non-normative, example for ERC-7836, which is also only valid in the `eip155` scope:
 
 ```json
 "scopedProperties": {
@@ -126,21 +126,21 @@ There must still be 1 canonical wallet service URL for a given method (if availa
 
 ### Different wallet service depending on account
 
-There was consideration for being able to specify different wallet service URLs for different accounts. However, this would not make sense in the context of CAIP-25 because there is no mechanism to scope the methods themselves to particular accounts. If we provided a mechanism to scope the methods to accounts in this CAIP, the app may still try to send the method requests for non-listed accounts directly to the wallet.
+There was consideration for being able to specify different wallet service URLs for different accounts. However, this would not make sense in the context of CAIP-25 because there is no mechanism to scope the methods to particular accounts. If this CAIP provided a way to scope the methods to particular accounts, the app may still try to send the method requests for non-listed accounts directly to the wallet.
 
 ### Map methods to wallet services, instead of methods in array
 
-There was consideraiton for defining the standard to have a unique wallet service URL for every single method. However, this would cause excessive bandwidth consumption if the same URL were to be used for multiple methods which we think is the more likely case.
+There was consideraiton for defining the standard to have a separate wallet service URL for every single method. However, this would cause excessive bandwidth consumption if the same URL were to be used for multiple methods which we think is the more likely case.
 
 ### Not supporting custom headers
 
-Specifying custom headers to use in the wallet service request is not supported. This is because in browsers, custom headers will create pre-flight `OPTIONS` requests, increasing bandwidth and server load.
+Specifying custom headers to use in the wallet service request is not supported. This is because in browsers, custom headers will create pre-flight `OPTIONS` requests, increasing bandwidth and server load. Instead, the necessary parameters should be passed via query params.
 
-### Apps using `connect-src` in Content-Security-Policy
+### Web apps using `connect-src` in Content-Security-Policy
 
-Many apps specify `connect-src` in their CSP which prevents the application and its libraries from connecting to URLs that aren't pre-specified. Since each wallet may use their own wallet service hosted on unique origins, it's not possible nor advisable to dynamically set the `connect-src` value necessary to allow a connection to flow properly.
+Many web apps specify `connect-src` in their CSP which prevents the app and its libraries from connecting to URLs that aren't pre-specified. Since each wallet may use their own wallet service hosted on unique origins, it's not possible/advisable to dynamically set the `connect-src` value as-necessary.
 
-To circumvent this, it is RECOMMENDED that such apps consume a minimal proxy service (such as a server function) in order to forward the wallet RPC request to the destination wallet service. This proxy service is known by the app, and has a fixed origin URL, which allows putting in `connect-src`. The service would be implemented by the app, or by a third-party.
+However to support this use case, such apps can consume a minimal proxy service (such as a server function) which will forward the wallet RPC request to the destination wallet service. This proxy service is known by the app, and has a fixed origin URL, which allows placing it in `connect-src`. The proxy service could be implemented by the app, or by a third-party.
 
 The mechanism by which this proxy service is implemented or consumed is outside the scope of this CAIP.
 
@@ -172,6 +172,8 @@ Similarly, the wallet service would have visibility into the wallet RPC requests
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
 This new property is fully backwards-compatible with CAIP-25.
+
+As also mentioned above, wallets MUST implement fallback handling for all wallet service methods, in case the app does not implement this CAIP.
 
 ## References
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations. See CONTRIBUTING.md#style-guide . -->
