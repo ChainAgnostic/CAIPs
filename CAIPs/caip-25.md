@@ -52,7 +52,8 @@ After a session is established between wallet and caller, subsequent `wallet_cre
 - When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls either:
   - overwrite the previous singular session between caller and wallet, or
   - increment the previous session properties with the subsequent requested session properties.
-__We advise a dapp using this implementation to always call `wallet_revokeSession` before calling a subsequent `wallet_createSession`, if it intends to guarantee an overwriting of a previously existing set of properties and authorization scopes.__
+
+__We advise a dapp using this procedure to always call `wallet_revokeSession` before calling a subsequent `wallet_createSession`, if it intends to guarantee an overwriting of a previously existing set of properties and authorization scopes.__
 
 When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-311] notification.
 
