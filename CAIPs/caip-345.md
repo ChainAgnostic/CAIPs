@@ -136,6 +136,14 @@ There was consideraiton for defining the standard to have a unique wallet servic
 
 Specifying custom headers to use in the wallet service request is not supported. This is because in browsers, custom headers will create pre-flight `OPTIONS` requests, increasing bandwidth and server load.
 
+### Apps using `connect-src` in Content-Security-Policy
+
+Many apps specify `connect-src` in their CSP which prevents the application and its libraries from connecting to URLs that aren't pre-specified. Since each wallet may use their own wallet service hosted on unique origins, it's not possible nor advisable to dynamically set the `connect-src` value necessary to allow a connection to flow properly.
+
+To circumvent this, it is RECOMMENDED that such apps consume a minimal proxy service (such as a server function) in order to forward the wallet RPC request to the destination wallet service. This proxy service is known by the app, and has a fixed origin URL, which allows putting in `connect-src`. The service would be implemented by the app, or by a third-party.
+
+The mechanism by which this proxy service is implemented or consumed is outside the scope of this CAIP.
+
 ## Test Cases
 <!--Please add diverse test cases here if applicable. Any normative definition of an interface requires test cases to be implementable. -->
 Valid wallet service:
