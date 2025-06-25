@@ -109,7 +109,7 @@ Currently Firefox does not support `externally_connectable` yet, but they are [c
 
 ## Rationale
 <!--The rationale fleshes out the specification by describing what motivated the design and why particular design decisions were made. It should describe alternate designs that were considered and related work, e.g. how the feature is supported in other languages. The rationale may also provide evidence of consensus within the community, and should discuss important objections or concerns raised during discussion.-->
-The current reliance of extension wallets on contentscript is highly unideal as it is overly permissive in regards to what the wallet is ultimately trying to achieve which is to provide an entrypoint for a website to the wallet. This paradigm exists because of website reliance on inpage injected providers.
+The current reliance of extension wallets on content scripts is highly unideal as it is overly permissive in regards to what the wallet is ultimately trying to achieve which is to provide an entrypoint for a website to the wallet. This paradigm exists because of website reliance on inpage injected providers.
 
 A better pattern would be for dapps to be able to connect directly to the wallet without the wallet needing to inject and run code on the webpage at all. This can be achieved by using the the `externally_connectable` transport layer, which allows website to communicate with wallets without requiring code injection. This reduces permissions required by extensions and improves website performance. Additionally, this simplifies the complicated situtation website maintainers may find themselves in when it comes to building and designing around code being forceably injected into their pages. Not to mention the headache around debugging, monitoring, and triaging bug reports that may not have originated from their application logic but is being caught by monitoring tools.
 
@@ -132,7 +132,7 @@ It should be noted however that this API is still fingerprintable based on the r
 
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
-This CAIP does not require discontinuing the usage of contentscript which currently powers most injected provider implementations. `externally_connectable` can be used alongside contentscript.
+This CAIP does not require discontinuing the usage of content scripts which currently power most injected provider implementations. `externally_connectable` can be used alongside content scripts.
 
 The message format used by this CAIP allows extensions that already use `externally_connectable` to serve requests to continue doing so. This is because the new message format introduced by this CAIP is easily identifiable and can be easily ignored/filtered by any pre-existing handlers. Additionally, the message format is also flexible enough to be compatible with future APIs that may also share the same `externally_connectable` entrypoint.
 
