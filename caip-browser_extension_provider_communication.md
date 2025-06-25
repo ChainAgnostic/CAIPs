@@ -122,7 +122,7 @@ Web extension inter-operability is the key to enabling generalized provider impl
 
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
-Using `externally_connectable`
+Inclusion of `externally_connectable` does not require the user to also give the wallet extension permission to use  `content_scripts`. Content scripts are a higher-privileged permission with ability to run scripts on any webpage. `externally_connectable` simple enables a way for webpages to directly communicate with extensions.
 
 ## Privacy Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
@@ -132,7 +132,7 @@ It should be noted however that this API is still fingerprintable based on the r
 
 ## Backwards Compatibility
 <!--All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright.-->
-This CAIP does not require discontinuing the usage of content scripts which currently power most injected provider implementations. `externally_connectable` can be used alongside content scripts.
+`externally_connectable` does not conflict with `content_scripts` which currently enable injected providers. This CAIP does not require changes to an extension wallet's existing injected providers pattern.
 
 The message format used by this CAIP allows extensions that already use `externally_connectable` to serve requests to continue doing so. This is because the new message format introduced by this CAIP is easily identifiable and can be easily ignored/filtered by any pre-existing handlers. Additionally, the message format is also flexible enough to be compatible with future APIs that may also share the same `externally_connectable` entrypoint.
 
