@@ -130,7 +130,7 @@ There was consideration for being able to specify different wallet service URLs 
 
 ### Map methods to wallet services, instead of methods in array
 
-There was consideraiton for defining the standard to have a separate wallet service URL for every single method. However, this would cause excessive bandwidth consumption if the same URL were to be used for multiple methods which we think is the more likely case.
+There was consideration for defining the standard to have a separate wallet service URL for every single method. However, this would cause excessive bandwidth consumption if the same URL were to be used for multiple methods which we think is the more likely case.
 
 ### Not supporting custom headers
 
