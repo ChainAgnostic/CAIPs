@@ -163,7 +163,7 @@ Invalid wallet service:
 
 ## Security Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
-The wallet service would bear the security resonsibility of responding to these wallet RPC requests. Wallets should make informed decisions about which providers they use for this.
+The wallet service would bear the security responsibility of responding to these wallet RPC requests. Wallets should make informed decisions about which providers they use for this.
 
 ## Privacy Considerations
 <!--Please add an explicit list of intra-actor assumptions and known risk factors if applicable. Any normative definition of an interface requires these to be implementable; assumptions and risks should be at both individual interaction/use-case scale and systemically, should the interface specified gain ecosystem-namespace adoption. -->
