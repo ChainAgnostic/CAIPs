@@ -89,7 +89,7 @@ type Caip25Properties = {
 
 If a method is included in the `caip345` property, then the same method MUST be included in the CAIP-25 session for the same scopes. Wallets MUST implement fallback handling for all wallet service methods, in case the app does not implement this CAIP.
 
-Below is an unverifed, non-normative, example for `wallet_getAssets` which is only supported in the `eip155` scope:
+Below is an unverified, non-normative, example for `wallet_getAssets` which is only supported in the `eip155` scope:
 
 ```json
 "scopedProperties": {
