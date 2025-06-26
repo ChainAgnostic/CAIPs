@@ -24,7 +24,7 @@ It is sub-optimal UX to redirect the user to their wallet in order to handle RPC
 
 Examples of non-actionable wallet requests include:
 - [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities) `wallet_getCapabilities`
-- [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcallsstatus-rpc-specification) `wallet_getCallsStatus`
+- [EIP-5792 `wallet_getCallsStatus`](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcallsstatus-rpc-specification)
 - [ERC-7836](https://github.com/ethereum/ERCs/pull/758) `wallet_prepareCalls` and `wallet_sendPreparedCalls`
 - [ERC-7811](https://eips.ethereum.org/EIPS/eip-7811) `wallet_getAssets`
 
