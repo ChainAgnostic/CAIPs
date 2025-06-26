@@ -146,6 +146,7 @@ The mechanism by which this proxy service is implemented or consumed is outside 
 
 ## Test Cases
 <!--Please add diverse test cases here if applicable. Any normative definition of an interface requires test cases to be implementable. -->
+
 Valid wallet service:
 ```json
 {
