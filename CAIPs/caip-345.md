@@ -36,7 +36,7 @@ By defining a way for wallets to send requests to an out-of-band endpoint, the r
 
 A "wallet service" is a JSON-RPC-compatible HTTP endpoint that can be used to satisfy certain wallet RPC methods. This service may be developed, hosted, and maintained by the same organization developing the wallet app, or by a third-party. It is up to the wallet to determine what server should be responsible for handling wallet RPCs.
 
-The wallet service can be specified as a URL, and a list of methods for which to use the URL. `methods` SHOULD NOT be empty. The endpoint MUST be JSON-RPC compatible and support `POST` requests.
+The wallet service can be specified as a URL, and a list of JSON-RPC methods for which to use the URL. `methods` SHOULD NOT be empty. The endpoint MUST be JSON-RPC compatible and support `POST` requests.
 
 ```ts
 type WalletService = {
