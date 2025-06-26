@@ -23,7 +23,7 @@ This proposal defines the wallet service property, `caip345`, for use in CAIP-25
 It is sub-optimal UX to redirect the user to their wallet in order to handle RPC requests that are non-actionable to them. This is especially relevant for protocols such as WalletConnect which is used in more distributed environments such as mobile wallets or custodial solutions. In these contexts, actioning a wallet RPC request can involve significant effort.
 
 Examples of non-actionable wallet requests include:
-- [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities) `wallet_getCapabilities`
+- [EIP-5792 `wallet_getCapabilities`](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcapabilities)
 - [EIP-5792 `wallet_getCallsStatus`](https://eips.ethereum.org/EIPS/eip-5792#wallet_getcallsstatus-rpc-specification)
 - [ERC-7836](https://github.com/ethereum/ERCs/pull/758) `wallet_prepareCalls` and `wallet_sendPreparedCalls`
 - [ERC-7811](https://eips.ethereum.org/EIPS/eip-7811) `wallet_getAssets`
