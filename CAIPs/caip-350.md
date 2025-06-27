@@ -37,7 +37,7 @@ The purpose of each namespace's profile is to specify deterministic and unambigu
 
 And must also define the binary id of the namespace itself, akin to [ERC-7930]'s `ChainType`
 
-For this, every namespace MUST define specify all of the above in a CAIP-350 profile to maximize interoperability and review. A [template for these profiles](https://github.com/ChainAgnostic/namespaces/blob/main/_template/caip350.md) is defined in the Namespaces registry.
+For this, every namespace MUST specify all of the above in a CAIP-350 profile to maximize interoperability and review. A [template for these profiles](https://github.com/ChainAgnostic/namespaces/blob/main/_template/caip350.md) is defined in the Namespaces registry.
 
 ## Rationale
 
