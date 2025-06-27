@@ -60,7 +60,7 @@ It is possible that a CAIP-350 profile for a given chain namespace is not able t
 
 This standard actively seeks to be exhaustive in its backwards compatibility with CAIP-2 and CAIP-10.
 
-Namespaces are responsible over clarifying which conversions to and from the aforementioned standards are:
+Namespace profiles SHOULD clarify which conversions to and from the aforementioned standards are:
 - Problematic, by requiring extra resources network or storage-constrained clients might not have, such as the conversion from a CAIP-2 `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp` (with a truncated genesis blockhash) to its CAIP-350 equivalent: `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d`. While clients SHOULD support this kind of conversion, those unable to do so will still be considered compliant with the standard.
 - Impossible, due to a standard's inability to represent a given chain or address. Examples: an EVM chain with a chainid greater than 10^32, which could be represented in CAIP-350, but not in CAIP-2 due to its length restriction on chain references, and a chain for which only CAIP-10 is defined, which clients would not know how to serialize into CAIP-350.
 
