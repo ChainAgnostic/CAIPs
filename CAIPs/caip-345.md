@@ -1,5 +1,5 @@
 ---
-caip: CAIP-345
+caip: 345
 title: Wallet Service URL property
 author: Chris Smith (@chris13524)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/345

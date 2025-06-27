@@ -82,6 +82,7 @@ Client libraries SHOULD produce different errors for the two aforementioned erro
 
 [CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
 [CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
+[CAIP-104]: https://ChainAgnostic.org/CAIPs/caip-104
 <!-- TODO: point to the EIP website when the PR is merged -->
 [ERC-7930]: https://ethereum-magicians.org/t/erc-7930-interoperable-addresses/23365
 
