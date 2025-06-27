@@ -37,7 +37,7 @@ The purpose of each namespace's profile is to specify deterministic and unambigu
 - [ERC-7930]'s Interoperable Address and [ERC-7930]'s Interoperable Name of the ecosystem's chain references
 - [ERC-7930]'s Interoperable Address and [ERC-7930]'s Interoperable Name of the ecosystem's addresses *for all address formats of said ecosystem*
 
-And MUST also define the binary id of the namespace itself, akin to [ERC-7930]'s `ChainType`
+Crucially, each namespace MUST also define exactly ONE (1) 2-byte bytestring to uniquely identify the namespace itself, without colliding with previous definitions, which will provide the value for the `chainType` property defined in [ERC-7930].
 
 Every namespace MUST specify all of the above in a CAIP-350 profile to maximize interoperability and review.
 A [template for these profiles](https://github.com/ChainAgnostic/namespaces/blob/main/_template/caip350.md) is defined in the Namespaces registry.
