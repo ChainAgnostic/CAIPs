@@ -32,7 +32,7 @@ The namespace is called "polkadot" to refer to Polkadot-like chains.
 
 #### Reference Definition
 
-The definition for this namespace will use the `genesis-hash` as an indentifier for different Polkadot chains. The format is a 32 character prefix of the block hash (lower case hex).
+The definition for this namespace will use the `genesis-hash` as an identifier for different Polkadot chains. The format is a 32 character prefix of the block hash (lower case hex).
 
 ### Resolution Method
 
