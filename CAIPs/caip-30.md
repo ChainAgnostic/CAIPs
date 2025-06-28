@@ -32,7 +32,7 @@ The namespace "solana" refers to the Solana open-source blockchain platform.
 
 #### Reference Definition
 
-The definition for this namespace will use the `genesisHash` as an indentifier for different Solana chains.
+The definition for this namespace will use the `genesisHash` as an identifier for different Solana chains.
 The method for calculating the chain ID is as follows with pseudo-code:
 
 ```
