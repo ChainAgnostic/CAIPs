@@ -2,7 +2,7 @@
 caip: CAIP-210
 title: CAIP-2 and CAIP-10 Wildcard Namespace Extension
 author: Daniel Rocha (@danroc)
-discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/XX
+discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/364
 status: Draft
 type: Standard
 created: 2025-07-01
