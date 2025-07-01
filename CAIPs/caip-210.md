@@ -1,6 +1,6 @@
 ---
 caip: CAIP-210
-title: Wildcard Namespace Extension
+title: Chain ID Wildcard
 author: Daniel Rocha (@danroc)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/364
 status: Draft
