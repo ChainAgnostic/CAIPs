@@ -19,7 +19,7 @@ namespace.
 
 ## Abstract
 
-By introducing the `_` wildcard into CAIP-2-compliant chain ID definitions, and
+By reserving the `_` wildcard into CAIP-2-compliant chain ID definitions, and
 supporting it within CAIP-10 account identifiers, this CAIP enables an address
 to represent a multichain account. For example, `eip155:_:<address>` signifies
 the given address across all chains in the `eip155` namespace.
