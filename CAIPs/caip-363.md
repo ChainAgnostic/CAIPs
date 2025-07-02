@@ -58,11 +58,11 @@ Extend the CAIP-10 account ID to support the wildcard chain reference:
 
 For example:
 
-- `eip155:_:0x1234...abcd` represents the same address across all `eip155`
+- `eip155:_:0x59f3...d0c3` represents the same address across all `eip155`
   chains.
 
-- `solana:_:cosmos1abcd...` represents a Solana account across all Solana
-  chains (for example, Mainnet, Testnet, and Devnet).
+- `solana:_:DAXa...bx77` represents a Solana account across all Solana chains
+  (for example, Mainnet, Testnet, and Devnet).
 
 ### Reserved Character
 
