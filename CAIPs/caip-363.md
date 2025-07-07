@@ -91,3 +91,12 @@ reference within the specified namespace.
 ## Copyright
 
 Copyright and related rights waived via CC0.
+
+## References
+
+- [CAIP-2]
+- [CAIP-10]
+
+[CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
+[CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
+
