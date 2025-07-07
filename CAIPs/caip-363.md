@@ -66,7 +66,7 @@ For example:
 
 ### Reserved Character
 
-The `_` character is reserved solely for the wildcard chain reference and MUST
+A single `_` character is reserved solely for the wildcard chain reference and MUST
 NOT be designated as a valid reference or account identifier in any future [CAIP-2] profile.
 
 ## Rationale
