@@ -66,8 +66,9 @@ For example:
 
 ### Reserved Character
 
-A single `_` character is reserved solely for the wildcard chain reference and MUST
-NOT be designated as a valid reference or account identifier in any future [CAIP-2] profile.
+A single `_` character is reserved solely for the wildcard chain reference and
+MUST NOT be designated as a valid reference or account identifier in any future
+[CAIP-2] profile.
 
 ## Rationale
 
@@ -78,9 +79,9 @@ implementations.
 
 ## Backwards Compatibility
 
-This CAIP is backwards compatible. Existing implementations that do not
-support `_` will simply reject these identifiers as invalid, while updated
-systems can handle them appropriately.
+This CAIP is backwards compatible. Existing implementations that do not support
+`_` will simply reject these identifiers as invalid, while updated systems can
+handle them appropriately.
 
 ## Reference Implementation
 
@@ -99,4 +100,3 @@ Copyright and related rights waived via CC0.
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
-
