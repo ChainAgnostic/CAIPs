@@ -356,7 +356,7 @@ time. This also contributes to a more consentful experience overall and
 encourages progressive trust establishment across complex architectures with
 many distinct actors and agents.
 
-Another design pattern that accomodates the "silent time out" behavior is minor
+Another design pattern that accommodates the "silent time out" behavior is minor
 updates to the session. For example, a caller sending a request identical to a
 previous request (or a previous response) except for a new session expiry
 further in the future could expect one of exactly three responses:
