@@ -12,14 +12,18 @@ requires: CAIP-2, CAIP-10
 ## Simple Summary
 
 This CAIP extends CAIP-2 and CAIP-10 by reserving the `_` character as a
-wildcard reference for "all chain IDs" within any CAIP-2 namespace. This allows
-for the representation of multichain accounts, enabling wallets and
-applications to express account identity across all chains of a given
-namespace.
+wildcard reference for "all chain IDs" within a CAIP-2 namespace. This enables
+wallets and applications to represent account identity across all chains of a
+given namespace.
+
+This CAIP makes no assumptions about how the address is derived or whether it
+is valid across all chains in the namespace. The use of `_` simply denotes
+intent to refer to the same address across chains, without implying
+compatibility or derivation logic.
 
 ## Abstract
 
-By reserving the `_` wildcard into CAIP-2-compliant chain ID definitions, and
+By reserving the `_` wildcard in CAIP-2-compliant chain ID definitions, and
 supporting it within CAIP-10 account identifiers, this CAIP enables an address
 to represent a multichain account. For example, `eip155:_:<address>` signifies
 the given address across all chains in the `eip155` namespace.
@@ -62,7 +66,7 @@ For example:
   chains.
 
 - `solana:_:DAXa...bx77` represents a Solana account across all Solana chains
-  (for example, Mainnet, Testnet, and Devnet).
+  (e.g., Mainnet, Testnet, and Devnet).
 
 ### Reserved Character
 
