@@ -48,7 +48,8 @@ type PaymentOption = {
 
 // JSON-RPC Request
 type PayRequest = {
-  orderId: string;
+  version: string;
+  orderId?: string;
   acceptedPayments: PaymentOption[]; 
   expiry: number;
 }
@@ -56,12 +57,14 @@ type PayRequest = {
 ```
 
 The application **MUST** include:
-- An `orderId` that uniquely identifies this payment request. `orderId` **MUST NOT** be longer than 128 characters.
 - At least one entry in the `acceptedPayments` array
 - `expiry` timestamp for the payment request
 
+The application **MAY** include:
+- An `orderId` that uniquely identifies this payment request. If provided, `orderId` **MUST NOT** be longer than 128 characters.
 
-The `orderId` field **MUST** be a string that uniquely identifies the payment request. Implementations **SHOULD** ensure this ID is unique across their system to prevent collisions.
+
+ When `orderId` is provided, it **MUST** be a string and implementations **SHOULD** ensure this ID is unique across their system to prevent collisions.
 
 The `acceptedPayments` field **MUST** be an array of `PaymentOption` objects. Each element in the array represents a payment option that the wallet can choose from to complete the payment.
 
@@ -77,27 +80,29 @@ The `expiry` field **MUST** be a UNIX timestamp (in seconds) after which the pay
 Request example:
 ```json
 {
-    "orderId": "order-123456",
-    "acceptedPayments": [
-      {
-        "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-        "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "amount": "0x5F5E100" 
-      },
-      {
-        "recipient": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp:9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-        "asset": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp/slip44:501",
-        "amount": "0x6F05B59D3B20000"
-      }
-    ],
-    "expiry": 1709593200 
-  }
+  "version": "1.0.0",
+  "orderId": "order-123456",
+  "acceptedPayments": [
+    {
+      "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "amount": "0x5F5E100" 
+    },
+    {
+      "recipient": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ:9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
+      "amount": "0x6F05B59D3B20000"
+    }
+  ],
+  "expiry": 1709593200 
+}
 ```
 
 #### Response
 ```typescript
 type PayResult = {
-  orderId: string; 
+  version: string;
+  orderId?: string; 
   txid: string; 
   recipient: string;  
   asset: string;  
@@ -106,11 +111,12 @@ type PayResult = {
 ```
 
 The wallet's response MUST include:
-- `orderId` that matches the original request
 - `txid` with the transaction identifier on the blockchain
 - `recipient` that received the payment. It **MUST** be a valid [CAIP-10][] account ID.
 - `asset` that was used for payment. It **MUST** follow the [CAIP-19][] standard.
 - `amount` that was paid. It **MUST** be represented in hex string
+
+If an `orderId` was provided in the original request, the response **MUST** include the same `orderId`.
 
 `txid` **MUST** be a valid transaction identifier on the blockchain network specified in the asset's chain ID.
 
@@ -120,23 +126,29 @@ The wallet's response MUST include:
 Example response:
 ```json
 {
-    "orderId": "order-123456",
-    "txid": "0x8a8c3e0b1b812182db4cabd81c9d6de78e549fa3bf3d505d6e1a2b25a15789ed",
-    "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-    "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    "amount": "0x5F5E100"
+  "version": "1.0.0",
+  "orderId": "order-123456",
+  "txid": "0x8a8c3e0b1b812182db4cabd81c9d6de78e549fa3bf3d505d6e1a2b25a15789ed",
+  "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+  "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  "amount": "0x5F5E100"
 }
 ```
 
 #### Idempotency
-The `wallet_pay` method **MUST** be idempotent for the same `orderId`. This ensures robustness in case of connection failures or timeout scenarios.
+The `wallet_pay` method **MUST** be idempotent for the same `orderId` when provided. This ensures robustness in case of connection failures or timeout scenarios.
 
-Requirements:
+Requirements when `orderId` is provided:
 - If a payment with the same `orderId` has already been completed successfully, the wallet **MUST** return the original `PayResult` without executing a new payment
 - If a payment with the same `orderId` is currently pending, the wallet **SHOULD** return the result of the original payment attempt
 - If a payment with the same `orderId` has failed previously, the wallet **MAY** attempt the payment again or return the previous error
 - Wallets **SHOULD** maintain payment status for completed transactions for at least 24 hours after completion
 - If connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
+
+When `orderId` is not provided:
+- Each payment request **SHOULD** be treated as a new payment attempt
+- Wallets **MAY** implement their own deduplication logic based on other request parameters (recipient, asset, amount, expiry)
+- Dapps **SHOULD** include an `orderId` if they require guaranteed idempotency behavior
 
 #### Error Handling
 If the payment process fails, the wallet **MUST** return an appropriate error message:
