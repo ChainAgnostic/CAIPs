@@ -71,19 +71,16 @@ The goals of the general account ID format is:
 
 ## Canonicalization
 
-Note that some namespaces like the EVM offer canonicalization schemes that use
-capitalization (e.g. [EIP-55][]), an option suffix (e.g. [HIP-15][]), or some
-other transformation. At the present time, this specification does NOT require
-canonicalization, and implementers are advised to consider deduplication or
-canonicalization in their consumption of CAIP-addresses. CAIP-10 profiles in
-CASA [namespaces][] may contain additional information per namespace.
+Note that some namespaces like the `eip155` (i.e. Ethereum) namespace offer canonicalization schemes that use capitalization (e.g. [EIP-55][]), an optional suffix (e.g. [HIP-15][]), or some other transformation.
+At the present time, this specification does NOT require canonicalization, and implementers are advised to consider deduplication or canonicalization in their consumption of CAIP-addresses.
+Furthermore, it is always recommended that implementers read carefully any guidance in the relevant CAIP-10 profiles in CASA [namespaces][] for additional information per namespace about security and canonicalization conventions.
 
 ## Test Cases
 
 This is a list of manually composed examples
 
 ```
-# Ethereum mainnet (canonicalized with [EIP-55][] checksum)
+# Ethereum mainnet (canonicalized with [EIP-55][] Checksum Case)
 eip155:1:0xab16a96D359eC26a11e2C2b3d8f8B8942d5Bfcdb
 
 # Bitcoin mainnet
@@ -125,8 +122,8 @@ of specification for details.
 
 ## Changelog
 
-- 2022-10-23: expanded charset to include `-`,`.`, and `%`; also added
-  canonicalization section and links
+- 2024-07-19: more explicit recommendation to read namespaces in canonicalization section
+- 2022-10-23: expanded charset to include `-`,`.`, and `%`; also added canonicalization section and links
 - 2022-03-10: update RegEx to incorporate CAIP-2 reference
 - 2021-08-11: switch from `{account id}@{chain id}` to `{chain id}:{account id}`
   syntax
