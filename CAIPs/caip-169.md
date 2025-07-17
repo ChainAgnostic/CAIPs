@@ -184,7 +184,7 @@ occur.
 
 Called **by the wallet** to the application, providing the parameters needed for
 a credential issuance and expecting back a verifiable credential OR an error.
-The parameters are formated as a [credential_application object][] as specified
+The parameters are formatted as a [credential_application object][] as specified
 in the [Credential Manifest][] specification.
 
 #### Method:
@@ -195,7 +195,7 @@ in the [Credential Manifest][] specification.
 
 - `credential_application` - REQUIRED. This can vary from the full contents of
   the payload of the to-be-issued credential to a mere consent event per
-  use-case, but in either case MUST be formated as a valid
+  use-case, but in either case MUST be formatted as a valid
   [credential_application object][] as specified in the [Credential Manifest][]
   specification.
 - `preferred_proofs` - OPTIONAL. An **ordered** array (from most to least
