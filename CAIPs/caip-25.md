@@ -46,10 +46,14 @@ Note that wallets NOT returning `sessionId`s MUST implement additional methods a
     * [`wallet_sessionChanged`][CAIP-311] to notify caller of updated session authorizations.
 
 After a session is established between wallet and caller, subsequent `wallet_createSession` calls can be used to update the properties and authorization scopes of the session.
-- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls either: 
+- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls either:
   - include a previously used `sessionId` on the root of the request meaning this request is intended to modify that session, or
   - do not include a `sessionId`, in which case a new session is created - the respondent generates a new `sessionId` and sends it with the success response - and the previous session dangles in parallel (until its expiration, if applicable), though maintaining concurrent sessions is discouraged (see Security Considerations).
-- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous singular session between caller and wallet.
+- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls either:
+  - overwrite the previous singular session between caller and wallet, or
+  - increment the previous session properties with the subsequent requested session properties.
+
+The distinction between `requiredScopes` and `optionalScopes` is ultimately semantic, since a wallet may still choose to establish a connection authorizing a subset of requested networks or requested capabilities from each. The primary function of the distinction is to offer callers a mechanism for signaling which scopes they consider primary and which they consider secondary to their request, in order to better inform the authorization logic of the respondent.
 
 When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-311] notification.
 
@@ -119,7 +123,7 @@ Example:
     },
     "scopedProperties": {
       "eip155:42161": {
-        "extension_foo": "bar"    
+        "extension_foo": "bar"
       }
     },
     "sessionProperties": {
@@ -210,7 +214,7 @@ An example of a successful response follows:
       "cosmos": {
         ...
       }
-    },      
+    },
     "scopedProperties": {
       "eip155:42161": {
         "walletExtensionConfig": {
@@ -296,7 +300,7 @@ Regardless of caller trust level, the following error responses can reduce frict
   - message = "Unknown notification(s) requested"
 - When a badly-formed request defines one `chainId` two ways
   - code = 5204
-  - message = "ChainId defined in two different scopes"  
+  - message = "ChainId defined in two different scopes"
 - Invalid scopedProperties Object
   - code = 5300
   - message = "Invalid scopedProperties requested"
