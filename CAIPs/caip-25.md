@@ -53,6 +53,7 @@ After a session is established between wallet and caller, subsequent `wallet_cre
   - overwrite the previous singular session between caller and wallet, or
   - increment the previous session properties with the subsequent requested session properties.
 
+The distinction between `requiredScopes` and `optionalScopes` is ultimately semantic, since a wallet may still choose to establish a connection authorizing a subset of requested networks or requested capabilities from each. The primary function of the distinction is to offer callers a mechanism for signaling which scopes they consider primary and which they consider secondary to their request, in order to better inform the authorization logic of the respondent.
 
 When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-311] notification.
 
