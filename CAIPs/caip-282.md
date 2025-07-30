@@ -1,7 +1,7 @@
 ---
 caip: 282
 title: Browser Wallet Discovery Interface
-author: Pedro Gomes (@pedrouid)
+author: Pedro Gomes (@pedrouid), Joao Carlos (@ffmcgee725), Jiexi Luan (@jiexi), Alex Donesky (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/282
 status: Draft
 type: Standard

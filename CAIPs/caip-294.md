@@ -1,7 +1,7 @@
 ---
 caip: 294
 title: Browser Wallet Messaging for Extensions
-author: Pedro Gomes (@pedrouid)
+author: Pedro Gomes (@pedrouid), Joao Carlos (@ffmcgee725), Jiexi Luan (@jiexi), Alex Donesky (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/294
 status: Draft
 type: Standard
