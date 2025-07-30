@@ -19,7 +19,7 @@ When accompanied with chain-specific message forms and signing algorithms, along
 ## Motivation
 
 As specified in [EIP-4361][], Sign in With Ethereum defined an Ethereum-focused workflow to authenticate Ethereum accounts on non-blockchain services. 
-This work is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of this specification, to work with any cryptographic system's namespace expressable in [CAIP-10][] and [CAIP-2][] formats.
+This work is meant to generalize and abstract the Sign in With Ethereum specification, thereby making EIP-4361 a specific implementation of this specification, to work with any cryptographic system's namespace expressible in [CAIP-10][] and [CAIP-2][] formats.
 
 Additionally, [CAIP-74][] specified a way to represent a chain-agnostic capability object (OCAP) by placing an EIP-4361 message into a CACAO container.
 

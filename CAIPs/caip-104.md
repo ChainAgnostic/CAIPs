@@ -170,7 +170,7 @@ this reference depends on.
 
 Namespace-CAIPs may also have a `superseded-by` header indicating that an CAIP
 has been rendered obsolete by a later document; the value is the `title` that
-replaces the current document, i.e., if "eip155-caip10" gets superceded, it
+replaces the current document, i.e., if "eip155-caip10" gets superseded, it
 should rename in the directory `eip155` directory but contain a link to the
 superseding specification(s), like `[caip10v2](caip10v2.md)`. The newer
 Namespace-CAIP must have a `replaces` header containing the number of the

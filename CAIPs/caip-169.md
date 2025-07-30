@@ -184,7 +184,7 @@ occur.
 
 Called **by the wallet** to the application, providing the parameters needed for
 a credential issuance and expecting back a verifiable credential OR an error.
-The parameters are formated as a [credential_application object][] as specified
+The parameters are formatted as a [credential_application object][] as specified
 in the [Credential Manifest][] specification.
 
 #### Method:
