@@ -1,5 +1,5 @@
 ---
-caip: CAIP-363
+caip: 363
 title: Chain ID Wildcard
 author: Daniel Rocha (@danroc)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/364
