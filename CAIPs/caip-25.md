@@ -49,7 +49,7 @@ After a session is established between wallet and caller, subsequent `wallet_cre
 - When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls either:
   - include a previously used `sessionId` on the root of the request meaning this request is intended to modify that session, or
   - do not include a `sessionId`, in which case a new session is created - the respondent generates a new `sessionId` and sends it with the success response - and the previous session dangles in parallel (until its expiration, if applicable), though maintaining concurrent sessions is discouraged (see Security Considerations).
-- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSessions` calls target the previous singular session between caller and wallet.
+- When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls target the previous singular session between caller and wallet.
 - `wallet_createSession` calls either increase scope, decrease scope, or both.
 
 When a user wishes to update the authorizations of an active session from within the wallet, the wallet should notify the caller of the changes with a [`wallet_sessionChanged`][CAIP-311] notification.
