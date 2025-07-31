@@ -1,7 +1,7 @@
 ---
 caip: 211
 title: JSON-RPC Authority Negotiation
-author: Hassan Malik (@hmalik88), Juan Caballero (@bumblefudge)
+author: Hassan Malik (@hmalik88), Bumblefudge (@bumblefudge)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/211, https://github.com/ChainAgnostic/CAIPs/pull/207 
 status: Draft
 type: Informational
