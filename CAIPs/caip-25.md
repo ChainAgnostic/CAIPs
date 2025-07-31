@@ -37,16 +37,17 @@ uppercase in this document are to be interpreted as described in [RFC
 #### Session Lifecycle
 
 The session is proposed by a caller and the response by the respondent is used as the baseline for an ongoing session between the two parties.
+
 - When a wallet responds with a success response containing a `sessionId` (an entropic [identifier][CAIP-171]), the properties and authorization scopes that make up the session should be persisted and tracked over the life of the session by both parties in a discrete data store.
 - When the wallet does not provide a `sessionId` in its initial response, the wallet MUST persist and track the properties and authorization scopes that make up the session.
-The caller is not expected to persist session data or even a `sessionId`.
-Note that wallets NOT returning `sessionId`s MUST implement additional methods and notifications to handle the full lifecycle of the session:
-    * [`wallet_getSession`][CAIP-312] to enable the caller to query for the current status of the session at any time.
-    * [`wallet_revokeSession`][CAIP-285] to explicitly end the session
-    * [`wallet_sessionChanged`][CAIP-311] to notify caller of updated session authorizations.
+  The caller is not expected to persist session data or even a `sessionId`.
+  Note that wallets NOT returning `sessionId`s MUST implement additional methods and notifications to handle the full lifecycle of the session:
+  _ [`wallet_getSession`][CAIP-312] to enable the caller to query for the current status of the session at any time.
+  _ [`wallet_revokeSession`][CAIP-285] to explicitly end the session \* [`wallet_sessionChanged`][CAIP-311] to notify caller of updated session authorizations.
 
 After a session is established between wallet and caller, subsequent `wallet_createSession` calls can be used to update the properties and authorization scopes of the session.
-- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls either: 
+
+- When a `sessionId` is returned in the initial `wallet_createSession` response, subsequent `wallet_createSession` calls either:
   - include a previously used `sessionId` on the root of the request meaning this request is intended to modify that session, or
   - do not include a `sessionId`, in which case a new session is created - the respondent generates a new `sessionId` and sends it with the success response - and the previous session dangles in parallel (until its expiration, if applicable), though maintaining concurrent sessions is discouraged (see Security Considerations).
 - When the wallet does not provide a `sessionId` in its initial response, subsequent `wallet_createSession` calls overwrite the previous singular session between caller and wallet.
@@ -56,10 +57,11 @@ When a user wishes to update the authorizations of an active session from within
 If a connection is initially established without a `sessionId` and the wallet later implements `sessionId` support, the wallet can revoke the single session and notify the caller via `wallet_sessionChanged`. When the caller seeks to re-establish the session via `wallet_createSession`, the wallet should return a `sessionId` in the response.
 
 When a caller wishes revoke an active session, it can do so by calling [`wallet_revokeSession`][CAIP-285].
+
 - When a `sessionId` is returned in the initial `wallet_createSession` response, the caller MUST call `wallet_revokeSession` with the supplied `sessionId` to revoke that session.
 - When the wallet does not provide a `sessionId` in its initial response, a call to `wallet_revokeSession` revokes the single active session between caller and wallet.
 
-For more detail on the lifecycle and management of sessions with and without `sessionId`s, see the informational [CAIP-316][].
+For more detail on the lifecycle and management of sessions with and without `sessionId`s, see the informational [CAIP-316][]
 
 #### Session Data and Metadata
 
@@ -119,7 +121,7 @@ Example:
     },
     "scopedProperties": {
       "eip155:42161": {
-        "extension_foo": "bar"    
+        "extension_foo": "bar"
       }
     },
     "sessionProperties": {
@@ -162,10 +164,11 @@ The wallet can respond to this method with either a success result or an error m
 The successful result MAY contain a string (keyed as `sessionId` with a value conformant to [CAIP-171][]). As described above, if a `sessionId` is returned in the response, the caller should persist and track the properties and authorization scopes associated with this `sessionid`. If the wallet does not return a `sessionId` in the response, the connection will only consist of one session at a time, the contents of which are always retrievable for the caller via [`wallet_getSession`][CAIP-312].
 
 The successful result MUST contain an object called `sessionScopes` which contains 1 or more `scopeObjects`.
+
 - All required `scopeObjects` and all, none, or some of the optional `scopeObject`s (at the discretion of the provider) MUST be included if successful.
 - Unlike the request, each scope object MUST also contain an `accounts` array,
-containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
-and valid in that scope. Additional constraints on the accounts authorized for a given session MUST be applied conformant to the namespace's [CAIP-10][] profile, if one has been specified.
+  containing 0 or more [CAIP-10][]-conformant accounts authorized for the session
+  and valid in that scope. Additional constraints on the accounts authorized for a given session MUST be applied conformant to the namespace's [CAIP-10][] profile, if one has been specified.
 
 A `scopedProperties` object MAY also be present, each member of which corresponds to exactly 1 `sessionScope`.
 This is intended for expressing connection-specific or non-standardized extensions to `sessionScope`.
@@ -210,7 +213,7 @@ An example of a successful response follows:
       "cosmos": {
         ...
       }
-    },      
+    },
     "scopedProperties": {
       "eip155:42161": {
         "walletExtensionConfig": {
@@ -283,7 +286,6 @@ The valid error messages codes are the following:
   - code = 5102
   - message = "Requested notifications are not supported"
 
-
 ##### Trust-Agnostic Malformed Request Failure Codes
 
 Regardless of caller trust level, the following error responses can reduce friction and user experience problems in the case of malformed requests.
@@ -296,7 +298,7 @@ Regardless of caller trust level, the following error responses can reduce frict
   - message = "Unknown notification(s) requested"
 - When a badly-formed request defines one `chainId` two ways
   - code = 5204
-  - message = "ChainId defined in two different scopes"  
+  - message = "ChainId defined in two different scopes"
 - Invalid scopedProperties Object
   - code = 5300
   - message = "Invalid scopedProperties requested"
@@ -339,7 +341,7 @@ respondents are recommended to ignore calls
 3. which are rejected for unknown reasons.
 
 "Ignoring" these calls means responding to all three in a way that is
-*indistinguishable* to a malicious caller or observer which might deduce
+_indistinguishable_ to a malicious caller or observer which might deduce
 information from differences in those responses (including the time taken to
 provide them). Effectively, this means allowing requests in all three cases to
 time out even if the end-user experience might be better served by
@@ -364,13 +366,13 @@ further in the future could expect one of exactly three responses:
 1. An identical response to the previous request (meaning the session extension was denied);
 2. A response identical expect that it includes the new, extended session expiry; or,
 3. A silent time out (meaning the calling behavior was malformed in ways the
-respondent cannot understand, or the respondent choses not to make explicit how
-the request was malformed, or the end-user rejected them, or the request itself
-was in violation of policy).
+   respondent cannot understand, or the respondent choses not to make explicit how
+   the request was malformed, or the end-user rejected them, or the request itself
+   was in violation of policy).
 
 ## Changelog
 
--- 2024-07-29: added lifecycle management methods and notification for single session connections, see [CAIP-316][] for equivalence chart and diagrams
+- 2024-07-29: added lifecycle management methods and notification for single session connections, see [CAIP-316][] for equivalence chart and diagrams
 - 2024-07-16: redefined requiredScopes to be functionally equivalent to optionalScopes, but semantically different; previously, authorizing less than 100% of reqScopes required rejecting the connection
 - 2023-03-29: refactored out scopeObject syntax as separate CAIP-217, simplified
 - 2022-11-26: add mandatory indexing by session identifier (i.e. CAIP-171 requirement)
@@ -386,7 +388,7 @@ was in violation of policy).
 - [CAIP-285][] - `wallet_revokeSession` Specification
 - [CAIP-312][] - `wallet_getSession` Specification
 - [CAIP-311][] - `wallet_sessionChanged` Specification
-- [CAIP-316][] -  Session Lifecycle Management equivalence chart and diagrams
+- [CAIP-316][] - Session Lifecycle Management equivalence chart and diagrams
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
 [CAIP-10]: https://chainagnostic.org/CAIPs/caip-10
@@ -397,8 +399,6 @@ was in violation of policy).
 [CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
 [CAIP-311]: https://chainagnostic.org/CAIPs/CAIP-311
 [CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
-[namespaces]: https://namespaces.chainagnostic.org
-[RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
 
 ## Copyright
 
