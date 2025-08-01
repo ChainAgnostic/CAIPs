@@ -82,7 +82,10 @@ e.g., one or more specific failure states MAY be sent (see [#### failure states]
 
 After parsing and authorizing separately all the networks and capabilities within each, a respondent establishes a connection by returning a success response that organizes all authorized features of each authorized scope in a single unified object of `scopeObject`s called `sessionScopes`.
 In the case of identically-keyed `scopeObject`s appearing in both top-level objects in the request (`requestedScopes` and `optionalScopes`), the identically-scoped objects MUST be merged in the response, since `sessionScopes` MUST NOT contain redundant keys (see examples below).
-However, respondents MUST NOT restructure scopes (e.g., by folding properties from a [CAIP-2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed, namespace-wide scope object) as this may introduce ambiguities (See Security Considerations below).
+
+However, respondents SHOULD exercise caution when restructuring scopes.
+Folding properties from a [CAIP-2][]-keyed, chain-specific scope object into a [CAIP-104][]-keyed, namespace-wide scope object, for example, may introduce ambiguities or violate the law of Least Privilege;
+it is safer, in such cases, to restructure in the opposite direction, i.e. from compact [CAIP-104] scopes into more verbose single-chain [CAIP-2] requests. (See Security Considerations below).
 
 ### Request
 
@@ -296,6 +299,9 @@ Regardless of caller trust level, the following error responses can reduce frict
 - When provider does not recognize one or more requested notification(s)
   - code = 5202
   - message = "Unknown notification(s) requested"
+- When a badly-formed request includes a network reference invalid in that scope
+  - code = 5203
+  - message = "Chain reference invalid for given scope"
 - When a badly-formed request defines one `chainId` two ways
   - code = 5204
   - message = "ChainId defined in two different scopes"
@@ -326,6 +332,55 @@ are structures as objects full of objects keyed to these scopes, formatted eithe
 translate this object into other structures, preserving it in the CAIP-25
 interface is crucial to the unambiguous communication between caller and
 respondent about what exact authorization is granted.
+
+### Ambiguity Between Different Types of Scopes
+
+In the examples given above, there is no overlap between the two `eip155` chains authorized identically in compact form (1, 137) and the three additional chains identified in free-standing scopes (10, 42161, 0).
+
+In cases where a given chain appears in both, it can be ambiguous what the intended behavior was.
+Depending on the security posture of the respondent, the ambiguity MAY be rejected using error code 5204, or the respondent MAY err on the side of [Postel's Law permissiveness][postel], returning a disambiguated response with all authorizations for a given chain moved into a single scope to confirm the intention.
+
+For example, the request
+
+```json
+//...
+    "requiredScopes": {
+      "eip155": {
+        "references": ["1", "10", "137"],
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign"],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": ["eip155:10:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb", "eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
+      },
+      "eip155:10": {
+        "methods": ["personal_sign"],
+        "notifications": ["accountsChanged"],
+        "accounts:" []
+      },
+//...
+```
+
+Can be returned as
+
+```json
+//...
+    "sessionScopes": {
+      "eip155": {
+        "references": ["1", "137"],
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign"]
+        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": ["eip155:137:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
+      },
+      "eip155:10": {
+        "methods": ["eth_sendTransaction", "eth_signTransaction", "get_balance", "eth_sign", "personal_sign"]
+        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": ["eip155:10:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"]
+      },
+//...
+```
+
+Note that the reference "10" has been moved out of the compact multi-reference scope, and that the union of all methods and notifications authorized to chainId reference `10` in both requested scopes has been granted to it in the latter.
+Also note that the `accounts` array of both scope objects has been updated, as the `eip155:10` account is no longer valid in the compact scope after the removal of `10` from the `references` array; likewise, the union of the compact scope's array and the empty array of the requested `eip155:10` scope, minus the invalid terms, leaves an array with only one member, an `eip155:10` account.
+
 
 ## Privacy Considerations
 
@@ -401,6 +456,7 @@ was in violation of policy).
 [CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
 [namespaces]: https://namespaces.chainagnostic.org
 [RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339#section-5.6
+[postel]: https://www.rfc-editor.org/rfc/rfc760#section-3.2
 
 ## Copyright
 
