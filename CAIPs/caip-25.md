@@ -1,7 +1,7 @@
 ---
 caip: 25
 title: Wallet Create Session JSON-RPC Method
-author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88)
+author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88), Alex Donesky (@adonesky1), Jiexi Luan (@jiexi)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Review
 type: Standard
