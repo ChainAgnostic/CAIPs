@@ -110,7 +110,7 @@ window.dispatchEvent(new CustomEvent(
 
 
 
-// Wallet Providers starts listenning on init
+// Wallet Providers starts listening on init
 window.addEventListener("caip294:wallet_prompt", (event) => {
   // when a prompt message was received then the wallet will announces again
   window.dispatchEvent(new CustomEvent(
