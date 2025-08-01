@@ -1,5 +1,5 @@
 ---
-caip: CAIP-358
+caip: 358
 title: Universal Payment Request Method
 author: Luka Isailovic (@lukaisailovic), Derek Rein (@arein)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/358
