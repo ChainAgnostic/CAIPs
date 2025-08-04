@@ -125,7 +125,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
     },
     "properties": {
       "expiry": "2022-12-24T17:07:31+00:00",
-      "caip154-mandatory": "true"
+      "caip369-personalInfo": "true"
     }
   }
 }
@@ -216,7 +216,11 @@ A successful response includes:
     },
     "properties": {
       "expiry": "2022-12-24T17:07:31+00:00",
-      "caip154-mandatory": "true"
+      "caip369-personalInfo": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "emailAddress": "johndoe@email.org"
+      }
     }
   }
 }
