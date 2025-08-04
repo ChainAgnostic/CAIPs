@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Review
 type: Standard
 created: 2020-10-14
-updated: 2025-07-31
+updated: 2025-08-04
 requires: 2, 10, 171, 217, 285, 311, 312
 ---
 
@@ -20,7 +20,7 @@ This proposal defines a standard procedure for decentralized applications to int
 
 ## Motivation
 
-The lack of standardization across blockchains for exposing accounts and defining expected JSON-RPC methods has created inconsistencies. CAIP-25 addresses this by enabling a unified, session-based interface between applications and wallets.
+The absence of standardized interfaces and abstractions for reading from and writing to blockchains such as consistent account models and JSON-RPC method specifications has fragmented application and wallet interactions. CAIP-25 resolves this by defining a unified, session-based interface that standardizes communication between applications and wallets.
 
 ## Specification
 
@@ -32,7 +32,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 #### Session Lifecycle
 
-The session is proposed by a caller and accepted by the respondent. The respondent may return a `sessionId` which both parties then persist along with session properties and authorization scopes.
+The session is proposed by a caller and accepted by the respondent. The respondent may return a `sessionId` which both parties then persist along with session properties and authorization scopes. See [CAIP-316][] for guidance on session lifecycles with and without `sessionId`s.
 
 If a wallet does not return a `sessionId`, it MUST track session data internally. The caller is not required to persist any session state but may query or revoke sessions via [`wallet_getSession`][CAIP-312], [`wallet_revokeSession`][CAIP-285], or receive updates via [`wallet_sessionChanged`][CAIP-311].
 
@@ -47,13 +47,13 @@ Callers may revoke sessions using `wallet_revokeSession`, either by `sessionId` 
 
 #### Session Data and Metadata
 
-Authorization requests are expressed as a top-level object `sessionScopes` containing keyed [scopeObjects][CAIP-217].
+Authorization requests are expressed as a top-level object `scopes` containing keyed [scopeObjects][CAIP-217].
 
-Each `scopeObject` is keyed by a [CAIP-2][] network ID or [CAIP-104][] namespace. Namespace-scoped `scopeObjects` SHOULD include a non-empty `references` array for actionable requests. An absent or empty `references` array implies null authorization within the namespace.
+Each `scopeObject` is keyed by a [CAIP-2][] chain ID.
 
 Wallets MAY authorize a subset of scopes. This enables granular control and flexibility.
 
-Upon successful negotiation, the response includes a unified `sessionScopes` object containing all granted scopes. Identically-keyed `scopeObjects` from multiple requests MUST be merged. No duplicate keys are allowed.
+Upon successful negotiation, the response includes a unified `scopes` object containing all granted scopes. Identically-keyed `scopeObjects` from multiple requests MUST be merged. No duplicate keys are allowed.
 
 Respondents MUST NOT restructure scope formats (e.g., converting chain-specific keys into namespace-wide keys).
 
@@ -67,42 +67,53 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
   "jsonrpc": "2.0",
   "method": "wallet_createSession",
   "params": {
-    "sessionScopes": {
-      "eip155": {
-        "references": ["1", "137"],
+    "scopes": {
+      "eip155:1": {
         "methods": ["eth_sendTransaction", "personal_sign"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {}
+      },
+      "eip155:8453": {
+        "methods": ["eth_sendTransaction", "personal_sign"],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {}
       },
       "eip155:42161": {
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {
+          "atomicBatch": "true"
+        }
       },
       "eip155:0": {
         "methods": ["wallet_grantPermissions"],
-        "notifications": []
+        "notifications": [],
+        "capabilities": {}
       },
-      "solana": {
-        "references": [
-          "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
-          "EtWTRABZaYq6iMfeYKouRu166VU2xqa1"
-        ],
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
           "solana_signAndSendTransaction"
         ],
-        "notifications": []
-      }
-    },
-    "sessionCapabilities": {
-      "eip155:42161": {
-        "atomicBatch": "true"
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["legacy", "0"]
+        }
       },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
-        "supportedTransactionVersions": ["legacy", "0"]
+      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
+        "methods": [
+          "solana_signMessage",
+          "solana_signTransaction",
+          "solana_signAndSendTransaction"
+        ],
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["legacy"]
+        }
       }
     },
-    "sessionProperties": {
+    "properties": {
       "expiry": "2022-12-24T17:07:31+00:00",
       "caip154-mandatory": "true"
     }
@@ -110,11 +121,9 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
 }
 ```
 
-The `sessionScopes` object MUST contain one or more scopeObjects.
+The `scopes` object MUST contain one or more scopeObjects.
 
-The `sessionCapabilities` object MAY be present and provides metadata or annotations tied to specific `sessionScopes` keys.
-
-The `sessionProperties` object MAY be included for global session metadata.
+The `properties` object MAY be included for global session metadata.
 
 ### Response
 
@@ -128,48 +137,70 @@ A successful response includes:
   "jsonrpc": "2.0",
   "result": {
     "sessionId": "0xdeadbeef",
-    "sessionScopes": {
-      "eip155": {
-        "references": ["1", "137"],
+    "scopes": {
+      "eip155:1": {
+        "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {}
+      },
+      "eip155:8453": {
+        "accounts": ["eip155:8453:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "methods": ["eth_sendTransaction", "personal_sign"],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {}
       },
       "eip155:42161": {
+        "accounts": ["eip155:8453:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {
+          "atomicBatch": "true"
+        }
       },
       "eip155:0": {
         "methods": ["wallet_grantPermissions"],
-        "notifications": []
+        "notifications": [],
+        "capabilities": {}
       },
-      "solana": {
-        "references": [
-          "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
-          "EtWTRABZaYq6iMfeYKouRu166VU2xqa1"
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "accounts": [
+          "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp:7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"
         ],
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
           "solana_signAndSendTransaction"
         ],
-        "notifications": []
-      }
-    },
-    "sessionCapabilities": {
-      "eip155:42161": {
-        "atomicBatch": "true"
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["legacy", "0"]
+        }
       },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
-        "supportedTransactionVersions": ["legacy", "0"]
+      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
+        "accounts": [
+          "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z:6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"
+        ],
+        "methods": [
+          "solana_signMessage",
+          "solana_signTransaction",
+          "solana_signAndSendTransaction"
+        ],
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["legacy"]
+        }
       }
     },
-    "sessionProperties": {
+    "properties": {
       "expiry": "2022-12-24T17:07:31+00:00",
       "caip154-mandatory": "true"
     }
   }
 }
 ```
+
+The `scopes` object MAY contain `accounts` as part of its `scopeObject` for success response.
 
 #### Error
 
@@ -178,12 +209,12 @@ The wallet MAY return generic or specific error messages depending on trust. Tru
 - `5000`: Unknown error
 - `5001`: User disapproved requested methods
 - `5002`: User disapproved requested notifications
-- `5100-5102`: Unsupported networks, methods, or notifications
+- `5100-5102`: Unsupported chains, methods, or notifications
 - `5201-5302`: Malformed requests
 
 ## Security Considerations
 
-To avoid ambiguity in authorizations, `sessionScopes` MUST retain their original keyed structure using [CAIP-2][] or [CAIP-104][] identifiers. This ensures clarity in what is authorized and prevents accidental scope merging or misinterpretation.
+To avoid ambiguity in authorizations, `scopes` MUST retain their original keyed structure using [CAIP-2][] or [CAIP-104][] identifiers. This ensures clarity in what is authorized and prevents accidental scope merging or misinterpretation.
 
 ## Privacy Considerations
 
@@ -191,8 +222,10 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 
 ## Changelog
 
-- 2025-07-31: Removed `requiredScopes` and retained only `sessionScopes` (fka `optionalScopes`).
-- 2025-07-30: Renamed `optionalScopes` to `sessionScopes` and `scopedProperties` to `sessionCapabilities`
+- 2025-08-04: Merged `capabilities` (fka `scopedProperties`) into `scopeObjects`.
+- 2025-08-03: Removed Namespace-scoped `scopeObjects` and retained only Chain-scoped `scopeObjects`
+- 2025-07-31: Removed `requiredScopes` and retained only `scopes` (fka `optionalScopes`).
+- 2025-07-30: Renamed `optionalScopes` to `scopes`, `scopedProperties` to `capabilities` and `sessionProperties` to `properties`
 - 2024-07-29: Added lifecycle management methods and notification for single session connections
 - 2024-07-16: Redefined scope negotiation behavior
 - 2023-03-29: Refactored `scopeObject` syntax to CAIP-217
