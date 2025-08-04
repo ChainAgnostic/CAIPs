@@ -74,21 +74,31 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
         "capabilities": {}
       },
       "eip155:8453": {
-        "methods": ["eth_sendTransaction", "personal_sign"],
-        "notifications": ["accountsChanged", "chainChanged"],
-        "capabilities": {}
-      },
-      "eip155:42161": {
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
           "atomicBatch": "true"
         }
       },
+      "eip155:42161": {
+        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {
+          "atomicBatch": "true",
+          "paymasterService": {
+            "url": "https://...",
+            "optional": true
+          }
+        }
+      },
       "eip155:0": {
         "methods": ["wallet_grantPermissions"],
         "notifications": [],
-        "capabilities": {}
+        "capabilities": {
+          "signInWithEthereum": {
+            "nonce": "12345678"
+          }
+        }
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "methods": [
@@ -146,22 +156,34 @@ A successful response includes:
       },
       "eip155:8453": {
         "accounts": ["eip155:8453:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
-        "methods": ["eth_sendTransaction", "personal_sign"],
-        "notifications": ["accountsChanged", "chainChanged"],
-        "capabilities": {}
-      },
-      "eip155:42161": {
-        "accounts": ["eip155:8453:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
           "atomicBatch": "true"
         }
       },
+      "eip155:42161": {
+        "accounts": ["eip155:42161:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {
+          "atomicBatch": "true",
+          "paymasterService": {
+            "url": "https://...",
+            "optional": true
+          }
+        }
+      },
       "eip155:0": {
         "methods": ["wallet_grantPermissions"],
         "notifications": [],
-        "capabilities": {}
+        "capabilities": {
+          "signInWithEthereum": {
+            "nonce": "12345678",
+            "message": "0x...",
+            "signature": "0x..."
+          }
+        }
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "accounts": [
