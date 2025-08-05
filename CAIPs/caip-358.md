@@ -243,20 +243,21 @@ It also does not attempt to provide dispute functionality. These present ideas f
 
 ### Wallet Address Sharing
 
-Wallet addresses were intentionally left off here both for a purpose of UX simplicity as well as privacy. By opting to limit the usage of a wallet address,
-we make it so this API can be implemented without first needing to request permission for the user's wallet address. The wallet address acts as a cross-origin identifier
-which can be used to link a user's financial transactions across sites.  Since the wallet address is not needed, we can leave this up to the wallet to address this. 
-Therefore, it's the responsibility of the wallet to determine if possible which wallet or token they wish to make a payment from. This may be done automatically to improve the user experience or allowing the user to select and override assumed defaults.
+Wallet addresses were intentionally omitted here both for the purpose of UX simplicity as well as for privacy.
+By opting to limit the usage of a wallet address, we make this API implementable without first needing to request permission for the user's wallet address.
+The wallet address acts as a cross-origin identifier which can be used to link a user's financial transactions across sites.
+Since the wallet address is not needed, we can leave it up to the wallet which address to use.
+Furthermore, it is also the responsibility of the wallet to determine if possible which token they wish to make a payment from, if multiple are accepted.
+This may be done automatically to improve the user experience or allowing the user to select and override assumed defaults.
 
 ### Transaction Privacy
 
-Wallets are encouraged to utilize transaction privacy protocols to prevent payment data from leaking browsing history onchain. A sufficient transaction privacy protocol
-are expected prevent someone from viewing the tranasaction on a block explorer from identifying either the sender, the recipient, or both parties having transacted. A
-protocol which focuses only on the sender's privacy will prevent leaking of purchase data being used to build a behavioral profile through purchase history of an onchain account.
-A protocol which focuses only on recipient privacy will prevent leaking real-time transaction data of businesses potentially not looking to let their competitors or investors
-rebuilding their sales data which they've opted not to publish for competitive reasons, purchases from their suppliers, or other financial data that's considered intellectual
-property and trade secrets of most businesses which are not publicly traded. Therefore, it's pertinent that both sender and recipient privacy be accounted for by wallets and
-sites utilizing this RPC.
+Wallets are encouraged to utilize transaction privacy protocols to prevent payment data from leaking browsing history onchain.
+A complete transaction privacy protocol can be defined as one that prevents manual or automated analysis of transaction data on-chain (e.g. on a block explorer) being enough to identify the sender and/or the recipient of a given transaction.
+A protocol which protects the sender's privacy will prevent leaking of purchase data being used to build a behavioral profile through purchase history of an onchain account.
+A protocol which focuses only on recipient (e.g. merchant) privacy will prevent leaking real-time transaction data of businesses which may constitute "business intelligence" that enables reverse engineering of business practices, intellectual
+property, trade secrets, etc.
+Depending on the use-case, either or both may be necessary to prevent this RPC's on-chain records creating damaging externalities.
 
 ## Backwards Compatibility
 
