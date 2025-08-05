@@ -246,7 +246,7 @@ It also does not attempt to provide dispute functionality. These present ideas f
 Wallet addresses were intentionally left off here both for a purpose of UX simplicity as well as privacy. By opting to limit the usage of a wallet address,
 we make it so this API can be implemented without first needing to request permission for the user's wallet address. The wallet address acts as a cross-origin identifier
 which can be used to link a user's financial transactions across sites.  Since the wallet address is not needed, we can leave this up to the wallet to address this. 
-Therefore, it's the responsibility of the wallet to request from the user which wallet or token they wish to make a payment from.
+Therefore, it's the responsibility of the wallet to determine if possible which wallet or token they wish to make a payment from. This may be done automatically to improve the user experience or allowing the user to select and override assumed defaults.
 
 ### Transaction Privacy
 
