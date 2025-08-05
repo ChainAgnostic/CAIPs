@@ -241,7 +241,22 @@ It also does not attempt to provide dispute functionality. These present ideas f
 
 ## Privacy Considerations
 
-TODO
+### Wallet Address Sharing
+
+Wallet addresses were intentionally left off here both for a purpose of UX simplicity as well as privacy. By opting to limit the usage of a wallet address,
+we make it so this API can be implemented without first needing to request permission for the user's wallet address. The wallet address acts as a cross-origin identifier
+which can be used to link a user's financial transactions across sites.  Since the wallet address is not needed, we can leave this up to the wallet to address this. 
+Therefore, it's the responsibility of the wallet to request from the user which wallet or token they wish to make a payment from.
+
+### Transaction Privacy
+
+Wallets are encouraged to utilize transaction privacy protocols to prevent payment data from leaking browsing history onchain. A sufficient transaction privacy protocol
+are expected prevent someone from viewing the tranasaction on a block explorer from identifying either the sender, the recipient, or both parties having transacted. A
+protocol which focuses only on the sender's privacy will prevent leaking of purchase data being used to build a behavioral profile through purchase history of an onchain account.
+A protocol which focuses only on recipient privacy will prevent leaking real-time transaction data of businesses potentially not looking to let their competitors or investors
+rebuilding their sales data which they've opted not to publish for competitive reasons, purchases from their suppliers, or other financial data that's considered intellectual
+property and trade secrets of most businesses which are not publicly traded. Therefore, it's pertinent that both sender and recipient privacy be accounted for by wallets and
+sites utilizing this RPC.
 
 ## Backwards Compatibility
 
