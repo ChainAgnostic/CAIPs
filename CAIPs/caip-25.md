@@ -43,7 +43,7 @@ Subsequent `wallet_createSession` calls may:
 
 Session updates initiated by the wallet must notify the caller using `wallet_sessionChanged`.
 
-Callers may revoke sessions using `wallet_revokeSession`, either by `sessionId` or directly if no sessionId was established.
+Callers may revoke sessions using `wallet_revokeSession`, passing the `sessionId` parameter if it was returned by the initial response.
 
 #### Session Data and Metadata
 
