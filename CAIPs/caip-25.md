@@ -41,7 +41,7 @@ Subsequent `wallet_createSession` calls may:
 - Update an existing session by including the same `sessionId`
 - Create a new session if no `sessionId` is provided (discouraged)
 
-Session updates triggered by the wallet must notify the caller using `wallet_sessionChanged`.
+Session updates initiated by the wallet must notify the caller using `wallet_sessionChanged`.
 
 Callers may revoke sessions using `wallet_revokeSession`, either by `sessionId` or directly if no sessionId was established.
 
