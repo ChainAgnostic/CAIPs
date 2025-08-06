@@ -16,7 +16,7 @@ CAIP-25 defines an authorization procedure for a chain agnostic provider to inte
 
 ## Abstract
 
-This proposal defines a standard procedure for decentralized applications to interface with chain agnostic cryptocurrency wallets and other user agents that govern identities (including accounts) across multiple cryptographic systems. It specifies a lightweight protocol for negotiating and persisting authorizations during a session managed by a provider construct.
+This proposal defines a standard procedure for decentralized applications to interface with chain agnostic cryptocurrency wallets and other user agents that govern identities (including accounts) across multiple cryptographic systems. It specifies a lightweight protocol for negotiating and persisting authorizations during a session managed either by an in-DOM provider construct, by a securely-addressed browser extensions, or by a distinct user-agent.
 
 ## Motivation
 
