@@ -49,7 +49,7 @@ Callers may revoke sessions using `wallet_revokeSession`, passing the `sessionId
 
 Authorization requests are expressed as a top-level object `scopes` containing keyed [scopeObjects][CAIP-217].
 
-Each `scopeObject` is keyed by a [CAIP-2][] chain ID.
+Each `scopeObject` is keyed by a [CAIP-2][] chain ID. A null identifier can be used to refer to a scope that applies to ANY chain within that namespace (eg. `eip155:0`)
 
 Wallets MAY authorize a subset of scopes. This enables granular control and flexibility.
 
