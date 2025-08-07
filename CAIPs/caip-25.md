@@ -53,7 +53,7 @@ Each `scopeObject` is keyed by a [CAIP-2][] chain ID. A null reference can be us
 
 Wallets MAY authorize a subset of scopes. This enables granular control and flexibility.
 
-Upon successful negotiation, the response includes a unified `scopes` object containing all granted scopes. Identically-keyed `scopeObjects` from multiple requests MUST be merged. No duplicate keys are allowed.
+Upon successful negotiation, the response includes a unified `scopes` object containing all granted scopes. Identically-keyed `scopeObjects` from multiple requests MUST be merged. No duplicate scopes with identical keys are allowed.
 
 Respondents MUST NOT restructure scope formats (e.g., converting chain-specific keys into namespace-wide keys).
 
