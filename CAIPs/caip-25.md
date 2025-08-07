@@ -70,35 +70,19 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
     "scopes": {
       "eip155:1": {
         "methods": ["eth_sendTransaction", "personal_sign"],
-        "notifications": ["accountsChanged", "chainChanged"],
-        "capabilities": {}
+        "notifications": ["accountsChanged", "chainChanged"]
       },
       "eip155:8453": {
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"],
-        "capabilities": {
-          "atomicBatch": "true"
-        }
+        "notifications": ["accountsChanged", "chainChanged"]
       },
       "eip155:42161": {
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"],
-        "capabilities": {
-          "atomicBatch": "true",
-          "paymasterService": {
-            "url": "https://...",
-            "optional": true
-          }
-        }
+        "notifications": ["accountsChanged", "chainChanged"]
       },
       "eip155:0": {
         "methods": ["wallet_grantPermissions"],
-        "notifications": [],
-        "capabilities": {
-          "signInWithEthereum": {
-            "nonce": "12345678"
-          }
-        }
+        "notifications": []
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "methods": [
@@ -106,10 +90,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
           "solana_signTransaction",
           "solana_signAndSendTransaction"
         ],
-        "notifications": [],
-        "capabilities": {
-          "supportedTransactionVersions": ["legacy", "0"]
-        }
+        "notifications": []
       },
       "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
         "methods": [
@@ -117,15 +98,11 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
           "solana_signTransaction",
           "solana_signAndSendTransaction"
         ],
-        "notifications": [],
-        "capabilities": {
-          "supportedTransactionVersions": ["legacy"]
-        }
+        "notifications": []
       }
     },
     "properties": {
-      "expiry": "2022-12-24T17:07:31+00:00",
-      "caip369-personalInfo": "true"
+      "expiry": "2022-12-24T17:07:31+00:00"
     }
   }
 }
@@ -177,13 +154,7 @@ A successful response includes:
       "eip155:0": {
         "methods": ["wallet_grantPermissions"],
         "notifications": [],
-        "capabilities": {
-          "signInWithEthereum": {
-            "nonce": "12345678",
-            "message": "0x...",
-            "signature": "0x..."
-          }
-        }
+        "capabilities": {}
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "accounts": [
@@ -215,12 +186,7 @@ A successful response includes:
       }
     },
     "properties": {
-      "expiry": "2022-12-24T17:07:31+00:00",
-      "caip369-personalInfo": {
-        "firstName": "John",
-        "lastName": "Doe",
-        "emailAddress": "johndoe@email.org"
-      }
+      "expiry": "2022-12-24T17:07:31+00:00"
     }
   }
 }
