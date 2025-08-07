@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Review
 type: Standard
 created: 2020-10-14
-updated: 2025-08-04
+updated: 2025-08-07
 requires: 2, 10, 171, 217, 285, 311, 312
 ---
 
@@ -210,6 +210,7 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 
 ## Changelog
 
+- 2025-08-07: Remove `capababilities` from request AND remove CAIP-2 prefix from `accounts`
 - 2025-08-04: Merged `capabilities` (fka `scopedProperties`) into `scopeObjects`.
 - 2025-08-03: Removed Namespace-scoped `scopeObjects` and retained only Chain-scoped `scopeObjects`
 - 2025-07-31: Removed `requiredScopes` and retained only `scopes` (fka `optionalScopes`).
