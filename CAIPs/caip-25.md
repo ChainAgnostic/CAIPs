@@ -126,13 +126,13 @@ A successful response includes:
     "sessionId": "0xdeadbeef",
     "scopes": {
       "eip155:1": {
-        "accounts": ["eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {}
       },
       "eip155:8453": {
-        "accounts": ["eip155:8453:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
@@ -140,7 +140,7 @@ A successful response includes:
         }
       },
       "eip155:42161": {
-        "accounts": ["eip155:42161:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
@@ -157,9 +157,7 @@ A successful response includes:
         "capabilities": {}
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
-        "accounts": [
-          "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp:7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"
-        ],
+        "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
@@ -171,9 +169,7 @@ A successful response includes:
         }
       },
       "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
-        "accounts": [
-          "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z:6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"
-        ],
+        "accounts": ["6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"],
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
@@ -192,7 +188,7 @@ A successful response includes:
 }
 ```
 
-The `scopes` object MAY contain `accounts` as part of its `scopeObject` for success response.
+The `scopes` object MUST contain `accounts` and `capabilities` as part of its `scopeObject` for success response.
 
 #### Error
 
