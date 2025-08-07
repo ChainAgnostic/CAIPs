@@ -51,7 +51,7 @@ Authorization requests are expressed as a top-level object `scopes` containing k
 
 Each `scopeObject` is keyed by a [CAIP-2][] chain ID. A null reference can be used to refer to a scope that applies to ANY chain within that namespace (eg. `eip155:0`)
 
-Wallets MAY authorize a subset of scopes. This enables granular control and flexibility.
+Wallets MAY authorize a subset of scopes or scope properties as requested, and MAY also authorize additional scopes or scope properties. This enables granular control and flexibility on the part of the respondent.
 
 Upon successful negotiation, the response includes a unified `scopes` object containing all granted scopes. Identically-keyed `scopeObjects` from multiple requests MUST be merged. No duplicate scopes with identical keys are allowed.
 
