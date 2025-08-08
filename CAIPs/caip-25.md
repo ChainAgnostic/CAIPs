@@ -136,7 +136,9 @@ A successful response includes:
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
-          "atomicBatch": "true"
+          "atomic": {
+            "status": "supported"
+          }
         }
       },
       "eip155:42161": {
@@ -144,7 +146,9 @@ A successful response includes:
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
-          "atomicBatch": "true",
+          "atomic": {
+            "status": "supported"
+          },
           "paymasterService": {
             "url": "https://...",
             "optional": true
