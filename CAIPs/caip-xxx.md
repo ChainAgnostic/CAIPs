@@ -18,7 +18,7 @@ The wallet URI scheme is defined as follows:
 
 `web3://wallet_getAccounts`
 
-When invoked by a wallet, this intent will return all wallet addresses in the CAIP-10 format:
+When invoked by an application, this intent will return all wallet addresses in the CAIP-10 format:
 
 `[namespace:reference:address]`
 
