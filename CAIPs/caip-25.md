@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/25
 status: Review
 type: Standard
 created: 2020-10-14
-updated: 2025-08-07
+updated: 2025-08-11
 requires: 2, 10, 171, 217, 285, 311, 312
 ---
 
@@ -67,6 +67,10 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
   "jsonrpc": "2.0",
   "method": "wallet_createSession",
   "params": {
+    "wallet": {
+      "methods": ["wallet_authenticate", "wallet_pay"],
+      "notifications": []
+    },
     "scopes": {
       "eip155:1": {
         "methods": ["eth_sendTransaction", "personal_sign"],
@@ -81,7 +85,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
         "notifications": ["accountsChanged", "chainChanged"]
       },
       "eip155:0": {
-        "methods": ["wallet_grantPermissions"],
+        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
         "notifications": []
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
@@ -108,6 +112,8 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
 }
 ```
 
+The `wallet` object MUST be included for wallet-level method and notification requests.
+
 The `scopes` object MUST contain one or more scopeObjects.
 
 The `properties` object MAY be included for global session metadata.
@@ -116,14 +122,25 @@ The `properties` object MAY be included for global session metadata.
 
 #### Success
 
-A successful response includes:
-
 ```jsonc
 {
   "id": 1,
   "jsonrpc": "2.0",
   "result": {
     "sessionId": "0xdeadbeef",
+    "wallet": {
+      "methods": ["wallet_authenticate", "wallet_pay"],
+      "notifications": [],
+      "info": {
+        "uuid": "350670db-19fa-4704-a166-e52e178b59d2",
+        "name": "Example Wallet",
+        "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>",
+        "rdns": "com.example.wallet"
+      },
+      "capabilities": {
+        "walletService": "https://wallet-service.example.com/rpc"
+      }
+    },
     "scopes": {
       "eip155:1": {
         "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
@@ -136,9 +153,7 @@ A successful response includes:
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
-          "atomic": {
-            "status": "supported"
-          }
+          "atomic": { "status": "supported" }
         }
       },
       "eip155:42161": {
@@ -146,17 +161,13 @@ A successful response includes:
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
-          "atomic": {
-            "status": "supported"
-          },
-          "paymasterService": {
-            "url": "https://...",
-            "optional": true
-          }
+          "atomic": { "status": "supported" },
+          "paymasterService": { "url": "https://...", "optional": true }
         }
       },
       "eip155:0": {
-        "methods": ["wallet_grantPermissions"],
+        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
         "notifications": [],
         "capabilities": {}
       },
@@ -192,7 +203,9 @@ A successful response includes:
 }
 ```
 
-The `scopes` object MUST contain `accounts` and `capabilities` as part of its `scopeObject` for success response.
+The `wallet` object MAY contain `info` and `capabilities` for success response.
+
+Each entry within `scopes` object MUST contain `accounts` and `capabilities` as part of its object for success response.
 
 #### Error
 
@@ -214,8 +227,9 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 
 ## Changelog
 
+- 2025-08-11: Added top-level `wallet` as mandatory object for both request and response
 - 2025-08-07: Remove `capababilities` from request AND remove CAIP-2 prefix from `accounts`
-- 2025-08-04: Merged `capabilities` (fka `scopedProperties`) into `scopeObjects`.
+- 2025-08-04: Merged `capabilities` (fka `scopedProperties`) into `scopeObjects`
 - 2025-08-03: Removed Namespace-scoped `scopeObjects` and retained only Chain-scoped `scopeObjects`
 - 2025-07-31: Removed `requiredScopes` and retained only `scopes` (fka `optionalScopes`).
 - 2025-07-30: Renamed `optionalScopes` to `scopes`, `scopedProperties` to `capabilities` and `sessionProperties` to `properties`
