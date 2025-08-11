@@ -1,7 +1,7 @@
 ---
 caip: 282
 title: Browser Wallet Discovery Interface
-author: Pedro Gomes (@pedrouid)
+author: Pedro Gomes (@pedrouid), Joao Carlos (@ffmcgee725), Jiexi Luan (@jiexi), Alex Donesky (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/282
 status: Draft
 type: Standard
@@ -25,7 +25,7 @@ Users are already installing a wallet application on their devices, and given it
 
 This results not only in a degraded user experience but also increases the barrier to entry for new Wallet Providers as users are incentivized to use more popular Wallet Providers that are more widely supported in more applications.
 
-This situation is further aggravated by differences between blockchain networks such as Ethereum, Cosmos, Solana, Tezos, etc. While some solutions attempt to solve this, such as WalletConnect, [EIP-6963][eip-6963], Solana Wallet Protocol, etc., they do not cover all wallets and are not chain-angostic.
+This situation is further aggravated by low-level differences between blockchain networks such as Ethereum, Cosmos, Solana, Tezos, etc. While some solutions attempt to abstract over these differences, such as WalletConnect, [EIP-6963][eip-6963], Solana Wallet Protocol, etc., they do not cover as wide an array of wallet interfaces and do not optimize for chain-agnosticism.
 
 In this proposal, we present a solution focused on optimizing interoperability for multiple Wallet Providers, fostering fairer competition by reducing the barriers to entry for new Wallet Providers, and enhancing user experience across all blockchain networks.
 
@@ -43,7 +43,7 @@ Blockchain Library: A library or piece of software that assists a dapp to intera
 
 #### Discovery
 
-Both Wallet Providers and blockchain libraries must listen to incoming messages that might be published after their initialization. Additionally both Wallet Providers and blockchain libraries must publish a message to both announce themselves and their intent to connect, respectively.
+Both Wallet Providers and blockchain libraries MUST listen to incoming messages that might be published after their initialization. Additionally both Wallet Providers and blockchain libraries MUST publish a message to both announce themselves and their intent to connect, respectively.
 
 This discovery would use the following JSON-RPC request params:
 
@@ -57,6 +57,7 @@ interface WalletPromptRequestParams {
 // for "wallet_announce" method
 interface WalletAnnounceRequestParams {
   info: WalletInfo;
+  targets?: { type: string; value: any }[];
   scopes?: AuthorizationScopes;
 }
 ```
@@ -65,7 +66,7 @@ Whenever a new Wallet Provider is discovered the Blockchain Library would index 
 
 The `WalletInfo` object is defined by [CAIP-372][] which covers all the Wallet provider necessary to identify and validate the different wallets being announced in the browser.
 
-The only optional parameter is `scopes` which is defined by CAIP-217 authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts.
+The optional parameters are `scopes`, which is defined by [CAIP-217] authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts, and `targets`, which accepts [CAIP-341] Extension ID as a valid target type for establishing connections with browser extension wallets via the [CAIP-294] `wallet_announce` wallet discovery event.
 
 ```typescript
 // Defined by CAIP-217
@@ -119,7 +120,7 @@ Here are some illustrative examples for both JSON-RPC request params:
 }
 
 
-// Example for wallet_prompt
+// Example for wallet_announce
 {
   id: 2,
   jsonrpc: "2.0"
@@ -149,13 +150,13 @@ Regarding security considerations it's important to consider that the WalletData
 
 Application developers are expected to actively detect for misbehavior of properties or functions being modified in order to tamper with or modify other wallets. One way this can be easily achieved is to look for when the uuid property within two WalletData objects match. Applications and Libraries are expected to consider other potential methods that the WalletData objects are being tampered with and consider additional mitigation techniques to prevent this as well in order to protect the user.
 
-### Prevent SVG Javascript Execution
+### Prevent SVG JavaScript Execution
 
 The use of SVG images introduces a cross-site scripting risk as they can include JavaScript code. This JavaScript executes within the context of the page and can modify the page or the contents of the page. So, when considering the experience of rendering the icons, dapps need to take into consideration how they’ll approach handling these concerns in order to prevent an image from being used as an obfuscation technique to hide malicious modifications to the page or to other wallets.
 
 ## Privacy Considerations
 
-Any form of wallet discoverability must alwasys take in consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Wallet Providers can abstain from publishing "Announce" messages on every page load and wait for incoming "Prompt" messages. Yet this opens the possibility for race conditions where Wallet Providers could be initialized after the "Prompt" message was published and therefore be undiscoverable. It is recommended that Wallet Providers offer this more "private connect" feature that users only enable optionally, rather than set by default.
+Any form of wallet discoverability must always take into consideration wallet fingerprinting that can happen by malicious webpages or extensions that attempt to capture user information. Wallet Providers can abstain from publishing "Announce" messages on every page load and wait for incoming "Prompt" messages. Yet this opens the possibility for race conditions where Wallet Providers could be initialized after the "Prompt" message was published and therefore be undiscoverable. It is recommended that Wallet Providers offer this more "private connect" feature that users only enable optionally, rather than set by default.
 
 ## Backwards Compatibility
 
