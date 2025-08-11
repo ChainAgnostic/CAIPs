@@ -58,7 +58,7 @@ interface WalletPromptRequestParams {
 interface WalletAnnounceRequestParams {
   uuid: string;
   name: string;
-  icon: string;
+  icon: string; //base64'd dataURI of type image/{svg+xml|webp|png|gif}
   rdns: string;
   targets?: { type: string, value: any }[],
   scopes?: AuthorizationScopes;
