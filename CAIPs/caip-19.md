@@ -60,7 +60,7 @@ handling of any non-alphanumerics.
 ## Specification of Asset ID
 
 The optional addition of an `asset ID` suffix separated by `/` uniquely
-identifies an addressible asset of a given type in a developer-friendly fashion.
+identifies an addressable asset of a given type in a developer-friendly fashion.
 In the case of non-fungible tokens or other collections, this address is called
 a `token_id` (commonly referred to as a "serial number" since they are often
 sequentially numbered). Note: [ERC721][] defines identifiers for specific tokens

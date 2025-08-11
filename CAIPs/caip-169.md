@@ -1,7 +1,7 @@
 ---
 caip: 169
 title: Simple Credential Interface Provider
-author: Oliver Terbu (@awoie), Mircea Nistor (@mirceanis), Juan Caballero (@bumblefudge)
+author: Oliver Terbu (@awoie), Mircea Nistor (@mirceanis), Bumblefudge (@bumblefudge)
 discussions-to: https://github.com/veramolabs/credential-provider-eip/pulls?q=is%3Apr+
 status: Draft
 type: Standard 
@@ -184,7 +184,7 @@ occur.
 
 Called **by the wallet** to the application, providing the parameters needed for
 a credential issuance and expecting back a verifiable credential OR an error.
-The parameters are formated as a [credential_application object][] as specified
+The parameters are formatted as a [credential_application object][] as specified
 in the [Credential Manifest][] specification.
 
 #### Method:
