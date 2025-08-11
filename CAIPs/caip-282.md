@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/282
 status: Draft
 type: Standard
 created: 2024-05-30
-requires: 25, 27, 217, 275
+requires: 25, 27, 217, 275, 372
 ---
 
 ## Simple Summary
@@ -56,30 +56,25 @@ interface WalletPromptRequestParams {
 
 // for "wallet_announce" method
 interface WalletAnnounceRequestParams {
-  uuid: string;
-  name: string;
-  icon: string;
-  rdns: string;
+  info: WalletInfo;
   scopes?: AuthorizationScopes;
 }
 ```
 
 Whenever a new Wallet Provider is discovered the Blockchain Library would index them in order for the Decentralized Application to display them and prompt the user for selecting their wallet of choice for this connection.
 
-The parameters `name` and `icon` are used to display to the user to be easily recognizable while the `rdns` and `uuid` are only used internally for de-duping while they must always be unique, the `rdns` will always be the same but `uuid` is ephemeral per browser session.
+The `WalletInfo` object is defined by [CAIP-372][] which covers all the Wallet provider necessary to identify and validate the different wallets being announced in the browser.
 
-The only optional parameter is `scps` which is defined by CAIP-217 authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts.
+The only optional parameter is `scopes` which is defined by CAIP-217 authorization specs that enables early discoverability and filtering of wallets based on RPC methods, notifications, documents and endpoints but also optional discovery of supported chains and even accounts.
 
 ```typescript
 // Defined by CAIP-217
 interface AuthorizationScopes {
   [scopeString: string]: {
-    scopes?: string[];
     methods: string[];
     notifications: string[];
     accounts?: string[];
-    rpcDocuments?: string[];
-    rpcEndpoints?: string[];
+    capabilities?: string[];
   };
 }
 ```
@@ -130,10 +125,18 @@ Here are some illustrative examples for both JSON-RPC request params:
   jsonrpc: "2.0"
   method: "wallet_announce",
   params: {
-    uuid:  "350670db-19fa-4704-a166-e52e178b59d2",
-    name: "Example Wallet",
-    icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
-    rdns: "com.example.wallet",
+    info: {
+      uuid:  "350670db-19fa-4704-a166-e52e178b59d2",
+      name: "Example Wallet",
+      icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
+      rdns: "com.example.wallet",
+    },
+    scopes: {
+      "chain:777": {
+        methods: ["chain_signMessage", "chain_sendTransaction"],
+        notifications: ["accountsChanged"],
+      },
+    }
   }
 }
 ```
@@ -171,12 +174,14 @@ The WalletData exposed in this messaging interface is also compatible with EIP-6
 - [CAIP-25][caip-25] - Blockchain ID Specification
 - [CAIP-217][caip-217] - Provider Authorization Scopes
 - [CAIP-275][caip-275] - Domain Wallet Authentication
+- [CAIP-372][caip-372] - Wallet Information Metadata Standard
 
 [eip-6963]: https://eips.ethereum.org/EIPS/eip-6963
 [caip-27]: https://chainagnostic.org/CAIPs/caip-27
 [caip-25]: https://chainagnostic.org/CAIPs/caip-25
 [caip-217]: https://chainagnostic.org/CAIPs/caip-217
 [caip-275]: https://chainagnostic.org/CAIPs/caip-275
+[caip-372]: https://chainagnostic.org/CAIPs/caip-372
 
 ## Copyright
 

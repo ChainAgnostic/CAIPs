@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/294
 status: Draft
 type: Standard
 created: 2024-06-26
-requires: 25, 27, 282
+requires: 25, 27, 282, 372
 ---
 
 ## Simple Summary
@@ -64,9 +64,9 @@ const wallets: Record<string, WalletMapEntry> = {}
 // Blockchain Library starts listening on init
 window.addEventListener("caip294:wallet_announce", (event) => {
   // when an announce message was received then the library can index it by uuid
-  wallets[event.detail.params.uuid] = {
+  wallets[event.detail.params.info.uuid] = {
     params: event.detail.params,
-    eventName: event.detail.params.uuid
+    eventName: event.detail.params.info.uuid
   }
 });
 
@@ -131,7 +131,7 @@ window.addEventListener("caip294:wallet_prompt", (event) => {
 
 After the wallet has been selected by the user then the Blockchain Library MUST publish a message to share its intent to establish a connection. This can be either done as a [CAIP-25][caip-25] request.
 
-The communication will use the `uuid` shared by the initial Wallet Provider announcement payload, which the Wallet Provider will listen to for any incoming requests, and consequently, the Blockchain Library will also be used for publishing messages. The same will happen again the other way around but vice-versa, where the Wallet Provider will be the Blockchain Library that will be listening to any incoming responses, and consequently, the Wallet Provider will also use it for publishing messages.
+The communication will use the `uuid` shared by the initial Wallet Provider announcement payload as described by the [CAIP-372][caip-372] wallet info, which the Wallet Provider will listen to for any incoming requests, and consequently, the Blockchain Library will also be used for publishing messages. The same will happen again the other way around but vice-versa, where the Wallet Provider will be the Blockchain Library that will be listening to any incoming responses, and consequently, the Wallet Provider will also use it for publishing messages.
 
 #### Signing
 
@@ -178,9 +178,9 @@ const wallets: Record<string, WalletMapEntry> = {}
 
 window.addEventListener("caip294:wallet_announce", (event) => {
   // when an announce message was received then the library can index it by uuid
-  wallets[event.detail.params.uuid] = {
+  wallets[event.detail.params.info.uuid] = {
     params: event.detail.params,
-    eventName: event.detail.params.uuid
+    eventName: event.detail.params.info.uuid
   }
 });
 
@@ -213,14 +213,13 @@ const sessionRequest = {
   jsonrpc: "2.0",
   method: "wallet_createSession",
   params: {
-    optionalScopes: {
-      eip155: {
-        scopes: ["chain:777"],
+    scopes: {
+      "chain:777": {
         methods: ["chain_signMessage", "chain_sendTransaction"],
         notifications: ["accountsChanged"],
       },
     },
-    sessionProperties: {
+    properties: {
       expiry: "2024-06-06T13:10:48.155Z",
     },
   },
@@ -257,7 +256,7 @@ const signingRequest = {
   method: "wallet_requestMethod",
   params: {
     // UUID from WalletData is used as SessionId
-    sessionId: walletData.uuid,
+    sessionId: walletData.info.uuid,
     scope: "chain:777",
     request: {
       method: "chain_signMessage",
@@ -296,10 +295,18 @@ Logic from the Wallet Provider:
 // 1. Wallet Provider sets their WalletData and then listens to wallet_prompt message
 // and also immediatelly posts a message with the WalletData as wallet_announce type
 const walletData = {
-  uuid: generateUUID(); // eg. "350670db-19fa-4704-a166-e52e178b59d2"
-  name: "Example Wallet",
-  icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
-  rdns: "com.example.wallet",
+  info {
+    uuid: generateUUID(); // eg. "350670db-19fa-4704-a166-e52e178b59d2"
+    name: "Example Wallet",
+    icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
+    rdns: "com.example.wallet",
+  },
+  scopes: {
+    "chain:777": {
+      methods: ["chain_signMessage", "chain_sendTransaction"],
+      notifications: ["accountsChanged"],
+    },
+  }
 }
 
 window.dispatchEvent(new CustomEvent(
@@ -352,19 +359,28 @@ const sessionResponse = {
   id: sessionRequest.id, // 123
   jsonrpc: "2.0",
   result: {
-    sessionId: walletData.uuid, // "350670db-19fa-4704-a166-e52e178b59d2"
-    sessionScopes: {
-      eip155: {
-        scopes: ["eip155:1", "eip155:10"],
+    sessionId: walletData.info.uuid, // "350670db-19fa-4704-a166-e52e178b59d2"
+    wallet: {
+      info: {
+        uuid:  "350670db-19fa-4704-a166-e52e178b59d2",
+        name: "Example Wallet",
+        icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
+        rdns: "com.example.wallet",
+      },
+      methods: ["wallet_pay"],
+      notifications: [],
+      capabilties: {}
+    }
+    scopes: {
+      "eip155:1": {
         methods: ["eth_sendTransaction", "personal_sign"],
         notifications: ["accountsChanged", "chainChanged"],
-        accounts: [
-          "eip155:1:0x43e3ca49c7be4f429abce408da6b738f879d02a0",
-          "eip155:10:0x43e3ca49c7be4f429abce408da6b738f879d02a0"
-        ]
+        accounts: ["0x43e3ca49c7be4f429abce408da6b738f879d02a0",
+        ],
+        capabilities: {}
       },
     },
-    sessionProperties: {
+    properties: {
       expiry: "2024-06-06T13:10:48.155Z",
     }
   }
@@ -383,7 +399,7 @@ window.dispatchEvent(new CustomEvent(
 let signingRequest = {}
 
 window.addEventListener("message", (event) => {
-  if (event.detail.method === "wallet_createSession" && event.detail.params.sessionId === walletData.uuid) {
+  if (event.detail.method === "wallet_createSession" && event.detail.params.sessionId === walletData.info.uuid) {
     signingRequest = event.detail.params
   }
 });
@@ -420,11 +436,13 @@ TODO
 - [CAIP-27][caip-27] - Blockchain ID Specification
 - [CAIP-25][caip-25] - Blockchain ID Specification
 - [CAIP-282][caip-282] - Browser Wallet Discovery Interface
+- [CAIP-372][caip-372] - Wallet Information Metadata Standard
 
 [eip-6963]: https://eips.ethereum.org/EIPS/eip-6963
 [caip-27]: https://chainagnostic.org/CAIPs/caip-27
 [caip-25]: https://chainagnostic.org/CAIPs/caip-25
 [caip-282]: https://chainagnostic.org/CAIPs/caip-282
+[caip-372]: https://chainagnostic.org/CAIPs/caip-372
 
 ## Copyright
 
