@@ -7,7 +7,7 @@ status: Review
 type: Standard
 created: 2020-10-14
 updated: 2025-08-11
-requires: 2, 10, 171, 217, 285, 311, 312
+requires: 2, 10, 171, 217, 285, 311, 312, 372
 ---
 
 ## Simple Summary
@@ -203,7 +203,7 @@ The `properties` object MAY be included for global session metadata.
 }
 ```
 
-The `wallet` object MAY contain `info` and `capabilities` for success response.
+The `wallet` object MAY contain `info` (per [CAIP-372][] spec) and `capabilities` for success response.
 
 Each entry within `scopes` object MUST contain `accounts` and `capabilities` as part of its object for success response.
 
@@ -250,6 +250,7 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 - [CAIP-312][] - `wallet_getSession` Specification
 - [CAIP-311][] - `wallet_sessionChanged` Specification
 - [CAIP-316][] - Session Lifecycle Management equivalence chart and diagrams
+- [CAIP-372][] - Wallet Information Metadata Standard
 - [RFC-2119][] - Key words for use in RFCs to Indicate Requirement Levels
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
@@ -261,6 +262,7 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 [CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
 [CAIP-311]: https://chainagnostic.org/CAIPs/CAIP-311
 [CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
+[CAIP-372]: https://chainagnostic.org/CAIPs/caip-372
 [RFC-2119]: https://datatracker.ietf.org/doc/html/rfc2119
 
 ## Copyright
