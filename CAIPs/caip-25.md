@@ -7,7 +7,7 @@ status: Review
 type: Standard
 created: 2020-10-14
 updated: 2025-08-11
-requires: 2, 10, 171, 217, 285, 311, 312, 372
+requires: 2, 10, 171, 217, 285, 311, 312
 ---
 
 ## Simple Summary
@@ -67,11 +67,15 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
   "jsonrpc": "2.0",
   "method": "wallet_createSession",
   "params": {
-    "wallet": {
-      "methods": ["wallet_authenticate", "wallet_pay"],
-      "notifications": []
-    },
     "scopes": {
+      "wallet:any": {
+        "methods": ["wallet_authenticate", "wallet_pay"],
+        "notifications": []
+      },
+      "wallet:eip155": {
+        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
+        "notifications": []
+      },
       "eip155:1": {
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"]
@@ -83,10 +87,6 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
       "eip155:42161": {
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"]
-      },
-      "eip155:0": {
-        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
-        "notifications": []
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "methods": [
@@ -112,8 +112,6 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
 }
 ```
 
-The `wallet` object MUST be included for wallet-level method and notification requests.
-
 The `scopes` object MUST contain one or more scopeObjects.
 
 The `properties` object MAY be included for global session metadata.
@@ -128,20 +126,19 @@ The `properties` object MAY be included for global session metadata.
   "jsonrpc": "2.0",
   "result": {
     "sessionId": "0xdeadbeef",
-    "wallet": {
-      "methods": ["wallet_authenticate", "wallet_pay"],
-      "notifications": [],
-      "info": {
-        "uuid": "350670db-19fa-4704-a166-e52e178b59d2",
-        "name": "Example Wallet",
-        "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>",
-        "rdns": "com.example.wallet"
-      },
-      "capabilities": {
-        "walletService": "https://wallet-service.example.com/rpc"
-      }
-    },
     "scopes": {
+      "wallet:any": {
+        "methods": ["wallet_authenticate", "wallet_pay"],
+        "notifications": [],
+        "capabilities": {}
+      },
+      "wallet:eip155": {
+        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
+        "notifications": [],
+        "capabilities": {
+          "walletService": "https://wallet-service.example.com/rpc"
+        }
+      },
       "eip155:1": {
         "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign"],
@@ -153,7 +150,9 @@ The `properties` object MAY be included for global session metadata.
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
-          "atomic": { "status": "supported" }
+          "atomic": {
+            "status": "supported"
+          }
         }
       },
       "eip155:42161": {
@@ -161,15 +160,14 @@ The `properties` object MAY be included for global session metadata.
         "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {
-          "atomic": { "status": "supported" },
-          "paymasterService": { "url": "https://...", "optional": true }
+          "atomic": {
+            "status": "supported"
+          },
+          "paymasterService": {
+            "url": "https://...",
+            "optional": true
+          }
         }
-      },
-      "eip155:0": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
-        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
-        "notifications": [],
-        "capabilities": {}
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
@@ -197,15 +195,19 @@ The `properties` object MAY be included for global session metadata.
       }
     },
     "properties": {
-      "expiry": "2022-12-24T17:07:31+00:00"
+      "expiry": "2022-12-24T17:07:31+00:00",
+      "walletInfo": {
+        "uuid": "350670db-19fa-4704-a166-e52e178b59d2",
+        "name": "Example Wallet",
+        "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>",
+        "rdns": "com.example.wallet"
+      }
     }
   }
 }
 ```
 
-The `wallet` object MAY contain `info` (per [CAIP-372][] spec) and `capabilities` for success response.
-
-Each entry within `scopes` object MUST contain `accounts` and `capabilities` as part of its object for success response.
+Each entry within `scopes` object MAY contain `accounts` and `capabilities` as part of its object for success response.
 
 #### Error
 
@@ -227,7 +229,6 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 
 ## Changelog
 
-- 2025-08-11: Added top-level `wallet` as mandatory object for both request and response
 - 2025-08-07: Remove `capababilities` from request AND remove CAIP-2 prefix from `accounts`
 - 2025-08-04: Merged `capabilities` (fka `scopedProperties`) into `scopeObjects`
 - 2025-08-03: Removed Namespace-scoped `scopeObjects` and retained only Chain-scoped `scopeObjects`
@@ -250,7 +251,6 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 - [CAIP-312][] - `wallet_getSession` Specification
 - [CAIP-311][] - `wallet_sessionChanged` Specification
 - [CAIP-316][] - Session Lifecycle Management equivalence chart and diagrams
-- [CAIP-372][] - Wallet Information Metadata Standard
 - [RFC-2119][] - Key words for use in RFCs to Indicate Requirement Levels
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
@@ -262,7 +262,6 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 [CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
 [CAIP-311]: https://chainagnostic.org/CAIPs/CAIP-311
 [CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
-[CAIP-372]: https://chainagnostic.org/CAIPs/caip-372
 [RFC-2119]: https://datatracker.ietf.org/doc/html/rfc2119
 
 ## Copyright
