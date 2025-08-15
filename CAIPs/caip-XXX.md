@@ -6,16 +6,16 @@ discussions-to: XXX
 status: Draft
 type: Standard
 created: 2025-08-15
-requires: 2
+requires: [2, 10]
 ---
 
 ## Simple Summary
 
-CAIP-XXX defines a standardized way to reference objects stored in EVM smart contract mappings or variables through function calls, enabling cross-application and cross-chain references to blockchain data that isn't tokenized as ERC-721s.
+CAIP-XXX extends CAIP-10 Account ID Specification to reference specific data within EVM smart contracts through function calls, enabling cross-application and cross-chain references to blockchain data that isn't tokenized as ERC-721s.
 
 ## Abstract
 
-This CAIP establishes a uniform method for identifying and referencing data stored in EVM smart contracts through function calls. The specification builds upon CAIP-2 blockchain identification to create unique, resolvable references for contract data accessed via mappings, arrays, or variables, enabling applications to create portable identifiers for blockchain-stored objects.
+This CAIP extends CAIP-10 Account ID Specification by adding function call parameters to reference specific data stored within EVM smart contracts. While CAIP-10 identifies contract addresses, this specification allows referencing specific data within those contracts through function calls. The specification builds upon CAIP-2 blockchain identification and CAIP-10 account addressing to create unique, resolvable references for contract data accessed via mappings, arrays, or variables.
 
 ## Motivation
 
@@ -26,7 +26,7 @@ Many blockchain applications store data in smart contract mappings or variables 
 3. Configuration data or registry entries
 4. Any contract data accessible through function calls
 
-Currently, each application implements its own addressing scheme for such data, making it impossible to create portable references that work across different applications and chains. This specification provides a universal addressing system for contract data accessible through function calls.
+While CAIP-10 provides a way to identify contract addresses across chains, there is no standardized way to reference specific data within those contracts. Currently, each application implements its own addressing scheme for such data, making it impossible to create portable references that work across different applications and chains. This specification extends CAIP-10 to provide a universal addressing system for contract data accessible through function calls.
 
 ## Specification
 
@@ -35,9 +35,10 @@ Currently, each application implements its own addressing scheme for such data, 
 The `function_call_reference` is a case-sensitive string in the form:
 
 ```
-function_call_reference:   chain_id + ":" + contract_address + ":" + method + ":" + function_data
+function_call_reference:   account_id + ":" + method + ":" + function_data
+account_id:                chain_id + ":" + account_address (See CAIP-10)
 chain_id:                  [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See CAIP-2)
-contract_address:          0x[a-fA-F0-9]{40}
+account_address:           0x[a-fA-F0-9]{40}
 method:                    "call"
 function_data:             0x[a-fA-F0-9]*
 ```
@@ -46,10 +47,11 @@ Note: Unlike other CAIP specifications, `function_data` has no fixed maximum len
 
 ### Semantics
 
-- `chain_id`: Identifies the blockchain using CAIP-2 format (e.g., `eip155:1` for Ethereum mainnet)
-- `contract_address`: The smart contract address containing the data (hex-encoded with 0x prefix)
+- `account_id`: Identifies the smart contract using CAIP-10 format (e.g., `eip155:1:0x6B175474E89094C44Da98b954EedeAC495271d0F`)
 - `method`: Specifies the method type - currently only "call" is supported for EVM chains
 - `function_data`: The complete ABI-encoded function call including function selector and parameters
+
+This extends CAIP-10 by appending `:method:function_data` to a standard CAIP-10 account identifier.
 
 ## Rationale
 
@@ -62,11 +64,13 @@ The goals of the function call reference format are:
 
 The following design decisions were made:
 
-1. **Complete Function Encoding**: Using full ABI-encoded function call data ensures compatibility with existing EVM tooling and eliminates ambiguity in parameter encoding.
+1. **Extension of CAIP-10**: Building on the established account identification standard ensures compatibility and follows the logical progression from identifying contracts to identifying data within contracts.
 
-2. **No Length Restriction**: Unlike other CAIP specifications, function_data has no fixed maximum length limit to accommodate complex function calls with multiple or large parameters.
+2. **Complete Function Encoding**: Using full ABI-encoded function call data ensures compatibility with existing EVM tooling and eliminates ambiguity in parameter encoding.
 
-3. **Generic Method Field**: Using "method" instead of EVM-specific terminology allows for future extension to non-EVM chains while maintaining the same general structure.
+3. **No Length Restriction**: Unlike other CAIP specifications, function_data has no fixed maximum length limit to accommodate complex function calls with multiple or large parameters.
+
+4. **Generic Method Field**: Using "method" instead of EVM-specific terminology allows for future extension to non-EVM chains while maintaining the same general structure.
 
 ## Test Cases
 
@@ -118,7 +122,7 @@ Function calls should be ABI-encoded according to the Ethereum ABI specification
 
 Applications that need to resolve these references can:
 
-1. Parse the reference to extract chain_id, contract_address, method, and function_data
+1. Parse the reference to extract account_id, method, and function_data (where account_id follows CAIP-10 format)
 2. Validate the chain_id exists and is accessible
 3. Verify the contract_address exists on the specified chain
 4. Execute the function call using the function_data
@@ -137,6 +141,7 @@ The "method" field is designed to allow future extensions to non-EVM chains, for
 
 ## References
 
+- [CAIP-10][CAIP-10] defines the account identification standard that this specification extends
 - [CAIP-2][CAIP-2] defines the blockchain identification standard
 - [Ethereum ABI Specification][ETH-ABI] defines function call encoding
 - [CAIP-1][CAIP-1] defines the CAIP document structure
