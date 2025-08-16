@@ -209,7 +209,7 @@ The `properties` object MAY be included for global session metadata.
 
 Each entry within `scopes` object MAY contain `accounts` and `capabilities` as part of its object for success response.
 
-#### Error
+#### Error Codes
 
 The wallet MAY return generic or specific error messages depending on trust. Trusted responses may include codes like:
 
