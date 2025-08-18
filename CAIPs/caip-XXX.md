@@ -2,7 +2,7 @@
 caip: XXX
 title: EVM Smart Contract Call Reference Specification
 author: David Furlong (@davidfurlong), Stephan Cilliers (@stephancill)
-discussions-to: XXX
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/373
 status: Draft
 type: Standard
 created: 2025-08-15
