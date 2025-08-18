@@ -11,7 +11,7 @@ requires: [2, 10]
 
 ## Simple Summary
 
-CAIP-XXX extends CAIP-10 Account ID Specification to reference specific data within EVM smart contracts through function calls, enabling cross-application and cross-chain references to blockchain data that isn't tokenized as ERC-721s.
+CAIP-XXX extends CAIP-10 Account ID Specification to reference specific data within EVM smart contracts through function calls, enabling cross-application and cross-chain references to blockchain data.
 
 ## Abstract
 
