@@ -35,23 +35,27 @@ While CAIP-10 provides a way to identify contract addresses across chains, there
 The `function_call_reference` is a case-sensitive string in the form:
 
 ```
-function_call_reference:   account_id + ":" + method + ":" + function_data
+function_call_reference:   account_id + ":" + method + ":" + function_data + [":" + block_number]
 account_id:                chain_id + ":" + account_address (See CAIP-10)
 chain_id:                  [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See CAIP-2)
 account_address:           0x[a-fA-F0-9]{40}
 method:                    "call"
 function_data:             0x[a-fA-F0-9]*
+block_number:              [0-9]+ (optional)
 ```
 
 Note: Unlike other CAIP specifications, `function_data` has no fixed maximum length as ABI-encoded function parameters can vary significantly in size. This is a deliberate design trade-off to accommodate the full range of possible function calls.
+
+The `block_number` is optional and when omitted, the function call will be executed against the latest block. When specified, the function call will be executed against the specified block number for historical data access.
 
 ### Semantics
 
 - `account_id`: Identifies the smart contract using CAIP-10 format (e.g., `eip155:1:0x6B175474E89094C44Da98b954EedeAC495271d0F`)
 - `method`: Specifies the method type - currently only "call" is supported for EVM chains
 - `function_data`: The complete ABI-encoded function call including function selector and parameters
+- `block_number`: Optional block number for historical data access (e.g., `12345678`). When omitted, the function call executes against the latest block.
 
-This extends CAIP-10 by appending `:method:function_data` to a standard CAIP-10 account identifier.
+This extends CAIP-10 by appending `:method:function_data[:block_number]` to a standard CAIP-10 account identifier.
 
 ## Rationale
 
@@ -83,6 +87,12 @@ eip155:1:0x6B175474E89094C44Da98b954EedeAC495271d0F:call:0x70a082310000000000000
 
 # ECP comment reference by ID
 eip155:8453:0xb262C9278fBcac384Ef59Fc49E24d800152E19b1:call:0x8c20d587a1b2c3d4e5f6789012345678901234567890123456789012345678901234567890
+
+# Historical ERC-20 balance at specific block
+eip155:1:0x6B175474E89094C44Da98b954EedeAC495271d0F:call:0x70a08231000000000000000000000000742d35cc6637c0532e3ee008ee31d49b1f7ca2f1:12345678
+
+# Historical total supply at specific block
+eip155:1:0xA0b86a33E6441E9CbC2d64Ec2344E9C4Db2c4A91:call:0x18160ddd:98765432
 ```
 
 ## Viem Implementation Example
@@ -122,10 +132,10 @@ Function calls should be ABI-encoded according to the Ethereum ABI specification
 
 Applications that need to resolve these references can:
 
-1. Parse the reference to extract account_id, method, and function_data (where account_id follows CAIP-10 format)
+1. Parse the reference to extract account_id, method, function_data, and optional block_number (where account_id follows CAIP-10 format)
 2. Validate the chain_id exists and is accessible
 3. Verify the contract_address exists on the specified chain
-4. Execute the function call using the function_data
+4. Execute the function call using the function_data at the specified block_number (or latest block if not specified)
 5. Process the returned data according to the function's return type
 
 ## Backwards Compatibility
