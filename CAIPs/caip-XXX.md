@@ -146,6 +146,13 @@ The "method" field is designed to allow future extensions to non-EVM chains, for
 - [Ethereum ABI Specification][ETH-ABI] defines function call encoding
 - [CAIP-1][CAIP-1] defines the CAIP document structure
 
+## Links
+
+[CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
+[CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
+[CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
+[ETH-ABI]: https://docs.soliditylang.org/en/latest/abi-spec.html
+
 ## Copyright
 
 Copyright and related rights waived via [CC0](../LICENSE).
