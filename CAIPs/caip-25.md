@@ -68,7 +68,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
   "method": "wallet_createSession",
   "params": {
     "scopes": {
-      "wallet:any": {
+      "wallet": {
         "methods": ["wallet_authenticate", "wallet_pay"],
         "notifications": []
       },
@@ -76,7 +76,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
         "methods": ["wallet_grantPermissions", "wallet_getAssets"],
         "notifications": []
       },
-      "eip155:0": {
+      "eip155": {
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"]
       },
@@ -92,7 +92,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
         "methods": ["wallet_sendCalls"],
         "notifications": []
       },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+      "solana": {
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
@@ -100,12 +100,12 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
         ],
         "notifications": []
       },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "methods": [],
+        "notifications": []
+      },
       "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
-        "methods": [
-          "solana_signMessage",
-          "solana_signTransaction",
-          "solana_signAndSendTransaction"
-        ],
+        "methods": [],
         "notifications": []
       }
     },
