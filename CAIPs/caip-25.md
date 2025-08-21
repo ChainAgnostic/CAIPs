@@ -168,7 +168,7 @@ The `properties` object MAY be included for global session metadata.
         }
       },
       "eip155:42161": {
-        "accounts": [],
+        "accounts": ["0x0495766cD136138Fc492Dd499B8DC87A92D6685b"],
         "methods": ["wallet_sendCalls"],
         "notifications": [],
         "capabilities": {
