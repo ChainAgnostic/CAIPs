@@ -76,17 +76,21 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
         "methods": ["wallet_grantPermissions", "wallet_getAssets"],
         "notifications": []
       },
-      "eip155:1": {
+      "eip155:0": {
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"]
       },
+      "eip155:1": {
+        "methods": [],
+        "notifications": []
+      },
       "eip155:8453": {
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "methods": ["wallet_sendCalls"],
+        "notifications": []
       },
       "eip155:42161": {
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "methods": ["wallet_sendCalls"],
+        "notifications": []
       },
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
         "methods": [
@@ -128,27 +132,35 @@ The `properties` object MAY be included for global session metadata.
     "sessionId": "0xdeadbeef",
     "scopes": {
       "wallet:any": {
+        "accounts": [],
         "methods": ["wallet_authenticate", "wallet_pay"],
         "notifications": [],
         "capabilities": {}
       },
       "wallet:eip155": {
+        "accounts": [],
         "methods": ["wallet_grantPermissions", "wallet_getAssets"],
         "notifications": [],
         "capabilities": {
           "walletService": "https://wallet-service.example.com/rpc"
         }
       },
-      "eip155:1": {
+      "eip155:0": {
         "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {}
       },
+      "eip155:1": {
+        "accounts": [],
+        "methods": [],
+        "notifications": [],
+        "capabilities": {}
+      },
       "eip155:8453": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": [],
+        "methods": ["wallet_sendCalls"],
+        "notifications": [],
         "capabilities": {
           "atomic": {
             "status": "supported"
@@ -156,9 +168,9 @@ The `properties` object MAY be included for global session metadata.
         }
       },
       "eip155:42161": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": [],
+        "methods": ["wallet_sendCalls"],
+        "notifications": [],
         "capabilities": {
           "atomic": {
             "status": "supported"
