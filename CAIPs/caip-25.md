@@ -131,7 +131,7 @@ The `properties` object MAY be included for global session metadata.
   "result": {
     "sessionId": "0xdeadbeef",
     "scopes": {
-      "wallet:any": {
+      "wallet": {
         "accounts": [],
         "methods": ["wallet_authenticate", "wallet_pay"],
         "notifications": [],
@@ -145,7 +145,7 @@ The `properties` object MAY be included for global session metadata.
           "walletService": "https://wallet-service.example.com/rpc"
         }
       },
-      "eip155:0": {
+      "eip155": {
         "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
@@ -181,20 +181,8 @@ The `properties` object MAY be included for global session metadata.
           }
         }
       },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
-        "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
-        "methods": [
-          "solana_signMessage",
-          "solana_signTransaction",
-          "solana_signAndSendTransaction"
-        ],
-        "notifications": [],
-        "capabilities": {
-          "supportedTransactionVersions": ["legacy", "0"]
-        }
-      },
-      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
-        "accounts": ["6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"],
+      "solana": {
+        "accounts": [],
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
@@ -204,6 +192,20 @@ The `properties` object MAY be included for global session metadata.
         "capabilities": {
           "supportedTransactionVersions": ["legacy"]
         }
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
+        "methods": [],
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["0"]
+        }
+      },
+      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
+        "accounts": ["6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"],
+        "methods": [],
+        "notifications": [],
+        "capabilities": {}
       }
     },
     "properties": {
