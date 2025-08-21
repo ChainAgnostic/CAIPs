@@ -68,40 +68,53 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
   "method": "wallet_createSession",
   "params": {
     "scopes": {
-      "wallet:any": {
-        "methods": ["wallet_authenticate", "wallet_pay"],
-        "notifications": []
+      "wallet": {
+        "methods": [
+          "wallet_revokeSession",
+          "wallet_getSession",
+          "wallet_authenticate",
+          "wallet_pay"
+        ],
+        "notifications": ["wallet_sessionChanged"]
       },
       "wallet:eip155": {
-        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
+        "methods": [
+          "personal_sign",
+          "wallet_grantPermissions",
+          "wallet_getAssets"
+        ],
         "notifications": []
       },
-      "eip155:1": {
-        "methods": ["eth_sendTransaction", "personal_sign"],
+      "eip155": {
+        "methods": ["eth_sendTransaction"],
         "notifications": ["accountsChanged", "chainChanged"]
+      },
+      "eip155:1": {
+        "methods": [],
+        "notifications": []
       },
       "eip155:8453": {
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "methods": ["wallet_sendCalls"],
+        "notifications": []
       },
       "eip155:42161": {
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"]
+        "methods": ["wallet_sendCalls"],
+        "notifications": []
       },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+      "solana": {
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
           "solana_signAndSendTransaction"
         ],
+        "notifications": []
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "methods": [],
         "notifications": []
       },
       "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
-        "methods": [
-          "solana_signMessage",
-          "solana_signTransaction",
-          "solana_signAndSendTransaction"
-        ],
+        "methods": [],
         "notifications": []
       }
     },
@@ -127,28 +140,36 @@ The `properties` object MAY be included for global session metadata.
   "result": {
     "sessionId": "0xdeadbeef",
     "scopes": {
-      "wallet:any": {
+      "wallet": {
+        "accounts": [],
         "methods": ["wallet_authenticate", "wallet_pay"],
         "notifications": [],
         "capabilities": {}
       },
       "wallet:eip155": {
+        "accounts": [],
         "methods": ["wallet_grantPermissions", "wallet_getAssets"],
         "notifications": [],
         "capabilities": {
           "walletService": "https://wallet-service.example.com/rpc"
         }
       },
-      "eip155:1": {
+      "eip155": {
         "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {}
       },
+      "eip155:1": {
+        "accounts": [],
+        "methods": [],
+        "notifications": [],
+        "capabilities": {}
+      },
       "eip155:8453": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": [],
+        "methods": ["wallet_sendCalls"],
+        "notifications": [],
         "capabilities": {
           "atomic": {
             "status": "supported"
@@ -156,9 +177,9 @@ The `properties` object MAY be included for global session metadata.
         }
       },
       "eip155:42161": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
-        "methods": ["eth_sendTransaction", "personal_sign", "wallet_sendCalls"],
-        "notifications": ["accountsChanged", "chainChanged"],
+        "accounts": ["0x0495766cD136138Fc492Dd499B8DC87A92D6685b"],
+        "methods": ["wallet_sendCalls"],
+        "notifications": [],
         "capabilities": {
           "atomic": {
             "status": "supported"
@@ -169,20 +190,8 @@ The `properties` object MAY be included for global session metadata.
           }
         }
       },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
-        "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
-        "methods": [
-          "solana_signMessage",
-          "solana_signTransaction",
-          "solana_signAndSendTransaction"
-        ],
-        "notifications": [],
-        "capabilities": {
-          "supportedTransactionVersions": ["legacy", "0"]
-        }
-      },
-      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
-        "accounts": ["6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"],
+      "solana": {
+        "accounts": [],
         "methods": [
           "solana_signMessage",
           "solana_signTransaction",
@@ -192,6 +201,20 @@ The `properties` object MAY be included for global session metadata.
         "capabilities": {
           "supportedTransactionVersions": ["legacy"]
         }
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
+        "methods": [],
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["0"]
+        }
+      },
+      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
+        "accounts": ["6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"],
+        "methods": [],
+        "notifications": [],
+        "capabilities": {}
       }
     },
     "properties": {
