@@ -69,15 +69,24 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
   "params": {
     "scopes": {
       "wallet": {
-        "methods": ["wallet_authenticate", "wallet_pay"],
-        "notifications": []
+        "methods": [
+          "wallet_revokeSession",
+          "wallet_getSession",
+          "wallet_authenticate",
+          "wallet_pay"
+        ],
+        "notifications": ["wallet_sessionChanged"]
       },
       "wallet:eip155": {
-        "methods": ["wallet_grantPermissions", "wallet_getAssets"],
+        "methods": [
+          "personal_sign",
+          "wallet_grantPermissions",
+          "wallet_getAssets"
+        ],
         "notifications": []
       },
       "eip155": {
-        "methods": ["eth_sendTransaction", "personal_sign"],
+        "methods": ["eth_sendTransaction"],
         "notifications": ["accountsChanged", "chainChanged"]
       },
       "eip155:1": {
