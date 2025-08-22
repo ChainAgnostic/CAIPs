@@ -76,7 +76,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
           "wallet_pay"
         ],
         "notifications": ["wallet_sessionChanged"],
-        "exceptions": {
+        "extensions": {
           "wallet:eip155": {
             "methods": [
               "personal_sign",
@@ -90,7 +90,7 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
         "chains": ["1", "8453", "42161"],
         "methods": ["eth_sendTransaction"],
         "notifications": ["accountsChanged", "chainChanged"],
-        "exceptions": {
+        "extensions": {
           "eip155:8453": {
             "methods": ["wallet_sendCalls"]
           },
@@ -143,7 +143,7 @@ The `properties` object MAY be included for global session metadata.
         ],
         "notifications": ["wallet_sessionChanged"],
         "capabilities": {},
-        "exceptions": {
+        "extensions": {
           "wallet:eip155": {
             "methods": [
               "personal_sign",
@@ -162,7 +162,7 @@ The `properties` object MAY be included for global session metadata.
         "methods": ["eth_sendTransaction", "personal_sign"],
         "notifications": ["accountsChanged", "chainChanged"],
         "capabilities": {},
-        "exceptions": {
+        "extensions": {
           "eip155:8453": {
             "methods": ["wallet_sendCalls"],
             "capabilities": {
@@ -201,7 +201,7 @@ The `properties` object MAY be included for global session metadata.
         "capabilities": {
           "supportedTransactionVersions": ["legacy"]
         },
-        "exceptions": {
+        "extensions": {
           "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
             "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
             "capabilities": {
