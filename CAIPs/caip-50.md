@@ -72,7 +72,7 @@ Each blockchain namespace needs to be properly defined with a registry table:
 
 **Example:**
 
-In the exammple below we encode `128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6` on bitcoin mainnet.
+In the example below we encode `128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6` on bitcoin mainnet.
 This means that we use `chain_id = 000000000019d6689c085ae165831e93`
 
 ```
@@ -87,7 +87,7 @@ z2gNan4mLV1vvkzpmEi2kzHR8wUyFd5SpsuLcFDGbbyXTxbR8HL5hmqf7DhCEx5Lwt
 
 **Example:**
 
-In the exammple below we encode `0xde30da39c46104798bb5aa3fe8b9e0e1f348163f` on ethereum mainnet.
+In the example below we encode `0xde30da39c46104798bb5aa3fe8b9e0e1f348163f` on ethereum mainnet.
 This means that we use `chain_id = 1`
 
 ```
