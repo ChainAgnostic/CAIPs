@@ -49,7 +49,7 @@ Callers may revoke sessions using `wallet_revokeSession`, passing the `sessionId
 
 Authorization requests are expressed as a top-level object `scopes` containing keyed [scopeObjects][CAIP-217].
 
-Each `scopeObject` is keyed by a [CAIP-2][] chain ID. A null reference can be used to refer to a scope that applies to ANY chain within that namespace (eg. `eip155:0`)
+Each `scopeObject` is keyed by a [CAIP-2][] or [CAIP-104][] identifiers. A null reference can be used to refer to a scope that applies to ANY chain within that namespace (eg. `eip155:0`)
 
 Wallets MAY authorize a subset of scopes or scope properties as requested, and MAY also authorize additional scopes or scope properties. This enables granular control and flexibility on the part of the respondent.
 
@@ -61,67 +61,23 @@ If a connection is rejected, the wallet MAY respond with a generic error or sile
 
 #### Request
 
-```jsonc
-{
-  "id": 1,
-  "jsonrpc": "2.0",
-  "method": "wallet_createSession",
-  "params": {
-    "scopes": {
-      "wallet": {
-        "methods": [
-          "wallet_revokeSession",
-          "wallet_getSession",
-          "wallet_authenticate",
-          "wallet_pay"
-        ],
-        "notifications": ["wallet_sessionChanged"]
-      },
-      "wallet:eip155": {
-        "methods": [
-          "personal_sign",
-          "wallet_grantPermissions",
-          "wallet_getAssets"
-        ],
-        "notifications": []
-      },
-      "eip155": {
-        "methods": ["eth_sendTransaction"],
-        "notifications": ["accountsChanged", "chainChanged"]
-      },
-      "eip155:1": {
-        "methods": [],
-        "notifications": []
-      },
-      "eip155:8453": {
-        "methods": ["wallet_sendCalls"],
-        "notifications": []
-      },
-      "eip155:42161": {
-        "methods": ["wallet_sendCalls"],
-        "notifications": []
-      },
-      "solana": {
-        "methods": [
-          "solana_signMessage",
-          "solana_signTransaction",
-          "solana_signAndSendTransaction"
-        ],
-        "notifications": []
-      },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
-        "methods": [],
-        "notifications": []
-      },
-      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
-        "methods": [],
-        "notifications": []
-      }
-    },
-    "properties": {
-      "expiry": "2022-12-24T17:07:31+00:00"
-    }
-  }
+```typescript
+interface CAIP25JsonRpcRequest {
+  id: number;
+  jsonrpc: "2.0";
+  method: "wallet_createSession";
+  params: {
+    scopes: {
+      [scopeKey: string]: {
+        chains?: string[];
+        methods: string[];
+        notifications: string[];
+      };
+    };
+    properties?: {
+      [propertyKey: string]: any;
+    };
+  };
 }
 ```
 
@@ -133,109 +89,26 @@ The `properties` object MAY be included for global session metadata.
 
 #### Success
 
-```jsonc
-{
-  "id": 1,
-  "jsonrpc": "2.0",
-  "result": {
-    "sessionId": "0xdeadbeef",
-    "scopes": {
-      "wallet": {
-        "accounts": [],
-        "methods": [
-          "wallet_revokeSession",
-          "wallet_getSession",
-          "wallet_authenticate",
-          "wallet_pay"
-        ],
-        "notifications": ["wallet_sessionChanged"],
-        "capabilities": {}
-      },
-      "wallet:eip155": {
-        "accounts": [],
-        "methods": [
-          "personal_sign",
-          "wallet_grantPermissions",
-          "wallet_getAssets"
-        ],
-        "notifications": [],
-        "capabilities": {
-          "walletService": "https://wallet-service.example.com/rpc"
-        }
-      },
-      "eip155": {
-        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
-        "methods": ["eth_sendTransaction"],
-        "notifications": ["accountsChanged", "chainChanged"],
-        "capabilities": {}
-      },
-      "eip155:1": {
-        "accounts": [],
-        "methods": [],
-        "notifications": [],
-        "capabilities": {}
-      },
-      "eip155:8453": {
-        "accounts": [],
-        "methods": ["wallet_sendCalls"],
-        "notifications": [],
-        "capabilities": {
-          "atomic": {
-            "status": "supported"
-          }
-        }
-      },
-      "eip155:42161": {
-        "accounts": ["0x0495766cD136138Fc492Dd499B8DC87A92D6685b"],
-        "methods": ["wallet_sendCalls"],
-        "notifications": [],
-        "capabilities": {
-          "atomic": {
-            "status": "supported"
-          },
-          "paymasterService": {
-            "url": "https://...",
-            "optional": true
-          }
-        }
-      },
-      "solana": {
-        "accounts": [],
-        "methods": [
-          "solana_signMessage",
-          "solana_signTransaction",
-          "solana_signAndSendTransaction"
-        ],
-        "notifications": [],
-        "capabilities": {
-          "supportedTransactionVersions": ["legacy"]
-        }
-      },
-      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
-        "accounts": ["7S3P4HxJpyyigGzodYwHtCxZyUQe9JiBMHyRWXArAaKv"],
-        "methods": [],
-        "notifications": [],
-        "capabilities": {
-          "supportedTransactionVersions": ["0"]
-        }
-      },
-      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
-        "accounts": ["6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"],
-        "methods": [],
-        "notifications": [],
-        "capabilities": {}
-      }
-    },
-    "properties": {
-      "expiry": "2022-12-24T17:07:31+00:00",
-      "walletInfo": {
-        "uuid": "350670db-19fa-4704-a166-e52e178b59d2",
-        "name": "Example Wallet",
-        "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>",
-        "rdns": "com.example.wallet"
-      }
-    }
-  }
+```typescript
+interface CAIP25JsonRpcRequest {
+  id: number;
+  jsonrpc: "2.0";
+  result: {
+    scopes: {
+      [scopeKey: string]: {
+        chains?: string[];
+        accounts: string[];
+        methods: string[];
+        notifications: string[];
+        capabilities?: {
+          [capabilityKey: string]: any;
+        };
+      };
+    };
+    properties?: {
+      [propertyKey: string]: any;
+    };
+  };
 }
 ```
 
@@ -250,6 +123,227 @@ The wallet MAY return generic or specific error messages depending on trust. Tru
 - `5002`: User disapproved requested notifications
 - `5100-5102`: Unsupported chains, methods, or notifications
 - `5201-5302`: Malformed requests
+
+## Examples
+
+**Example 1**
+
+For request, we define a very simple scope for 10 EVM chains with the exact same scope.
+
+```jsonc
+// JSON-RPC REQUEST
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "wallet_createSession",
+  "params": {
+    "scopes": {
+      "eip155": {
+        "chains": [
+          "1",
+          "10",
+          "130",
+          "324",
+          "2741",
+          "8453",
+          "42161",
+          "59144",
+          "534352",
+          "747474"
+        ],
+        "methods": ["eth_sendTransaction", "personal_sign"],
+        "notifications": ["accountsChanged", "chainChanged"]
+      }
+    },
+    "properties": {
+      "expiry": "2022-12-24T17:07:31+00:00"
+    }
+  }
+}
+```
+
+For response, we also keep it quite simple with no wallet capabilities also and responded back with just a single account matching all requested EVM chains.
+
+```jsonc
+// JSON-RPC RESPONSE
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "scopes": {
+      "eip155": {
+        "chains": [
+          "1",
+          "10",
+          "130",
+          "324",
+          "2741",
+          "8453",
+          "42161",
+          "59144",
+          "534352",
+          "747474"
+        ],
+        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "methods": ["eth_sendTransaction", "personal_sign"],
+        "notifications": ["accountsChanged", "chainChanged"]
+      }
+    },
+    "properties": {
+      "expiry": "2022-12-24T17:07:31+00:00"
+    }
+  }
+}
+```
+
+**Example 2**
+
+For the request, we define the expectation of 5 EVM chains with similar scope and additonally we have 2 Solana chains with similar scope
+
+```jsonc
+// JSON-RPC REQUEST
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "wallet_createSession",
+  "params": {
+    "scopes": {
+      "eip155": {
+        "chains": ["1", "10", "324", "8453", "42161"],
+        "methods": [
+          "eth_sendTransaction",
+          "personal_sign",
+          "wallet_grantPermissions",
+          "wallet_getAssets",
+          "wallet_sendCalls"
+        ],
+        "notifications": ["accountsChanged", "chainChanged"]
+      },
+      "solana": {
+        "chains": [
+          "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+          "4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z"
+        ],
+        "methods": [
+          "solana_signMessage",
+          "solana_signTransaction",
+          "solana_signAndSendTransaction"
+        ],
+        "notifications": []
+      }
+    },
+    "properties": {
+      "expiry": "2022-12-24T17:07:31+00:00"
+    }
+  }
+}
+```
+
+For the response, we match the same scopes as the request but segregate 2 out of 5 EVM chains into their scopes because of either exclusive accounts or capabilities.
+
+Additionaly we have the two Solana chains returning the same scopes but returning two different account addresses for each chain including a unique capability for one of the chains
+
+Finally the wallet has provided within properties with its walletInfo per [CAIP-372][].
+
+```jsonc
+// JSON-RPC RESPONSE
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "result": {
+    "sessionId": "0xdeadbeef",
+    "scopes": {
+      "eip155": {
+        "chains": ["1", "10", "324"],
+        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "methods": [
+          "eth_sendTransaction",
+          "personal_sign",
+          "wallet_grantPermissions",
+          "wallet_getAssets",
+          "wallet_sendCalls"
+        ],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {
+          "walletService": "https://wallet-service.example.com/rpc"
+        }
+      },
+      "eip155:8453": {
+        "accounts": ["0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb"],
+        "methods": [
+          "eth_sendTransaction",
+          "personal_sign",
+          "wallet_grantPermissions",
+          "wallet_getAssets",
+          "wallet_sendCalls"
+        ],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {
+          "atomic": {
+            "status": "supported"
+          }
+        }
+      },
+      "eip155:42161": {
+        "accounts": [
+          "0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb",
+          "0x0495766cD136138Fc492Dd499B8DC87A92D6685b"
+        ],
+        "methods": [
+          "eth_sendTransaction",
+          "personal_sign",
+          "wallet_grantPermissions",
+          "wallet_getAssets",
+          "wallet_sendCalls"
+        ],
+        "notifications": ["accountsChanged", "chainChanged"],
+        "capabilities": {
+          "atomic": {
+            "status": "supported"
+          },
+          "paymasterService": {
+            "url": "https://...",
+            "optional": true
+          }
+        }
+      },
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": {
+        "accounts": [],
+        "methods": [
+          "solana_signMessage",
+          "solana_signTransaction",
+          "solana_signAndSendTransaction"
+        ],
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["legacy", "0"]
+        }
+      },
+      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z": {
+        "accounts": ["6LmSRCiu3z6NCSpF19oz1pHXkYkN4jWbj9K1nVELpDkT"],
+        "methods": [
+          "solana_signMessage",
+          "solana_signTransaction",
+          "solana_signAndSendTransaction"
+        ],
+        "notifications": [],
+        "capabilities": {
+          "supportedTransactionVersions": ["legacy"]
+        }
+      }
+    },
+    "properties": {
+      "expiry": "2022-12-24T17:07:31+00:00",
+      "walletInfo": {
+        "uuid": "350670db-19fa-4704-a166-e52e178b59d2",
+        "name": "Example Wallet",
+        "icon": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>",
+        "rdns": "com.example.wallet"
+      }
+    }
+  }
+}
+```
 
 ## Security Considerations
 
@@ -283,6 +377,7 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 - [CAIP-312][] - `wallet_getSession` Specification
 - [CAIP-311][] - `wallet_sessionChanged` Specification
 - [CAIP-316][] - Session Lifecycle Management equivalence chart and diagrams
+- [CAIP-372][] - Wallet Information Metadata Standard
 - [RFC-2119][] - Key words for use in RFCs to Indicate Requirement Levels
 
 [CAIP-2]: https://chainagnostic.org/CAIPs/caip-2
@@ -294,6 +389,7 @@ To mitigate fingerprinting risks, wallets should prefer uniform or silent failur
 [CAIP-312]: https://chainagnostic.org/CAIPs/CAIP-312
 [CAIP-311]: https://chainagnostic.org/CAIPs/CAIP-311
 [CAIP-316]: https://chainagnostic.org/CAIPs/caip-316
+[CAIP-372]: https://chainagnostic.org/CAIPs/caip-372
 [RFC-2119]: https://datatracker.ietf.org/doc/html/rfc2119
 
 ## Copyright
