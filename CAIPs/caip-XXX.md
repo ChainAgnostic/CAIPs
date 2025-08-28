@@ -52,7 +52,7 @@ Note: Unlike other CAIP specifications, `function_data` has no fixed maximum len
 This is a deliberate design trade-off to accommodate the full range of possible function calls.
 
 The `block_number` is optional and when omitted, the function call will be executed against the latest block.
-When specified, the function call will be executed against the specified block number for historical data access.
+When specified, the function call will be executed against the specified block number for historical data access in VMs/namespaces where this is supported. See per-namespace profiles for syntax, validation rules, etc. of this segment.
 
 ### Semantics
 
