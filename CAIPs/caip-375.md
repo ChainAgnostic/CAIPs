@@ -15,14 +15,17 @@ Defines a JSON-RPC method, `wallet_signMessage`, to request cryptographic signat
 
 ## Abstract
 
-The `wallet_signMessage` RPC method is a chain-agnostic interface for signing arbitrarymessages. It supports multiple accounts and signature schemes within a single call, optionally referencing a CAIP-171 session. This unifies how apps and wallets perform message signing for authentication, typed data, and off-chain actions.
+The `wallet_signMessage` RPC method is a chain-agnostic interface for signing arbitrary messages.
+It supports multiple accounts and signature schemes within a single call, optionally referencing a CAIP-171 session.
+This unifies how apps and wallets perform message signing for authentication, typed data, and off-chain actions.
 
 ## Motivation
 
 Message signing today is fragmented: each wallet has its own API for personal message signing, typed data (e.g., EIP-712), or custom formats.
-There's no standard to support multiple accounts or signature types in one request. This proposal fixes that by:
+There's no standard to support multiple accounts or signature types in one request.
+This proposal fixes that by:
 
-- Supporting optional sessions (CAIP-171) to link sign requests to an ongoing connection.
+- Supporting optional sessions (CAIP-171) to link signing requests to an ongoing connection.
 - Allowing multiple messages and flexible signature schemes (e.g., EIP-191, EIP-1271).
 - Making message type and content explicit, improving wallet UX and security.
 
