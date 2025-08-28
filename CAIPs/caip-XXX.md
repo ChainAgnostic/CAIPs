@@ -139,7 +139,7 @@ Function calls should be ABI-encoded according to the Ethereum ABI specification
 Applications that need to resolve these references can:
 
 1. Parse the reference to extract account_id, method, function_data, and optional block_number (where account_id follows CAIP-10 format)
-2. Validate the chain_id exists and is accessible
+2. Validate the `chain_id` exists and is accessible
 3. Verify the contract_address exists on the specified chain
 4. Execute the function call using the function_data at the specified block_number (or latest block if not specified)
 5. Process the returned data according to the function's return type
