@@ -1,5 +1,5 @@
 ---
-caip: XXX
+caip: 373
 title: EVM Smart Contract Call Reference Specification
 author: David Furlong (@davidfurlong), Stephan Cilliers (@stephancill)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/373
@@ -11,11 +11,13 @@ requires: [2, 10]
 
 ## Simple Summary
 
-CAIP-XXX extends CAIP-10 Account ID Specification to reference specific data within EVM smart contracts through function calls, enabling cross-application and cross-chain references to blockchain data.
+CAIP-373 extends the [CAIP-10] Account ID Specification to reference specific data within EVM smart contracts fetched through "on-chain" function calls, enabling cross-application and cross-chain references to blockchain data.
 
 ## Abstract
 
-This CAIP extends CAIP-10 Account ID Specification by adding function call parameters to reference specific data stored within EVM smart contracts. While CAIP-10 identifies contract addresses, this specification allows referencing specific data within those contracts through function calls. The specification builds upon CAIP-2 blockchain identification and CAIP-10 account addressing to create unique, resolvable references for contract data accessed via mappings, arrays, or variables.
+This CAIP extends the [CAIP-10] Account ID Specification by adding function call parameters to reference specific data stored within EVM smart contracts.
+While CAIP-10 identifies contract addresses, this specification allows referencing specific data within those contracts through function calls.
+The specification builds upon [CAIP-2] blockchain identification and [CAIP-10] account addressing to create unique, resolvable references for contract data accessed via mappings, arrays, or variables.
 
 ## Motivation
 
@@ -26,7 +28,9 @@ Many blockchain applications store data in smart contract mappings or variables 
 3. Configuration data or registry entries
 4. Any contract data accessible through function calls
 
-While CAIP-10 provides a way to identify contract addresses across chains, there is no standardized way to reference specific data within those contracts. Currently, each application implements its own addressing scheme for such data, making it impossible to create portable references that work across different applications and chains. This specification extends CAIP-10 to provide a universal addressing system for contract data accessible through function calls.
+While CAIP-10 provides a way to identify contract addresses across chains, there is no standardized way to reference specific data within those contracts
+Currently, each application implements its own addressing scheme for such data, making it impossible to create portable references that work across different applications and chains.
+This specification extends CAIP-10 to provide a universal addressing system for contract data accessible through function calls.
 
 ## Specification
 
@@ -44,9 +48,11 @@ function_data:             0x[a-fA-F0-9]*
 block_number:              [0-9]+ (optional)
 ```
 
-Note: Unlike other CAIP specifications, `function_data` has no fixed maximum length as ABI-encoded function parameters can vary significantly in size. This is a deliberate design trade-off to accommodate the full range of possible function calls.
+Note: Unlike other CAIP specifications, `function_data` has no fixed maximum length as ABI-encoded function parameters can vary significantly in size.
+This is a deliberate design trade-off to accommodate the full range of possible function calls.
 
-The `block_number` is optional and when omitted, the function call will be executed against the latest block. When specified, the function call will be executed against the specified block number for historical data access.
+The `block_number` is optional and when omitted, the function call will be executed against the latest block.
+When specified, the function call will be executed against the specified block number for historical data access.
 
 ### Semantics
 
