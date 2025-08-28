@@ -48,7 +48,7 @@ function_data:             0x[a-fA-F0-9]*
 block_number:              [0-9]+ (optional)
 ```
 
-Note: Unlike other CAIP specifications, `function_data` has no fixed maximum length as ABI-encoded function parameters can vary significantly in size.
+Note: Unlike other CAIP specifications, `function_data` has no fixed maximum length as real-world usage of on-chain function calls (e.g. ABI-encoded function parameters, in EVM-based contexts) can vary significantly in size.
 This is a deliberate design trade-off to accommodate the full range of possible function calls.
 
 The `block_number` is optional and when omitted, the function call will be executed against the latest block.
