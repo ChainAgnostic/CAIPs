@@ -61,7 +61,7 @@ When specified, the function call will be executed against the specified block n
 - `function_data`: The complete parameters passed to the target address, exactly as passed (i.e., in EVM contexts, fully ABI-encoded, including the function's selector and concatenated parameters)
 - `block_number`: Optional block number for historical data access (e.g., `12345678`). When omitted, the function call executes against the latest block.
 
-This extends CAIP-10 by appending `:method:function_data[:block_number]` to a standard CAIP-10 account identifier.
+This extends CAIP-10 by appending `:{method}:{function_data}[:{block_number}]` to a standard CAIP-10 account identifier.
 
 ## Rationale
 
