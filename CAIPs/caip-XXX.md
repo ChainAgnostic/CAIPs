@@ -58,7 +58,7 @@ When specified, the function call will be executed against the specified block n
 
 - `account_id`: Identifies the smart contract using CAIP-10 format (e.g., `eip155:1:0x6B175474E89094C44Da98b954EedeAC495271d0F`)
 - `method`: Specifies the method type - currently only "call" is supported for EVM chains
-- `function_data`: The complete ABI-encoded function call including function selector and parameters
+- `function_data`: The complete parameters passed to the target address, exactly as passed (i.e., in EVM contexts, fully ABI-encoded, including the function's selector and concatenated parameters)
 - `block_number`: Optional block number for historical data access (e.g., `12345678`). When omitted, the function call executes against the latest block.
 
 This extends CAIP-10 by appending `:method:function_data[:block_number]` to a standard CAIP-10 account identifier.
