@@ -5,7 +5,7 @@ author: Bumblefudge (@bumblefudge)
 discussions-to: https://github.com/ChainAgnostic/namespaces/pull/107, https://github.com/ChainAgnostic/CASA/issues/107, https://github.com/ChainAgnostic/CAIPs/issues/22, https://github.com/ChainAgnostic/namespaces/issues/55
 status: Draft
 type: Informational
-replaces: CAIP-2
+replaces: 2
 created: 2024-06-14
 updated: 2024-06-14
 ---
