@@ -260,6 +260,7 @@ Finally the wallet has provided within properties with its walletInfo per [CAIP-
         "methods": [
           "eth_sendTransaction",
           "personal_sign",
+          "wallet_addEthereumChain",
           "wallet_grantPermissions",
           "wallet_getAssets",
           "wallet_sendCalls"
