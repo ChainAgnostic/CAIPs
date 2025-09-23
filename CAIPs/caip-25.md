@@ -240,7 +240,7 @@ For the request, we define the expectation of 5 EVM chains with similar scope an
 }
 ```
 
-For the response, we match the same scopes as the request but segregate 2 out of 5 EVM chains into their scopes because of either exclusive accounts or capabilities.
+For the response, we match the same scopes as the request but separate 2 out of 5 EVM chains into individual scopes because of exclusive accounts, capabilities or methods.
 
 Additionaly we have the two Solana chains returning the same scopes but returning two different account addresses for each chain including a unique capability for one of the chains
 
