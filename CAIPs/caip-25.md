@@ -70,6 +70,7 @@ interface CAIP25JsonRpcRequest {
     scopes: {
       [scopeKey: string]: {
         chains?: string[];
+        accounts?: string[];
         methods: string[];
         notifications: string[];
       };
