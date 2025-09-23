@@ -91,7 +91,7 @@ The `properties` object MAY be included for global session metadata.
 #### Success
 
 ```typescript
-interface CAIP25JsonRpcRequest {
+interface CAIP25JsonRpcResponse {
   id: number;
   jsonrpc: "2.0";
   result: {
@@ -163,7 +163,7 @@ For request, we define a very simple scope for 10 EVM chains with the exact same
 }
 ```
 
-For response, we also keep it quite simple with no wallet capabilities also and responded back with just a single account matching all requested EVM chains.
+For response, we also keep it quite simple with no wallet capabilities or special scopes.
 
 ```jsonc
 // JSON-RPC RESPONSE
