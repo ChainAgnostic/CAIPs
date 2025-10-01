@@ -1,0 +1,20 @@
+{
+  "did": "did:pkh:eip155:1:0x1111111111111111111111111111111111111111",
+  "qHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
+  "verifierIds": ["ownership-basic"],
+  "data": {
+    "owner": "0x1111111111111111111111111111111111111111",
+    "reference": { "type": "other", "id": "example-1" }
+  },
+  "signedMessage": "Portable Proof Verification Request\nWallet: 0x1111111111111111111111111111111111111111\nChain: 1\nVerifiers: ownership-basic\nData: {\"owner\":\"0x1111111111111111111111111111111111111111\",\"reference\":{\"type\":\"other\",\"id\":\"example-1\"}}\nTimestamp: 1730000000000",
+  "signature": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "signedTimestamp": 1730000000000,
+  "chainId": 1,
+  "signatureMethod": "eip191",
+  "meta": {},
+  "options": {}
+}
+
+
+
+
