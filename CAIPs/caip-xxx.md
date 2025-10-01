@@ -2,6 +2,7 @@
 caip: CAIP-X
 title: Portable Proof
 author: Chris Leal (@cl34l)
+discussion-to: https://github.com/ChainAgnostic/CAIPs/pull/380
 status: Draft
 type: Standard
 created: 2025-10-01
