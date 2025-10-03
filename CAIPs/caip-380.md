@@ -18,7 +18,7 @@ Identities follow CAIP-10 (`did:pkh`) and chains follow CAIP-2.
 ## Abstract
 
 Defines a chain-agnostic, wallet-signed proof object anchored by a SHAKE-256 digest (`qHash`).
-Applications validate once off-chain; the same `qHash` may be surfaced on-chain for indexing/transport via EIP-7683–compatible vouchers.
+Applications validate once off-chain; the same `qHash` may be surfaced on-chain for indexing/transport via [EIP-7683]–compatible vouchers.
 
 ## Motivation
 
@@ -29,7 +29,7 @@ Align identities with CAIP-10 and chain context with CAIP-2 to avoid namespace c
 
 - Use [EIP-191] for broad wallet compatibility; support [EIP-1271] and detect [EIP-6492] to cover smart accounts and pre-deploy signatures.
 - Keep `qHash` anchored to a canonical subset to ensure stable, cross-environment equivalence and idempotency.
-- Treat vouchers as optional EIP-7683–compatible artifacts keyed by `qHash` to enable cross-chain transport without constraining settlement designs.
+- Treat vouchers as optional [EIP-7683]–compatible artifacts keyed by `qHash` to enable cross-chain transport without constraining settlement designs.
 
 ## Specification
 
@@ -37,7 +37,7 @@ Align identities with CAIP-10 and chain context with CAIP-2 to avoid namespace c
   - Envelope: the signed data structure defined in this document
   - Anchor: `qHash` computed over the canonical subset
   - Verifier: logic module identified by `verifierId`
-  - Voucher: optional on-chain artifact (EIP-7683–compatible) keyed by `qHash`
+  - Voucher: optional on-chain artifact ([EIP-7683]–compatible) keyed by `qHash`
 
 - **Identifiers:**
   - Chains: `eip155:<chainId>` per CAIP-2 (numeric `chainId` on-wire)
@@ -63,7 +63,7 @@ Align identities with CAIP-10 and chain context with CAIP-2 to avoid namespace c
 
 - **Canonical signing (MUST):** [EIP-191] (also known as `personal_sign`). Exact six-line signer string structure (line 1 is a fixed context label; default label shown):
   - Freshness: reject if older than 5 minutes or >1 minute in the future
-  - Smart-accounts: support [EIP-1271]; 
+  - Smart-accounts: support [EIP-1271];
   - detect [EIP-6492] wrappers.
 
 ```sh
@@ -79,20 +79,20 @@ Align identities with CAIP-10 and chain context with CAIP-2 to avoid namespace c
   - key-sorted objects;
   - omit `undefined`;
   - preserve `null`;
-  - arrays keep order; 
+  - arrays keep order;
   - standard JSON escaping;
   - no "pretty-print" or whitespace.
-- **Anchor (SHOULD):** `qHash = SHAKE-256_32(canonical_json({ did, verifierIds, data, signedTimestamp, chainId }))`. 
+- **Anchor (SHOULD):** `qHash = SHAKE-256_32(canonical_json({ did, verifierIds, data, signedTimestamp, chainId }))`.
   - Implementations MAY compute `qHash = SHAKE-256_32(canonical_json(data))` for compatibility with existing systems, provided validators reconstruct the same anchor deterministically.
   - Cross-domain portability is maximized with the canonical subset.
-- **Voucherization (SHOULD):** 
-  - provide exactly one EIP-7683–compatible voucher per target chain, keyed by `qHash`;
+- **Voucherization (SHOULD):**
+  - provide exactly one [EIP-7683]–compatible voucher per target chain, keyed by `qHash`;
   - creation SHOULD be access-controlled and idempotent.
-- **EIP-712 option (MAY):** When `signatureMethod` is `eip712`, use EIP-712 typed data. The envelope fields remain unchanged.
+- **[EIP-712] option (MAY):** When `signatureMethod` is `eip712`, use [EIP-712] typed data. The envelope fields remain unchanged.
 
 ### Conformance
 
-- **Clients MUST:** 
+- **Clients MUST:**
   1. construct the six-line signer string;
   2. sign with EIP-191;
   3. include `did`, `qHash`, `verifierIds`, `data`, `signature`, `signedTimestamp`, `chainId`.
