@@ -33,11 +33,30 @@ Align identities with CAIP-10 and chain context with CAIP-2 to avoid namespace c
 
 ## Specification
 
-- **Terminology:**
-  - Envelope: the signed data structure defined in this document
-  - Anchor: `qHash` computed over the canonical subset
-  - Verifier: logic module identified by `verifierId`
-  - Voucher: optional on-chain artifact ([EIP-7683]–compatible) keyed by `qHash`
+> Conformance Language. The key words MUST, MUST NOT, SHOULD, MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals. Unless otherwise stated, bullets under a normative heading inherit the heading’s conformance level.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in uppercase in this document are to be interpreted as described in [RFC 2119] and [RFC 8174].
+
+### Terminology
+
+- Envelope: The top-level, signed data structure defined by this CAIP.
+- Canonical Subset: The exact set of Envelope properties that MUST be serialized deterministically (see Deterministic JSON) and hashed to produce the Anchor.
+- Anchor: The 32-byte `qHash` (SHAKE-256, 32 bytes) computed over the canonical serialization of the Canonical Subset.
+- Verifier: logic module identified by `verifierId`.
+- Voucher: optional on-chain artifact ([EIP-7683]–compatible) keyed by `qHash`.
+
+### Canonical Subset (Normative)
+
+The Canonical Subset MUST contain exactly the following top-level properties and MUST NOT contain any others:
+
+1. "did" (string) — CAIP-10 account identifier of the signer (`did:pkh:eip155:<chainId>:<address>`).
+2. "verifierIds" (array of string) — MUST be a non-empty array of ASCII identifiers.
+3. "data" (object) — application payload object.
+4. "signedTimestamp" (integer) — Unix epoch milliseconds when the user signed.
+5. "chainId" (integer) — numeric EVM chain ID.
+
+`chainId` is a JSON integer. The signer DID MUST map to CAIP-10 `did:pkh:eip155:<chainId>:<address>`, where `<chainId>` is the same integer rendered in decimal.
+
+Extensibility. Any additional top-level properties MUST be outside the Canonical Subset and therefore excluded from the Anchor. Producers MAY add such properties (e.g., `signature`, `signedMessage`, `signatureMethod`, `options`, `meta`), but validators MUST ignore unknown non-canonical properties when computing/validating the Anchor, while they MAY apply additional local validation policies to them.
 
 - **Identifiers:**
   - Chains: `eip155:<chainId>` per CAIP-2 (numeric `chainId` on-wire)
@@ -61,34 +80,115 @@ Align identities with CAIP-10 and chain context with CAIP-2 to avoid namespace c
   }
 ```
 
-- **Canonical signing (MUST):** [EIP-191] (also known as `personal_sign`). Exact six-line signer string structure (line 1 is a fixed context label; default label shown):
-  - Freshness: reject if older than 5 minutes or >1 minute in the future
-  - Smart-accounts: support [EIP-1271];
-  - detect [EIP-6492] wrappers.
+- **Canonical signing (MUST):** All sub-requirements in this section are MUST unless marked otherwise.
 
-```sh
-  Portable Proof Verification Request
-  Wallet: 0x<lowercased address>
-  Chain: <numeric chain id>
-  Verifiers: <comma-separated verifier ids>
-  Data: <deterministic JSON of envelope.data>
-  Timestamp: <unix ms>
+### Canonical Signing (Normative)
+
+Signatures MUST use [EIP-191] (`personal_sign`) over the exact six-line message below.
+
+Six-line signer message (ABNF):
+
+```abnf
+signer-msg = line1 LF line2 LF line3 LF line4 LF line5 LF line6
+
+line1 = "Portable Proof Verification Request" ; fixed context label
+line2 = "Wallet: " eth-addr
+line3 = "Chain: " 1*DIGIT               ; numeric chain id
+line4 = "Verifiers: " verifier-id *("," verifier-id)
+line5 = "Data: " 1*VCHAR                ; canonical JSON of envelope.data (no spaces)
+line6 = "Timestamp: " 1*DIGIT           ; unix ms
+
+eth-addr = "0x" 40HEXDIG               ; MUST be lowercased in practice
+verifier-id = 1*(ALPHA / DIGIT / "-" / "_" / ".")
+LF = %x0A
 ```
 
-- **Deterministic JSON (MUST):**
-  - key-sorted objects;
-  - omit `undefined`;
-  - preserve `null`;
-  - arrays keep order;
-  - standard JSON escaping;
-  - no "pretty-print" or whitespace.
-- **Anchor (SHOULD):** `qHash = SHAKE-256_32(canonical_json({ did, verifierIds, data, signedTimestamp, chainId }))`.
-  - Implementations MAY compute `qHash = SHAKE-256_32(canonical_json(data))` for compatibility with existing systems, provided validators reconstruct the same anchor deterministically.
+Binding rules.
+
+- `line2` address MUST equal the lowercased address component of `did`.
+- `line3` MUST equal `chainId`.
+- `line4` MUST equal the ASCII join of `verifierIds` with `","` (no spaces).
+- `line5` MUST equal the deterministic (canonical) JSON bytes of `data` as defined in Deterministic JSON. It MUST be the exact byte sequence used inside the Canonical Subset's `data` portion.
+- `line6` MUST equal `signedTimestamp`.
+- The recovered EOA address (for EOA signers) MUST match the address component of `did`.
+
+Address Case. Implementations MUST compare addresses case-insensitively. For canonicalization and binding, the address component of `did` MUST be normalized to lowercase. Examples in this CAIP show lowercase addresses.
+
+Freshness window.
+
+- Verifiers MUST reject if `signedTimestamp` is older than 5 minutes from verification time or more than 60 seconds in the future (clock-skew allowance). Implementations SHOULD make this window configurable, but MUST default to these values.
+- Verification time is the validator’s local wall clock; implementations SHOULD use a synchronized time source.
+
+- **Deterministic JSON (MUST):** See the following normative rules.
+
+### Deterministic JSON (Normative)
+
+All canonicalization in this CAIP follows a JCS-style profile.
+
+- Scope. The rules apply to: (1) the Canonical Subset object, and (2) the `"data"` object contained within it. Non-canonical, top-level extension properties are not included in the Anchor and MUST NOT be fed into the Canonical Subset digest.
+
+- Objects. Keys MUST be UTF-8 and lexicographically sorted by Unicode code point, with no duplicate keys.
+
+- Arrays. Order MUST be preserved as provided.
+
+- Values.
+  - The value `undefined` MUST NOT appear anywhere in the Canonical Subset or the `"data"` object. Producers MUST omit such keys entirely.
+  - The value `null` MUST be preserved as a value if present.
+  - Strings MUST use JSON escapes per RFC 8259; numbers SHOULD use shortest round-trip representation; booleans unchanged.
+
+- Whitespace. No insignificant whitespace MUST be present in the serialized canonical form.
+
+- Encoding. Canonical byte sequence MUST be UTF-8.
+
+Canonicalization example (informative)
+
+Input (producer view):
+
+```text
+{
+  "did": "did:pkh:eip155:1:0xabc000000000000000000000000000000000def0",
+  "verifierIds": ["ownership-basic", "x-bonus"],
+  "data": { "owner": "0xabc000000000000000000000000000000000def0" },
+  "signedTimestamp": 1738532812345,
+  "chainId": 1,
+  "meta": { "debug": true }    // extension, not canonical
+}
+```
+
+Canonical Subset serialized (bytes fed to Anchor):
+
+```json
+{"chainId":1,"data":{"owner":"0xabc000000000000000000000000000000000def0"},"did":"did:pkh:eip155:1:0xabc000000000000000000000000000000000def0","signedTimestamp":1738532812345,"verifierIds":["ownership-basic","x-bonus"]}
+```
+- **Anchor (MUST):** `qHash = "0x" + hex_lower( SHAKE-256_32( canonical_json( CanonicalSubset ) ) )`, where `CanonicalSubset` is exactly `{ did, verifierIds, data, signedTimestamp, chainId }` serialized per Deterministic JSON.
+  - The hex representation MUST be 64 lowercase hexadecimal characters prefixed with `0x`.
   - Cross-domain portability is maximized with the canonical subset.
 - **Voucherization (SHOULD):**
   - provide exactly one [EIP-7683]–compatible voucher per target chain, keyed by `qHash`;
   - creation SHOULD be access-controlled and idempotent.
-- **[EIP-712] option (MAY):** When `signatureMethod` is `eip712`, use [EIP-712] typed data. The envelope fields remain unchanged.
+- **[EIP-712] (Future Work):** A typed-data variant may be standardized in a future revision. This document defines only the EIP-191 string for canonical signing.
+
+### Smart-Account Support (EIP-1271) and 6492 Detection (Normative)
+
+Implementations MUST support contract-based accounts ([EIP-1271]) and MUST detect/verify [EIP-6492] signature wrappers.
+
+Verification algorithm:
+
+1. Parse signature.
+   - If input bytes match the EIP-6492 wrapper format, unwrap to obtain the inner signature bytes and deployment proof metadata (e.g., factory address, initCode). Record provenance metadata as needed.
+2. Determine signer type.
+   - If there is code at the DID’s address on `chainId` (or 6492 proves a counterfactual deployment), treat as a smart account; otherwise treat as EOA.
+3. EOA path.
+   - Recover address with EIP-191 over the exact six-line message. If recovered address ≠ the address component of `did`, fail.
+4. Smart-account path.
+   - Call `isValidSignature(<message-bytes>, <signature-bytes>)` on the contract at the DID’s address on the chain identified by `chainId` (or on the counterfactual proven by 6492). The call MUST return magic value `0x1626ba7e`; any other result or a revert MUST be treated as invalid. When using 6492, validators MUST validate the deployment proof per [EIP-6492].
+5. Result.
+   - On success, proceed to freshness checks and Anchor matching; on failure, reject.
+
+Notes.
+
+- Implementations MUST verify the same message bytes for both EOA and 1271 paths (no hashing differences).
+- If both EOA recovery and 1271 succeed (unexpected), prefer 1271 and emit a warning.
 
 ### Conformance
 
@@ -126,6 +226,19 @@ Implementers are encouraged to consider:
 1. Minimize `data` to what is necessary for verification; avoid including sensitive PII.
 2. Public exposure SHOULD avoid revealing raw signatures; share only `qHash` and high-level verifier summaries.
 3. For public artifacts, use content addressing (e.g., [IPFS]) and masking where appropriate.
+
+## Appendix A — Validation Checklist (Informative)
+
+1. Build Canonical Subset (exact keys only) and canonicalize.
+2. Compute `Anchor = qHash(canonical-bytes)`.
+3. Construct six-line message; ensure exact field equality.
+4. Verify signature:
+   - Parse 6492 wrapper if present.
+   - If EOA: EIP-191 recover equals the DID’s address component.
+   - If smart account: EIP-1271 `isValidSignature` returns magic value; 6492 proof valid if used.
+5. Check freshness window (`signedTimestamp` within [-5m, +60s]).
+6. Canonicalize `data` and ensure it matches the `Data:` line bytes.
+7. Accept; otherwise reject with the first failing step recorded.
 
 ## Test Cases
 
@@ -166,6 +279,8 @@ Canonical example envelope (must match attached test vector [`minimal-1.json`](/
 [EIP-6492]: https://eips.ethereum.org/EIPS/eip-6492
 [EIP-7683]: https://eips.ethereum.org/EIPS/eip-7683
 [IPFS]: https://docs.ipfs.tech
+[RFC 2119]: https://www.rfc-editor.org/rfc/rfc2119
+[RFC 8174]: https://www.rfc-editor.org/rfc/rfc8174
 
 ## References
 
