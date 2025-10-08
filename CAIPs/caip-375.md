@@ -81,7 +81,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 **Rules:**
 
-- `sessionId` is OPTIONAL but SHOULD follow CAIP-171 if provided.
+- `sessionId` is OPTIONAL but MUST follow CAIP-171 if provided.
 - Each message MUST include `messageType` and `content`.
 - Wallets MAY choose any of the provided `signatureTypes`.
 - Response MUST include `account` and `signatureType` for each signature
