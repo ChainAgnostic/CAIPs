@@ -33,7 +33,6 @@ Align identities with CAIP-10 and chain context with CAIP-2 to avoid namespace c
 
 ## Specification
 
-> Conformance Language. The key words MUST, MUST NOT, SHOULD, MAY are to be interpreted as described in RFC 2119 and RFC 8174 when, and only when, they appear in all capitals. Unless otherwise stated, bullets under a normative heading inherit the heading’s conformance level.
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" written in uppercase in this document are to be interpreted as described in [RFC 2119] and [RFC 8174].
 
 ### Terminology
@@ -44,23 +43,23 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 - Verifier: logic module identified by `verifierId`.
 - Voucher: optional on-chain artifact ([EIP-7683]–compatible) keyed by `qHash`.
 
-### Canonical Subset (Normative)
+### Core Envelope — Canonical Subset (Normative)
 
 The Canonical Subset MUST contain exactly the following top-level properties and MUST NOT contain any others:
 
-1. "did" (string) — CAIP-10 account identifier of the signer (`did:pkh:eip155:<chainId>:<address>`).
+1. "did" (string) — CAIP-10 account identifier of the signer (e.g., `did:pkh:<chainRef>:<address>`; for EVM, `did:pkh:eip155:<chainId>:<address>`).
 2. "verifierIds" (array of string) — MUST be a non-empty array of ASCII identifiers.
 3. "data" (object) — application payload object.
 4. "signedTimestamp" (integer) — Unix epoch milliseconds when the user signed.
-5. "chainId" (integer) — numeric EVM chain ID.
+5. One of: "chainId" (integer, EVM profile) or "chain" (string, CAIP-2 chain reference for non-EVM or alternate namespaces).
 
-`chainId` is a JSON integer. The signer DID MUST map to CAIP-10 `did:pkh:eip155:<chainId>:<address>`, where `<chainId>` is the same integer rendered in decimal.
+Chain binding: If `chainId` is present, the signer DID MUST map to `did:pkh:eip155:<chainId>:<address>`. If `chain` is present, the signer DID MUST map to `did:pkh:<chain>:<address>` where `<chain>` is a CAIP-2 reference (e.g., `solana:mainnet`, `eip155:1`). Exactly one of (`chainId`, `chain`) MUST be present.
 
 Extensibility. Any additional top-level properties MUST be outside the Canonical Subset and therefore excluded from the Anchor. Producers MAY add such properties (e.g., `signature`, `signedMessage`, `signatureMethod`, `options`, `meta`), but validators MUST ignore unknown non-canonical properties when computing/validating the Anchor, while they MAY apply additional local validation policies to them.
 
 - **Identifiers:**
-  - Chains: `eip155:<chainId>` per CAIP-2 (numeric `chainId` on-wire)
-  - Accounts: `did:pkh:eip155:<chainId>:<address>` per CAIP-10
+  - Chains: CAIP-2 references (e.g., `eip155:1`, `solana:mainnet`)
+  - Accounts: CAIP-10 `did:pkh:<chainRef>:<address>`
 - **Envelope (top-level):**
   - Note that the fields `signedMessage` and `signatureMethod` are OPTIONAL (see Conformance).
 
@@ -82,9 +81,16 @@ Extensibility. Any additional top-level properties MUST be outside the Canonical
 
 - **Canonical signing (MUST):** All sub-requirements in this section are MUST unless marked otherwise.
 
-### Canonical Signing (Normative)
+### Signature Profiles
+
+Universal signing: The envelope, Canonical Subset, determinism rules, freshness, and `qHash` are universal across ecosystems; non-EVM (e.g., Solana) follow the same six-line message with profile-specific bindings.
+
+Default freshness window (applies to all profiles): verifiers MUST reject if `signedTimestamp` is older than 5 minutes from verification time or more than 60 seconds in the future (clock-skew allowance).
+
+#### EVM Profile (Normative)
 
 Signatures MUST use [EIP-191] (`personal_sign`) over the exact six-line message below.
+Signature encoding: `signature` MUST be 0x-prefixed, lowercase hex (applies to [EIP-191], [EIP-1271], and [EIP-6492]).
 
 Six-line signer message (ABNF):
 
@@ -140,6 +146,8 @@ All canonicalization in this CAIP follows a JCS-style profile.
 
 - Encoding. Canonical byte sequence MUST be UTF-8.
 
+Signer bytes normalization (Normative): Implementations MUST produce the six-line signer message as UTF-8 without BOM, using LF ("\n", 0x0A) line endings only, and strings MUST be NFC-normalized prior to serialization. This requirement prevents cross-environment drift (e.g., differing newline conventions or BOM insertion).
+
 Canonicalization example (informative)
 
 Input (producer view):
@@ -163,10 +171,33 @@ Canonical Subset serialized (bytes fed to Anchor):
 - **Anchor (MUST):** `qHash = "0x" + hex_lower( SHAKE-256_32( canonical_json( CanonicalSubset ) ) )`, where `CanonicalSubset` is exactly `{ did, verifierIds, data, signedTimestamp, chainId }` serialized per Deterministic JSON.
   - The hex representation MUST be 64 lowercase hexadecimal characters prefixed with `0x`.
   - Cross-domain portability is maximized with the canonical subset.
+  - The Canonical Subset includes exactly one of `chainId` (EVM) or `chain` (CAIP-2 string) and the Anchor is computed over whichever is present.
 - **Voucherization (SHOULD):**
   - provide exactly one [EIP-7683]–compatible voucher per target chain, keyed by `qHash`;
   - creation SHOULD be access-controlled and idempotent.
 - **[EIP-712] (Future Work):** A typed-data variant may be standardized in a future revision. This document defines only the EIP-191 string for canonical signing.
+
+### Non-EVM example (Informative: ed25519 / Solana)
+
+Signatures SHOULD use Ed25519 over the same six-line message (non-EVM, e.g., Solana) with the following substitutions:
+Signature encoding: `signature` SHOULD be base58 (64-byte Ed25519).
+
+ABNF differences:
+
+```abnf
+line2 = "Wallet: " base58-addr         ; base58 account, case-sensitive
+line3 = "Chain: " chain-ref            ; CAIP-2 chain string (e.g., "solana:mainnet")
+base58-addr = 1*(ALPHA / DIGIT)        ; simplified; wallets enforce full alphabet
+chain-ref = 1*VCHAR                    ; CAIP-2 reference
+```
+
+Binding rules:
+
+- `did` MUST be `did:pkh:solana:<ref>:<base58Address>` and MUST match `Wallet:` and `Chain:`.
+- `signatureMethod` SHOULD be `ed25519`.
+- `Data:` line canonicalization is identical to EVM.
+
+Validation sketch: verify Ed25519 over the exact six-line bytes. Freshness and `qHash` rules are unchanged.
 
 ### Smart-Account Support (EIP-1271) and 6492 Detection (Normative)
 
@@ -190,21 +221,38 @@ Notes.
 - Implementations MUST verify the same message bytes for both EOA and 1271 paths (no hashing differences).
 - If both EOA recovery and 1271 succeed (unexpected), prefer 1271 and emit a warning.
 
+### 380↔7683 Composition (Informative)
+
+380 and 7683 are complementary: 380 provides a portable, off-chain proof keyed by `qHash`; 7683 provides cross-chain intent/settlement. Two common compositions:
+
+1. 7683 carries 380: include `qHash` (and optional verifier summary) in a 7683 intent. Settlement looks up and verifies by `qHash`.
+2. 380 carries 7683: embed a 7683 intent object inside `data`; the 380 signature attests to it; settlement proceeds per 7683.
+
+Example (illustrative):
+
+```json
+{
+  "voucher": {
+    "intent": { "payload": { "qHash": "0x…" } }
+  }
+}
+```
+
 ### Conformance
 
 - **Clients MUST:**
   1. construct the six-line signer string;
-  2. sign with EIP-191;
-  3. include `did`, `qHash`, `verifierIds`, `data`, `signature`, `signedTimestamp`, `chainId`.
+  2. sign per the selected Signature Profile;
+  3. include `did`, `qHash`, `verifierIds`, `data`, `signature`, `signedTimestamp`, and exactly one of (`chainId`, `chain`).
 - **Clients MAY:**
   1. include `signedMessage` (diagnostic);
   2. include `signatureMethod` (default `eip191`).
 - **Validators/Servers MUST:**
   1. reconstruct the signer string;
   2. enforce freshness;
-  3. validate DID/`chainId`;
+  3. validate DID and chain binding (to `chainId` or `chain` per profile);
   4. compute/verify `qHash`;
-  5. support [EIP-1271] and detect [EIP-6492].
+  5. support [EIP-1271] and detect [EIP-6492] (EVM profile).
 - **Wallets SHOULD:**
   1. support [EIP-1271] and [EIP-6492].
 
@@ -258,6 +306,27 @@ Canonical example envelope (must match attached test vector [`minimal-1.json`](/
   "signedTimestamp": 1730000000000,
   "chainId": 1,
   "signatureMethod": "eip191",
+  "meta": {},
+  "options": {}
+}
+```
+
+Non-EVM example envelope (informative; see attached vector [`minimal-solana-1.json`](/assets/caip-380/minimal-solana-1.json)):
+
+```json
+{
+  "did": "did:pkh:solana:devnet:11111111111111111111111111111111",
+  "qHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
+  "verifierIds": ["ownership-basic"],
+  "data": {
+    "owner": "11111111111111111111111111111111",
+    "reference": { "type": "other", "id": "example-solana-1" }
+  },
+  "signedMessage": "Portable Proof Verification Request\nWallet: 11111111111111111111111111111111\nChain: solana:devnet\nVerifiers: ownership-basic\nData: {\"owner\":\"11111111111111111111111111111111\",\"reference\":{\"type\":\"other\",\"id\":\"example-solana-1\"}}\nTimestamp: 1730000000000",
+  "signature": "5Ed25519SignatureBase58ExampleXXXXXXXXXXXXXXXXXXXXXXXX",
+  "signedTimestamp": 1730000000000,
+  "chain": "solana:devnet",
+  "signatureMethod": "ed25519",
   "meta": {},
   "options": {}
 }

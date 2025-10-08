@@ -1,33 +1,53 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "urn:caip:portable-proof.schema.json",
-    "title": "Portable Proof Envelope",
-    "type": "object",
-    "required": [
-      "did",
-      "qHash",
-      "verifierIds",
-      "data",
-      "signature",
-      "signedTimestamp",
-      "chainId"
-    ],
-    "properties": {
-      "did": { "type": "string", "pattern": "^did:pkh:eip155:\\d+:0x[0-9a-f]{40}$" },
-      "qHash": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
-      "verifierIds": { "type": "array", "items": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" }, "minItems": 1 },
-      "data": { "type": "object" },
-      "signature": { "type": "string", "pattern": "^0x[0-9a-fA-F]+$" },
-      "signedMessage": { "type": "string", "description": "Optional: exact signer string for diagnostics" },
-      "signedTimestamp": { "type": "integer" },
-      "chainId": { "type": "integer" },
-      "signatureMethod": { "type": "string", "enum": ["eip191"], "description": "Optional: defaults to eip191; eip712 is reserved for a future revision" },
-      "options": { "type": "object" },
-      "meta": { "type": "object" }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:caip:portable-proof.schema.json",
+  "title": "Portable Proof Envelope",
+  "type": "object",
+  "required": [
+    "did",
+    "qHash",
+    "verifierIds",
+    "data",
+    "signature",
+    "signedTimestamp"
+  ],
+  "properties": {
+    "did": { "type": "string", "pattern": "^did:pkh:[a-z0-9]+:[A-Za-z0-9._:-]+$" },
+    "qHash": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+    "verifierIds": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+      "minItems": 1
     },
-    "additionalProperties": true
-  }
-  
-  
-  
-  
+    "data": { "type": "object" },
+    "signature": { "type": "string" },
+    "signedMessage": { "type": "string", "description": "Optional: exact signer string for diagnostics" },
+    "signedTimestamp": { "type": "integer" },
+    "chainId": { "type": "integer" },
+    "chain": { "type": "string", "description": "CAIP-2 chain reference string (e.g., eip155:1, solana:mainnet)" },
+    "signatureMethod": {
+      "type": "string",
+      "enum": ["eip191", "ed25519"],
+      "description": "Optional: defaults to eip191; eip712 reserved for a future revision"
+    },
+    "options": { "type": "object" },
+    "meta": { "type": "object" }
+  },
+  "oneOf": [
+    {
+      "required": ["chainId"],
+      "properties": {
+        "signatureMethod": { "enum": ["eip191"], "default": "eip191" }
+      },
+      "not": { "required": ["chain"] }
+    },
+    {
+      "required": ["chain", "signatureMethod"],
+      "properties": {
+        "signatureMethod": { "const": "ed25519" }
+      },
+      "not": { "required": ["chainId"] }
+    }
+  ],
+  "additionalProperties": true
+}
