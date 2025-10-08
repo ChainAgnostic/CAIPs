@@ -81,7 +81,7 @@ The JSON-RPC method is labeled as `wallet_invokeMethod` and expects three parame
 - **request** (required) - an object containing the fields:
   - **method** (required) - the JSON-RPC method to invoke (previously authorized for the targeted network)
   - **params** (required) - JSON-RPC parameters to invoke (may be empty but must be set)
-- **capabilities** (optional) - an object containing metadata discovered through a [CAIP-25][] session of capabilities exposed by the wallet to be invoked with this method
+- **capabilities** (optional) - an object containing metadata pertaining to a capability announced by the wallet in the [CAIP-25][] return object, to be invoked with this method
 
 ### Validation
 
