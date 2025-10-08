@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/27
 status: Draft
 type: Standard
 created: 2020-12-12
-updated: 2024-08-12
+updated: 2025-08-08
 requires: 2, 25, 171, 217, 316
 ---
 
@@ -60,6 +60,15 @@ The application would interface with an JSON-RPC provider to make request as fol
           "gasPrice": "0x4a817c800"
         }
       ]
+    },
+    "capabilities": {
+      "atomic": {
+        "status": "supported"
+      },
+      "paymasterService": {
+        "url": "https://...",
+        "optional": true
+      }
     }
   }
 }
@@ -72,6 +81,7 @@ The JSON-RPC method is labeled as `wallet_invokeMethod` and expects three parame
 - **request** (required) - an object containing the fields:
   - **method** (required) - the JSON-RPC method to invoke (previously authorized for the targeted network)
   - **params** (required) - JSON-RPC parameters to invoke (may be empty but must be set)
+- **capabilities** (optional) - an object containing metadata pertaining to a capability announced by the wallet in the [CAIP-25][] return object, to be invoked with this method
 
 ### Validation
 
