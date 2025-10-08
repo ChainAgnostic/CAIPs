@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/364
 status: Draft
 type: Standard
 created: 2025-07-01
-requires: CAIP-2, CAIP-10
+requires: 2, 10
 ---
 
 ## Simple Summary
