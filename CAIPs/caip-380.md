@@ -20,6 +20,8 @@ Identities follow CAIP-10 (`did:pkh`) and chains follow CAIP-2.
 Defines a chain-agnostic, wallet-signed proof object anchored by a SHAKE-256 digest (`qHash`).
 Applications validate once off-chain; the same `qHash` may be surfaced on-chain for indexing/transport via [EIP-7683]–compatible vouchers.
 
+Non-goal: CAIP-380 is not an authentication/session protocol. It standardizes a portable, canonical wallet-signed envelope for verifiability; authentication is an application-level choice layered above 380 with additional requirements.
+
 ## Motivation
 
 Establish a canonical, deterministic envelope that can be validated once and referenced anywhere (off-chain or on-chain) without binding to any vendor, domain, or transport.
@@ -54,6 +56,8 @@ The Canonical Subset MUST contain exactly the following top-level properties and
 5. One of: "chainId" (integer, EVM profile) or "chain" (string, CAIP-2 chain reference for non-EVM or alternate namespaces).
 
 Chain binding: If `chainId` is present, the signer DID MUST map to `did:pkh:eip155:<chainId>:<address>`. If `chain` is present, the signer DID MUST map to `did:pkh:<chain>:<address>` where `<chain>` is a CAIP-2 reference (e.g., `solana:mainnet`, `eip155:1`). Exactly one of (`chainId`, `chain`) MUST be present.
+
+For EVM signatures (eip191/eip1271/eip6492), producers MUST use `chainId`; using `chain = "eip155:*"` with EVM is NOT RECOMMENDED.
 
 Extensibility. Any additional top-level properties MUST be outside the Canonical Subset and therefore excluded from the Anchor. Producers MAY add such properties (e.g., `signature`, `signedMessage`, `signatureMethod`, `options`, `meta`), but validators MUST ignore unknown non-canonical properties when computing/validating the Anchor, while they MAY apply additional local validation policies to them.
 
@@ -123,13 +127,13 @@ Address Case. Implementations MUST compare addresses case-insensitively. For can
 Freshness window.
 
 - Verifiers MUST reject if `signedTimestamp` is older than 5 minutes from verification time or more than 60 seconds in the future (clock-skew allowance). Implementations SHOULD make this window configurable, but MUST default to these values.
-- Verification time is the validator’s local wall clock; implementations SHOULD use a synchronized time source.
+- Verification time is the validator’s local wall clock; implementations SHOULD use a synchronized time source (e.g., NTP).
 
 - **Deterministic JSON (MUST):** See the following normative rules.
 
 ### Deterministic JSON (Normative)
 
-All canonicalization in this CAIP follows a JCS-style profile.
+All canonicalization in this CAIP follows a JCS-style profile (RFC 8785).
 
 - Scope. The rules apply to: (1) the Canonical Subset object, and (2) the `"data"` object contained within it. Non-canonical, top-level extension properties are not included in the Anchor and MUST NOT be fed into the Canonical Subset digest.
 
@@ -145,6 +149,8 @@ All canonicalization in this CAIP follows a JCS-style profile.
 - Whitespace. No insignificant whitespace MUST be present in the serialized canonical form.
 
 - Encoding. Canonical byte sequence MUST be UTF-8.
+
+- Recommendation. Implementations SHOULD conform to RFC 8785 (JSON Canonicalization Scheme, JCS) or an equivalent deterministic algorithm to produce canonical bytes.
 
 Signer bytes normalization (Normative): Implementations MUST produce the six-line signer message as UTF-8 without BOM, using LF ("\n", 0x0A) line endings only, and strings MUST be NFC-normalized prior to serialization. This requirement prevents cross-environment drift (e.g., differing newline conventions or BOM insertion).
 
@@ -248,24 +254,64 @@ Example (illustrative):
   1. include `signedMessage` (diagnostic);
   2. include `signatureMethod` (default `eip191`).
 - **Validators/Servers MUST:**
-  1. reconstruct the signer string;
-  2. enforce freshness;
-  3. validate DID and chain binding (to `chainId` or `chain` per profile);
-  4. compute/verify `qHash`;
-  5. support [EIP-1271] and detect [EIP-6492] (EVM profile).
+  1. Reconstruct the signer string exactly (LF line breaks, field order, and canonicalized `data`).
+  2. Verify signature:
+     - EVM: attempt [EIP-191] recovery; if it fails, call [EIP-1271]; if that fails, accept [EIP-6492] only if the deployment proof validates.
+     - Non-EVM: verify Ed25519 over the same bytes.
+  3. Bind identity/chain: the recovered/validated address MUST match the `did`, and `did` MUST match `chainId` or `chain` per profile.
+  4. MUST reject if both `chainId` and `chain` are present, or both are absent.
+  5. Enforce freshness: reject if `signedTimestamp` is older than 5 minutes or more than +60 seconds ahead (clock skew).
+  6. Compute and compare `qHash` from the Canonical Subset bytes; reject on mismatch.
+  7. SHOULD deduplicate by `qHash` when persisting, indexing, or transporting.
 - **Wallets SHOULD:**
   1. support [EIP-1271] and [EIP-6492].
 
 ## Security Considerations
 
-Implementers are encouraged to consider:
-  
-1. Replay-window enforcement;
-2. strict signer-string determinism;
-3. DID/`chainId` validation;
-4. controlled voucher creation;
-5. deduplication by `qHash`;
-6. idempotent relays.
+- Validators **MUST** enforce the freshness window (**5m TTL**, **+60s** skew) and signer determinism.
+
+- **Baseline (normative):**
+  - Enforce TTL and clock-skew limits.
+  - Reconstruct the six-line signer string **exactly** (UTF-8, LF, canonical `data` bytes).
+  - Bind DID ↔ chain (address matches `did`; `did` matches asserted `chainId` or `chain`).
+  - Canonicalize JSON (`data`) per JCS-style rules.
+  - When storing or transporting, **SHOULD** deduplicate by `qHash` to avoid cross-transport replay.
+
+- **Threats → required behavior (normative):**
+  - **Envelope replay across time:** **MUST** reject if `signedTimestamp` is older than 5m or > +60s ahead.
+  - **Cross-transport replay:** **SHOULD** treat `qHash` as an idempotent key and deduplicate on write/relay.
+  - **Message malleability:** **MUST** use deterministic six-line signer string and canonical JSON (`data`) bytes.
+  - **Signer ambiguity (EVM AA):** **MUST** verify in order **191 → 1271 → 6492 (with proof)**, then bind to `did`.
+  - **Wrong chain/address binding:** **MUST** ensure recovered/validated address matches `did` and asserted **chainId/chain**.
+
+- **Use for authentication (informative, out of scope):**
+  - CAIP-380 is not auth/session. If an app chooses to use it for auth, additionally:
+    - bind to an audience/origin,
+    - require a single-use nonce,
+    - shorten TTL to **≤60s**.
+
+## Using CAIP-380 for Authentication (Informative Recipe)
+
+CAIP-380 standardizes a portable proof envelope; it is **not** an auth/session protocol. If an application chooses to use 380 for login/authN, layer these app-level controls:
+
+**Client MUST include in `data`:**
+- `audience`: the app origin or identifier (e.g., `https://app.example` or `app:myapp`).
+- `nonce`: cryptographically random, single-use.
+- (optional) `scope`: requested app roles/permissions.
+
+**Server MUST perform:**
+1) **Verify per CAIP-380**: exact six-line message; signature (EVM: 191 → 1271 → 6492-with-proof; non-EVM: ed25519); DID↔chain binding; freshness (5m TTL, +60s skew); compute/compare `qHash`.
+2) **Auth checks**:
+   - `audience` equals the expected origin/app ID.
+   - `nonce` unused → mark consumed (store `(audience, nonce, did, qHash)` briefly).
+3) **Issue session**: short-lived token (e.g., JWT 5–15m) with `sub=did`, `aud=audience`, `qhash`, `iat/exp`; rotate/refresh as desired.
+4) **Replay separation**: deduplicate by `qHash` and by `(audience, nonce)`; apply rate limits by DID/IP/device.
+
+**Operational notes (guidance):**
+- Use the **same canonical JSON bytes** for `Data:` and `qHash`.
+- Prefer **shorter TTL** (≤60s) for auth prompts and browser-bound flows.
+- On mobile deep-links, pin `audience` to the app ID/bundle, not a web origin.
+- If KYC/verification is required, carry or reference the **verifier result** inside `data`; 380 attests to it, it does not perform KYC itself.
 
 ## Privacy Considerations
 
@@ -301,7 +347,7 @@ Canonical example envelope (must match attached test vector [`minimal-1.json`](/
     "owner": "0x1111111111111111111111111111111111111111",
     "reference": { "type": "other", "id": "example-1" }
   },
-  "signedMessage": "Portable Proof Verification Request\nWallet: 0x1111111111111111111111111111111111111111\nChain: 1\nVerifiers: ownership-basic\nData: {\"owner\":\"0x1111111111111111111111111111111111111111\",\"reference\":{\"type\":\"other\",\"id\":\"example-1\"}}\nTimestamp: 1730000000000",
+  "signedMessage": "Portable Proof Verification Request\nWallet: 0x1111111111111111111111111111111111111111\nChain: 1\nVerifiers: ownership-basic\nData: {\"owner\":\"0x1111111111111111111111111111111111111111\",\"reference\":{\"id\":\"example-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
   "signature": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "signedTimestamp": 1730000000000,
   "chainId": 1,
@@ -322,7 +368,7 @@ Non-EVM example envelope (informative; see attached vector [`minimal-solana-1.js
     "owner": "11111111111111111111111111111111",
     "reference": { "type": "other", "id": "example-solana-1" }
   },
-  "signedMessage": "Portable Proof Verification Request\nWallet: 11111111111111111111111111111111\nChain: solana:devnet\nVerifiers: ownership-basic\nData: {\"owner\":\"11111111111111111111111111111111\",\"reference\":{\"type\":\"other\",\"id\":\"example-solana-1\"}}\nTimestamp: 1730000000000",
+  "signedMessage": "Portable Proof Verification Request\nWallet: 11111111111111111111111111111111\nChain: solana:devnet\nVerifiers: ownership-basic\nData: {\"owner\":\"11111111111111111111111111111111\",\"reference\":{\"id\":\"example-solana-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
   "signature": "5Ed25519SignatureBase58ExampleXXXXXXXXXXXXXXXXXXXXXXXX",
   "signedTimestamp": 1730000000000,
   "chain": "solana:devnet",
@@ -350,6 +396,7 @@ Non-EVM example envelope (informative; see attached vector [`minimal-solana-1.js
 [IPFS]: https://docs.ipfs.tech
 [RFC 2119]: https://www.rfc-editor.org/rfc/rfc2119
 [RFC 8174]: https://www.rfc-editor.org/rfc/rfc8174
+[RFC 8785]: https://www.rfc-editor.org/rfc/rfc8785
 
 ## References
 

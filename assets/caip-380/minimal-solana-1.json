@@ -4,9 +4,9 @@
   "verifierIds": ["ownership-basic"],
   "data": {
     "owner": "11111111111111111111111111111111",
-    "reference": { "type": "other", "id": "example-solana-1" }
+    "reference": { "id": "example-solana-1", "type": "other" }
   },
-  "signedMessage": "Portable Proof Verification Request\nWallet: 11111111111111111111111111111111\nChain: solana:devnet\nVerifiers: ownership-basic\nData: {\"owner\":\"11111111111111111111111111111111\",\"reference\":{\"type\":\"other\",\"id\":\"example-solana-1\"}}\nTimestamp: 1730000000000",
+  "signedMessage": "Portable Proof Verification Request\nWallet: 11111111111111111111111111111111\nChain: solana:devnet\nVerifiers: ownership-basic\nData: {\"owner\":\"11111111111111111111111111111111\",\"reference\":{\"id\":\"example-solana-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
   "signature": "5Ed25519SignatureBase58ExampleXXXXXXXXXXXXXXXXXXXXXXXX",
   "signedTimestamp": 1730000000000,
   "chain": "solana:devnet",
