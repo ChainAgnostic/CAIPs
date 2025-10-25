@@ -37,7 +37,7 @@ may be important to cross-namespace use cases.
 Transactions are addressed as follows:
 
 ```
-block_address:        chain_id + ":" [ + "block:"]? + "txn/" + transaction_id + ["." + property]?
+block_address:        chain_id + ":" [ + "block:"]? + "tx/" + transaction_id + ["." + property]?
 chain_id:             [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See [CAIP-2][])
 transaction_id:       [-%a-zA-Z0-9]{1,128}
 property (optional):  (signer|recipients|type|outputs|inputs)
