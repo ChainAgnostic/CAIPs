@@ -45,6 +45,7 @@ type PaymentOption = {
   asset: string; 
   amount: Hex;
   recipient: string;
+  types: string[];
 }
 
 // JSON-RPC Request
@@ -106,11 +107,17 @@ Request example:
 ```typescript
 type PayResult = {
   version: string;
-  orderId?: string; 
-  txid: string; 
-  recipient: string;  
-  asset: string;  
-  amount: Hex; 
+  orderId?: string;
+  paymentOption: {
+    recipient: string;  
+    asset: string;  
+    amount: Hex; 
+  }
+  transferAuthorization: {
+    type: string;
+    data: string;
+  }
+
 }
 ```
 
