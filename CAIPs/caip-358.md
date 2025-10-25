@@ -41,61 +41,65 @@ The method transmits all the acceptable payment requests so the wallet can pick 
 ```typescript
 type Hex = `0x${string}`;
 
+// Accepted Payment Options
 type PaymentOption = {
   asset: string; 
   amount: Hex;
   recipient: string;
-  types: string[];
+  types?: string[];
 }
 
-// JSON-RPC Request
-type PayRequest = {
-  version: string;
-  orderId?: string;
-  acceptedPayments: PaymentOption[]; 
+// JSON-RPC Request Params
+type RequestParams = {
+  version: integer;
+  orderId: string;
   expiry: number;
+  acceptedPayments: PaymentOption[];
 }
 
 ```
 
-The application **MUST** include:
+The following request parameters are defined for `version=1` as:
 
-- At least one entry in the `acceptedPayments` array
-- `expiry` timestamp for the payment request
+- `version` - this field is an integer and **MUST** be present to define which the following parameters are optional and required.
+- `orderId` - this field **MUST** uniquely identify an order for which this payment request is linked to and **MUST NOT** be longer than 128 characters.
+- `expiry` - this field **MUST** be a UNIX timestamp (in seconds) after which the payment request is expired. Wallets **MUST** check this timestamp before processing the payment.
+- `acceptedPayments` -  this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option that the wallet can choose from to complete the payment with independent parameters.
 
-The application **MAY** include:
+For `PaymentOption` parameters these are defined for `version=1` as:
 
-- An `orderId` that uniquely identifies this payment request. If provided, `orderId` **MUST NOT** be longer than 128 characters.
+- `asset` - this field **MUST** follow the [CAIP-19][] standard.
+- `amount` - this field **MUST** be a hex-encoded string representing the amount of the asset to be transferred.
+- `recipient` - this field **MUST** be a valid [CAIP-10][] account ID.
+- `types` - this field **MUST** be an array of strings defining different transfer authorization types (eg. `erc20`, `spl`, `erc2612`, `erc3009`).
 
- When `orderId` is provided, it **MUST** be a string and implementations **SHOULD** ensure this ID is unique across their system to prevent collisions.
+**Note:** [CAIP-2][] chainId component in the [CAIP-19][] `asset` field **MUST** match the [CAIP-2][] chainId component of the [CAIP-10][] `recipient` account ID.
 
-The `acceptedPayments` field **MUST** be an array of `PaymentOption` objects. Each element in the array represents a payment option that the wallet can choose from to complete the payment.
 
-For `PaymentOption` options:
-
-- The `recipient` field **MUST** be a valid [CAIP-10][] account ID.
-- The `asset` field **MUST** follow the [CAIP-19][] standard.
-- The `amount` field **MUST** be a hex-encoded string representing the amount of the asset to be transferred.
-- The [CAIP-2][] chainId component in the [CAIP-19][] `asset` field **MUST** match the [CAIP-2][] chainId component of the [CAIP-10][] `recipient` account ID.
-
-The `expiry` field **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. Wallets **SHOULD** check this timestamp before processing the payment.
-
-Request example:
+Example Request:
 
 ```json
 {
-  "version": "1.0.0",
+  "version": 1
   "orderId": "order-123456",
   "acceptedPayments": [
     {
       "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
       "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      "amount": "0x5F5E100" 
+      "amount": "0x5F5E100",
+      "types": ["erc20", "erc3009"]
+    },
+    {
+      "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+      "amount": "0x5F5E100",
+      "types": ["erc20", "erc2612"]
     },
     {
       "recipient": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ:9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
-      "amount": "0x6F05B59D3B20000"
+      "amount": "0x6F05B59D3B20000",
+      "types": ["spl"]
     }
   ],
   "expiry": 1709593200 
@@ -105,72 +109,125 @@ Request example:
 #### Response
 
 ```typescript
-type PayResult = {
-  version: string;
-  orderId?: string;
-  paymentOption: {
-    recipient: string;  
-    asset: string;  
-    amount: Hex; 
-  }
-  transferAuthorization: {
-    type: string;
-    data: string;
-  }
+// Transfer Authorization Payload
+type TransferAuthorization = {
+  type: string; 
+  data: unknown;
+}
 
+// JSON-RPC Response Result
+type ResponseResult = {
+  version: string;
+  orderId: string;
+  paymentOption: PaymentOption
+  transferAuthorization: TransferAuthorization
 }
 ```
+The following response parameters are defined for `version=1` as:
 
-The wallet's response MUST include:
+- `version` - this field is an integer and **MUST** match the same one as the request.
+- `orderId` - this field is a string and **MUST** match the same one as the request.
+- `paymentOption` - this field is a `PaymentOption` object and describes which option was used to fulfill this request and **MUST** match one of the available ones in the request.
+- `transferAuthorization` - this field is a `TransferAuthorization` object and will include the transfer type used and corresponding data which **MUST** not be empty.
 
-- `txid` with the transaction identifier on the blockchain
-- `recipient` that received the payment. It **MUST** be a valid [CAIP-10][] account ID.
-- `asset` that was used for payment. It **MUST** follow the [CAIP-19][] standard.
-- `amount` that was paid. It **MUST** be represented in hex string
+For `TransferAuthorization` parameters here are some different types:
 
-If an `orderId` was provided in the original request, the response **MUST** include the same `orderId`.
+```typescript
+// ERC-20 Transfer Authorization
+type TransferAuthorization = {
+  type: "erc20"; 
+  data: {
+   txn: string;
+  };
+}
 
-`txid` **MUST** be a valid transaction identifier on the blockchain network specified in the asset's chain ID.
+// ERC-2612 Transfer Authorization
+type TransferAuthorization = {
+  type: "erc2612"; 
+  data: {
+   msg: string;
+   sig: string;
+  };
+}
 
- `recipient`, `asset`, and `amount` **MUST** match those specified in the selected direct payment option in the `acceptedPayments` array.
+// ERC-3009 Transfer Authorization
+type TransferAuthorization = {
+  type: "erc3009"; 
+  data: {
+   msg: string;
+   sig: string;
+  };
+}
+
+// SPL Transfer Authorization
+type TransferAuthorization = {
+  type: "spl"; 
+  data: {
+   txn: string;
+  };
+}
+
+```
 
 
-Example response:
+Example Response:
 ```json
+// Response (type="erc20")
+
 {
-  "version": "1.0.0",
+  "version": 1
   "orderId": "order-123456",
-  "txid": "0x8a8c3e0b1b812182db4cabd81c9d6de78e549fa3bf3d505d6e1a2b25a15789ed",
-  "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-  "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  "amount": "0x5F5E100"
+  "paymentSelected":  {
+     "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+     "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+     "amount": "0x5F5E100",
+     "types": ["erc20", "erc3009"]
+   },
+  "transferConfirmation": {
+    "type": "erc20",
+    "data": {
+       "txn": "0x8a8c3e0b1b812182db4cabd81c9d6de78e549fa3bf3d505d6e1a2b25a15789ed", 
+    }
+  },
+}
+
+
+// Response (type="erc3009")
+
+{
+  "version": 1
+  "orderId": "order-123456",
+  "paymentSelected": {
+     "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+     "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+     "amount": "0x5F5E100",
+     "types": ["erc20", "erc3009"]
+   },
+  "transferConfirmation": {
+    "type": "erc3009",
+    "data": {
+      "msg": "0xd4a13b6f8c927ae53f1e20a7c59d84b2ef3a76c1b4920de85fca3b7d91e405a67f12c38b94d7e26f0a581b9c4e73d2f8b9165e0a23c7f4d1e8a2b37c5f9d04e6b2c7a51d3e890f2a6b5e1c8d39f470ab2c84f13e69d5a70c1f92b4e3a6d57c80f1e2a9b3c48d75e0a1b64c29f3d7e58a0",
+      "sig": "0x8f3d1a72c9e54b60a7f2d98e41b3c75a9d04f68e2c71b95f3a0e6d2b4c89f17a5b3e90c47d61f2a8e9c5b4d73a1e06f298d3b57c40f9e1a62b84d5c7f03a9b6e81d24f5b70a39c8e4d26f1a05b7c9d3e8f42a"
+    }
+  },
 }
 ```
 
 #### Idempotency
 
-The `wallet_pay` method **MUST** be idempotent for the same `orderId` when provided. This ensures robustness in case of connection failures or timeout scenarios.
-
-Requirements when `orderId` is provided:
-
+The `wallet_pay` method **MUST** be idempotent for the same `orderId` as his ensures robustness in case of connection failures or timeout scenarios:
 - If a payment with the same `orderId` has already been completed successfully, the wallet **MUST** return the original `PayResult` without executing a new payment
 - If a payment with the same `orderId` is currently pending, the wallet **SHOULD** return the result of the original payment attempt
 - If a payment with the same `orderId` has failed previously, the wallet **MAY** attempt the payment again or return the previous error
 - Wallets **SHOULD** maintain payment status for completed transactions for at least 24 hours after completion
 - If connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
 
-When `orderId` is not provided:
-
-- Each payment request **SHOULD** be treated as a new payment attempt
-- Wallets **MAY** implement their own deduplication logic based on other request parameters (recipient, asset, amount, expiry)
-- Dapps **SHOULD** include an `orderId` if they require guaranteed idempotency behavior
-
 #### Error Handling
 
 If the payment process fails, the wallet **MUST** return an appropriate error message:
 
 ```typescript
-type PayError = {
+type ResponseError = {
   code: number;
   message: string;
   data?: any;
@@ -281,7 +338,10 @@ TODO
 [CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
 [CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
 [CAIP-19]: https://ChainAgnostic.org/CAIPs/caip-19
+[EIP-20]: https://eips.ethereum.org/EIPS/eip-20
 [EIP-681]: https://eips.ethereum.org/EIPS/eip-681
+[EIP-2612]: https://eips.ethereum.org/EIPS/eip-2612
+[EIP-3009]: https://eips.ethereum.org/EIPS/eip-3009
 
 ## Copyright
 
