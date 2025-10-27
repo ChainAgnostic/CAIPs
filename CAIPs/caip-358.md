@@ -184,7 +184,7 @@ Example Response:
       "to": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
       "value": "100",
       "nbf": 1740672089,
-      "exp": 1740672154,
+      "exp": 1740672389,
       "nonce": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480"
     }
   },
