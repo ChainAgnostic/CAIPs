@@ -133,6 +133,18 @@ The following response parameters are defined for `version=1` as:
 For `TransferAuthorization` parameters here are some different types:
 
 ```typescript
+/* ---- Chain-Agnostic ----- */
+
+// Native Transfer Authorization
+type TransferAuthorization = {
+  type: "native"; 
+  data: {
+   txn: string;
+  };
+}
+
+/* ---- EVM specific ----- */
+
 // ERC-20 Transfer Authorization
 type TransferAuthorization = {
   type: "erc20"; 
@@ -159,9 +171,19 @@ type TransferAuthorization = {
   };
 }
 
+/* ---- Solana specific ----- */
+
 // SPL Transfer Authorization
 type TransferAuthorization = {
   type: "spl"; 
+  data: {
+   txn: string;
+  };
+}
+
+// Token2022 Transfer Authorization
+type TransferAuthorization = {
+  type: "token2022"; 
   data: {
    txn: string;
   };
