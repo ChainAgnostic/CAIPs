@@ -78,7 +78,7 @@ For `PaymentOption` parameters these are defined for `version=1` as:
 
 Example Request:
 
-```json
+```jsonc
 {
   "version": 1
   "orderId": "order-123456",
@@ -193,7 +193,7 @@ type TransferAuthorization = {
 
 
 Example Response:
-```json
+```jsonc
 // Response (type="erc20")
 
 {
