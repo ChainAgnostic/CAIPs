@@ -80,7 +80,7 @@ Example Request:
 
 ```jsonc
 {
-  "version": 1
+  "version": 1,
   "orderId": "order-123456",
   "acceptedPayments": [
     {
@@ -197,7 +197,7 @@ Example Response:
 // Response (type="erc20")
 
 {
-  "version": 1
+  "version": 1,
   "orderId": "order-123456",
   "paymentSelected":  {
      "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
@@ -217,7 +217,7 @@ Example Response:
 // Response (type="erc3009")
 
 {
-  "version": 1
+  "version": 1,
   "orderId": "order-123456",
   "paymentSelected": {
      "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
