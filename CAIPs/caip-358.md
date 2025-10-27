@@ -68,7 +68,7 @@ For `PaymentOption` parameters these are defined for `version=1` as:
 - `asset` - this field **MUST** follow the assetId [CAIP-19][] spec without the CAIP-2 prefix.
 - `value` - this field **MUST** be a string representing the value of the asset to be transferred.
 - `payTo` - this field **MUST** be a chain-specific address present in the chain.
-- `types` - this field **MUST** be an array of strings defining different transfer authorization types (eg. `erc20-transfer`, `erc20-approve`, `spl-transfer`, `erc2612-permit`, `erc3009-authorization`).
+- `types` - this field **MUST** be an array of strings defining different transfer authorization types (eg. `native`, `erc20-transfer`, `erc20-approve`, `spl-transfer`, `token2022-transfer`, `erc2612-permit`, `erc3009-authorization`).
 
 Example Request:
 
@@ -86,6 +86,7 @@ Example Request:
       "types": ["erc20-transfer", "erc20-approve", "erc3009-authorization"]
     },
     {
+      "chain": "eip155:1",
       "asset": "erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
       "value": "100",
       "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
@@ -95,6 +96,13 @@ Example Request:
       "chain": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ",
       "asset": "slip44:501",
       "value": "0.5",
+      "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "types": ["native"]
+    },
+    {
+      "chain": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ",
+      "asset": "spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "value": "100",
       "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["spl-transfer"]
     }
