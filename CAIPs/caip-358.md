@@ -66,7 +66,18 @@ For `PaymentOption` parameters these are defined for `version=1` as:
 - `asset` - this field **MUST** follow the assetId [CAIP-19][] spec which also includes the CAIP-2 chainId prefix.
 - `value` - this field **MUST** be a string representing the value of the asset to be transferred.
 - `payTo` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
-- `types` - this field **MUST** be an array of strings defining different transfer authorization types (eg. `native`, `erc20-transfer`, `erc20-approve`, `spl-transfer`, `token2022-transfer`, `erc2612-permit`, `erc3009-authorization`).
+- `types` - this field **MUST** be an array of strings defining different transfer authorization types.
+
+Transfer Authorization types:
+
+- `native` - this type is used when native crypto is being used as a PUSH transfer (eg. ETH, SOL).
+- `erc20-transfer` - this is used when an ERC-20 transfer is being used as a PUSH transfer.
+- `erc20-approve` - this is used when an ERC-20 allowance is approaved to be used as a PULL transfer.
+- `spl-transfer` - this is used when a SPL token transfer is being used as a PUSH transfer.
+- `token2022-transfer` - this is used when a Token2022 token transfer is being used as a PUSH transfer.
+- `erc2612-permit` - this is used when a ERC-2612 permit message is being used as a PULL transfer.
+- `erc3009-authorization` - this is used when a ERC-3009 authorization message is being used as a PULL transfer.
+
 
 Example Request:
 
