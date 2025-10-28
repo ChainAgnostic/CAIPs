@@ -39,7 +39,6 @@ The method transmits all the acceptable payment requests so the wallet can pick 
 ```typescript
 // Accepted Payment Options
 type PaymentOption = {
-  chain: string;
   asset: string;
   value: string;
   payto: string;
@@ -64,10 +63,9 @@ The following request parameters are defined for `version=1` as:
 
 For `PaymentOption` parameters these are defined for `version=1` as:
 
-- `chain` - this fields **MUST** follow the chainId [CAIP-2][] spec and it will used for all fields below.
-- `asset` - this field **MUST** follow the assetId [CAIP-19][] spec without the CAIP-2 prefix.
+- `asset` - this field **MUST** follow the assetId [CAIP-19][] spec which also includes the CAIP-2 chainId prefix.
 - `value` - this field **MUST** be a string representing the value of the asset to be transferred.
-- `payTo` - this field **MUST** be a chain-specific address present in the chain.
+- `payTo` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
 - `types` - this field **MUST** be an array of strings defining different transfer authorization types (eg. `native`, `erc20-transfer`, `erc20-approve`, `spl-transfer`, `token2022-transfer`, `erc2612-permit`, `erc3009-authorization`).
 
 Example Request:
