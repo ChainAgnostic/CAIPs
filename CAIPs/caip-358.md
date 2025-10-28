@@ -70,21 +70,20 @@ For `PaymentOption` parameters these are defined for `version=1` as:
 
 Transfer Authorization types:
 
-- `native` - this type is used when native crypto is being used as a PUSH transfer (eg. ETH, SOL).
-- `erc20-transfer` - this is used when an ERC-20 transfer is being used as a PUSH transfer.
-- `erc20-approve` - this is used when an ERC-20 allowance is approaved to be used as a PULL transfer.
-- `spl-transfer` - this is used when a SPL token transfer is being used as a PUSH transfer.
-- `token2022-transfer` - this is used when a Token2022 token transfer is being used as a PUSH transfer.
-- `erc2612-permit` - this is used when a ERC-2612 permit message is being used as a PULL transfer.
-- `erc3009-authorization` - this is used when a ERC-3009 authorization message is being used as a PULL transfer.
-
+- `native-transfer` - this type is used when a native token is being used as a PUSH payment (eg. ETH, SOL).
+- `erc20-transfer` - this is used when an ERC-20 transfer is being used as a PUSH payment.
+- `erc20-approve` - this is used when an ERC-20 allowance is approaved to be used as a PULL payment.
+- `spl-transfer` - this is used when a SPL token transfer is being used as a PUSH payment.
+- `token2022-transfer` - this is used when a Token2022 token transfer is being used as a PUSH payment.
+- `erc2612-permit` - this is used when a ERC-2612 permit message is being used as a PULL payment.
+- `erc3009-authorization` - this is used when a ERC-3009 authorization message is being used as a PULL payment.
 
 Example Request:
 
 ```jsonc
 {
   "version": 1,
-  "orderId": "order-123456",
+  "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
   "timeout": 300,
   "accepts": [
     {
@@ -103,7 +102,7 @@ Example Request:
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
       "value": "0.5",
       "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-      "types": ["native"]
+      "types": ["native-transfer"]
     },
     {
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
@@ -156,7 +155,7 @@ Example Response:
 
 {
   "version": 1,
-  "orderId": "order-123456",
+  "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
   "payment":  {
     "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     "value": "100",
@@ -180,14 +179,14 @@ Example Response:
 
 {
   "version": 1,
-  "orderId": "order-123456",
-  "paymentSelected": {
+  "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
+  "payment": {
     "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     "value": "100",
     "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
     "types": ["erc20-transfer", "erc3009-authorization"]
    },
-  "transferConfirmation": {
+  "receipt": {
     "type": "erc3009-authorization",
     "hash": "0x8f3d1a72c9e54b60a7f2d98e41b3c75a9d04f68e2c71b95f3a0e6d2b4c89f17a5b3e90c47d61f2a8e9c5b4d73a1e06f298d3b57c40f9e1a62b84d5c7f03a9b6e81d24f5b70a39c8e4d26f1a05b7c9d3e8f42a",
     "data": {
@@ -196,7 +195,7 @@ Example Response:
       "value": "100",
       "nbf": 1740672089,
       "exp": 1740672389,
-      "nonce": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480"
+      "nonce": "0xb543b4324bc37877595306a83422e70903589eb3079a0003871b5fb0a545bd8d"
     }
   },
 }
