@@ -88,29 +88,25 @@ Example Request:
   "timeout": 300,
   "accepts": [
     {
-      "chain": "eip155:1",
-      "asset": "erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
       "value": "100",
       "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
       "types": ["erc20-transfer", "erc20-approve", "erc3009-authorization"]
     },
     {
-      "chain": "eip155:1",
-      "asset": "erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+      "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
       "value": "100",
       "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
       "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
     },
     {
-      "chain": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ",
-      "asset": "slip44:501",
+      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
       "value": "0.5",
       "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["native"]
     },
     {
-      "chain": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ",
-      "asset": "spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
       "value": "100",
       "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["spl-transfer"]
@@ -162,8 +158,7 @@ Example Response:
   "version": 1,
   "orderId": "order-123456",
   "payment":  {
-    "chain": "eip155:1",
-    "asset": "erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     "value": "100",
     "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
     "types": ["erc20-transfer", "erc3009-authorization"]
@@ -187,8 +182,7 @@ Example Response:
   "version": 1,
   "orderId": "order-123456",
   "paymentSelected": {
-    "chain": "eip155:1",
-    "asset": "erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     "value": "100",
     "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
     "types": ["erc20-transfer", "erc3009-authorization"]
