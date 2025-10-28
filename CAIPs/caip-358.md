@@ -24,7 +24,7 @@ The method allows merchants to specify payment requirements enabling wallets to 
 Current cryptocurrency payment experiences are either error-prone (manual transfers, address QR codes) or suboptimal, requiring multiple interactions from the user.
 In addition to this, different payment providers implement different payment experiences, creating confusion.
 
-Solutions like EIP-681 or `bitcoin:` url are ecosystem-specific and have not historically gotten sufficient support from the wallets. They tend to rely on a QR code scan as well, which means that they can't be batched as part of a connection-flow using protocols like WalletConnect.
+Solutions like [ERC-681][] or `bitcoin:` url are ecosystem-specific and have not historically gotten sufficient support from the wallets. They tend to rely on a QR code scan as well, which means that they can't be batched as part of a connection-flow using protocols like WalletConnect.
 
 By standardizing the payment experience on both the application side and the wallet side, we can reduce user errors during payment, providing the payment experience in as few clicks as possible and reducing the friction in crypto payments.
 
@@ -63,7 +63,7 @@ The following request parameters are defined for `version=1` as:
 
 For `PaymentOption` parameters these are defined for `version=1` as:
 
-- `asset` - this field **MUST** follow the assetId [CAIP-19][] spec which also includes the CAIP-2 chainId prefix.
+- `asset` - this field **MUST** follow the assetId [CAIP-19][] spec which also includes the [CAIP-2][] chainId prefix.
 - `value` - this field **MUST** be a string representing the value of the asset to be transferred.
 - `payTo` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
 - `types` - this field **MUST** be an array of strings defining different transfer authorization types.
@@ -71,12 +71,12 @@ For `PaymentOption` parameters these are defined for `version=1` as:
 Transfer Authorization types:
 
 - `native-transfer` - this type is used when a native token is being used as a PUSH payment (eg. ETH, SOL).
-- `erc20-transfer` - this is used when an ERC-20 transfer is being used as a PUSH payment.
-- `erc20-approve` - this is used when an ERC-20 allowance is approaved to be used as a PULL payment.
-- `spl-transfer` - this is used when a SPL token transfer is being used as a PUSH payment.
-- `token2022-transfer` - this is used when a Token2022 token transfer is being used as a PUSH payment.
-- `erc2612-permit` - this is used when a ERC-2612 permit message is being used as a PULL payment.
-- `erc3009-authorization` - this is used when a ERC-3009 authorization message is being used as a PULL payment.
+- `erc20-transfer` - this is used when an [ERC-20][] transfer is being used as a PUSH payment.
+- `erc20-approve` - this is used when an [ERC-20][] allowance is approaved to be used as a PULL payment.
+- `spl-transfer` - this is used when a [SPL][] token transfer is being used as a PUSH payment.
+- `token2022-transfer` - this is used when a [Token2022][] token transfer is being used as a PUSH payment.
+- `erc2612-permit` - this is used when a [ERC-2612][] permit message is being used as a PULL payment.
+- `erc3009-authorization` - this is used when a [ERC-3009][] authorization message is being used as a PULL payment.
 
 Example Request:
 
@@ -255,7 +255,7 @@ Example error response:
 
 ## Rationale
 
-This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to EIP-681/Solana Pay, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
+This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to ERC-681/Solana Pay, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
 
 Existing cryptocurrency payment flows typically require users to:
 
@@ -321,16 +321,16 @@ TODO
 ## References
 
 - [CAIP-1] defines the CAIP document structure
-- [EIP-681] is ethereum-specific prior art that also includes gas information in the URI
 
 [CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
 [CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
-[CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
 [CAIP-19]: https://ChainAgnostic.org/CAIPs/caip-19
-[EIP-20]: https://eips.ethereum.org/EIPS/eip-20
-[EIP-681]: https://eips.ethereum.org/EIPS/eip-681
-[EIP-2612]: https://eips.ethereum.org/EIPS/eip-2612
-[EIP-3009]: https://eips.ethereum.org/EIPS/eip-3009
+[ERC-20]: https://eips.ethereum.org/EIPS/eip-20
+[ERC-681]: https://eips.ethereum.org/EIPS/eip-681
+[ERC-2612]: https://eips.ethereum.org/EIPS/eip-2612
+[ERC-3009]: https://eips.ethereum.org/EIPS/eip-3009
+[SPL]: https://github.com/solana-program/token
+[Token2022]: https://github.com/solana-program/token-2022
 
 ## Copyright
 
