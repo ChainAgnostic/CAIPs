@@ -64,7 +64,7 @@ The following request parameters are defined for `version=1` as:
 For `PaymentOption` parameters these are defined for `version=1` as:
 
 - `asset` - this field **MUST** follow the assetId [CAIP-19][] spec which also includes the [CAIP-2][] chainId prefix.
-- `amount` - this field **MUST** be a string representing the amount of the asset to be transferred.
+- `amount` - this field **MUST** be a Hex string representing the amount in the smallest denomination of its asset.
 - `recipient` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
 - `types` - this field **MUST** be an array of strings defining different transfer authorization types.
 
