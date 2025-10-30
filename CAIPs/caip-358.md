@@ -58,7 +58,7 @@ The following request parameters are defined for `version=1` as:
 
 - `version` - this field is an integer and **MUST** be present to define which the following parameters are optional and required.
 - `orderId` - this field **MUST** uniquely identify an order for which this payment request is linked to and **MUST NOT** be longer than 128 characters.
-- `timeout` - this field **MUST** be an integer in seconds after which the payment request is expired. Wallets **MUST** check this timestamp before processing the payment.
+- `expiry` - this field **MUST**be a UNIX timestamp (in seconds) after which the payment request is considered expired and recommendeded to set for at least 5 mins.
 - `accepts` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option that the wallet can choose from to complete the payment with independent parameters.
 
 For `PaymentOption` parameters these are defined for `version=1` as:
@@ -70,13 +70,13 @@ For `PaymentOption` parameters these are defined for `version=1` as:
 
 Transfer Authorization types:
 
-- `native-transfer` - this type is used when a native token is being used as a PUSH payment (eg. ETH, SOL).
+- `native-transfer` - this is used when a native token is being used as a PUSH payment (eg. ETH, SOL).
 - `erc20-transfer` - this is used when an [ERC-20][] transfer is being used as a PUSH payment.
 - `erc20-approve` - this is used when an [ERC-20][] allowance is approaved to be used as a PULL payment.
-- `spl-transfer` - this is used when a [SPL][] token transfer is being used as a PUSH payment.
-- `token2022-transfer` - this is used when a [Token2022][] token transfer is being used as a PUSH payment.
 - `erc2612-permit` - this is used when a [ERC-2612][] permit message is being used as a PULL payment.
 - `erc3009-authorization` - this is used when a [ERC-3009][] authorization message is being used as a PULL payment.
+- `spl-transfer` - this is used when a [SPL][] transfer is being used as a PUSH payment.
+- `spl-approve` - this is used when a [SPL][] delegation is being used as a PULL payment.
 
 Example Request:
 
@@ -84,29 +84,33 @@ Example Request:
 {
   "version": 1,
   "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
-  "timeout": 300,
+  "expiry": 1740672389,
   "accepts": [
     {
+      // 100 USDC on Ethereum Mainnet
       "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      "value": "100",
-      "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-      "types": ["erc20-transfer", "erc20-approve", "erc3009-authorization"]
+      "value": "0x5F5E100",
+      "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "types": ["erc3009-authorization"]
     },
     {
+      // 100 USDE on Ethereum Mainnet
       "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
-      "value": "100",
-      "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "value": "0x56BC75E2D63100000",
+      "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
       "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
     },
     {
+      // 0.5 SOL on Solana Mainnet
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
-      "value": "0.5",
+      "value": "0x1DCD6500",
       "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["native-transfer"]
     },
     {
+      // 100 USDC on Solana Mainnet
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      "value": "100",
+      "value": "0x5F5E100",
       "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["spl-transfer"]
     }
@@ -156,19 +160,19 @@ Example Response:
 {
   "version": 1,
   "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
-  "payment":  {
-    "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    "value": "100",
-    "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-    "types": ["erc20-transfer", "erc3009-authorization"]
-   },
+  "payment": {
+    "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+    "value": "0x56BC75E2D63100000",
+    "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
+  },
   "receipt": {
     "type": "erc20-transfer",
     "hash": "0x8a8c3e0b1b812182db4cabd81c9d6de78e549fa3bf3d505d6e1a2b25a15789ed",
     "data": {
       "from": "0xab16a96D359eC26a11e2C2b3d8f8B8942d5Bfcdb",
       "to": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-      "value": "100",
+      "value": "0x56BC75E2D63100000",
     }
   },
 }
@@ -182,17 +186,17 @@ Example Response:
   "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
   "payment": {
     "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    "value": "100",
-    "payTo": ":0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-    "types": ["erc20-transfer", "erc3009-authorization"]
-   },
+    "value": "0x5F5E100",
+    "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "types": ["erc3009-authorization"]
+  },
   "receipt": {
     "type": "erc3009-authorization",
     "hash": "0x8f3d1a72c9e54b60a7f2d98e41b3c75a9d04f68e2c71b95f3a0e6d2b4c89f17a5b3e90c47d61f2a8e9c5b4d73a1e06f298d3b57c40f9e1a62b84d5c7f03a9b6e81d24f5b70a39c8e4d26f1a05b7c9d3e8f42a",
     "data": {
       "from": "0xab16a96D359eC26a11e2C2b3d8f8B8942d5Bfcdb",
       "to": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-      "value": "100",
+      "value": "0x5F5E100",
       "nbf": 1740672089,
       "exp": 1740672389,
       "nonce": "0xb543b4324bc37877595306a83422e70903589eb3079a0003871b5fb0a545bd8d"
@@ -330,7 +334,6 @@ TODO
 [ERC-2612]: https://eips.ethereum.org/EIPS/eip-2612
 [ERC-3009]: https://eips.ethereum.org/EIPS/eip-3009
 [SPL]: https://github.com/solana-program/token
-[Token2022]: https://github.com/solana-program/token-2022
 
 ## Copyright
 
