@@ -40,8 +40,8 @@ The method transmits all the acceptable payment requests so the wallet can pick 
 // Accepted Payment Options
 type PaymentOption = {
   asset: string;
-  value: string;
-  payto: string;
+  amount: string;
+  recipient: string;
   types: string[];
 };
 
@@ -49,8 +49,8 @@ type PaymentOption = {
 type RequestParams = {
   version: integer;
   orderId: string;
-  timeout: number;
-  accepts: PaymentOption[];
+  expiry: number;
+  paymentOptions: PaymentOption[];
 };
 ```
 
@@ -59,13 +59,13 @@ The following request parameters are defined for `version=1` as:
 - `version` - this field is an integer and **MUST** be present to define which the following parameters are optional and required.
 - `orderId` - this field **MUST** uniquely identify an order for which this payment request is linked to and **MUST NOT** be longer than 128 characters.
 - `expiry` - this field **MUST**be a UNIX timestamp (in seconds) after which the payment request is considered expired and recommendeded to set for at least 5 mins.
-- `accepts` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option that the wallet can choose from to complete the payment with independent parameters.
+- `paymentOptions` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option that the wallet can choose from to complete the payment with independent parameters.
 
 For `PaymentOption` parameters these are defined for `version=1` as:
 
 - `asset` - this field **MUST** follow the assetId [CAIP-19][] spec which also includes the [CAIP-2][] chainId prefix.
-- `value` - this field **MUST** be a string representing the value of the asset to be transferred.
-- `payTo` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
+- `amount` - this field **MUST** be a string representing the amount of the asset to be transferred.
+- `recipient` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
 - `types` - this field **MUST** be an array of strings defining different transfer authorization types.
 
 Transfer Authorization types:
@@ -85,33 +85,33 @@ Example Request:
   "version": 1,
   "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
   "expiry": 1740672389,
-  "accepts": [
+  "paymentOptions": [
     {
       // 100 USDC on Ethereum Mainnet
       "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      "value": "0x5F5E100",
-      "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "amount": "0x5F5E100",
+      "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
       "types": ["erc3009-authorization"]
     },
     {
       // 100 USDE on Ethereum Mainnet
       "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
-      "value": "0x56BC75E2D63100000",
-      "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "amount": "0x56BC75E2D63100000",
+      "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
       "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
     },
     {
       // 0.5 SOL on Solana Mainnet
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
-      "value": "0x1DCD6500",
-      "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "amount": "0x1DCD6500",
+      "recipient": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["native-transfer"]
     },
     {
       // 100 USDC on Solana Mainnet
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-      "value": "0x5F5E100",
-      "payTo": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "amount": "0x5F5E100",
+      "recipient": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["spl-transfer"]
     }
   ]
@@ -162,8 +162,8 @@ Example Response:
   "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
   "payment": {
     "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
-    "value": "0x56BC75E2D63100000",
-    "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "amount": "0x56BC75E2D63100000",
+    "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
     "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
   },
   "receipt": {
@@ -186,8 +186,8 @@ Example Response:
   "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
   "payment": {
     "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    "value": "0x5F5E100",
-    "payTo": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "amount": "0x5F5E100",
+    "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
     "types": ["erc3009-authorization"]
   },
   "receipt": {
@@ -310,9 +310,9 @@ This may be done automatically to improve the user experience or allowing the us
 ### Transaction Privacy
 
 Wallets are encouraged to utilize transaction privacy protocols to prevent payment data from leaking browsing history onchain.
-A complete transaction privacy protocol can be defined as one that prevents manual or automated analysis of transaction data on-chain (e.g. on a block explorer) being enough to identify the sender and/or the payTo of a given transaction.
+A complete transaction privacy protocol can be defined as one that prevents manual or automated analysis of transaction data on-chain (e.g. on a block explorer) being enough to identify the sender and/or the recipient of a given transaction.
 A protocol which protects the sender's privacy will prevent leaking of purchase data being used to build a behavioral profile through purchase history of an onchain account.
-A protocol which focuses only on payTo (e.g. merchant) privacy will prevent leaking real-time transaction data of businesses which may constitute "business intelligence" that enables reverse engineering of business practices, intellectual
+A protocol which focuses only on recipient (e.g. merchant) privacy will prevent leaking real-time transaction data of businesses which may constitute "business intelligence" that enables reverse engineering of business practices, intellectual
 property, trade secrets, etc.
 Depending on the use-case, either or both may be necessary to prevent this RPC's on-chain records creating damaging externalities.
 
