@@ -3,7 +3,7 @@ caip: 222
 title: Wallet Authenticate JSON-RPC Method
 author: Pedro Gomes (@pedrouid), Gancho Radkov (@ganchoradkov)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/222
-status: Draft
+status: Review
 type: Standard
 created: 2023-04-07
 updated: 2023-10-19
