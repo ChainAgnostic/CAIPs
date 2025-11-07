@@ -3,7 +3,7 @@ caip: 375
 title: Wallet Sign Message
 author: Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/375
-status: Review
+status: Draft
 type: Standard
 created: 2025-08-25
 requires: 10, 171, 217
