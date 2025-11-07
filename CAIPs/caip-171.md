@@ -3,7 +3,7 @@ caip: 171
 title: Session Identifiers
 author: Olaf Tomalka (@ritave)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/176
-status: Draft
+status: Review
 type: Standard
 created: 2022-11-09
 ---
@@ -49,12 +49,13 @@ type SessionIdentifier = string;
 ```
 
 Properties of the `SessionIdentifier` are as follows:
-1. It MUST uniquely identify an open and stateful session. 
+
+1. It MUST uniquely identify an open and stateful session.
 2. It MUST identify a closeable session, and it MUST become invalid after a
    session is closed.
 3. It MUST remain the same as the identified session's state changes.
 4. It MUST be serializable into JSON. Serialization and later deserialization
-using JSON MUST result in the same value.
+   using JSON MUST result in the same value.
 5. It MUST be generated from a cryptographically random source and include at
    least 96 bits of entropy for security.
 
