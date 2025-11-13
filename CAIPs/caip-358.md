@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/358
 status: Draft
 type: Standard
 created: 2025-05-26
-updated: 2025-05-26
+updated: 2025-11-13
 requires: 2, 19
 ---
 
