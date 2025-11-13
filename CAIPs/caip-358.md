@@ -60,7 +60,7 @@ The following request parameters are defined for `version=1` as:
 - `expiry` - this field **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. It **SHOULD** use an expiry of at least 5 minutes (300 seconds).
 - `paymentOptions` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option the wallet may choose to complete the payment, each with independent parameters.
 
-**Note:**Merchants **CAN** signal `PaymentOption` preference by ordering the paymentOptions array. JSON-RPC guarantees array order, but wallets are **NOT REQUIRED** to honor it. Wallets **MAY** offer swaps or bridges to help users match the merchant’s preferred option.
+**Note:** Merchants **CAN** signal `PaymentOption` preference by ordering the paymentOptions array. JSON-RPC guarantees array order, but wallets are **NOT REQUIRED** to honor it. Wallets **MAY** offer swaps or bridges to help users match the merchant’s preferred option.
 
 For `PaymentOption` parameters these are defined for `version=1` as:
 
