@@ -272,7 +272,7 @@ Example error response:
 
 ## Rationale
 
-This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to ERC-681/Solana Pay, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
+This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to [ERC-681][]/Solana Pay, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
 
 Existing cryptocurrency payment flows typically require users to:
 
