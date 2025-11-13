@@ -7,7 +7,7 @@ status: Draft
 type: Standard
 created: 2025-05-26
 updated: 2025-05-26
-requires: 2, 10, 19
+requires: 2, 19
 ---
 
 ## Simple Summary
@@ -278,7 +278,7 @@ This multi-step process creates excessive friction, often requiring 4-6 user int
 
 The `wallet_pay` method addresses these limitations by:
 
-- Moving choice to the wallet rather than forcing merchants to pre-select payment methods, wallets can filter available options based on user account balances and preferences
+- It moves choice to the wallet, allowing it to filter payment options based on user balances and preferences.
 - All payment options are transmitted in one request, eliminating the need for multiple user interactions
 - The response includes transaction ID and execution details, providing immediate confirmation
 - Can be batched with connection establishment, enabling "connect-and-pay" flows in protocols like WalletConnect
@@ -306,20 +306,23 @@ It also does not attempt to provide dispute functionality. These present ideas f
 
 ### Wallet Address Sharing
 
-Wallet addresses were intentionally omitted here both for the purpose of UX simplicity as well as for privacy.
-By opting to limit the usage of a wallet address, we make this API implementable without first needing to request permission for the user's wallet address.
-The wallet address acts as a cross-origin identifier which can be used to link a user's financial transactions across sites.
-Since the wallet address is not needed, we can leave it up to the wallet which address to use.
-Furthermore, it is also the responsibility of the wallet to determine if possible which token they wish to make a payment from, if multiple are accepted.
-This may be done automatically to improve the user experience or allowing the user to select and override assumed defaults.
+Wallet addresses were intentionally omitted both for UX simplicity and to improve privacy.
+
+By not requiring the user’s wallet address, this API can be implemented without first requesting a cross-origin identifier that could link a user’s activity across sites. Since the wallet address is not needed, the wallet may determine which address to use for the payment.
+
+This design also supports use cases where payments originate from an address different from the user's primary account such as sponsored transactions, delegated or session-based accounts, or orchestration flows where the user controls multiple accounts.
+
+Relying on payment requests rather than fixed wallet addresses provides greater flexibility and future-proofing. Wallets may automatically choose the appropriate token or address, or allow the user to override defaults when multiple options are available.
 
 ### Transaction Privacy
 
-Wallets are encouraged to utilize transaction-privacy protocols to prevent payment data from leaking browsing behavior onchain.
-A complete transaction privacy protocol can be defined as one that prevents manual or automated analysis of transaction data onchain (e.g. on a block explorer) being enough to identify the sender and/or the recipient of a given transaction.
-A protocol which protects the sender's privacy will prevent leaking of purchase data being used to build a behavioral profile through purchase history of an onchain account.
-A protocol focused only on recipient (e.g., merchant) privacy will prevent leaking real-time transaction data of businesses, which may constitute “business intelligence” enabling reverse engineering of business practices, intellectual property, trade secrets, etc.
-Depending on the use-case, either or both may be necessary to prevent this RPC's onchain records creating damaging externalities.
+Wallets are encouraged to use transaction-privacy protocols to avoid exposing payment behavior on-chain.
+
+A complete privacy protocol prevents manual or automated analysis (e.g., via block explorers) from identifying either the sender or recipient.
+
+Sender privacy protects users from having their purchase history used to build behavioral profiles, while recipient (e.g., merchant) privacy prevents real-time business data from being revealed as “business intelligence.
+
+Depending on the use case, either or both protections may be required to avoid undesirable externalities from on-chain payment records.
 
 ## Backwards Compatibility
 
