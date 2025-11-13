@@ -218,7 +218,7 @@ The `wallet_pay` method **MUST** be idempotent for the same `orderId` as this en
 - If a payment with the same `orderId` is currently pending, the wallet **SHOULD** return the result of the original payment attempt
 - If a payment with the same `orderId` has failed previously, the wallet **MAY** attempt the payment again or return the previous error
 - Wallets **SHOULD** maintain payment status for completed transactions for at least 24 hours after completion
-- If connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
+- If the connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
 
 #### Error Handling
 
