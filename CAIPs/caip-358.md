@@ -212,7 +212,7 @@ Example Response:
 
 #### Idempotency
 
-The `wallet_pay` method **MUST** be idempotent for the same `orderId` as his ensures robustness in case of connection failures or timeout scenarios:
+The `wallet_pay` method **MUST** be idempotent for the same `orderId` as this ensures robustness in case of connection failures or timeout scenarios:
 
 - If a payment with the same `orderId` has already been completed successfully, the wallet **MUST** return the original `PayResult` without executing a new payment
 - If a payment with the same `orderId` is currently pending, the wallet **SHOULD** return the result of the original payment attempt
