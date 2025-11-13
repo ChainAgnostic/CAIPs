@@ -107,18 +107,25 @@ Example Request:
       "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
     },
     {
-      // 0.5 SOL on Solana Mainnet
-      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
-      "amount": "0x1DCD6500",
-      "recipient": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-      "types": ["native-transfer"]
-    },
-    {
       // 100 USDC on Solana Mainnet
       "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
       "amount": "0x5F5E100",
       "recipient": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
       "types": ["spl-transfer"]
+    },
+    {
+      // 0.025 ETH on Ethereum Mainnet
+      "asset": "eip155:1/slip44:60",
+      "amount": "0x58D15E17628000",
+      "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "types": ["native-transfer"]
+    }
+    {
+      // 0.5 SOL on Solana Mainnet
+      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
+      "amount": "0x1DCD6500",
+      "recipient": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "types": ["native-transfer"]
     }
   ]
 }
