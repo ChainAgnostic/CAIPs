@@ -23,7 +23,7 @@ The method allows merchants to specify payment requirements enabling wallets to 
 
 Current cryptocurrency payment experiences are either error-prone (manual transfers, address QR codes) or overly complex, often requiring multiple user interactions. In addition to this, different payment providers implement different payment experiences, creating confusion.
 
-Solutions like [ERC-681][] or `bitcoin:` url are ecosystem-specific and have not historically gotten sufficient support from the wallets. They tend to rely on a QR code scan as well, which means that they can't be batched as part of a connection-flow using protocols like WalletConnect.
+Solutions like `ethereum:` ([ERC-681][]) or `bitcoin:` url are ecosystem-specific and have not historically gotten sufficient support from the wallets. They tend to rely on a QR code scan as well, which means that they can't be batched as part of a connection-flow using protocols like WalletConnect.
 
 By standardizing the payment experience on both the application and wallet side, we reduce user errors and enable payments in as few interactions as possible, lowering friction across crypto payments.
 
