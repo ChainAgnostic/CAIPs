@@ -56,8 +56,8 @@ type RequestParams = {
 
 The following request parameters are defined for `version=1` as:
 
-- `version` - this field is an integer and **MUST** be present to define which of the following parameters are optional and required.
-- `orderId` - this field **MUST** uniquely identify an order which this payment request is linked to and **MUST NOT** be longer than 128 characters.
+- `version` - this field is an integer and **MUST** be present to define which of the following parameters are optional or required.
+- `orderId` - this field **MUST** uniquely identify an order which this payment request is linked to and **MUST NOT** be longer than 128 characters. It does not require global uniqueness, but it's **RECOMMENDED** to use a UUIDv4 if global uniqueness is necessary.
 - `expiry` - this field **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. It **SHOULD** use an expiry of at least 5 minutes (300 seconds).
 - `paymentOptions` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option that the wallet can choose from to complete the payment with independent parameters.
 
@@ -78,10 +78,10 @@ The exclusive list of Transfer Types supported in `version=1` are the following:
 - `spl-transfer` - this is used when a [SPL][] transfer is being used as a PUSH payment.
 - `spl-approve` - this is used when a [SPL][] delegation is being used as a PULL payment.
 
-*NOTE:*
+**NOTE:**
+
 - A PUSH payment would be when the wallet user is the sender of the transaction onchain to settle the token transfer.
 - A PULL payment would be when the recipient or a third-party is the sender of the transaction onchain to settle the token transfer.
-
 
 Example Request:
 
