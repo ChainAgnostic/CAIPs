@@ -327,7 +327,7 @@ Wallets are encouraged to use transaction-privacy protocols to avoid exposing pa
 
 A complete privacy protocol prevents manual or automated analysis (e.g., via block explorers) from identifying either the sender or recipient.
 
-Sender privacy protects users from having their purchase history used to build behavioral profiles, while recipient (e.g., merchant) privacy prevents real-time business data from being revealed as “business intelligence.
+Sender privacy protects users from having their purchase history used to build behavioral profiles, while recipient (e.g., merchant) privacy prevents real-time business data from being revealed as “business intelligence".
 
 Depending on the use case, either or both protections may be required to avoid undesirable externalities from on-chain payment records.
 
