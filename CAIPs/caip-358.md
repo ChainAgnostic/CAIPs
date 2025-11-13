@@ -321,7 +321,17 @@ Depending on the use-case, either or both may be necessary to prevent this RPC's
 
 ## Backwards Compatibility
 
-TODO
+This method is backwards compatible through a dual-payload pattern. A merchant MAY send both a standard wallet-connection request and a `wallet_pay` request in parallel.
+
+Wallets that support `wallet_pay` MUST respond only to the `wallet_pay` request and proceed with the simplified payment flow.
+
+Wallets that do not support `wallet_pay` will ignore the unknown method and instead follow the legacy sequence:
+
+- connect the wallet
+- select token and network
+- request a normal transfer
+
+This approach allows dapps to adopt `wallet_pay` without breaking compatibility for existing wallets.
 
 ## References
 
