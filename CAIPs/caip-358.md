@@ -153,7 +153,7 @@ The following response parameters are defined for `version=1` as:
 
 - `version` - this field is an integer and **MUST** match the same value used in the request.
 - `orderId` - this field is a string and **MUST** match the same valued used in the request.
-- `payment` - this field is a `PaymentOption` object and describes which option was used to fulfill this request and **MUST** match one of the available ones in the request.
+- `payment` - this field is a `PaymentOption` object and describes which option was used to fulfill this request and **MUST** match one of the provided options in the request.
 - `receipt` - this field is a `TransferReceipt` object and will include the transfer type used and corresponding data which **MUST** not be empty.
 
 Example Response:
