@@ -12,7 +12,7 @@ requires: 2, 10, 19
 
 ## Simple Summary
 
-A standard for enabling one-interaction cryptocurrency payment experiences across wallets and dapps, allowing payment information to be transmitted in a single round-trip.
+A standard for enabling one-interaction cryptocurrency payment flows across wallets and dapps, allowing all payment information to be transmitted in a single round-trip.
 
 ## Abstract
 
@@ -21,12 +21,11 @@ The method allows merchants to specify payment requirements enabling wallets to 
 
 ## Motivation
 
-Current cryptocurrency payment experiences are either error-prone (manual transfers, address QR codes) or suboptimal, requiring multiple interactions from the user.
-In addition to this, different payment providers implement different payment experiences, creating confusion.
+Current cryptocurrency payment experiences are either error-prone (manual transfers, address QR codes) or overly complex, often requiring multiple user interactions. In addition to this, different payment providers implement different payment experiences, creating confusion.
 
 Solutions like [ERC-681][] or `bitcoin:` url are ecosystem-specific and have not historically gotten sufficient support from the wallets. They tend to rely on a QR code scan as well, which means that they can't be batched as part of a connection-flow using protocols like WalletConnect.
 
-By standardizing the payment experience on both the application side and the wallet side, we can reduce user errors during payment, providing the payment experience in as few clicks as possible and reducing the friction in crypto payments.
+By standardizing the payment experience on both the application and wallet side, we reduce user errors and enable payments in as few interactions as possible, lowering friction across crypto payments.
 
 The method transmits all the acceptable payment requests so the wallet can pick the most optimal one based on the assets that user has in the account and the wallet's capabilities.
 
@@ -59,7 +58,7 @@ The following request parameters are defined for `version=1` as:
 - `version` - this field is an integer and **MUST** be present to define which of the following parameters are optional or required.
 - `orderId` - this field **MUST** uniquely identify an order which this payment request is linked to and **MUST NOT** be longer than 128 characters. It does not require global uniqueness, but it's **RECOMMENDED** to use a UUIDv4 if global uniqueness is necessary.
 - `expiry` - this field **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. It **SHOULD** use an expiry of at least 5 minutes (300 seconds).
-- `paymentOptions` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option that the wallet can choose from to complete the payment with independent parameters.
+- `paymentOptions` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option the wallet may choose to complete the payment, each with independent parameters.
 
 For `PaymentOption` parameters these are defined for `version=1` as:
 
@@ -72,7 +71,7 @@ The exclusive list of Transfer Types supported in `version=1` are the following:
 
 - `native-transfer` - this is used when a native token is being used as a PUSH payment (eg. ETH, SOL).
 - `erc20-transfer` - this is used when an [ERC-20][] transfer is being used as a PUSH payment.
-- `erc20-approve` - this is used when an [ERC-20][] allowance is approaved to be used as a PULL payment.
+- `erc20-approve` - this is used when an [ERC-20][] allowance is approved to be used as a PULL payment.
 - `erc2612-permit` - this is used when a [ERC-2612][] permit message is being used as a PULL payment.
 - `erc3009-authorization` - this is used when a [ERC-3009][] authorization message is being used as a PULL payment.
 - `spl-transfer` - this is used when a [SPL][] transfer is being used as a PUSH payment.
@@ -149,7 +148,7 @@ type ResponseResult = {
 };
 ```
 
-The following response parameters are defined for `version=1` as:
+The following response parameters are defined for `version=1`:
 
 - `version` - this field is an integer and **MUST** match the same value used in the request.
 - `orderId` - this field is a string and **MUST** match the same valued used in the request.
@@ -216,7 +215,7 @@ The `wallet_pay` method **MUST** be idempotent for the same `orderId` as this en
 
 - If a payment with the same `orderId` has already been completed successfully, the wallet **MUST** return the original `PayResult` without executing a new payment
 - If a payment with the same `orderId` is currently pending, the wallet **SHOULD** return the result of the original payment attempt
-- If a payment with the same `orderId` has failed previously, the wallet **MAY** attempt the payment again or return the previous error
+- If a payment with the same `orderId` previously failed, the wallet MAY attempt it again or return the same error.
 - Wallets **SHOULD** maintain payment status for completed transactions for at least 24 hours after completion
 - If the connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
 
@@ -268,8 +267,8 @@ This specification evolved through multiple iterations to address fundamental us
 
 Existing cryptocurrency payment flows typically require users to:
 
-- Select a token type
-- Choose a blockchain network
+- Select a token
+- Choose a chain
 - Wait for address/QR code generation
 - Complete the transfer manually
 
@@ -280,7 +279,7 @@ The `wallet_pay` method addresses these limitations by:
 - Moving choice to the wallet rather than forcing merchants to pre-select payment methods, wallets can filter available options based on user account balances and preferences
 - All payment options are transmitted in one request, eliminating the need for multiple user interactions
 - The response includes transaction ID and execution details, providing immediate confirmation
-- Can be batched with connection establishment, enabling "connect + pay" flows in protocols like WalletConnect
+- Can be batched with connection establishment, enabling "connect-and-pay" flows in protocols like WalletConnect
 
 ### Alternative Approaches Considered
 
@@ -314,18 +313,15 @@ This may be done automatically to improve the user experience or allowing the us
 
 ### Transaction Privacy
 
-Wallets are encouraged to utilize transaction privacy protocols to prevent payment data from leaking browsing history onchain.
-A complete transaction privacy protocol can be defined as one that prevents manual or automated analysis of transaction data on-chain (e.g. on a block explorer) being enough to identify the sender and/or the recipient of a given transaction.
+Wallets are encouraged to utilize transaction-privacy protocols to prevent payment data from leaking browsing behavior onchain.
+A complete transaction privacy protocol can be defined as one that prevents manual or automated analysis of transaction data onchain (e.g. on a block explorer) being enough to identify the sender and/or the recipient of a given transaction.
 A protocol which protects the sender's privacy will prevent leaking of purchase data being used to build a behavioral profile through purchase history of an onchain account.
-A protocol which focuses only on recipient (e.g. merchant) privacy will prevent leaking real-time transaction data of businesses which may constitute "business intelligence" that enables reverse engineering of business practices, intellectual
-property, trade secrets, etc.
-Depending on the use-case, either or both may be necessary to prevent this RPC's on-chain records creating damaging externalities.
+A protocol focused only on recipient (e.g., merchant) privacy will prevent leaking real-time transaction data of businesses, which may constitute “business intelligence” enabling reverse engineering of business practices, intellectual property, trade secrets, etc.
+Depending on the use-case, either or both may be necessary to prevent this RPC's onchain records creating damaging externalities.
 
 ## Backwards Compatibility
 
 TODO
-
-<!-- All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright. -->
 
 ## References
 
