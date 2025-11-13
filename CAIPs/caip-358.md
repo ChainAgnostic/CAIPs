@@ -78,6 +78,11 @@ Transfer Authorization types:
 - `spl-transfer` - this is used when a [SPL][] transfer is being used as a PUSH payment.
 - `spl-approve` - this is used when a [SPL][] delegation is being used as a PULL payment.
 
+*NOTE:*
+- A PUSH payment would be when the wallet user is the sender of the transaction onchain to settle the token transfer.
+- A PULL payment would be when the recipient or a third-party is the sender of the transaction onchain to settle the token transfer.
+
+
 Example Request:
 
 ```jsonc
