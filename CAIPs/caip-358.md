@@ -337,7 +337,14 @@ This approach allows dapps to adopt `wallet_pay` without breaking compatibility 
 
 ## References
 
-- [CAIP-1] defines the CAIP document structure
+- [CAIP-1][] - defines the CAIP document structure
+- [CAIP-2][] - Blockchain ID Specification
+- [CAIP-19][] - Asset Type and Asset ID Specification
+- [ERC-20][] - Ethereum Token Standard
+- [ERC-681][] - URL Format for Transaction Requests
+- [ERC-2612][] - Permit Extension for ERC-20 Signed Approvals
+- [ERC-3009][] - Transfer With Authorization
+- [SPL][] - Solana Token Standard
 
 [CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
 [CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
