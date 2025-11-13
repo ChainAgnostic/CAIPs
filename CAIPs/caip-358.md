@@ -56,7 +56,7 @@ type RequestParams = {
 
 The following request parameters are defined for `version=1` as:
 
-- `version` - this field is an integer and **MUST** be present to define which the following parameters are optional and required.
+- `version` - this field is an integer and **MUST** be present to define which of the following parameters are optional and required.
 - `orderId` - this field **MUST** uniquely identify an order for which this payment request is linked to and **MUST NOT** be longer than 128 characters.
 - `expiry` - this field **MUST**be a UNIX timestamp (in seconds) after which the payment request is considered expired and recommendeded to set for at least 5 mins.
 - `paymentOptions` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option that the wallet can choose from to complete the payment with independent parameters.
