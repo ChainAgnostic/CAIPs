@@ -68,7 +68,7 @@ For `PaymentOption` parameters these are defined for `version=1` as:
 - `recipient` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
 - `types` - this field **MUST** be an array of strings defining different transfer authorization types.
 
-Transfer Authorization types:
+The exclusive list of Transfer Types supported in `version=1` are the following:
 
 - `native-transfer` - this is used when a native token is being used as a PUSH payment (eg. ETH, SOL).
 - `erc20-transfer` - this is used when an [ERC-20][] transfer is being used as a PUSH payment.
