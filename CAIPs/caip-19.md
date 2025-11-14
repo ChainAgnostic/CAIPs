@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/19
 status: Review
 type: Standard
 created: 2020-06-23
-updated: 2020-06-23
+updated: 2025-11-06
 requires: 2
 ---
 
@@ -46,10 +46,10 @@ The `asset_type` is a case-sensitive string in the form
 asset_type:        chain_id + "/" + asset_namespace + ":" + asset_reference
 chain_id:          Namespace+Blockchain ID as per [CAIP-2][]
 asset_namespace:   [-a-z0-9]{3,8}
-asset_reference:   [-.%a-zA-Z0-9]{1,128}
+asset_reference:   [-_.%a-zA-Z0-9]{1,128}
 ```
 
-Note that `-`, `%` and `.` characters are allowed in `asset_references`, which
+Note that `-`, `_`, `%` and `.` characters are allowed in `asset_references`, which
 include on-chain addresses like those specified in [CAIP-10][], but no other
 non-alphanumerics such as `:`, `/` or `\`.  Implementers are recommended to use
 "URL encoding" (% + 2-character codes, canonically capitalized) as per [Section
@@ -73,11 +73,11 @@ The `asset_id` is a case-sensitive string in the form
 
 ```
 asset_id:    asset_type + "/" + token_id 
-token_id:   [-.%a-zA-Z0-9]{1,78}
+token_id:   [-_.%a-zA-Z0-9]{1,78}
 
 ```
 
-Note that `-`, `%` and `.` characters are allowed, but no other
+Note that `-`, `_`, `%` and `.` characters are allowed, but no other
 non-alphanumerics such as `:`, `/` or `\`.  Implementers are recommended to use
 "URL encoding" (% + 2-character codes, canonically capitalized) as per [Section
 2][rfc3986sec2.1] of [RFC 3986][rfc3986] to escape any further non-alphanumeric
@@ -173,6 +173,7 @@ hedera:mainnet/nft:0.0.55492/12
 
 ## Changelog
 
+- 2025-11-06: expanded charset to include `_`
 - 2022-10-23: 
     - expanded charset to include `-`,`.`, and `%`
     - added canonicalization section and links

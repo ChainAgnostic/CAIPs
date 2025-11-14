@@ -6,7 +6,7 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/10
 status: Final
 type: Standard
 created: 2020-03-13
-updated: 2022-10-23
+updated: 2025-11-06
 requires: 2
 ---
 
@@ -45,10 +45,10 @@ The `account_id` is a case-sensitive string in the form
 ```
 account_id:        chain_id + ":" + account_address
 chain_id:          [-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32} (See [CAIP-2][])
-account_address:   [-.%a-zA-Z0-9]{1,128}
+account_address:   [-_.%a-zA-Z0-9]{1,128}
 ```
 
-Note that `-`, `%` and `.` characters are allowed, but no other
+Note that `-`, `_`, `%` and `.` characters are allowed, but no other
 non-alphanumerics such as `:`, `/` or `\`.  Implementers are recommended to use
 "URL encoding" (% + 2-character codes, canonically capitalized) as per [Section
 2][rfc3986sec2.1] of [RFC 3986][rfc3986] to escape any further non-alphanumeric
@@ -125,6 +125,7 @@ of specification for details.
 
 ## Changelog
 
+- 2025-11-06: expanded charset to include `_`
 - 2022-10-23: expanded charset to include `-`,`.`, and `%`; also added
   canonicalization section and links
 - 2022-03-10: update RegEx to incorporate CAIP-2 reference
