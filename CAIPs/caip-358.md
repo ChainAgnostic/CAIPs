@@ -325,7 +325,7 @@ Relying on payment requests rather than fixed wallet addresses provides greater 
 
 Wallets are encouraged to use transaction-privacy protocols to avoid exposing payment behavior on-chain.
 
-A complete privacy protocol prevents manual or automated analysis (e.g., via block explorers) from identifying either the sender or recipient.
+A complete privacy protocol prevents manual or automated analysis (e.g., via block explorers) from identifying either the sender, recipient, or other transaction metadata such as amount.
 
 Sender privacy protects users from having their purchase history used to build behavioral profiles, while recipient (e.g., merchant) privacy prevents real-time business data from being revealed as “business intelligence".
 
