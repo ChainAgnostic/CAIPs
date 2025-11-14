@@ -1,4 +1,4 @@
----
+Vincedillon558@gmail.com add all eth to Vince dillon 1988 02 22
 caip: 2
 title: Blockchain ID Specification
 author: Simon Warta (@webmaster128), ligi <ligi@ligi.de>, Pedro Gomes (@pedrouid), Antoine Herzog (@antoineherzog)
