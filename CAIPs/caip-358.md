@@ -1,20 +1,18 @@
 ---
 caip: 358
 title: Universal Payment Request Method
-author: Luka Isailovic (@lukaisailovic), Derek Rein (@arein)
+author: Luka Isailovic (@lukaisailovic), Derek Rein (@arein), Pedro Gomes (@pedrouid)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/358
 status: Draft
 type: Standard
 created: 2025-05-26
-updated: 2025-05-26
-requires: 2, 10, 19
-replaces: 
+updated: 2025-11-13
+requires: 2, 19
 ---
-
 
 ## Simple Summary
 
-A standard for enabling one-interaction cryptocurrency payment experiences across wallets and dapps, allowing payment information to be transmitted in a single round-trip.
+A standard for enabling one-interaction cryptocurrency payment flows across wallets and dapps, allowing all payment information to be transmitted in a single round-trip.
 
 ## Abstract
 
@@ -23,13 +21,12 @@ The method allows merchants to specify payment requirements enabling wallets to 
 
 ## Motivation
 
-Current cryptocurrency payment experiences are either error-prone (manual transfers, address QR codes) or suboptimal, requiring multiple interactions from the user.
-In addition to this, different payment providers implement different payment experiences, creating confusion.
+Current cryptocurrency payment experiences are either error-prone (manual transfers, address QR codes) or overly complex, often requiring multiple user interactions. In addition to this, different payment providers implement different payment experiences, creating confusion.
 
-Solutions like EIP-681 or `bitcoin:` url are ecosystem-specific and have not historically gotten sufficient support from the wallets. They tend to rely on a QR code scan as well, which means that they can't be batched as part of a connection-flow using protocols like WalletConnect.
+Solutions like `ethereum:` ([ERC-681][]) or `bitcoin:` url are ecosystem-specific and have not historically gotten sufficient support from the wallets. They tend to rely on a QR code scan as well, which means that they can't be batched as part of a connection-flow using protocols like WalletConnect.
 
-By standardizing the payment experience on both the application side and the wallet side, we can reduce user errors during payment, providing the payment experience in as few clicks as possible and reducing the friction in crypto payments.
- 
+By standardizing the payment experience on both the application and wallet side, we reduce user errors and enable payments in as few interactions as possible, lowering friction across crypto payments.
+
 The method transmits all the acceptable payment requests so the wallet can pick the most optimal one based on the assets that user has in the account and the wallet's capabilities.
 
 ## Specification
@@ -39,135 +36,208 @@ The method transmits all the acceptable payment requests so the wallet can pick 
 #### Request
 
 ```typescript
-type Hex = `0x${string}`;
-
+// Accepted Payment Options
 type PaymentOption = {
-  asset: string; 
-  amount: Hex;
+  asset: string;
+  amount: string;
   recipient: string;
-}
+  types: string[];
+};
 
-// JSON-RPC Request
-type PayRequest = {
-  version: string;
-  orderId?: string;
-  acceptedPayments: PaymentOption[]; 
+// JSON-RPC Request Params
+type RequestParams = {
+  version: integer;
+  orderId: string;
   expiry: number;
-}
-
+  paymentOptions: PaymentOption[];
+};
 ```
 
-The application **MUST** include:
+The following request parameters are defined for `version=1` as:
 
-- At least one entry in the `acceptedPayments` array
-- `expiry` timestamp for the payment request
+- `version` - this field is an integer and **MUST** be present to define which of the following parameters are optional or required.
+- `orderId` - this field **MUST** uniquely identify an order which this payment request is linked to and **MUST NOT** be longer than 128 characters. It does not require global uniqueness, but it's **RECOMMENDED** to use a UUIDv4 if global uniqueness is necessary.
+- `expiry` - this field **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. It **SHOULD** use an expiry of at least 5 minutes (300 seconds).
+- `paymentOptions` - this field **MUST** be an array of `PaymentOption` objects with at least one entry. Each element in the array represents a payment option the wallet may choose to complete the payment, each with independent parameters.
 
-The application **MAY** include:
+**Note:** Merchants **CAN** signal `PaymentOption` preference by ordering the paymentOptions array. JSON-RPC guarantees array order, but wallets are **NOT REQUIRED** to honor it. Wallets **MAY** offer swaps or bridges to help users match the merchant’s preferred option.
 
-- An `orderId` that uniquely identifies this payment request. If provided, `orderId` **MUST NOT** be longer than 128 characters.
+For `PaymentOption` parameters these are defined for `version=1` as:
 
- When `orderId` is provided, it **MUST** be a string and implementations **SHOULD** ensure this ID is unique across their system to prevent collisions.
+- `asset` - this field **MUST** follow the assetId [CAIP-19][] spec which also includes the [CAIP-2][] chainId prefix.
+- `amount` - this field **MUST** be a Hex string representing the amount in the smallest denomination of its asset.
+- `recipient` - this field **MUST** be a chain-specific address present in the chain referred in the `asset` field.
+- `types` - this field **MUST** be an array of strings defining different transfer authorization types.
 
-The `acceptedPayments` field **MUST** be an array of `PaymentOption` objects. Each element in the array represents a payment option that the wallet can choose from to complete the payment.
+The exclusive list of Transfer Types supported in `version=1` are the following:
 
-For `PaymentOption` options:
+- `native-transfer` - this is used when a native token is being used as a PUSH payment (eg. ETH, SOL).
+- `erc20-transfer` - this is used when an [ERC-20][] transfer is being used as a PUSH payment.
+- `erc20-approve` - this is used when an [ERC-20][] allowance is approved to be used as a PULL payment.
+- `erc2612-permit` - this is used when a [ERC-2612][] permit message is being used as a PULL payment.
+- `erc3009-authorization` - this is used when a [ERC-3009][] authorization message is being used as a PULL payment.
+- `spl-transfer` - this is used when a [SPL][] transfer is being used as a PUSH payment.
+- `spl-approve` - this is used when a [SPL][] delegation is being used as a PULL payment.
 
-- The `recipient` field **MUST** be a valid [CAIP-10][] account ID.
-- The `asset` field **MUST** follow the [CAIP-19][] standard.
-- The `amount` field **MUST** be a hex-encoded string representing the amount of the asset to be transferred.
-- The [CAIP-2][] chainId component in the [CAIP-19][] `asset` field **MUST** match the [CAIP-2][] chainId component of the [CAIP-10][] `recipient` account ID.
+**NOTE:**
 
-The `expiry` field **MUST** be a UNIX timestamp (in seconds) after which the payment request is considered expired. Wallets **SHOULD** check this timestamp before processing the payment.
+- A PUSH payment would be when the wallet user is the sender of the transaction onchain to settle the token transfer.
+- A PULL payment would be when the recipient or a third-party is the sender of the transaction onchain to settle the token transfer.
 
-Request example:
+Example Request:
 
-```json
+```jsonc
 {
-  "version": "1.0.0",
-  "orderId": "order-123456",
-  "acceptedPayments": [
+  "version": 1,
+  "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
+  "expiry": 1740672389,
+  "paymentOptions": [
     {
-      "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      // 100 USDC on Ethereum Mainnet
       "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      "amount": "0x5F5E100" 
+      "amount": "0x5F5E100",
+      "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "types": ["erc3009-authorization"]
     },
     {
-      "recipient": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ:9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
-      "amount": "0x6F05B59D3B20000"
+      // 100 USDE on Ethereum Mainnet
+      "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+      "amount": "0x56BC75E2D63100000",
+      "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
+    },
+    {
+      // 100 USDC on Solana Mainnet
+      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/spl:EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "amount": "0x5F5E100",
+      "recipient": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "types": ["spl-transfer"]
+    },
+    {
+      // 0.025 ETH on Ethereum Mainnet
+      "asset": "eip155:1/slip44:60",
+      "amount": "0x58D15E17628000",
+      "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "types": ["native-transfer"]
     }
-  ],
-  "expiry": 1709593200 
+    {
+      // 0.5 SOL on Solana Mainnet
+      "asset": "solana:4sGjMW1sUnHzSxGspuhpqLDx6wiyjNtZ/slip44:501",
+      "amount": "0x1DCD6500",
+      "recipient": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+      "types": ["native-transfer"]
+    }
+  ]
 }
 ```
 
 #### Response
 
 ```typescript
-type PayResult = {
+// Transfer Receipt Payload
+type TransferReceipt = {
+  type: string;
+  hash: string;
+  data: {
+    from: string;
+    to: string;
+    value: string;
+    nbf?: integer;
+    exp?: integer;
+    nonce?: string;
+  };
+};
+
+// JSON-RPC Response Result
+type ResponseResult = {
   version: string;
-  orderId?: string; 
-  txid: string; 
-  recipient: string;  
-  asset: string;  
-  amount: Hex; 
-}
+  orderId: string;
+  payment: PaymentOption;
+  receipt: TransferReceipt;
+};
 ```
 
-The wallet's response MUST include:
+The following response parameters are defined for `version=1`:
 
-- `txid` with the transaction identifier on the blockchain
-- `recipient` that received the payment. It **MUST** be a valid [CAIP-10][] account ID.
-- `asset` that was used for payment. It **MUST** follow the [CAIP-19][] standard.
-- `amount` that was paid. It **MUST** be represented in hex string
+- `version` - this field is an integer and **MUST** match the same value used in the request.
+- `orderId` - this field is a string and **MUST** match the same valued used in the request.
+- `payment` - this field is a `PaymentOption` object and describes which option was used to fulfill this request and **MUST** match one of the provided options in the request.
+- `receipt` - this field is a `TransferReceipt` object and will include the transfer type used and corresponding data which **MUST** not be empty.
 
-If an `orderId` was provided in the original request, the response **MUST** include the same `orderId`.
+Example Response:
 
-`txid` **MUST** be a valid transaction identifier on the blockchain network specified in the asset's chain ID.
+```jsonc
+// Response (type="erc20-transfer")
+// [hash = transaction id]
 
- `recipient`, `asset`, and `amount` **MUST** match those specified in the selected direct payment option in the `acceptedPayments` array.
-
-
-Example response:
-```json
 {
-  "version": "1.0.0",
-  "orderId": "order-123456",
-  "txid": "0x8a8c3e0b1b812182db4cabd81c9d6de78e549fa3bf3d505d6e1a2b25a15789ed",
-  "recipient": "eip155:1:0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-  "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-  "amount": "0x5F5E100"
+  "version": 1,
+  "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
+  "payment": {
+    "asset": "eip155:1/erc20:0x4c9edd5852cd905f086c759e8383e09bff1e68b3",
+    "amount": "0x56BC75E2D63100000",
+    "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "types": ["erc20-transfer", "erc20-approve", "erc2612-permit"]
+  },
+  "receipt": {
+    "type": "erc20-transfer",
+    "hash": "0x8a8c3e0b1b812182db4cabd81c9d6de78e549fa3bf3d505d6e1a2b25a15789ed",
+    "data": {
+      "from": "0xab16a96D359eC26a11e2C2b3d8f8B8942d5Bfcdb",
+      "to": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "value": "0x56BC75E2D63100000",
+    }
+  },
+}
+
+
+// Response (type="erc3009-authorization")
+// [hash = signature]
+
+{
+  "version": 1,
+  "orderId": "643f31f2-67cd-4172-83cf-3176e8443ab8",
+  "payment": {
+    "asset": "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "amount": "0x5F5E100",
+    "recipient": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    "types": ["erc3009-authorization"]
+  },
+  "receipt": {
+    "type": "erc3009-authorization",
+    "hash": "0x8f3d1a72c9e54b60a7f2d98e41b3c75a9d04f68e2c71b95f3a0e6d2b4c89f17a5b3e90c47d61f2a8e9c5b4d73a1e06f298d3b57c40f9e1a62b84d5c7f03a9b6e81d24f5b70a39c8e4d26f1a05b7c9d3e8f42a",
+    "data": {
+      "from": "0xab16a96D359eC26a11e2C2b3d8f8B8942d5Bfcdb",
+      "to": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+      "value": "0x5F5E100",
+      "nbf": 1740672089,
+      "exp": 1740672389,
+      "nonce": "0xb543b4324bc37877595306a83422e70903589eb3079a0003871b5fb0a545bd8d"
+    }
+  },
 }
 ```
 
 #### Idempotency
 
-The `wallet_pay` method **MUST** be idempotent for the same `orderId` when provided. This ensures robustness in case of connection failures or timeout scenarios.
-
-Requirements when `orderId` is provided:
+The `wallet_pay` method **MUST** be idempotent for the same `orderId` as this ensures robustness in case of connection failures or timeout scenarios:
 
 - If a payment with the same `orderId` has already been completed successfully, the wallet **MUST** return the original `PayResult` without executing a new payment
 - If a payment with the same `orderId` is currently pending, the wallet **SHOULD** return the result of the original payment attempt
-- If a payment with the same `orderId` has failed previously, the wallet **MAY** attempt the payment again or return the previous error
+- If a payment with the same `orderId` previously failed, the wallet MAY attempt it again or return the same error.
 - Wallets **SHOULD** maintain payment status for completed transactions for at least 24 hours after completion
-- If connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
-
-When `orderId` is not provided:
-
-- Each payment request **SHOULD** be treated as a new payment attempt
-- Wallets **MAY** implement their own deduplication logic based on other request parameters (recipient, asset, amount, expiry)
-- Dapps **SHOULD** include an `orderId` if they require guaranteed idempotency behavior
+- If the connection is lost during payment execution, dapps **MAY** retry the same request to query the payment status
 
 #### Error Handling
 
 If the payment process fails, the wallet **MUST** return an appropriate error message:
 
 ```typescript
-type PayError = {
+type ResponseError = {
   code: number;
   message: string;
   data?: any;
-}
+};
 ```
 
 The wallet **MUST** use one of the following error codes when the pay request fails:
@@ -202,12 +272,12 @@ Example error response:
 
 ## Rationale
 
-This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to EIP-681/Solana Pay, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
+This specification evolved through multiple iterations to address fundamental usability issues in cryptocurrency payment flows. Initial exploration began as a CAIP alternative to [ERC-681][]/Solana Pay, but analysis of existing payment service provider (PSP) implementations revealed significant friction in current user experiences.
 
 Existing cryptocurrency payment flows typically require users to:
 
-- Select a token type
-- Choose a blockchain network
+- Select a token
+- Choose a chain
 - Wait for address/QR code generation
 - Complete the transfer manually
 
@@ -215,10 +285,10 @@ This multi-step process creates excessive friction, often requiring 4-6 user int
 
 The `wallet_pay` method addresses these limitations by:
 
-- Moving choice to the wallet rather than forcing merchants to pre-select payment methods, wallets can filter available options based on user account balances and preferences
+- It moves choice to the wallet, allowing it to filter payment options based on user balances and preferences.
 - All payment options are transmitted in one request, eliminating the need for multiple user interactions
 - The response includes transaction ID and execution details, providing immediate confirmation
-- Can be batched with connection establishment, enabling "connect + pay" flows in protocols like WalletConnect
+- Can be batched with connection establishment, enabling "connect-and-pay" flows in protocols like WalletConnect
 
 ### Alternative Approaches Considered
 
@@ -243,38 +313,57 @@ It also does not attempt to provide dispute functionality. These present ideas f
 
 ### Wallet Address Sharing
 
-Wallet addresses were intentionally omitted here both for the purpose of UX simplicity as well as for privacy.
-By opting to limit the usage of a wallet address, we make this API implementable without first needing to request permission for the user's wallet address.
-The wallet address acts as a cross-origin identifier which can be used to link a user's financial transactions across sites.
-Since the wallet address is not needed, we can leave it up to the wallet which address to use.
-Furthermore, it is also the responsibility of the wallet to determine if possible which token they wish to make a payment from, if multiple are accepted.
-This may be done automatically to improve the user experience or allowing the user to select and override assumed defaults.
+Wallet addresses were intentionally omitted both for UX simplicity and to improve privacy.
+
+By not requiring the user’s wallet address, this API can be implemented without first requesting a cross-origin identifier that could link a user’s activity across sites. Since the wallet address is not needed, the wallet may determine which address to use for the payment.
+
+This design also supports use cases where payments originate from an address different from the user's primary account such as sponsored transactions, delegated or session-based accounts, or orchestration flows where the user controls multiple accounts.
+
+Relying on payment requests rather than fixed wallet addresses provides greater flexibility and future-proofing. Wallets may automatically choose the appropriate token or address, or allow the user to override defaults when multiple options are available.
 
 ### Transaction Privacy
 
-Wallets are encouraged to utilize transaction privacy protocols to prevent payment data from leaking browsing history onchain.
-A complete transaction privacy protocol can be defined as one that prevents manual or automated analysis of transaction data on-chain (e.g. on a block explorer) being enough to identify the sender and/or the recipient of a given transaction.
-A protocol which protects the sender's privacy will prevent leaking of purchase data being used to build a behavioral profile through purchase history of an onchain account.
-A protocol which focuses only on recipient (e.g. merchant) privacy will prevent leaking real-time transaction data of businesses which may constitute "business intelligence" that enables reverse engineering of business practices, intellectual
-property, trade secrets, etc.
-Depending on the use-case, either or both may be necessary to prevent this RPC's on-chain records creating damaging externalities.
+Wallets are encouraged to use transaction-privacy protocols to avoid exposing payment behavior on-chain.
+
+A complete privacy protocol prevents manual or automated analysis (e.g., via block explorers) from identifying either the sender, recipient, or other transaction metadata such as amount.
+
+Sender privacy protects users from having their purchase history used to build behavioral profiles, while recipient (e.g., merchant) privacy prevents real-time business data from being revealed as “business intelligence".
+
+Depending on the use case, either or both protections may be required to avoid undesirable externalities from on-chain payment records.
 
 ## Backwards Compatibility
 
-TODO
+This method is backwards compatible through a dual-payload pattern. A merchant MAY send both a standard wallet-connection request and a `wallet_pay` request in parallel.
 
-<!-- All CAIPs that introduce backwards incompatibilities must include a section describing these incompatibilities and their severity. The CAIP must explain how the author proposes to deal with these incompatibilities. CAIP submissions without a sufficient backwards compatibility treatise may be rejected outright. -->
+Wallets that support `wallet_pay` MUST respond only to the `wallet_pay` request and proceed with the simplified payment flow.
 
-## References 
+Wallets that do not support `wallet_pay` will ignore the unknown method and instead follow the legacy sequence:
 
-- [CAIP-1] defines the CAIP document structure
-- [EIP-681] is ethereum-specific prior art that also includes gas information in the URI 
+- connect the wallet
+- select token and network
+- request a normal transfer
+
+This approach allows dapps to adopt `wallet_pay` without breaking compatibility for existing wallets.
+
+## References
+
+- [CAIP-1][] - defines the CAIP document structure
+- [CAIP-2][] - Blockchain ID Specification
+- [CAIP-19][] - Asset Type and Asset ID Specification
+- [ERC-20][] - Ethereum Token Standard
+- [ERC-681][] - URL Format for Transaction Requests
+- [ERC-2612][] - Permit Extension for ERC-20 Signed Approvals
+- [ERC-3009][] - Transfer With Authorization
+- [SPL][] - Solana Token Standard
 
 [CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
 [CAIP-2]: https://ChainAgnostic.org/CAIPs/caip-2
-[CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
 [CAIP-19]: https://ChainAgnostic.org/CAIPs/caip-19
-[EIP-681]: https://eips.ethereum.org/EIPS/eip-681
+[ERC-20]: https://eips.ethereum.org/EIPS/eip-20
+[ERC-681]: https://eips.ethereum.org/EIPS/eip-681
+[ERC-2612]: https://eips.ethereum.org/EIPS/eip-2612
+[ERC-3009]: https://eips.ethereum.org/EIPS/eip-3009
+[SPL]: https://github.com/solana-program/token
 
 ## Copyright
 
