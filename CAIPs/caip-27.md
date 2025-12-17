@@ -47,7 +47,7 @@ The application would interface with an JSON-RPC provider to make request as fol
   "method": "wallet_invokeMethod",
   "params": {
     "sessionId": "0xdeadbeef",
-    "scope": "eip155:1",
+    "chainId": "eip155:1",
     "request": {
       "method": "eth_sendTransaction",
       "params": [
@@ -77,7 +77,7 @@ The application would interface with an JSON-RPC provider to make request as fol
 The JSON-RPC method is labeled as `wallet_invokeMethod` and expects three parameters, **two of them required**:
 
 - **sessionId** (conditional) - [CAIP-171][] `SessionId` disambiguates an open session in a multi-session actor; it is required in some sessions, such as [CAIP-25][] sessions created by a response containing one, and SHOULD be omitted in other sessions, such as [CAIP-25] sessions created by a response not containing one (see [CAIP-316]).
-- **scope** (required) - a valid [CAIP-2][] network identifier, previously authorized by or within a `scopeObject` in the active session
+- **chainId** (required) - a valid [CAIP-2][] network identifier, previously authorized by or within a `scopeObject` in the active session
 - **request** (required) - an object containing the fields:
   - **method** (required) - the JSON-RPC method to invoke (previously authorized for the targeted network)
   - **params** (required) - JSON-RPC parameters to invoke (may be empty but must be set)
@@ -85,8 +85,8 @@ The JSON-RPC method is labeled as `wallet_invokeMethod` and expects three parame
 
 ### Validation
 
-1. A respondent SHOULD check the `scope` against active session's `scopeObject`s before executing or responding to such a request, and SHOULD invalidate a request for a scope not previously authorized.
-2. The respondent SHOULD check that `request.method` is authorized for the specified scope, and SHOULD invalidate a request for a scope not previously authorized.
+1. A respondent SHOULD check the `chainId` against active session's `scopeObject`s before executing or responding to such a request, and SHOULD invalidate a request for a chainId not previously authorized.
+2. The respondent SHOULD check that `request.method` is authorized for the specified chainId, and SHOULD invalidate a request for a chainId not previously authorized.
 3. The respondent MAY check that the `request.params` are valid for `request.method`, if its syntax is known to it.
 4. The respondent MAY apply other logic or validation.
 5. The respondent MAY chose to drop invalid requests or return an error message, but it MUST NOT route or submit them.
@@ -102,7 +102,7 @@ If the targeted network returns a response to the respondent, the respondent MAY
   "jsonrpc": "2.0",
   "result": {
     "sessionId": "0xdeadbeef",
-    "scope": "eip155:1",
+    "chainId": "eip155:1",
     "result": {
       "method": "eth_sendTransaction",
       "result": "0x4e306b5a5a37532e1734503f7d2427a86f2c992fbe471f5be403b9f734e667c8"
@@ -136,7 +136,7 @@ Conversely, errors specific to the method passed or its RPC namespace should be 
   "jsonrpc": "2.0",
   "result": {
     "sessionId": "0xdeadbeef",
-    "scope": "eip155:1",
+    "chainId": "eip155:1",
     "error": {
       "code": 4100,
       "message": "The requested account and/or method has not been authorized by the user."
@@ -149,7 +149,7 @@ The latter category of error depend on the design of the passed method defined w
 
 ## Backwards Compatibility
 
-Early drafts of this specification did not constrain `scope` to [CAIP-2] identifiers, but rather to any [valid scopeStrings][CAIP-217] previously-authorized, including namespace-wide ones.
+Early drafts of this specification did not constrain `chainId` to [CAIP-2] identifiers, but rather to any [valid scopeStrings][CAIP-217] previously-authorized, including namespace-wide ones.
 No known implementations in production took advantage of this affordance, as to date no RPC [namespaces] have been defined that could receive such requests regardless of [CAIP-2] network identifiers.
 
 ## Links
