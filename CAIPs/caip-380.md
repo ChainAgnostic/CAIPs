@@ -1,5 +1,5 @@
 ---
-caip: CAIP-380
+caip: 380
 title: Portable Proof
 author: Chris Leal (@cl34l)
 discussion-to: https://github.com/ChainAgnostic/CAIPs/pull/380
