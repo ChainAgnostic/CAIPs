@@ -112,7 +112,7 @@ sequenceDiagram
   rect rgb(255, 245, 255)
   note right of Caller: Revoke Session
   Caller->>Wallet: wallet_createSession (sessionId: 0xnewbeef, no scopes)
-  Wallet->>WalletDataStore: Create new, empty session 0xnewbeef ; clear all older sessions w/same dapp
+  Wallet->>WalletDataStore: Create new, empty session 0xnewbeef and clear all older sessions with same dapp
   Wallet-->>Caller: {"result": "true"} (session is revoked)
   Caller->>CallerDataStore: Clear session data
   end
@@ -125,17 +125,18 @@ sequenceDiagram
   end
   end
 ```
+
 ## Privacy Considerations
 
 The introduction of this lifecycle method must ensure that only authorized parties can retrieve the authorizations of a session. Proper authentication and authorization mechanisms must be in place to prevent unauthorized access or modifications.
 
 To achieve this, it is recommended to establish a connection over domain-bound or other 1:1 transports. Where applicable, additional binding to a `sessionId` is recommended to ensure secure session management. This approach helps to create a secure communication channel that can effectively authenticate and authorize session-related requests, minimizing the risk of unauthorized access or session hijacking.
+
 ## Changelog
 
 - 2024-06-07: Initial draft of CAIP-285.
 
 ## Links
-
 
 - [CAIP-25][] - Session handshake - `wallet_createSession` - specification
 - [CAIP-171][] - Session Identifier, i.e. syntax and usage of `sessionId`s
