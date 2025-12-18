@@ -3,7 +3,7 @@ caip: 222
 title: Wallet Authenticate JSON-RPC Method
 author: Pedro Gomes (@pedrouid), Gancho Radkov (@ganchoradkov)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/222
-status: Draft
+status: Review
 type: Standard
 created: 2023-04-07
 updated: 2023-10-19
@@ -78,7 +78,7 @@ The JSON-RPC method is labelled as `wallet_authenticate` and expects the followi
 - requestId (optional) - System-specific identifier used to uniquely refer to the authentication request.
 - resources (optional) - List of information or references to information the user wishes to have resolved as part of the authentication by the relying party; express as [RFC 3986][rfc 3986] URIs and separated by `\n`.
 - signatureTypes (optional) - Object specifying a list of the signing algorithms supported by the caller, for each namespace. The namespace MUST be defined in the key for each list. Each list should include the supported signing algorithms should be provided in the form of strings listed in each namespace's CAIP-222 profile and MUST contain one or more values if present. A request that does not set this value and constrain the signature types it will accept MAY be assumed to accept all signature TYPES, which may lead to unstable behavior in some contexts.
-Example of `signatureTypes`
+  Example of `signatureTypes`
 
 ```
 signatureTypes: {
