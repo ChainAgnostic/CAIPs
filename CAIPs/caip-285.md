@@ -1,7 +1,7 @@
 ---
 caip: 285
 title: JSON-RPC Method for Revoking Session Authorizations
-author: Alex Donesky (@adonesky1)
+author: Alex Donesky (@adonesky1), João Carlos (@ffmcgee725)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/285/files
 status: Draft
 type: Standard
@@ -33,6 +33,7 @@ otherwise, an appropriate error message is sent.
 **Parameters:**
 
 - `sessionId` (string, optional): The session identifier.
+- `scopes` (string[], optional): Scopes to be revoked if a partial revoke is intended instead of a full permission revoke.
 
 ### Request
 
@@ -64,6 +65,26 @@ An example of a successful response follows:
   "result": true
 }
 ```
+
+### Extended Usage: partial revokes via `wallet_revokeSession`
+
+When the optional `scopes` parameter is passed, the `wallet_revokeSession` method MUST partially revoke the active session.
+
+```jsonc
+{
+  "id": 1,
+  "jsonrpc": "2.0",
+  "method": "wallet_revokeSession",
+  "params": {
+    "scopes": ["eip155:1", "eip155:10"]
+  }
+}
+```
+
+The wallet SHOULD ignore any scopes that do not exist in the active session.
+This parameter is optional, so if it is not present in the request, the wallet MUST allow the request to follow through as usual, fully revoking the active session.
+
+If after a partial revoke, no scopes exist in the active session, the wallet SHOULD proceed with a full session revoke.
 
 ### Failure States
 
