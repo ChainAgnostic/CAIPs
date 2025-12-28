@@ -6,17 +6,17 @@ discussions-to: https://github.com/ChainAgnostic/CAIPs/issues/67
 status: Draft
 type: Standard
 created: 2024-08-08
-requires: 2, 10, 19, 20, 21, 22, 104
+requires: 2, 10, 19, 104
 ---
 
 ## Simple Summary
 
 Various CAIPs to date have defined generic chain-agnostic identifier schemes for certain informational primitives common to blockchain and other decentralized peer-to-peer systems.
-This URI scheme combines them into a structure that can be parsed heirarchically.
+This URI scheme combines them into a structure that can be parsed hierarchically.
 
 ## Abstract
 
-A general-purpose heirarchical URI scheme for identifiers that dereference to "on-chain" or otherwise cryptographically self-certifying records from peer-to-peer cryptographic systems.
+A general-purpose hierarchical URI scheme for identifiers that dereference to "on-chain" or otherwise cryptographically self-certifying records from peer-to-peer cryptographic systems.
 The model is not equally amenable to all native identifier schemes but is engineered to facilitate translation between, and access to, those systems as broadly as possible.
 
 ## Motivation
@@ -36,7 +36,7 @@ caip:<[CAIP-104] namespace>:<[CAIP-2] chain identifier>:<{[CAIP-10]|[CAIP-19]} o
 
 The top-level segment refers to short ASCII strings identifying entries in the Chain-Agnostic Namespace registry.
 The applicability of other CAIPs, as well as any namespace-specific constraints, validation syntax, and caveats, are defined in entries there.
-All segments after the namespace are optional but heirarchical, i.e., a [CAIP-2][] chain identifier without a preceding namespace segment is invalid, and a [CAIP-10][] account identifier without a preceding chain identifier is invalid.
+All segments after the namespace are optional but hierarchical, i.e., a [CAIP-2][] chain identifier without a preceding namespace segment is invalid, and a [CAIP-10][] account identifier without a preceding chain identifier is invalid.
 
 ## Rationale
 
@@ -45,7 +45,62 @@ Detailed rationales for each component of this scheme can be found following the
 
 ## Test Cases
 
-// TODO
+### Chain Identifiers (CAIP-2)
+
+```
+# Ethereum Mainnet
+caip:eip155:1
+
+# Bitcoin Mainnet
+caip:bip122:000000000019d6689c085ae165831e93
+
+# Cosmos Hub
+caip:cosmos:cosmoshub-4
+
+# Polkadot Relay Chain
+caip:polkadot:91b171bb158e2d3848fa23a9f1c25182
+
+# Litecoin
+caip:bip122:12a765e31ffd4059bada1e25190f6e98
+```
+
+### Account Identifiers (CAIP-10)
+
+```
+# Ethereum EOA
+caip:eip155:1:0xab16a96D359eC26a11e2C2b3d8f8B8942d5Bfcdb
+
+# Bitcoin Address
+caip:bip122:000000000019d6689c085ae165831e93:128Lkh3S7CkDTBZ8W7BbpsN3YYizJMp8p6
+
+# Cosmos Account
+caip:cosmos:cosmoshub-4:cosmos1t2uflqwqe0fsj0shcfkrvpukewcw40yjj6hdc0
+
+# Polkadot Account
+caip:polkadot:91b171bb158e2d3848fa23a9f1c25182:5hmuyxw9xdgbpptgypokw4thfyoe3ryenebr381z9iaegmfy
+```
+
+### Asset Identifiers (CAIP-19)
+
+```
+# Ether (native token via SLIP-44)
+caip:eip155:1/slip44:60
+
+# Bitcoin (native token via SLIP-44)
+caip:bip122:000000000019d6689c085ae165831e93/slip44:0
+
+# DAI Token (ERC-20)
+caip:eip155:1/erc20:0x6B175474E89094C44Da98b954EedeAC495271d0F
+
+# CryptoKitties Collectible (ERC-721 collection)
+caip:eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d
+
+# CryptoKitty #771769 (specific NFT)
+caip:eip155:1/erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
+
+# Hedera NFT
+caip:hedera:mainnet/nft:0.0.55492/12
+```
 
 ## Security Considerations
 
@@ -60,8 +115,17 @@ As such, this should be the baseline assumption unless contradicted or caveated 
 
 ## Backwards Compatibility
 
-It is important to note that most usage to date of [CAIP-2][], [CAIP-10][], and [CAIP-19][] identifiers has used these without a `caip:` prefix or a `caip:///` prefix, in contexts where these identifiers are unlikely to be encountered outside of their meaningful context.
-Care should be taken to add the `caip:` prefix when merging such lists or datasets into more 
+It is important to note that most usage to date of [CAIP-2][], [CAIP-10][], and [CAIP-19][] identifiers has used these without a `caip:` prefix, in contexts where these identifiers are unlikely to be encountered outside of their meaningful context.
+Care should be taken to add the `caip:` prefix when merging such lists or datasets into more general-purpose systems or URI-aware contexts.
+
+When migrating to URI-based systems:
+- Add the `caip:` prefix when exporting identifiers to external systems
+- Strip the `caip:` prefix when importing into CAIP-aware systems that expect unprefixed identifiers
+- Validate the full URI syntax before use
+
+## IANA Considerations
+
+This specification requires registration of the `caip` URI scheme with IANA per [RFC 7595][].
 
 ## References 
 <!--Links to external resources that help understanding the CAIP better. This can e.g. be links to existing implementations. See CONTRIBUTING.md#style-guide . -->
@@ -70,7 +134,7 @@ Care should be taken to add the `caip:` prefix when merging such lists or datase
 - [CAIP-104][] defines the CAIP namespaces directory
 - [CAIP-2][] defines the network-identifier syntax for each namespace's network topology, which in some cases includes wildcard or subnet-wide identifiers
 - [CAIP-10][] defines the "account"-identifier syntax for each namespace's actor model
-- [CAIP-19][] defines the "asset"-identifier syntac for each namespace's stably-addressable assets with an eye to commonalities
+- [CAIP-19][] defines the "asset"-identifier syntax for each namespace's stably-addressable assets with an eye to commonalities
 
 
 [CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
@@ -78,6 +142,8 @@ Care should be taken to add the `caip:` prefix when merging such lists or datase
 [CAIP-10]: https://ChainAgnostic.org/CAIPs/caip-10
 [CAIP-19]: https://ChainAgnostic.org/CAIPs/caip-19
 [CAIP-104]: https://ChainAgnostic.org/CAIPs/caip-104
+[RFC 7595]: https://www.rfc-editor.org/rfc/rfc7595
+[namespaces]: https://namespaces.chainagnostic.org/
 
 ## Copyright
 Copyright and related rights waived via [CC0](../LICENSE).
