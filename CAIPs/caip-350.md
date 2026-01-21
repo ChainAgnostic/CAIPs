@@ -32,11 +32,16 @@ Standards like CAIP-2 and CAIP-10 are simple text representations of addresses a
 
 The purpose of each namespace's profile is to specify deterministic and unambiguous conversions between format pairs for the Addresses and Chain References of the ecosystem.
 
-Chain References:
+#### CAIP-2/CAIP-10 Compatibility
+The "standard text" in CAIP-350 profiles is a variant of [CAIP-2]/[CAIP-10] that is identical for most namespaces, but less lossy for those where length restrictions cause truncation (e.g., Solana's genesis blockhash).
+
+Each CAIP-350 profile MUST state whether its standard text differs from [CAIP-2]/[CAIP-10], and how.
+
+### Chain References
 - **customary text ↔ standard text**: Between customary chain reference text formats of the ecosystem (which may also be described in [CAIP-2]) and a standard text representation
 - **standard text ↔ binary**: Between the standard text representation and a binary _ChainReference_ representation
 
-Addresses:
+### Addresses
 - **customary text ↔ standard text**: Between customary address text formats of the ecosystem (which may also be described in its [CAIP-10] profile) and a standard text representation
 - **standard text ↔ binary**: Between the standard text representation and a binary _Address_ representation, for all address formats of said ecosystem
 
