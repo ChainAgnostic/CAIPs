@@ -11,7 +11,7 @@ created: 2025-11-30
 
 ## Abstract
 
-A protocol based on FIDO2 WebAuthn principles for delegating private key storage and transaction
+A protocol based on FIDO2 [WebAuthn][webauthn] principles for delegating private key storage and transaction
 signing to a separate secure application (Signer App). It allows Client Apps (Wallets, DApps) running
 on various platforms (Mobile, Desktop, Web) to request Public Keys and sign content using a
 credential ID, without direct access to the user's mnemonic phrases or private keys. The protocol
@@ -138,6 +138,8 @@ negative values in some implementations.
 | `gcip.sign.response`       | 131 (-125)   | Response to `gcip.sign.request`.                           |
 | `gcip.disconnect.request`  | 4            | Request to close an existing connection.                   |
 | `gcip.disconnect.response` | 132 (-124)   | Response to `gcip.disconnect.request`.                     |
+| `gcip.import.request`      | 5            | Request to import credentials into the Signer App.         |
+| `gcip.import.response`     | 133 (-123)   | Response to `gcip.import.request`.                         |
 
 #### 2.2. Common Information about Encryption & Wrapping
 
@@ -177,12 +179,12 @@ GCIP uses two operational modes, depending on transport trust assumptions.
 ##### 2.2.3. Same-device trusted transports (Intent, ActionExtension, etc.)
 
 In same-device and OS-mediated transports where the channel has strong integrity and identity
-guarantees, the connection SHOULD be established with one RTT by performing `Connect` with an inline
+guarantees, the connection can be established with one RTT by performing `Connect` with an inline
 `exchangeKey` carried by `EncryptionMessage`.
 
 ##### 2.2.4. Cross environments (QR, BLE, NFC etc.)
 
-In cross-device or otherwise interceptable transports, the client SHOULD establish a session first
+In cross-device or otherwise interceptable transports, the client MUST establish a session first
 using `Exchange`, and then run `Connect` inside the established encrypted session.
 
 ##### 2.2.5. Session key derivation
@@ -204,13 +206,39 @@ Each party generates an ephemeral ECDH key pair and exchanges public keys (durin
 
 ##### 2.2.6.1 Handshake (no established session yet)
 
-<p align="left">
-<img
- src="https://github.com/anchupin/ticket-5313/blob/main/Screenshot%202025-12-29%20at%2017.26.12.png?raw=true"
- alt="GcipBlock"
- width="450"
- >
-</p>
+Used for initial `Connect` or `Exchange` when no session exists. The client sends its ephemeral
+public key in plaintext; the signer responds with encrypted data using the newly derived session key.
+
+```
+    Client                                              Signer
+      │                                                   │
+      │  REQUEST (plaintext)                              │
+      │  ┌─────────────────────────────────────────────┐  │
+      │  │ eid: null (no session yet)                  │  │
+      │  │ iv: null (not encrypted)                    │  │
+      │  │ exchangeKey: client's ECDH public key       │  │
+      │  │ data: plaintext CBOR request                │  │
+      │  └─────────────────────────────────────────────┘  │
+      │─────────────────────────────────────────────────►│
+      │                                                   │
+      │                              Generate ephemeral key pair
+      │                              Compute sessionKey via ECDH
+      │                              Generate new eid (16 bytes)
+      │                              Encrypt response with sessionKey
+      │                                                   │
+      │  RESPONSE (encrypted)                             │
+      │  ┌─────────────────────────────────────────────┐  │
+      │  │ eid: new session ID (16 bytes)              │  │
+      │  │ iv: random nonce (12 bytes)                 │  │
+      │  │ exchangeKey: signer's ECDH public key       │  │
+      │  │ data: AES-GCM ciphertext                    │  │
+      │  └─────────────────────────────────────────────┘  │
+      │◄─────────────────────────────────────────────────│
+      │                                                   │
+      │  Derive sessionKey using signer's exchangeKey     │
+      │  Store (eid, sessionKey) for future requests      │
+      │                                                   │
+```
 
 Request:
 
@@ -232,13 +260,37 @@ Response:
 
 ##### 2.2.6.2 Session (existing session)
 
-<p align="left">
-<img
- src="https://github.com/anchupin/ticket-5313/blob/main/Screenshot%202025-12-24%20at%2012.09.07.png?raw=true"
- alt="GcipBlock"
- width="450"
- >
-</p>
+Used for all operations after a session is established (`Sign`, `Extend`, `Disconnect`, `Import`,
+or `Connect`/`Exchange` inside existing session). Both request and response are encrypted with the
+established `sessionKey`.
+
+```
+    Client                                              Signer
+      │                                                   │
+      │  REQUEST (encrypted with sessionKey)              │
+      │  ┌─────────────────────────────────────────────┐  │
+      │  │ eid: existing session ID                    │  │
+      │  │ iv: random nonce (12 bytes)                 │  │
+      │  │ exchangeKey: null (no key exchange)         │  │
+      │  │ data: AES-GCM ciphertext                    │  │
+      │  └─────────────────────────────────────────────┘  │
+      │─────────────────────────────────────────────────►│
+      │                                                   │
+      │                              Lookup sessionKey by eid
+      │                              Decrypt request
+      │                              Process operation
+      │                              Encrypt response
+      │                                                   │
+      │  RESPONSE (encrypted with sessionKey)             │
+      │  ┌─────────────────────────────────────────────┐  │
+      │  │ eid: same session ID                        │  │
+      │  │ iv: random nonce (12 bytes)                 │  │
+      │  │ exchangeKey: null                           │  │
+      │  │ data: AES-GCM ciphertext                    │  │
+      │  └─────────────────────────────────────────────┘  │
+      │◄─────────────────────────────────────────────────│
+      │                                                   │
+```
 
 Request / Response:
 
@@ -246,8 +298,75 @@ Request / Response:
 |:--------------|:-----|:-------------|:--------------------|
 | `eid`         | 16   | `ID`         | Existing session ID |
 | `iv`          | 12   | `random()`   | AES-GCM nonce       |
-| `exchangeKey` | 0    | `null`       | MUST be absent      |
+| `exchangeKey` | 0    | `null`       | Absent for normal session messages |
 | `data`        | N    | `ciphertext` | AES-GCM ciphertext  |
+
+##### 2.2.6.3 Session with Key Rotation
+
+For key rotation during session operations (`Exchange`, `Sign`, `Extend`, `Disconnect`), the client
+MAY include an `exchangeKey` to initiate inline key rotation. This provides forward secrecy by
+generating a completely new session (`eid` + `sessionKey`), invalidating the old one.
+
+```
+    Client                                              Signer
+      │                                                   │
+      │  REQUEST (encrypted with CURRENT sessionKey)      │
+      │  ┌─────────────────────────────────────────────┐  │
+      │  │ eid: current session ID                     │  │
+      │  │ iv: random nonce (12 bytes)                 │  │
+      │  │ exchangeKey: client's NEW ECDH public key   │  │
+      │  │ data: AES-GCM ciphertext                    │  │
+      │  └─────────────────────────────────────────────┘  │
+      │─────────────────────────────────────────────────►│
+      │                                                   │
+      │                              Decrypt with current sessionKey
+      │                              Process operation (if any)
+      │                              Generate NEW ephemeral key pair
+      │                              Generate NEW eid
+      │                              Derive NEW sessionKey via ECDH
+      │                              Delete old session
+      │                              Encrypt response with NEW sessionKey
+      │                                                   │
+      │  RESPONSE (encrypted with NEW sessionKey)         │
+      │  ┌─────────────────────────────────────────────┐  │
+      │  │ eid: NEW session ID (different from request)│  │
+      │  │ iv: random nonce (12 bytes)                 │  │
+      │  │ exchangeKey: signer's NEW ECDH public key   │  │
+      │  │ data: AES-GCM ciphertext                    │  │
+      │  └─────────────────────────────────────────────┘  │
+      │◄─────────────────────────────────────────────────│
+      │                                                   │
+      │  Derive NEW sessionKey using signer's exchangeKey │
+      │  Replace (old eid, old key) with (new eid, new key)│
+      │                                                   │
+```
+
+**Key points:**
+- Request is encrypted with the **current** `sessionKey`
+- Response is encrypted with the **new** `sessionKey`
+- The `eid` in the response is **different** from the request (new session)
+- Both parties must atomically switch to the new session
+- The old session becomes invalid immediately
+
+Request (with rotation):
+
+| Field         | Size | Value          | Description                              |
+|:--------------|:-----|:---------------|:-----------------------------------------|
+| `eid`         | 16   | `ID`           | Existing session ID                      |
+| `iv`          | 12   | `random()`     | AES-GCM nonce                            |
+| `exchangeKey` | N    | `clientPubKey` | Client's new ephemeral public key        |
+| `data`        | N    | `ciphertext`   | AES-GCM ciphertext (encrypted with current sessionKey) |
+
+Response (after rotation):
+
+| Field         | Size | Value          | Description                              |
+|:--------------|:-----|:---------------|:-----------------------------------------|
+| `eid`         | 16   | `ID`           | **New** session ID (different from request) |
+| `iv`          | 12   | `random()`     | AES-GCM nonce                            |
+| `exchangeKey` | N    | `signerPubKey` | Signer's new ephemeral public key        |
+| `data`        | N    | `ciphertext`   | AES-GCM ciphertext (encrypted with **new** sessionKey) |
+
+Both parties derive a new `sessionKey` using the exchanged keys and the new `eid`. The old session is invalidated.
 
 ##### 2.2.7. AEAD (AES-GCM) and AAD binding
 
@@ -288,8 +407,6 @@ request/response structure, and flow description. Nested CBOR types are defined 
 **Overview**: Create a new connection session and return one or more derived public credentials (
 `credId` plus public key material).
 
-**Communication flow graph**: placeholder (image will be attached)
-
 **Main request structure** (`gcip.connect.request`):
 
 ```
@@ -308,26 +425,26 @@ request/response structure, and flow description. Nested CBOR types are defined 
   connectionId(0x01): ID,
   connectionType(0x02): 0,
   signerData(0x03): SignerData,
-  credentials(0x04): [ CredentialResponse ],
+  bundles(0x04): [ CredentialBundleResponse ],
   meta(0x20): b'data'
 }
 ```
 
 **Flow description**:
 
-1. Client sends `gcip.connect.request` wrapped in `EncryptionMessage`.
-    - The `transport` field describes the channel the client is using (or intends to use) and is
+1. The Client MUST send `gcip.connect.request` wrapped in `EncryptionMessage`.
+    - The `transport` field is REQUIRED as it describes the channel the client is using (or intends to use) and is
       used for policy, UX, and origin verification heuristics.
-    - To establish a new secure session in one RTT, the client includes `exchangeKey` in
+    - To establish a new secure session in one RTT, the client MAY include `exchangeKey` in
       `EncryptionMessage`, with `eid`, `iv` omitted. In this mode, the `gcip.connect.request` CBOR
-      payload is sent in plaintext inside `EncryptionMessage.data`.
-2. Signer validates request format, supported algorithms, and origin (when possible).
-3. Signer prompts the user to approve the connection and the disclosure of derived public keys.
-4. Signer derives requested credentials, assigns a `credId` to each derivation.
-5. Signer generates its own ephemeral key pair, computes the shared secret (`sessionKey`), and
-   includes its `exchangeKey` in the response `EncryptionMessage` alongside a newly generated `eid`
-   and ecrypted `payloadBody` with `sessionKey`.
-6. Signer returns `gcip.connect.response`.
+      payload MUST be sent in plaintext inside `EncryptionMessage.data`.
+2. The Signer MUST validate the request format, supported algorithms, and origin (when possible).
+3. The Signer MUST prompt the user to approve the connection and the disclosure of derived public keys.
+4. The Signer MUST derive requested credentials and assign a `credId` to each derivation.
+5. The Signer MUST generate its own ephemeral key pair, compute the shared secret (`sessionKey`), and
+   include its `exchangeKey` in the response `EncryptionMessage` alongside a newly generated `eid`
+   and encrypted `payloadBody` with `sessionKey`.
+6. The Signer MUST return `gcip.connect.response`.
 
 ##### 2.4.2. Exchange
 
@@ -352,13 +469,13 @@ request/response structure, and flow description. Nested CBOR types are defined 
 
 **Flow description**:
 
-1. Client sends `gcip.exchange.request` wrapped in `EncryptionMessage` with `exchangeKey` present,
-   `eid` and `iv` omitted.
-2. Signer generates a response key pair and a new `eid`.
-3. Signer returns `gcip.exchange.response` wrapped in `EncryptionMessage` with `eid` set and
+1. The Client MUST send `gcip.exchange.request` wrapped in `EncryptionMessage` with `exchangeKey` present.
+   The `eid` and `iv` fields MUST be omitted.
+2. The Signer MUST generate a response key pair and a new `eid`.
+3. The Signer MUST return `gcip.exchange.response` wrapped in `EncryptionMessage` with `eid` set and
    `exchangeKey` present.
-4. Both parties compute the shared secret (`sessionKey`) using ECDH. Future messages using this`eid`
-   are encrypted with this key.
+4. Both parties MUST compute the shared secret (`sessionKey`) using ECDH. Future messages using this `eid`
+   MUST be encrypted with this key.
 
 ##### 2.4.0. Exchange vs Connect (and why both exist)
 
@@ -394,6 +511,7 @@ already-known derivations.
 {
   connectionId(0x01): ID,
   credentials(0x02): [ CredentialRequest ],
+  transport(0x03): Transport,
   meta(0x20): b'data'
 }
 ```
@@ -402,7 +520,7 @@ already-known derivations.
 
 ```
 {
-  credentials(0x01): [ CredentialResponse ],
+  credentials(0x01): [ CredentialBundleResponse ],
   connectionId(0x02): ID,
   meta(0x20): b'data'
 }
@@ -410,11 +528,11 @@ already-known derivations.
 
 **Flow description**:
 
-1. Client sends `gcip.extend.request` with an existing `connectionId` and requested credential
+1. The Client MUST send `gcip.extend.request` with an existing `connectionId` and requested credential
    derivations.
-2. Signer validates `connectionId` and request fields.
-3. Signer prompts the user to approve returning additional public credentials.
-4. Signer returns `gcip.extend.response`.
+2. The Signer MUST validate `connectionId` and request fields.
+3. The Signer MUST prompt the user to approve returning additional public credentials.
+4. The Signer MUST return `gcip.extend.response`.
 
 ##### 2.4.4. Sign
 
@@ -426,8 +544,9 @@ a valid `connectionId`.
 ```
 {
   connectionId(0x01): ID,
-  credId(0x02):ID,
+  credId(0x02): ID,
   challenge(0x03): Challenge,
+  transport(0x04): Transport,
   meta(0x20): b'data'
 }
 ```
@@ -444,12 +563,12 @@ a valid `connectionId`.
 
 **Flow description**:
 
-1. Client sends `gcip.sign.request` with `connectionId`, `credId`, and `challenge`.
-2. Signer validates the connection and credential authorization, and checks algorithm and transform
+1. The Client MUST send `gcip.sign.request` with `connectionId`, `credId`, and `challenge`.
+2. The Signer MUST validate the connection and credential authorization, and check algorithm and transform
    support.
-3. Signer displays a confirmation UI with origin (and verification status when available) and a
+3. The Signer MUST display a confirmation UI with origin (and verification status when available) and a
    user-meaningful representation of the challenge when possible.
-4. After explicit user approval, Signer returns `gcip.sign.response`.
+4. After explicit user approval, the Signer MUST return `gcip.sign.response`.
 
 ##### 2.4.5. Disconnect
 
@@ -460,6 +579,7 @@ a valid `connectionId`.
 ```
 {
   connectionId(0x01): ID,
+  transport(0x02): Transport,
   meta(0x20): b'data'
 }
 ```
@@ -475,8 +595,48 @@ a valid `connectionId`.
 
 **Flow description**:
 
-1. Client sends `gcip.disconnect.request` with `connectionId`.
-2. Signer invalidates the connection and returns `gcip.disconnect.response`.
+1. The Client MUST send `gcip.disconnect.request` with `connectionId`.
+2. The Signer MUST invalidate the connection and return `gcip.disconnect.response`.
+
+##### 2.4.6. Import
+
+**Overview**: Import credentials (private keys or mnemonics) into the Signer App from a Client App.
+This operation is useful for migration scenarios where a user wants to move their existing keys to a
+GCIP-compliant Signer.
+
+**Main request structure** (`gcip.import.request`):
+
+```
+{
+  clientData(0x01): ClientData,
+  credentials(0x02): [ CredentialRequest ],
+  transport(0x03): Transport,
+  meta(0x20): b'data'
+}
+```
+
+**Main response structure** (`gcip.import.response`):
+
+```
+{
+  signerData(0x01): SignerData,
+  bundles(0x02): [ CredentialBundleResponse ],
+  meta(0x20): b'data'
+}
+```
+
+**Flow description**:
+
+1. The Client MUST send `gcip.import.request` with `clientData`, credential data to import, and `transport`.
+2. The Signer MUST validate the request format and origin (when possible).
+3. The Signer MUST prompt the user to approve the import operation.
+4. The Signer MUST securely store the imported credentials.
+5. The Signer MUST return `gcip.import.response` with the resulting credential bundles.
+
+**Security considerations**:
+- Import operations should be treated with extreme caution as they involve receiving sensitive key material.
+- The Signer SHOULD warn the user about the risks of importing keys from untrusted sources.
+- Imported credentials SHOULD be clearly marked as imported vs. natively generated in the Signer UI.
 
 ### 3. Nested CBOR Structures and Types
 
@@ -486,18 +646,18 @@ This section defines the nested CBOR structures referenced by the operation payl
 
 **ClientData**
 
-| Key    | Field      | Type  | Req/Opt/Cond | Description                                                                                 |
-|:-------|:-----------|:------|:-------------|:--------------------------------------------------------------------------------------------|
-| `0x01` | **name**   | UTF-8 | required     | Display name shown to the user. Max 50 chars.                                               |
-| `0x02` | **origin** | UTF-8 | required     | Web Origin (RFC 6454), e.g. `https://app.uniswap.org`. Required for web-based interactions. |
+| Key    | Field      | Type  | Req/Opt/Cond | Description                                                                                   |
+|:-------|:-----------|:------|:-------------|:----------------------------------------------------------------------------------------------|
+| `0x01` | **name**   | UTF-8 | required     | Display name shown to the user. Max 50 chars.                                                 |
+| `0x02` | **origin** | UTF-8 | required     | Web Origin (WHATWG URL), e.g. `https://app.uniswap.org`. Required for web-based interactions. |
 
 **SignerData**
 
-| Key    | Field      | Type  | Req/Opt/Cond | Description                                         |
-|:-------|:-----------|:------|:-------------|:----------------------------------------------------|
-| `0x01` | **name**   | UTF-8 | required     | Display name shown to the user. Max 50 chars.       |
-| `0x02` | **scheme** | UTF-8 | required     | Platform Scheme (e.g., `android`, `ios`, `chrome`). |
-| `0x03` | **id**     | UTF-8 | required     | **Signer ID**. See **3.9.12**.                      |
+| Key    | Field      | Type  | Req/Opt/Cond | Description                                   |
+|:-------|:-----------|:------|:-------------|:----------------------------------------------|
+| `0x01` | **name**   | UTF-8 | required     | Display name shown to the user. Max 50 chars. |
+| `0x02` | **scheme** | UTF-8 | required     | Platform Scheme. See **3.9.11**.              |
+| `0x03` | **id**     | UTF-8 | required     | **Signer ID**. See **3.9.12**.                |
 
 #### 3.3. Challenge
 
@@ -527,7 +687,11 @@ Requests a credential of a given `type`, with one or more derivation parameters.
 | `0x01` | **type**   | Int                                | required     | Credential type. See **3.9.8**.               |
 | `0x02` | **params** | Array of **Derivation Parameters** | required     | Requested derivation parameters. See **3.6**. |
 
-#### 3.6. Derivation Parameters
+#### 3.6. Credential Parameters
+
+Credential parameters vary based on the credential type requested.
+
+##### 3.6.1. Derivation Parameters (for `public-key` type)
 
 Derivation parameters for generating or identifying a key.
 
@@ -537,25 +701,33 @@ Derivation parameters for generating or identifying a key.
 | `0x02` | **der**     | Bytes            | conditional  | Arbitrary derivation input. Mutually exclusive with `derPath`.              |
 | `0x03` | **derPath** | Array of 5 ulong | conditional  | BIP-32 derivation path encoded as unsigned 32-bit indices (max 5 segments). |
 
-#### 3.7. Credential Response
+##### 3.6.2. Mnemonic Parameters (for `mnemonic` type)
+
+Parameters for mnemonic import operations.
+
+| Key    | Field    | Type | Req/Opt/Cond | Description                             |
+|:-------|:---------|:-----|:-------------|:----------------------------------------|
+| `0x01` | **type** | Int  | required     | Mnemonic type. See **3.9.11**.
+
+#### 3.7. Credential Bundle Response
 
 Returned credentials for a `namespace` (wallet name in the Signer UI), grouped by credential `type`.
 
-| Key    | Field           | Type                    | Req/Opt/Cond | Description                              |
-|:-------|:----------------|:------------------------|:-------------|:-----------------------------------------|
-| `0x01` | **type**        | Int                     | required     | Credential type. See **3.9.8**.          |
-| `0x02` | **namespace**   | UTF-8                   | required     | Wallet namespace shown in the Signer UI. |
-| `0x03` | **derivations** | Array of **Derivation** | required     | Returned derived credentials.            |
+| Key    | Field           | Type                             | Req/Opt/Cond | Description                              |
+|:-------|:----------------|:---------------------------------|:-------------|:-----------------------------------------|
+| `0x01` | **type**        | Int                              | required     | Credential type. See **3.9.8**.          |
+| `0x02` | **credentials** | Array of **Credential Response** | required     | Returned credentials.                    |
+| `0x03` | **namespace**   | UTF-8                            | required     | Wallet namespace shown in the Signer UI. |
 
-##### 3.7.1. Derivation
+##### 3.7.1. Credential Response
 
-Single derived credential material returned by the Signer.
+Single credential material returned by the Signer.
 
-| Key    | Field       | Type                      | Req/Opt/Cond | Description                                                  |
-|:-------|:------------|:--------------------------|:-------------|:-------------------------------------------------------------|
-| `0x01` | **credId**  | Bytes                     | required     | Credential identifier (handle for subsequent signing).       |
-| `0x02` | **payload** | **COSE_Key**              | required     | Public key or credential material (COSE Map). See **3.9.2**. |
-| `0x03` | **params**  | **Derivation Parameters** | required     | Derivation parameters used for this credential.              |
+| Key    | Field       | Type     | Req/Opt/Cond | Description                                                  |
+|:-------|:------------|:---------|:-------------|:-------------------------------------------------------------|
+| `0x01` | **credId**  | Bytes    | required     | Credential identifier (handle for subsequent signing).       |
+| `0x02` | **payload** | Bytes    | required     | Credential material (raw public key bytes or COSE_Key).      |
+| `0x03` | **params**  | Bytes    | required     | CBOR-encoded credential parameters used for this credential. |
 
 #### 3.8. Meta
 
@@ -612,16 +784,17 @@ Optional request metadata.
 
 ##### 3.9.2.1. COSE Key Structure
 
-A CBOR map conforming to COSE (RFC 8152) standards. Used for `exchangeKey` and credential `payload`.
+A CBOR map conforming to [COSE (RFC 8152)][rfc8152] standards. Used for `exchangeKey` and credential `payload`.
 
-| Key  | Name    | Description                              |
-|:-----|:--------|:-----------------------------------------|
-| `1`  | **kty** | Key Type (`1` = OKP, `2` = EC2).         |
-| `-1` | **crv** | Curve (e.g. `1` = P-256, `6` = Ed25519). |
-| `-2` | **x**   | X Coordinate / Public Key bytes.         |
-| `-3` | **y**   | Y Coordinate bytes (optional, EC2 only). |
-| `3`  | **alg** | Algorithm (optional).                    |
-| `2`  | **kid** | Key ID (optional).                       |
+| Key  | Name    | Description                                            |
+|:-----|:--------|:-------------------------------------------------------|
+| `1`  | **kty** | Key Type (`1` = OKP, `2` = EC2).                       |
+| `-1` | **crv** | Curve (e.g. `1` = P-256, `6` = Ed25519).               |
+| `-2` | **x**   | X Coordinate / Public Key bytes.                       |
+| `-3` | **y**   | Y Coordinate bytes (optional, EC2 only).               |
+| `-4` | **d**   | Private Key bytes (optional, for private key export).  |
+| `3`  | **alg** | Algorithm (optional).                                  |
+| `2`  | **kid** | Key ID (optional).                                     |
 
 ##### 3.9.2.2. Supported Signing Algorithms (COSE)
 
@@ -672,9 +845,11 @@ displayed to the user.
 
 ##### 3.9.8. Supported Credential Types
 
-| ID         | Type         | Description                                      |
-|:-----------|:-------------|:-------------------------------------------------|
-| 0x00 (`0`) | `public-key` | A public key credential derived from a key pair. |
+| ID         | Type          | Description                                                    |
+|:-----------|:--------------|:---------------------------------------------------------------|
+| 0x00 (`0`) | `public-key`  | A public key credential derived from a key pair.               |
+| 0x01 (`1`) | `private-key` | A private key credential (used for import/export operations).  |
+| 0x02 (`2`) | `mnemonic`    | A mnemonic phrase credential (used for import operations).     |
 
 ##### 3.9.9. Supported Transform Algorithms
 
@@ -700,7 +875,16 @@ For `origin` field in Party data (Web contexts).
 |:--------|:----------------|
 | `https` | Web Application |
 
-##### 3.9.11. Supported Device Types (Scheme)
+##### 3.9.11. Supported Mnemonic Types
+
+For `type` field in Mnemonic Credential Parameters.
+
+| ID         | Type     | Description                                           |
+|:-----------|:---------|:------------------------------------------------------|
+| 0x00 (`0`) | `bip39`  | BIP-39 mnemonic phrase (12, 15, 18, 21, or 24 words). |
+| 0x01 (`1`) | `slip39` | SLIP-39 Shamir's Secret Sharing mnemonic.             |
+
+##### 3.9.12. Supported Device Types (Scheme)
 
 For `scheme` field in SignerData (see **3.2**).
 
@@ -711,10 +895,10 @@ For `scheme` field in SignerData (see **3.2**).
 | `w`   | Windows                                    |
 | `m`   | MacOS                                      |
 | `l`   | Linux                                      |
-| `ext` | Chrome Extension                           |
+| `ce`  | Chrome Extension                           |
 | `web` | Web Application                            |
 
-##### 3.9.12. Signer ID
+##### 3.9.13. Signer ID
 
 For `id` field in SignerData. Simple string identifier that depends on the scheme.
 
@@ -725,265 +909,84 @@ For `id` field in SignerData. Simple string identifier that depends on the schem
 
 ### 4. Transport Layer
 
-The protocol is transport-agnostic, but specific implementations are defined for supported
-platforms:
+The protocol is transport-agnostic. Platform-specific implementation guidelines for Android, iOS, Web Extensions, and cross-environment communication are documented separately in [GUIDELINES.md](GUIDELINES.md).
 
-#### 4.1. Android Implementation Guidelines
+#### 4.1. GCIP URI Scheme
 
-1. **Intent Resolution:** Use `Intent.createChooser` so the user can select the preferred Signer
-   App, or use an explicit intent with a package name if a specific Signer is required. To avoid
-   Intent hijacking.
-2. **Origin Verification:** The Signer App must verify `clientData.origin`:
-    - **HTTPS (Android 12+):** Use `DomainVerificationUserState`.
-    - **HTTPS (Pre-Android 12):** Use `PackageManager.resolveActivity(website)` to verify if an
-      application claims to handle the website URL. **Warning: This is not cryptographically secure
-      as multiple apps can claim the same domain.**
-    - **Android App Scheme:** Use Package Manager to check the client's package
-      signature with `Activity.getCallingPackage`.
-3. **Activity Setup:**
-    - **`android:launchMode="singleTask"`:** Ensures a single instance of the Signer handler
-      Activity processes inbound requests, so repeated requests are delivered via the existing task
-      instead of creating multiple instances.
-    - **`android:exported="true"`:** Required for the Activity to receive an explicit or implicit
-      Intent from another application.
-    - **`<action android:name="gcip.action.request" />`:** Declares the protocol entrypoint action
-      so Client Apps can resolve and invoke Signer Apps via Intent.
-4. **Data sending:**
-    - **Intent Extra Key:** Use `gcip.data.block`.
-    - **Value:** Raw GCIP binary block (header + CBOR data).
-    - **Request/Response:** Client puts the request block into `gcip.data.block` and launches the
-      Signer Activity. Signer returns the response block in the same `gcip.data.block` key.
+For cross-device communication initiation (e.g., via QR codes), GCIP defines a URI scheme:
 
-**Example Activity Configuration:**
-
-```xml
-
-<activity android:name=".SignerGcipActivity" android:exported="true"
-    android:launchMode="singleTask">
-    <intent-filter>
-        <action android:name="gcip.action.request" />
-        <category android:name="android.intent.category.DEFAULT" />
-    </intent-filter>
-</activity>
+```
+gcip://<base64url-encoded-block>
 ```
 
-**Intent Handle:**
+Where `<base64url-encoded-block>` is the raw GCIP binary block encoded using URL-safe Base64 (RFC 4648 §5, no padding). This is typically used to encode a `gcip.exchange.request` for scanning by a Signer app, which then establishes a BLE/NFC connection for subsequent communication.
 
-```kotlin
-const val DATA = "gcip.data.block"
+See [GUIDELINES.md](GUIDELINES.md) for platform-specific implementation details.
 
-fun sendRequest() {
-    val requestData = createData()
-    intent.putExtra(DATA, requestData)
-}
+#### 4.2. GTP (GCIP Transport Protocol) for BLE
 
-fun handleRequest(intent: Intent) {
-    val requestData = intent.getStringExtra(DATA)
-    val responseData = handle(requestData)
-    intent.putExtra(DATA, responseData)
-}
+For constrained transports like BLE, GCIP defines a framing protocol called GTP (GCIP Transport
+Protocol) to handle message fragmentation and reassembly.
 
-fun receiveResponse(intent: Intent) {
-    val responseData = intent.getStringExtra(DATA)
-    val result = handle(requestData)
-}
-```
+##### 4.2.1. GTP Message Types
 
-#### 4.2. iOS Implementation Guidelines
+After frame reassembly, the message format is: `[Type (1 byte)] [Payload ...]`
 
-##### 4.2.1. Signer iOS Implementation (Receiver)
+| Type Code | Name        | Description                     |
+|:----------|:------------|:--------------------------------|
+| `0x01`    | `Data`      | Contains GCIP block data.       |
+| `0x02`    | `Keepalive` | Connection keepalive (no data). |
 
-1. **Data Limits:**
-    - No hard limit like Android's Binder, but memory constraints apply.
-    - Payloads larger than 10MB can be handled, comfortably supporting thousands of credentials
-      depending on device memory.
-2. **Mechanism:** Use **Action Extension** (`NSExtensionPointIdentifier` = `com.apple.ui-services`).
-3. **Discovery:** Client App presents `UIActivityViewController`, user selects the Signer App
-   extension from the share sheet.
-4. **Data sending:** The transport payload is a raw GCIP binary block (header + CBOR data) passed as
-   `gcip.data.block` (conforming to `public.data`).
-5. **Data Sharing:** Configure **App Groups** if the main Signer App and the Action Extension must
-   share persistent data (UserDefaults, SQLite/CoreData, Keychain).
-6. **Origin Verification:** iOS Action Extensions do not reliably provide the Host App bundle
-   identifier, so origin verification may be limited and should be treated as user-verified.
+##### 4.2.2. GTP Frame Layout
 
-**Example Action Extension Configuration(`Info.plist`):**
+Frame format: `[Flags (1 byte)] [Sequence (1 byte)] [Payload ...]`
 
-```xml
+**Flags byte:**
+- Bit 7: First frame of message
+- Bit 6: Last frame of message
+- Bits 5-0: Reserved for future use
 
-<key>NSExtension</key><dict>
-	<key>NSExtensionPointIdentifier</key>
-	<string>com.apple.ui-services</string>
-	<key>NSExtensionPrincipalClass</key>
-	<string>$(PRODUCT_MODULE_NAME).ActionViewController</string>
-	<key>NSExtensionAttributes</key>
-	<dict>
-		<key>NSExtensionActivationRule</key>
-		<string>SUBQUERY (
-    extensionItems,
-    $extensionItem,
-    SUBQUERY (
-        $extensionItem.attachments,
-        $attachment,
-        ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "gcip.data.block"
-    ).@count &gt;= 1
-).@count &gt;= 1</string>
-	</dict>
-</dict>
+**Framing rules:**
+- Single-frame message: `first=true`, `last=true`, `sequence=0`
+- Multi-frame message:
+  - First frame: `first=true`, `last=false`, `sequence=0`
+  - Middle frames: `first=false`, `last=false`, `sequence=1,2,3...`
+  - Last frame: `first=false`, `last=true`, `sequence=N`
 
-<key>com.apple.security.application-groups</key><array>
-<string>group.com.example.app.signer</string>
-</array>
+##### 4.2.3. MTU Handling
 
-<key>UTImportedTypeDeclarations</key>
-<array>
-    <dict>
-        <key>UTTypeIdentifier</key>
-        <string>gcip.data.block</string>
-        <key>UTTypeDescription</key>
-        <string>GCIP Block</string>
-        <key>UTTypeConformsTo</key>
-        <array>
-            <string>public.data</string>
-        </array>
-    </dict>
-</array>
-```
-
-**Example Swift Integration (Receiver):**
-
-```swift
-// ActionViewController.swift
-
-import MobileCoreServices
-import UniformTypeIdentifiers
-
-class ActionViewController: UIViewController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let gcipType = UTType(importedAs: "gcip.data.block")
-        
-        // Iterate over extension items to find the GCIP block
-        for item in self.extensionContext!.inputItems as! [NSExtensionItem] {
-            for provider in item.attachments! {
-                if provider.hasItemConformingToTypeIdentifier(gcipType.identifier) {
-                    provider.loadItem(forTypeIdentifier: gcipType.identifier, options: nil) { [weak self] (data, error) in
-                        // Handle the received GCIP binary block (URL or Data)
-                        if let url = data as? URL, let fileData = try? Data(contentsOf: url) {
-                             self?.handleGcipRequest(data: fileData)
-                        } else if let rawData = data as? Data {
-                             self?.handleGcipRequest(data: rawData)
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    func handleGcipRequest(data: Data) {
-        // Parse GCIP Block, verify, and present Signer UI...
-    }
-}
-```
-
-##### 4.2.2. Wallet iOS Implementation (Sender)
-
-1.  **Exported Type Declaration (`Info.plist`):**
-    The Wallet app (Client) is typically the creator of the transaction request, so it should "Export" the `gcip.data.block` type conforming to `public.data`.
-
-    ```xml
-    <key>UTExportedTypeDeclarations</key>
-    <array>
-        <dict>
-            <key>UTTypeIdentifier</key>
-            <string>gcip.data.block</string>
-            <key>UTTypeDescription</key>
-            <string>GCIP Block</string>
-            <key>UTTypeConformsTo</key>
-            <array>
-                <string>public.data</string>
-            </array>
-        </dict>
-    </array>
-    ```
-
-2.  **Sending Requests (Swift):**
-    Use `UIActivityViewController` to share the data.
-
-    ```swift
-    import UniformTypeIdentifiers
-
-    func sendGcipRequest(data: Data) {
-        let gcipType = UTType(exportedAs: "gcip.data.block")
-        let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: gcipType.identifier)
-        
-        let activityVC = UIActivityViewController(
-            activityItems: [itemProvider],
-            applicationActivities: nil
-        )
-        
-        // On iPad, configure popover presentation controller
-        self.present(activityVC, animated: true)
-    }
-    ```
-
-#### 4.3. Web Extension with Web Extension
-
-**Security Risk**: The goal is to isolate keys from the vulnerable browser. A Web Extension Signer
-keeps keys in that same 'hot' environment, defeating the purpose of a separate secure signer.
-
-**UI Limitation**: Browsers allow only one active popup at a time. It is effectively impossible to
-coordinate a signing flow between a DApp, Wallet Extesnsion and a Signer Extension within the same
-context.
-
-Recommend to use **4.4.1** (Desktop App) or **4.4.2** (Mobile App) as more robust alternatives.
-
-#### 4.4. Cross-Enviroment
-
-Same protocol standard; cross-enviroment communication will be described in a follow-up improvement
-proposal, describing communication between different Web Extensions, Web Browsers, Desktop/Mobile
-Applications, OS, devices.
-
-##### 4.4.1. Web Extension with Desktop App via Native Messaging API
-
-Requires an observability protocol for Extensions to discover Desktop Apps on different platforms (
-e.g. macOS, Windows, Linux, etc.).
-
-##### 4.4.2. Web Extension with Mobile App via BLE, NFC, USB
-
-Requires the creation or usage of a separate protocol, similar to or identical to Hybrid transports
-within CTAP, which is outside of the scope of this proposal.
+Frames are split based on the negotiated BLE MTU. The frame overhead is 2 bytes (flags + sequence),
+so the maximum payload per frame is `MTU - 2` bytes.
 
 ### 5. Rationale
 
-#### 5.1. Why not WebAuthn / CTAP?
+#### 5.1. Why not [WebAuthn][webauthn] / [CTAP][ctap]?
 
 While Passkeys are a well-designed standard for authentication, they have several limitations for
 cryptocurrency wallets:
 
-* 5.1.1. **Incompatibility with BIP-84 and Derivation Paths:** Passkey = 1 pubKey, for more you
+* 5.1.1. **One Key Support:** 1 Passkey = 1 Public Key, for more you
   should create another one, so to cover several chains and accounts you should create hundreds of
-  passkeys. They typically do not support Hierarchical Deterministic (HD) Wallets.
-* 5.1.2. **Public Key Retrieval:** It is impossible to retrieve the public key after creation. You must store it somewhere to be able to restore the wallet address
+  passkeys.
+* 5.1.2. **Incompatibility with [BIP-84][bip84] and Derivation Paths:** Passkeys providers do not support Hierarchical Deterministic (HD) Wallets.
+* 5.1.3. **Public Key Retrieval:** It is impossible to retrieve the public key after creation. You must store it somewhere to be able to restore the wallet address
   later.
-* 5.1.3. **No Private Key Visibility:** Users cannot view their Private Key (PK) to create a paper
+* 5.1.4. **No Private Key Visibility:** Users cannot view their Private Key (PK) to create a paper
   backup.
-* 5.1.4. **Limited Curve Support:** Many providers do not support secp256k1, which is a basic curve
+* 5.1.5. **Limited Curve Support:** Many providers do not support secp256k1, which is a basic curve
   required for many blockchains.
-* 5.1.5. **Inefficient On-chain Verification:** Passkeys by default sign a challenge with some
+* 5.1.6. **Inefficient On-chain Verification:** Passkeys by default sign a challenge with some
   additional data (Client Data JSON), so smart contract wallets based on passkeys often must pass
   this client JSON data on-chain, which is sub-optimal (gas expensive).
-* 5.1.6. **Reliability:** Passkeys are often an additional auth level. Providers do not guarantee
+* 5.1.7. **Reliability:** Passkeys are often an additional auth level. Providers do not guarantee
   credential safety, it can be erased any time.
-* 5.1.7. **Limited Signing Transparency:** Users often cannot see the actual content they are
+* 5.1.8. **Limited Signing Transparency:** Users often cannot see the actual content they are
   signing, as passkeys typically sign the data without displaying it.
-* 5.1.8. **Service-Specific Binding:** Passkeys bind specific keys to specific services (
+* 5.1.9. **Service-Specific Binding:** Passkeys bind specific keys to specific services (
   `service1-cred1`, `service2-cred2`). GCIP employs a different model where a single credential
   source is reused across multiple services (`service1-cred1`, `service2-cred1`), which is more
   suitable for wallet interoperability.
-* 5.1.9. **Protocol Rigidity:** The protocol is difficult to extend or modify, limiting the ability
+* 5.1.10. **Protocol Rigidity:** The protocol is difficult to extend or modify, limiting the ability
   to quickly adapt to new requirements in the fast-paced blockchain ecosystem.
 
 #### 5.2. Relation to WalletConnect
@@ -1183,12 +1186,50 @@ against a shared prefix.
 * **Mitigation:** This optimization is reserved for specific transport profiles where bandwidth is
   the primary constraint.
 
-#### 6.2. Key Rotation via Exchange
+#### 6.2. Key Rotation (Forward Secrecy)
 
-**Proposal:** Use the `gcip.exchange` method to securely rotate the `sessionKey` of an active connection.
+GCIP supports session key rotation for forward secrecy without requiring user re-authentication. Rotation generates a **new `eid`** and **new `sessionKey`**, invalidating the old session.
 
-* **Context**: Long-lived connections may want to rotate encryption keys forward secrecy or valid session maintenance without forcing the user to re-approve the connection in the UI.
-* **Mechanism**: The Client sends a `gcip.exchange.request` inside the existing encrypted session. A fresh ECDH handshake occurs, resulting in a new `eid` and `sessionKey`. The logical `connectionId` remains valid, but subsequent transport messages use the new encryption context.
+##### 6.2.1. Rotation via Exchange
+
+The Client sends `gcip.exchange.request` inside an existing encrypted session:
+
+1. Client sends `gcip.exchange.request` with `eid` set to current session (wrapped in `EncryptionMessage` with current `sessionKey`)
+2. Signer generates new `eid`, new ECDH key pair, derives new `sessionKey`
+3. Signer returns `gcip.exchange.response` with new `eid` and `exchangeKey`
+4. Client derives new `sessionKey` using response's `exchangeKey` and new `eid`
+5. Both parties migrate to new session; old session is deleted
+
+This method is useful for pure key rotation without executing any operation.
+
+##### 6.2.2. Inline Rotation with Operations
+
+For Sign, Extend, and Disconnect operations, the client MAY include an `exchangeKey` in the `EncryptionMessage` to trigger inline rotation:
+
+1. Client includes `exchangeKey` in request's `EncryptionMessage` (see **2.2.6.3**)
+2. Request is encrypted with current `sessionKey`
+3. Signer processes the operation AND performs key rotation
+4. Signer responds with new `eid`, new `exchangeKey`, encrypted with new `sessionKey`
+5. Both parties derive new `sessionKey` and migrate to new `eid`
+
+This method combines an operation with key rotation in a single round-trip.
+
+##### 6.2.3. Rotation Applicability
+
+| Operation    | Rotation Support |
+|:-------------|:-----------------|
+| `exchange`   | Yes (via eid in request) |
+| `connect`    | No (establishes new session) |
+| `extend`     | Yes (inline) |
+| `sign`       | Yes (inline) |
+| `disconnect` | Yes (inline) |
+| `import`     | No |
+
+##### 6.2.4. Security Considerations
+
+* **Forward Secrecy**: Each rotation generates fresh ephemeral keys, ensuring past sessions cannot be decrypted if future keys are compromised.
+* **Session Continuity**: The logical `connectionId` remains valid after rotation; only the encryption context (`eid`, `sessionKey`) changes.
+* **Atomic Migration**: Both parties must atomically switch to the new session. The old `eid` becomes invalid immediately after rotation.
 
 
 ## Known implementation
@@ -1207,17 +1248,30 @@ Copyright and related rights waived via [CC0](https://creativecommons.org/public
 
 ## References
 
-- WebAuthn FIDO2: https://www.w3.org/TR/webauthn-2/
-- COSE ID: https://www.iana.org/assignments/cose/cose.xhtml
-- CTAP: https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html
-- CTAP Hybrid Transports: https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html#sctn-hybrid
-- RFC 8949 (CBOR): https://www.rfc-editor.org/rfc/rfc8949.html
-- RFC 8152 (COSE): https://www.rfc-editor.org/rfc/rfc8152.html
-- RFC 6454 (Web Origin): https://www.rfc-editor.org/rfc/rfc6454.html
-- RFC 5869 (HKDF): https://www.rfc-editor.org/rfc/rfc5869.html
-- BIP-32 (HD Wallets): https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
-- BIP-84 (Derivation Scheme): https://github.com/bitcoin/bips/blob/master/bip-0084.mediawiki
-- RFC 8032 (EdDSA): https://www.rfc-editor.org/rfc/rfc8032.html
-- RFC 7748 (Curve25519): https://www.rfc-editor.org/rfc/rfc7748.html
-- NIST SP 800-38D (
-  AES-GCM): https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf
+- [WebAuthn FIDO2][webauthn]
+- [COSE ID][cose-id]
+- [CTAP][ctap]
+- [CTAP Hybrid Transports][ctap-hybrid]
+- [RFC 8949 (CBOR)][rfc8949]
+- [RFC 8152 (COSE)][rfc8152]
+- [RFC 6454 (Web Origin)][rfc6454]
+- [RFC 5869 (HKDF)][rfc5869]
+- [BIP-32 (HD Wallets)][bip32]
+- [BIP-84 (Derivation Scheme)][bip84]
+- [RFC 8032 (EdDSA)][rfc8032]
+- [RFC 7748 (Curve25519)][rfc7748]
+- [NIST SP 800-38D (AES-GCM)][nist-sp-800-38d]
+
+[webauthn]: https://www.w3.org/TR/webauthn-2/
+[cose-id]: https://www.iana.org/assignments/cose/cose.xhtml
+[ctap]: https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html
+[ctap-hybrid]: https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html#sctn-hybrid
+[rfc8949]: https://www.rfc-editor.org/rfc/rfc8949.html
+[rfc8152]: https://www.rfc-editor.org/rfc/rfc8152.html
+[rfc6454]: https://www.rfc-editor.org/rfc/rfc6454.html
+[rfc5869]: https://www.rfc-editor.org/rfc/rfc5869.html
+[bip32]: https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
+[bip84]: https://github.com/bitcoin/bips/blob/master/bip-0084.mediawiki
+[rfc8032]: https://www.rfc-editor.org/rfc/rfc8032.html
+[rfc7748]: https://www.rfc-editor.org/rfc/rfc7748.html
+[nist-sp-800-38d]: https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-38d.pdf
