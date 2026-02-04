@@ -30,17 +30,42 @@ Standards like CAIP-2 and CAIP-10 are simple text representations of addresses a
 
 ## Specification
 
-The purpose of each namespace's profile is to specify deterministic and unambiguous conversions between the following format-pairs:
+The purpose of each namespace's profile is to specify deterministic and unambiguous conversions between format pairs for the Addresses and Chain References of the ecosystem.
 
-- Customary address text formats of the ecosystem (which may also be described in its [CAIP-10] profile) and the Interoperable Names text representation defined in [ERC-7930]
-- Customary chain reference text formats of the ecosystem (which may also be described in [CAIP-2]) and the text representation defined in [ERC-7930]
-- [ERC-7930]'s Interoperable Address and [ERC-7930]'s Interoperable Name of the ecosystem's chain references
-- [ERC-7930]'s Interoperable Address and [ERC-7930]'s Interoperable Name of the ecosystem's addresses *for all address formats of said ecosystem*
+#### CAIP-2/CAIP-10 Compatibility
+The "standard text" in CAIP-350 profiles is a variant of [CAIP-2]/[CAIP-10] that is identical for most namespaces, but less lossy for those where length restrictions cause truncation (e.g., Solana's genesis blockhash).
+
+Each CAIP-350 profile MUST state whether its standard text differs from [CAIP-2]/[CAIP-10], and how.
+
+### Chain References
+- **customary text ↔ standard text**: Between customary chain reference text formats of the ecosystem (which may also be described in [CAIP-2]) and a standard text representation
+- **standard text ↔ binary**: Between the standard text representation and a binary _ChainReference_ representation
+
+### Addresses
+- **customary text ↔ standard text**: Between customary address text formats of the ecosystem (which may also be described in its [CAIP-10] profile) and a standard text representation
+- **standard text ↔ binary**: Between the standard text representation and a binary _Address_ representation, for all address formats of said ecosystem
 
 Crucially, each namespace MUST also define exactly ONE (1) 2-byte bytestring to uniquely identify the namespace itself, without colliding with previous definitions, which will provide the value for the `chainType` property defined in [ERC-7930].
 
 Every namespace MUST specify all of the above in a CAIP-350 profile to maximize interoperability and review.
 A [template for these profiles](https://github.com/ChainAgnostic/namespaces/blob/main/_template/caip350.md) is defined in the Namespaces registry.
+
+### Chain Identifier Text Representation
+
+
+The standard text representation of a chain identifier MUST follow the format:
+```
+<namespace>:<chainReference>
+```
+Where:
+- `<namespace>` is the [CAIP-104] namespace identifier (e.g., `eip155`, `solana`, `bip122`)
+- `<chainReference>` is the chain-specific reference as defined by each namespace's CAIP-350 profile
+
+
+This format ensures global uniqueness across all namespaces and maintains consistency with [CAIP-2].
+
+
+Each namespace's CAIP-350 profile MUST define only the syntax and semantics of the `<chainReference>` portion. The `<namespace>:` prefix is implicitly applied as defined by this specification and SHOULD NOT be redefined in individual profiles.
 
 ## Rationale
 
