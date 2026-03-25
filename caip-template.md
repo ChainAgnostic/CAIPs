@@ -61,4 +61,4 @@ All CAIPs that introduce backwards incompatibilities must include a section desc
 [CAIP-1]: https://ChainAgnostic.org/CAIPs/caip-1
 
 ## Copyright
-Copyright and related rights waived via [CC0](../LICENSE).
+Copyright and related rights waived via [CC0](LICENSE).
