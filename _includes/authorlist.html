@@ -7,7 +7,7 @@
     {%- assign authorparts=author|split:"(@" -%}
     <a href="https://github.com/{{authorparts[1]|remove:")"}}">{{authorparts[0]|strip}}</a>
   {%- else -%}
-    {{author}}
+    {{ author | strip }}
   {%- endif -%}
   {% if forloop.last == false %}, {% endif %}
 {%- endfor -%}
