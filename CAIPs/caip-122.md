@@ -110,7 +110,7 @@ URI: https://service.org/login
 Version: 1
 Nonce: 32891756
 Issued At: 2021-09-30T16:25:24Z
-Chain ID: 1
+Chain ID: eip155:1
 Resources:
 - ipfs://bafybeiemxf5abjwjbikoz4mc3a3dla6ual3jsgpdr4cjr3oz3evfyavhwq/
 - https://example.com/my-web2-claim.json
@@ -134,7 +134,7 @@ URI: https://service.org/login
 Version: 1
 Nonce: 32891757
 Issued At: 2021-09-30T16:25:24.000Z
-Chain ID: 5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d
+Chain ID: solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp
 Resources:
 - ipfs://Qme7ss3ARVgxv6rXqVPiikMJ8u2NLgmgszg13pYrDKEoiu
 - https://example.com/my-web2-claim.json
