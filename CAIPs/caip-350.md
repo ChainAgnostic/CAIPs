@@ -3,7 +3,7 @@ caip: 350
 title: Binary Serialization of Blockchain IDs and Addresses
 author: Defi Wonderland (@defi-wonderland), Teddy (@0xteddybear), Joxes (@Joxess), Racu (@0xRacoon), Skeletor Spaceman (@0xskeletor-spaceman), TiTi (@0xtiti), Gori (@0xGorilla), Ardy (@0xArdy), Onizuka (@onizuka-wl)
 discussions-to: https://ethereum-magicians.org/t/erc-7930-interoperable-addresses/23365
-status: Draft
+status: Review
 type: Standard
 created: 2025-04-18
 requires: 2
