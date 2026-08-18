@@ -3,7 +3,7 @@ caip: 217
 title: Authorization Scopes
 author: Pedro Gomes (@pedrouid), Hassan Malik (@hmalik88), Bumblefudge (@bumblefudge)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/discussions/217, https://github.com/ChainAgnostic/CAIPs/discussions/211
-status: Draft
+status: Review
 type: Standard
 created: 2022-11-09
 ---
@@ -14,6 +14,7 @@ This CAIP defines a simple syntax for scopes of authorization between
 applications (e.g. dapps) and user-agents (e.g. "wallets" or signers). These are
 expressed as JSON objects as a building block across multiple protocols and
 mechanisms, for example:
+
 - A JSON-RPC protocol for persisting and synchronizing authorized sessions
   ([CAIP-25][])
 - Routing individual RPC commands to an authorized network ([CAIP-27][])
@@ -35,7 +36,7 @@ An authorization scope is represented in JSON as an object which is keyed to a
 string that expresses its target network and contains arrays of strings
 expressing the various capabilities authorized there. When embedded in any other
 JSON context (including the `params` of a JSON-RPC message), the object MUST be
-expressed as the value of a property named by the scope string. 
+expressed as the value of a property named by the scope string.
 
 ### Language
 

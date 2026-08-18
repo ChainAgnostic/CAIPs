@@ -3,7 +3,7 @@ caip: 316
 title: JSON-RPC Provider Session Lifecycle Management with CAIP-25 Sessions BCP
 author: Alex Donesky (@adonesky1)
 discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/285/files
-status: Draft
+status: Review
 type: Informational
 created: 2024-06-07
 requires: 25, 217, 285, 311, 312
