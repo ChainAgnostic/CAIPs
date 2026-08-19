@@ -1,0 +1,12 @@
+Scheme name: chain-agnostic information pointers
+
+Status: 'Provisional'
+
+Applications/protocols that use this scheme name:
+     Export formats to enable information encoded into blockchain or other cryptographic common data systems to be addressable from outside those systems.
+
+Contact: Juan Caballero <bumblefudge@learningproof.xyz>
+
+Change controller: Juan Caballero <bumblefudge@learningproof.xyz>
+
+References: https://github.com/chainAgnostic/CAIPs/caip-317.md
