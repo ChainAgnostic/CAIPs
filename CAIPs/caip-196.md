@@ -12,11 +12,11 @@ replaces: 74
 
 ## Simple Summary
 
-A Chain Agnostic CApability Object, or CACAO, is an [IPLD](https://ipld.io) representation of an object-capability. 
+A Chain Agnostic CApability Object, or CACAO, is an [IPLD](https://ipld.io) representation of an object-capability.
 
 ## Abstract
 
-CACAO proposes a way to leverage [varsig](https://github.com/ChainAgnostic/varsig) and [multidid](https://github.com/ChainAgnostic/multidid/) as well as IPLD to create a common representation for various different object-capability formats, such as SIWE, SIWx, and UCAN. The IPLD representation contains common fields shared between these format. In addition this CAIP also registers varsig codes for both SIWE + ReCap and UCAN. 
+CACAO proposes a way to leverage [varsig](https://github.com/ChainAgnostic/varsig) and [multidid](https://github.com/ChainAgnostic/multidid/) as well as IPLD to create a common representation for various different object-capability formats, such as SIWE, SIWx, and UCAN. The IPLD representation contains common fields shared between these format. In addition this CAIP also registers varsig codes for both SIWE + ReCap and UCAN.
 
 ## Motivation
 
@@ -46,7 +46,7 @@ type CACAO struct {
   iss Principal
   aud Principal
   s Varsig
-  
+
   v String
   att Resources
   nnc String
@@ -145,7 +145,7 @@ According to the [tezos namespace](https://namespaces.chainagnostic.org/tezos/ca
 
 #### UCAN
 
-Most fields in a UCAN should map 1-to-1 with the CACAO IPLD schema. 
+Most fields in a UCAN should map 1-to-1 with the CACAO IPLD schema.
 
 **Additional fields**
 
@@ -326,13 +326,12 @@ uOqJlcm9vdHOB2CpYJQABcRIgEbxa4r0lKwE4Oj8ZUbYCpULmPfgw2g_r12IcKX1CxNlndmVyc2lvbgH
 
 The values in SIWx are encoded as [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) strings, while CACAO requires unix timestamps (in seconds). The algorithm used to convert between the two is outlined below.
 
-### RFC3339 to UNIX + tz-info
+### RFC3339 to UNIX + tz-info, UNIX + tz-info to RFC3339
 
-1. TODO
+Unix timestamp is defined in [POSIX specification](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) (as defined in The Open Group Base Specifications Issue 7, 2018 edition or IEEE Std 1003.1-2017).
+It is derived from UTC: regardless of leap seconds, a day has to have 86400 seconds. We can rely on a conversion algorithm provided by an operation system thus.
 
-### UNIX + tz-info to RFC3339
-
-1. TODO
+We have to have in mind though, that an instant of timestamp might be off by one _leap_ second. As CACAO is mostly consumed by human who care at most about minutes, this is an issue we can neglect.
 
 ## Links
 
