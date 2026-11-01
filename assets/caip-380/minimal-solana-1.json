@@ -1,18 +1,23 @@
 {
-  "did": "did:pkh:solana:devnet:11111111111111111111111111111111",
-  "qHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
-  "verifierIds": ["ownership-basic"],
+  "did": "did:pkh:solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp:9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY",
+  "qHash": "0xbad48fd6c0a07b7e20b24be574beadd3c62145c779c42e777ea82589015a034f",
+  "verifierIds": [
+    "ownership-basic"
+  ],
   "data": {
-    "owner": "11111111111111111111111111111111",
-    "reference": { "id": "example-solana-1", "type": "other" }
+    "owner": "9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY",
+    "reference": {
+      "id": "example-solana-1",
+      "type": "other"
+    }
   },
-  "signedMessage": "Portable Proof Verification Request\nWallet: 11111111111111111111111111111111\nChain: solana:devnet\nVerifiers: ownership-basic\nData: {\"owner\":\"11111111111111111111111111111111\",\"reference\":{\"id\":\"example-solana-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
-  "signature": "5Ed25519SignatureBase58ExampleXXXXXXXXXXXXXXXXXXXXXXXX",
+  "signedMessage": "Portable Proof Verification Request\nWallet: 9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY\nChain: solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\nVerifiers: ownership-basic\nData: {\"owner\":\"9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY\",\"reference\":{\"id\":\"example-solana-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
+  "signature": "4zQsekfdUntqvEnxDPnrYrKiXpSCWRC1dufZpt6dm43ggFDCeENaBXc3FdF1mW37DR893do3ETrPS5vAzprkiYMn",
   "signedTimestamp": 1730000000000,
-  "chain": "solana:devnet",
+  "chain": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
   "signatureMethod": "ed25519",
-  "meta": {},
+  "meta": {
+    "testKey": "Ed25519 seed = SHA-256(UTF-8 \"CAIP-380 test vector solana-1\"). Test only."
+  },
   "options": {}
 }
-
-

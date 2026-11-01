@@ -2,11 +2,11 @@
 caip: 380
 title: Portable Proof
 author: Chris Leal (@cl34l)
-discussion-to: https://github.com/ChainAgnostic/CAIPs/pull/380
-status: Draft
+discussions-to: https://github.com/ChainAgnostic/CAIPs/pull/380
+status: Review
 type: Standard
 created: 2025-10-01
-updated: 2025-10-01
+updated: 2026-11-01
 requires: [2,10]
 ---
 
@@ -55,14 +55,14 @@ The Canonical Subset MUST contain exactly the following top-level properties and
 4. "signedTimestamp" (integer) — Unix epoch milliseconds when the user signed.
 5. One of: "chainId" (integer, EVM profile) or "chain" (string, CAIP-2 chain reference for non-EVM or alternate namespaces).
 
-Chain binding: If `chainId` is present, the signer DID MUST map to `did:pkh:eip155:<chainId>:<address>`. If `chain` is present, the signer DID MUST map to `did:pkh:<chain>:<address>` where `<chain>` is a CAIP-2 reference (e.g., `solana:mainnet`, `eip155:1`). Exactly one of (`chainId`, `chain`) MUST be present.
+Chain binding: If `chainId` is present, the signer DID MUST map to `did:pkh:eip155:<chainId>:<address>`. If `chain` is present, the signer DID MUST map to `did:pkh:<chain>:<address>` where `<chain>` is a CAIP-2 reference (e.g., `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`, `eip155:1`). Exactly one of (`chainId`, `chain`) MUST be present.
 
 For EVM signatures (eip191/eip1271/eip6492), producers MUST use `chainId`; using `chain = "eip155:*"` with EVM is NOT RECOMMENDED.
 
 Extensibility. Any additional top-level properties MUST be outside the Canonical Subset and therefore excluded from the Anchor. Producers MAY add such properties (e.g., `signature`, `signedMessage`, `signatureMethod`, `options`, `meta`), but validators MUST ignore unknown non-canonical properties when computing/validating the Anchor, while they MAY apply additional local validation policies to them.
 
 - **Identifiers:**
-  - Chains: CAIP-2 references (e.g., `eip155:1`, `solana:mainnet`)
+  - Chains: CAIP-2 references (e.g., `eip155:1`, `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp`)
   - Accounts: CAIP-10 `did:pkh:<chainRef>:<address>`
 - **Envelope (top-level):**
   - Note that the fields `signedMessage` and `signatureMethod` are OPTIONAL (see Conformance).
@@ -89,7 +89,7 @@ Extensibility. Any additional top-level properties MUST be outside the Canonical
 
 Universal signing: The envelope, Canonical Subset, determinism rules, freshness, and `qHash` are universal across ecosystems; non-EVM (e.g., Solana) follow the same six-line message with profile-specific bindings.
 
-Default freshness window (applies to all profiles): verifiers MUST reject if `signedTimestamp` is older than 5 minutes from verification time or more than 60 seconds in the future (clock-skew allowance).
+Default freshness window (applies to all profiles): when accepting a newly signed envelope, validators MUST reject it if `signedTimestamp` is older than 5 minutes or more than 60 seconds in the future (clock-skew allowance). Re-verification of a stored envelope is covered under Freshness window.
 
 #### EVM Profile (Normative)
 
@@ -126,7 +126,8 @@ Address Case. Implementations MUST compare addresses case-insensitively. For can
 
 Freshness window.
 
-- Verifiers MUST reject if `signedTimestamp` is older than 5 minutes from verification time or more than 60 seconds in the future (clock-skew allowance). Implementations SHOULD make this window configurable, but MUST default to these values.
+- Acceptance. When a validator first accepts a newly signed envelope (for example, on submission for storage, relay or indexing), it MUST reject the envelope if `signedTimestamp` is older than 5 minutes from verification time or more than 60 seconds in the future (clock-skew allowance). Implementations SHOULD make this window configurable, but MUST default to these values.
+- Re-verification. An envelope already accepted and later referenced by its `qHash` is re-verified by signature, identity/chain binding and Anchor. Its age alone is not a reason to reject it under this CAIP. Verifiers SHOULD report the age, and applications MAY apply their own maximum age.
 - Verification time is the validator’s local wall clock; implementations SHOULD use a synchronized time source (e.g., NTP).
 
 - **Deterministic JSON (MUST):** See the following normative rules.
@@ -192,7 +193,7 @@ ABNF differences:
 
 ```abnf
 line2 = "Wallet: " base58-addr         ; base58 account, case-sensitive
-line3 = "Chain: " chain-ref            ; CAIP-2 chain string (e.g., "solana:mainnet")
+line3 = "Chain: " chain-ref            ; CAIP-2 chain string (e.g., "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp")
 base58-addr = 1*(ALPHA / DIGIT)        ; simplified; wallets enforce full alphabet
 chain-ref = 1*VCHAR                    ; CAIP-2 reference
 ```
@@ -260,7 +261,7 @@ Example (illustrative):
      - Non-EVM: verify Ed25519 over the same bytes.
   3. Bind identity/chain: the recovered/validated address MUST match the `did`, and `did` MUST match `chainId` or `chain` per profile.
   4. MUST reject if both `chainId` and `chain` are present, or both are absent.
-  5. Enforce freshness: reject if `signedTimestamp` is older than 5 minutes or more than +60 seconds ahead (clock skew).
+  5. Enforce freshness on acceptance: reject a newly signed envelope if `signedTimestamp` is older than 5 minutes or more than +60 seconds ahead (clock skew). When re-verifying a stored envelope by `qHash`, report its age instead (see Freshness window).
   6. Compute and compare `qHash` from the Canonical Subset bytes; reject on mismatch.
   7. SHOULD deduplicate by `qHash` when persisting, indexing, or transporting.
 - **Wallets SHOULD:**
@@ -268,17 +269,17 @@ Example (illustrative):
 
 ## Security Considerations
 
-- Validators **MUST** enforce the freshness window (**5m TTL**, **+60s** skew) and signer determinism.
+- Validators **MUST** enforce the freshness window (**5m TTL**, **+60s** skew) when accepting a newly signed envelope, and signer determinism always.
 
 - **Baseline (normative):**
-  - Enforce TTL and clock-skew limits.
+  - Enforce TTL and clock-skew limits on acceptance.
   - Reconstruct the six-line signer string **exactly** (UTF-8, LF, canonical `data` bytes).
   - Bind DID ↔ chain (address matches `did`; `did` matches asserted `chainId` or `chain`).
   - Canonicalize JSON (`data`) per JCS-style rules.
   - When storing or transporting, **SHOULD** deduplicate by `qHash` to avoid cross-transport replay.
 
 - **Threats → required behavior (normative):**
-  - **Envelope replay across time:** **MUST** reject if `signedTimestamp` is older than 5m or > +60s ahead.
+  - **Envelope replay across time:** **MUST** reject a newly submitted envelope if `signedTimestamp` is older than 5m or > +60s ahead. A stored envelope keeps its original `qHash`, so presenting it again cannot create a new proof.
   - **Cross-transport replay:** **SHOULD** treat `qHash` as an idempotent key and deduplicate on write/relay.
   - **Message malleability:** **MUST** use deterministic six-line signer string and canonical JSON (`data`) bytes.
   - **Signer ambiguity (EVM AA):** **MUST** verify in order **191 → 1271 → 6492 (with proof)**, then bind to `did`.
@@ -330,29 +331,36 @@ Implementers are encouraged to consider:
    - Parse 6492 wrapper if present.
    - If EOA: EIP-191 recover equals the DID’s address component.
    - If smart account: EIP-1271 `isValidSignature` returns magic value; 6492 proof valid if used.
-5. Check freshness window (`signedTimestamp` within [-5m, +60s]).
+5. On acceptance, check the freshness window (`signedTimestamp` within [-5m, +60s]); on re-verification of a stored envelope, report its age.
 6. Canonicalize `data` and ensure it matches the `Data:` line bytes.
 7. Accept; otherwise reject with the first failing step recorded.
 
 ## Test Cases
 
-Canonical example envelope (must match attached test vector [`minimal-1.json`](/assets/caip-380/minimal-1.json)):
+Canonical example envelope (must match attached test vector [`minimal-1.json`](/assets/caip-380/minimal-1.json)). Both vectors are signed with the test-only keys described in their `meta.testKey`, so anyone can reproduce the signatures and Anchors:
 
 ```json
 {
-  "did": "did:pkh:eip155:1:0x1111111111111111111111111111111111111111",
-  "qHash": "0x1111111111111111111111111111111111111111111111111111111111111111",
-  "verifierIds": ["ownership-basic"],
+  "did": "did:pkh:eip155:1:0xecdb7c90bc38ef62be0cf42b0e8e82f38cc008e0",
+  "qHash": "0x9cdd962a4348d3f351f4bb58b053e6d3ab1ea357a6e21e2247c74da4e6c534a4",
+  "verifierIds": [
+    "ownership-basic"
+  ],
   "data": {
-    "owner": "0x1111111111111111111111111111111111111111",
-    "reference": { "type": "other", "id": "example-1" }
+    "owner": "0xecdb7c90bc38ef62be0cf42b0e8e82f38cc008e0",
+    "reference": {
+      "id": "example-1",
+      "type": "other"
+    }
   },
-  "signedMessage": "Portable Proof Verification Request\nWallet: 0x1111111111111111111111111111111111111111\nChain: 1\nVerifiers: ownership-basic\nData: {\"owner\":\"0x1111111111111111111111111111111111111111\",\"reference\":{\"id\":\"example-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
-  "signature": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "signedMessage": "Portable Proof Verification Request\nWallet: 0xecdb7c90bc38ef62be0cf42b0e8e82f38cc008e0\nChain: 1\nVerifiers: ownership-basic\nData: {\"owner\":\"0xecdb7c90bc38ef62be0cf42b0e8e82f38cc008e0\",\"reference\":{\"id\":\"example-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
+  "signature": "0xff3050cab7c88616059aeeba2b2cc3d9072a9b4d8798f25f77130867a90704eb490f2fe4f805ec2a242b3e7ca4d8c61de32dcf0ba9f70a813e14b7bd01a4587d1b",
   "signedTimestamp": 1730000000000,
   "chainId": 1,
   "signatureMethod": "eip191",
-  "meta": {},
+  "meta": {
+    "testKey": "secp256k1 private key = keccak256(UTF-8 \"CAIP-380 test vector eip155-1\"). Test only."
+  },
   "options": {}
 }
 ```
@@ -361,22 +369,34 @@ Non-EVM example envelope (informative; see attached vector [`minimal-solana-1.js
 
 ```json
 {
-  "did": "did:pkh:solana:devnet:11111111111111111111111111111111",
-  "qHash": "0x2222222222222222222222222222222222222222222222222222222222222222",
-  "verifierIds": ["ownership-basic"],
+  "did": "did:pkh:solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp:9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY",
+  "qHash": "0xbad48fd6c0a07b7e20b24be574beadd3c62145c779c42e777ea82589015a034f",
+  "verifierIds": [
+    "ownership-basic"
+  ],
   "data": {
-    "owner": "11111111111111111111111111111111",
-    "reference": { "type": "other", "id": "example-solana-1" }
+    "owner": "9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY",
+    "reference": {
+      "id": "example-solana-1",
+      "type": "other"
+    }
   },
-  "signedMessage": "Portable Proof Verification Request\nWallet: 11111111111111111111111111111111\nChain: solana:devnet\nVerifiers: ownership-basic\nData: {\"owner\":\"11111111111111111111111111111111\",\"reference\":{\"id\":\"example-solana-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
-  "signature": "5Ed25519SignatureBase58ExampleXXXXXXXXXXXXXXXXXXXXXXXX",
+  "signedMessage": "Portable Proof Verification Request\nWallet: 9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY\nChain: solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\nVerifiers: ownership-basic\nData: {\"owner\":\"9FJUvthcEuD4Ee6Yx2LdhRR37GcoH6CU1j566ax4romY\",\"reference\":{\"id\":\"example-solana-1\",\"type\":\"other\"}}\nTimestamp: 1730000000000",
+  "signature": "4zQsekfdUntqvEnxDPnrYrKiXpSCWRC1dufZpt6dm43ggFDCeENaBXc3FdF1mW37DR893do3ETrPS5vAzprkiYMn",
   "signedTimestamp": 1730000000000,
-  "chain": "solana:devnet",
+  "chain": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
   "signatureMethod": "ed25519",
-  "meta": {},
+  "meta": {
+    "testKey": "Ed25519 seed = SHA-256(UTF-8 \"CAIP-380 test vector solana-1\"). Test only."
+  },
   "options": {}
 }
 ```
+
+### Implementations (Informative)
+
+- [`@proofable/sdk`](https://github.com/proofable/sdk): `computePortableProofQHash` reproduces both Anchors above, and `verifyPortableProofEnvelope` verifies EVM and Ed25519 envelopes offline, reporting envelope age separately from validity. Version 0.1.9 or later is required to verify envelopes that carry only `did` (no separate address field), including the test vectors above.
+- Proofable's hosted service issues and verifies envelopes in production. Its [published signed records](https://github.com/proofable/docs/tree/main/public/evidence/aaif/authority-at-dispatch) verify offline with the SDK or a standalone `ethers` check.
 
 ## Backwards Compatibility
 
